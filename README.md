@@ -1,2 +1,2 @@
 # Jetbrains
-Projevt backlog https://trello.com/b/ZLrTEmqk/sovellusprojekti-jetbrains
+Project backlog https://trello.com/b/ZLrTEmqk/sovellusprojekti-jetbrains
