@@ -1,0 +1,24 @@
+<idea-plugin>
+    <id>com.example.TestPlugin</id>
+    <name>TestPlugin</name>
+    <vendor email="matti.maikalainen@yritys.com" url="https://www.yritys.com">yritys</vendor>
+
+    <description><![CDATA[
+    My first IntelliJ plugin. lorem ipsum need 40 chars for description.
+    ]]></description>
+
+    <!-- Compatibility -->
+    <idea-version since-build="231" until-build="231.*" />
+
+    <!-- Dependencies -->
+    <depends>com.intellij.modules.java</depends>
+
+    <!-- Tool Window -->
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Test Plugin Tool Window"
+                    factoryClass="com.example.MyToolWindowFactory"
+                    anchor="left"
+                    canCloseContents="true"
+        />
+    </extensions>
+</idea-plugin>
