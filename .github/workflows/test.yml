@@ -52,6 +52,7 @@ jobs:
       - name: Super-linter
         uses: super-linter/super-linter@v7.2.1
         env:
+          VALIDATE_JAVA: true
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
