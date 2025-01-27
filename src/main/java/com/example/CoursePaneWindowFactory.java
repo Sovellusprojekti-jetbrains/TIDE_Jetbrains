@@ -7,12 +7,13 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import org.jetbrains.annotations.NotNull;
 
-public class MyToolWindowFactory implements ToolWindowFactory {
+// luokka, joka luo ikkunan joka sisältää CoursePaneWindow luokassa haetun paneelin
+public class CoursePaneWindowFactory implements ToolWindowFactory {
 
     @Override
-    public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
+    public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow coursePaneWindow) {
         // Create an instance of your tool window class
-        MyToolWindow myToolWindow = new MyToolWindow(toolWindow);
+        CoursePaneWindow myToolWindow = new CoursePaneWindow(coursePaneWindow);
 
         // Get the content factory instance
         ContentFactory contentFactory = ContentFactory.getInstance();
@@ -20,6 +21,6 @@ public class MyToolWindowFactory implements ToolWindowFactory {
         // Create content for the tool window
         Content content = contentFactory.createContent(myToolWindow.getContent(), "", false);
         // Add the content to the tool window
-        toolWindow.getContentManager().addContent(content);
+        coursePaneWindow.getContentManager().addContent(content);
     }
 }

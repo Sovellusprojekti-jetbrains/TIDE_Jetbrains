@@ -20,5 +20,10 @@
                     anchor="left"
                     canCloseContents="true"
         />
+        <toolWindow id="Course Task"
+                    factoryClass="com.example.CoursePaneWindowFactory"
+                    anchor="right"
+                    canCloseContents="true"
+        />
     </extensions>
 </idea-plugin>
