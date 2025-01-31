@@ -1,6 +1,7 @@
 package com.example;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -18,17 +19,46 @@ public class CustomScreen {
     private JPanel titlePanel;
     private JLabel courseLabel;
     private JPanel coursePanel;
-    private JPanel courseAPanel;
-    private JLabel courseALabel;
-    private JPanel A02;
-    private JLabel A02Name;
-    private JButton A02Download;
-    private JButton A02Open;
-    private JPanel A01;
-    private JPanel courseBPanel;
-    private JLabel courseBLabel;
 
     public CustomScreen() {
+
+        // ilman setLayout-kutsua tämä kaatuu nullpointteriin
+        coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
+
+        String[] courses = new String[]{"A", "B"};
+        for (int i = 0; i < 2; i++) {
+            JPanel panel = new JPanel(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridx = 0;
+            gbc.weightx = 1.0;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            JLabel label = new JLabel();
+            label.setText("Course " + courses[i]);
+            label.setFont(new Font("Arial", Font.BOLD, 26));
+            label.setHorizontalAlignment(SwingConstants.LEFT);
+            coursePanel.add(label);
+
+            for (int j = 0; j < 10; j++) {
+                JPanel subPanel = new JPanel();
+                subPanel.setLayout(new BorderLayout());
+                JLabel labelWeek = new JLabel();
+                labelWeek.setText("Label " + j);
+                subPanel.add(labelWeek, BorderLayout.WEST);
+
+                JButton dButton = new JButton();
+                dButton.setText("Download");
+                subPanel.add(dButton, BorderLayout.EAST);
+
+                gbc.gridy = j;
+                panel.add(subPanel, gbc);
+            }
+            coursePanel.add(panel);
+        }
+
+
+
+        panel1.revalidate();
+        panel1.repaint();
 
         //currently assumes that the user has the TIM CLI installed
         //need some checks and tests in the future
