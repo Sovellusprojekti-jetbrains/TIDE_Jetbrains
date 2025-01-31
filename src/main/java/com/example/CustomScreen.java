@@ -13,6 +13,20 @@ import java.io.InputStreamReader;
 public class CustomScreen {
     private JButton loginButton;
     private JPanel panel1;
+    private JTabbedPane tabbedPane;
+    private JPanel loginPane;
+    private JPanel titlePanel;
+    private JLabel courseLabel;
+    private JPanel coursePanel;
+    private JPanel courseAPanel;
+    private JLabel courseALabel;
+    private JPanel A02;
+    private JLabel A02Name;
+    private JButton A02Download;
+    private JButton A02Open;
+    private JPanel A01;
+    private JPanel courseBPanel;
+    private JLabel courseBLabel;
 
     public CustomScreen() {
 
