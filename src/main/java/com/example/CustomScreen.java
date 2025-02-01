@@ -1,5 +1,7 @@
 package com.example;
 
+import com.intellij.ui.components.JBScrollPane;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,11 +21,13 @@ public class CustomScreen {
     private JPanel titlePanel;
     private JLabel courseLabel;
     private JPanel coursePanel;
+    Color bgColor = new Color(40,40,40);
 
     public CustomScreen() {
 
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
+
 
         String[] courses = new String[]{"A", "B"};
         for (int i = 0; i < 2; i++) {
@@ -32,27 +36,32 @@ public class CustomScreen {
             gbc.gridx = 0;
             gbc.weightx = 1.0;
             gbc.fill = GridBagConstraints.HORIZONTAL;
+
+            JPanel labelPanel = new JPanel(new BorderLayout());
+            labelPanel.setBorder(BorderFactory.createEmptyBorder(20, 5, 5, 0));
             JLabel label = new JLabel();
             label.setText("Course " + courses[i]);
             label.setFont(new Font("Arial", Font.BOLD, 26));
             label.setHorizontalAlignment(SwingConstants.LEFT);
-            coursePanel.add(label);
+            labelPanel.add(label);
+            coursePanel.add(labelPanel);
 
             for (int j = 0; j < 10; j++) {
-                JPanel subPanel = new JPanel();
-                subPanel.setLayout(new BorderLayout());
-                JLabel labelWeek = new JLabel();
-                labelWeek.setText("Label " + j);
-                subPanel.add(labelWeek, BorderLayout.WEST);
-
-                JButton dButton = new JButton();
-                dButton.setText("Download");
-                subPanel.add(dButton, BorderLayout.EAST);
-
+                JPanel subPanel = createExercise(j);
+                subPanel.setBackground(bgColor);
                 gbc.gridy = j;
                 panel.add(subPanel, gbc);
             }
-            coursePanel.add(panel);
+            panel.setBackground(bgColor);
+            panel.setOpaque(true);
+
+            JScrollPane scrollPane = new JBScrollPane(panel);
+            scrollPane.setPreferredSize(new Dimension(300, 300)); // Set limited height
+            scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+            coursePanel.add(scrollPane);
         }
 
 
@@ -89,5 +98,34 @@ public class CustomScreen {
 
     public JPanel getContent() {
         return panel1;
+    }
+
+    JPanel createExercise(int name) {
+        JPanel subPanel = new JPanel();
+        subPanel.setLayout(new BorderLayout());
+        JLabel labelWeek = new JLabel();
+        labelWeek.setText("Label " + name);
+        labelWeek.setFont(new Font("Arial", Font.BOLD, 16));
+        subPanel.add(labelWeek, BorderLayout.WEST);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.setBackground(bgColor);
+        subPanel.setBackground(bgColor);
+
+        JButton dButton = new JButton();
+        dButton.setText("Download");
+        dButton.setBackground(bgColor);
+        buttonPanel.add(dButton);
+
+        JButton oButton = new JButton();
+        oButton.setText("Open as Project");
+        oButton.setBackground(bgColor);
+        buttonPanel.add(oButton);
+
+        subPanel.add(buttonPanel, BorderLayout.EAST);
+
+        //gbc.gridy = j;
+        //panel.add(subPanel, gbc);
+        return subPanel;
     }
 }
