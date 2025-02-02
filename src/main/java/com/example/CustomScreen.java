@@ -1,5 +1,6 @@
 package com.example;
 
+import com.google.gson.Gson;
 import com.intellij.ui.components.JBScrollPane;
 
 import javax.swing.*;
@@ -25,27 +26,32 @@ public class CustomScreen {
 
     public CustomScreen() {
 
+
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
 
-
+        // Kurssit nyt vaan näin kun JSON-parsimista ei tehdä
         String[] courses = new String[]{"A", "B"};
-        for (int i = 0; i < 2; i++) {
+
+        for (int i = 0; i < courses.length; i++) {
             JPanel panel = new JPanel(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.weightx = 1.0;
             gbc.fill = GridBagConstraints.HORIZONTAL;
 
+            // Kurssin nimelle vähän tilaa yläpuolelle
             JPanel labelPanel = new JPanel(new BorderLayout());
             labelPanel.setBorder(BorderFactory.createEmptyBorder(20, 5, 5, 0));
+
             JLabel label = new JLabel();
             label.setText("Course " + courses[i]);
             label.setFont(new Font("Arial", Font.BOLD, 26));
-            label.setHorizontalAlignment(SwingConstants.LEFT);
             labelPanel.add(label);
             coursePanel.add(labelPanel);
 
+            // Random-viikkotehtävät
+            // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
             for (int j = 0; j < 10; j++) {
                 JPanel subPanel = createExercise(j);
                 subPanel.setBackground(bgColor);
@@ -55,6 +61,7 @@ public class CustomScreen {
             panel.setBackground(bgColor);
             panel.setOpaque(true);
 
+            // Tehdään scrollpane johon lätkäistään kaikki tähän mennessä tehty.
             JScrollPane scrollPane = new JBScrollPane(panel);
             scrollPane.setPreferredSize(new Dimension(300, 300)); // Set limited height
             scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
@@ -65,7 +72,7 @@ public class CustomScreen {
         }
 
 
-
+        // Piirretään uudelleen
         panel1.revalidate();
         panel1.repaint();
 
@@ -100,6 +107,11 @@ public class CustomScreen {
         return panel1;
     }
 
+    /**
+     * Luo rivin viikkotehtävälle nappeineen
+     * @param name annettu nimi
+     * @return Viikkotehtävärivi
+     */
     JPanel createExercise(int name) {
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
@@ -124,8 +136,6 @@ public class CustomScreen {
 
         subPanel.add(buttonPanel, BorderLayout.EAST);
 
-        //gbc.gridy = j;
-        //panel.add(subPanel, gbc);
         return subPanel;
     }
 }
