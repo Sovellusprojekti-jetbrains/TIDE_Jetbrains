@@ -24,8 +24,7 @@ public class CustomScreen {
     private JScrollPane coursesPane;
     private JButton logoutButton;
     Color bgColor = new Color(40,40,40);
-    private int loginTabIndex = 0;
-    private int logoutTabIndex = 1;
+
 
     public CustomScreen() {
 
@@ -83,6 +82,7 @@ public class CustomScreen {
         panel1.repaint();
         switchToLogin();
 
+
         //currently assumes that the user has the TIM CLI installed
         //need some checks and tests in the future
         loginButton.addActionListener(new ActionListener() {
@@ -132,7 +132,8 @@ public class CustomScreen {
                     ex.printStackTrace();
                 }
             }
-        });
+        }
+        );
 
     }
 
@@ -173,12 +174,17 @@ public class CustomScreen {
     }
 
     private void switchToLogout() {
-        tabbedPane.remove(loginPane); // Hide Login tab
+        //tabbedPane.remove(loginPane); // Hide Login tab
         tabbedPane.addTab("Courses", coursesPane); // Show Logout ta
+        tabbedPane.setSelectedComponent(coursesPane);
+        //loginButton.setText("Logout");
     }
 
     private void switchToLogin() {
         tabbedPane.remove(coursesPane); // Hide Courses tab
-        tabbedPane.addTab("Login", loginPane); // Show Login tab
+        //tabbedPane.addTab("Login", loginPane); // Show Login tab
+        tabbedPane.setSelectedComponent(loginPane);
     }
+
 }
+
