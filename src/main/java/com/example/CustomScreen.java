@@ -1,6 +1,5 @@
 package com.example;
 
-import com.google.gson.Gson;
 import com.intellij.ui.components.JBScrollPane;
 
 import javax.swing.*;
@@ -22,9 +21,16 @@ public class CustomScreen {
     private JPanel titlePanel;
     private JLabel courseLabel;
     private JPanel coursePanel;
+    private JScrollPane coursesPane;
+    private JButton logoutButton;
     Color bgColor = new Color(40,40,40);
+    private int loginTabIndex = 0;
+    private int logoutTabIndex = 1;
 
     public CustomScreen() {
+
+        //Content loginContent = contentFactory.createContent(loginPane, "Login", false);
+        //Content logoutContent = contentFactory.createContent(coursesPane, "Content", false);
 
 
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
@@ -75,6 +81,7 @@ public class CustomScreen {
         // Piirretään uudelleen
         panel1.revalidate();
         panel1.repaint();
+        switchToLogin();
 
         //currently assumes that the user has the TIM CLI installed
         //need some checks and tests in the future
@@ -95,12 +102,38 @@ public class CustomScreen {
                     int exitCode = process.waitFor();
                     System.out.println("Process exited with code: " + exitCode);
 
+                    switchToLogout(); // Poistaa loginin näkyvistä
+                } catch (IOException | InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchToLogin(); // Poistaa kurssinäkymän näkyvistä
+                try{
+                    String command = "tide logout";
+
+                    ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
+                    pb.redirectErrorStream(true);
+                    Process process = pb.start();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                    int exitCode = process.waitFor();
+                    System.out.println("Process exited with code: " + exitCode);
+
 
                 } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
                 }
             }
         });
+
     }
 
     public JPanel getContent() {
@@ -137,5 +170,15 @@ public class CustomScreen {
         subPanel.add(buttonPanel, BorderLayout.EAST);
 
         return subPanel;
+    }
+
+    private void switchToLogout() {
+        tabbedPane.remove(loginPane); // Hide Login tab
+        tabbedPane.addTab("Courses", coursesPane); // Show Logout ta
+    }
+
+    private void switchToLogin() {
+        tabbedPane.remove(coursesPane); // Hide Courses tab
+        tabbedPane.addTab("Login", loginPane); // Show Login tab
     }
 }
