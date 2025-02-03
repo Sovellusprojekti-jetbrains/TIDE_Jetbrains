@@ -31,12 +31,14 @@
                 id="org.intellij.sdk.action.GroupedActions"
                 text="Tide"
                 popup="true"
-                icon="SdkIcons.Sdk_default_icon">
+                >
         <add-to-group
-                group-id="ToolsMenu"
-                anchor="after"
-                relative-to-action="org.intellij.sdk.action.PopupDialogAction"/>
+                group-id="MainMenu"
+                anchor="last"
+                />
             <action id="com.actions.About" class="com.actions.About" text="TIDE" description="TIDE menu">
+            </action>
+            <action id="com.actions.Settings" class="com.actions.Settings" text="Settings" description="Tide settings">
             </action>
         </group>
     </actions>
