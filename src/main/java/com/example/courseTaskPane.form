@@ -25,7 +25,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Points are not available. Please check task points from TIM"/>
+              <text value="&lt;html&gt; Points are not available. Please check task points from TIM. &lt;/html&gt;"/>
             </properties>
           </component>
           <component id="393c6" class="javax.swing.JButton" binding="submitButton" default-binding="true">
@@ -124,7 +124,9 @@
       </grid>
       <vspacer id="7eed7">
         <constraints>
-          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+            <preferred-size width="11" height="31"/>
+          </grid>
         </constraints>
       </vspacer>
       <vspacer id="ad095">
