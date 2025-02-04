@@ -1,5 +1,6 @@
 package com.example;
 
+import com.actions.Settings;
 import com.intellij.ui.components.JBScrollPane;
 
 import javax.swing.*;
@@ -23,6 +24,7 @@ public class CustomScreen {
     private JPanel coursePanel;
     private JScrollPane coursesPane;
     private JButton logoutButton;
+    private JButton settingsButton;
     Color bgColor = new Color(40,40,40);
 
 
@@ -105,7 +107,16 @@ public class CustomScreen {
                     switchToLogout(); // Poistaa loginin näkyvistä
                 } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
+                    switchToLogout();
                 }
+            }
+        });
+
+        settingsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Settings temp = new com.actions.Settings();
+                temp.displaySettings();
             }
         });
 
