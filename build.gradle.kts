@@ -20,9 +20,14 @@ intellij {
     plugins.set(listOf("java"))
 }
 dependencies {
-
+    //testImplementation("com.intellij.automation:ui-test-framework:0.11.23")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
 
 
 

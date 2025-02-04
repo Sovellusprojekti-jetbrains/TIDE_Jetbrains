@@ -10,11 +10,11 @@ import java.io.InputStreamReader;
 
 
 
-public class CustomScreen {
+public class LoginScreen {
     private JButton loginButton;
     private JPanel panel1;
 
-    public CustomScreen() {
+    public LoginScreen() {
 
         //currently assumes that the user has the TIM CLI installed
         //need some checks and tests in the future

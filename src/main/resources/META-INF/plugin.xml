@@ -16,7 +16,7 @@
     <!-- Tool Window -->
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Test Plugin Tool Window"
-                    factoryClass="com.example.MyToolWindowFactory"
+                    factoryClass="com.example.LoginWindowFactory"
                     anchor="left"
                     canCloseContents="true"
         />
@@ -25,5 +25,32 @@
                     anchor="right"
                     canCloseContents="true"
         />
+        <fileEditorProvider implementation="com.example.MyCustomFileEditorProvider"/>
     </extensions>
+
+
+    <!-- Actions -->
+    <actions>
+        <action id="MyPlugin.OpenCustomView"
+                class="com.example.OpenCustomEditorAction"
+                text="Open Custom View"
+                description="Opens the custom view in the editor">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <group class="com.example.actions.MyMenuActionGroup"
+               id="TIM.Menu"
+               text="TIM"
+               description="Tim menu"
+               popup="true"
+               compact="true">
+            <action id="MyPlugin.MyFirstAction" class="com.example.actions.MyFirstAction" text="My Action" description="My action" />
+
+            <!-- Add TIM group to MainMenu, after the 'HelpMenu' -->
+            <add-to-group group-id="MainMenu" anchor="last" />
+        </group>
+
+
+    </actions>
+
+
 </idea-plugin>
