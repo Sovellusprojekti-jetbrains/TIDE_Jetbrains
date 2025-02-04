@@ -26,4 +26,20 @@
                     canCloseContents="true"
         />
     </extensions>
+    <actions>
+        <group
+                id="org.intellij.sdk.action.GroupedActions"
+                text="Tide"
+                popup="true"
+                >
+        <add-to-group
+                group-id="MainMenu"
+                anchor="last"
+                />
+            <action id="com.actions.About" class="com.actions.About" text="TIDE" description="TIDE menu">
+            </action>
+            <action id="com.actions.Settings" class="com.actions.Settings" text="Settings" description="Tide settings">
+            </action>
+        </group>
+    </actions>
 </idea-plugin>
