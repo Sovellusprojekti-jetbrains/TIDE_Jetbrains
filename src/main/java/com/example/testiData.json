@@ -1,60 +1,34 @@
-[
+{
+  "courses": [
     {
-        "name": "TIEP112, C/C++ Javan jälkeen",
-        "id": 115303,
-        "path": "kurssit/tie/ohj2/cpp/TIEP112",
-        "tasks": [
-            {
-                "name": "DemoC1",
-                "doc_id": 639244,
-                "path": "kurssit/tie/ohj2/2024k/demot/DemoC1"
-            },
-            {
-                "name": "DemoC2",
-                "doc_id": 639246,
-                "path": "kurssit/tie/ohj2/2024k/demot/DemoC2"
-            },
-            {
-              "name": "DemoC3",
-              "doc_id": 639248,
-              "path": "kurssit/tie/ohj2/2024k/demot/DemoC3"
-          },
-          {
-            "name": "DemoC4",
-            "doc_id": 639250,
-            "path": "kurssit/tie/ohj2/2024k/demot/DemoC4"
-        }
-
-
-        ]
+      "name": "Introduction to Programming",
+      "exercises": [
+        { "name": "VT01", "link": "https://example.com/courses/intro-to-programming/vt01" },
+        { "name": "VT02", "link": "https://example.com/courses/intro-to-programming/vt02" },
+        { "name": "VT03", "link": "https://example.com/courses/intro-to-programming/vt03" },
+        { "name": "VT04", "link": "https://example.com/courses/intro-to-programming/vt04" }
+      ]
     },
     {
-      "name": "ITKP102, Ohjelmointi 1",
-      "id": 115101,
-      "path": "kurssit/tie/ohj1/v/2025/kevat/koti",
-      "tasks": [
-          {
-              "name": "Demo1",
-              "doc_id": 621240,
-              "path": "kurssit/tie/ohj1/v/2025/kevat/demot/demo1"
-          },
-          {
-              "name": "Demo2",
-              "doc_id": 621241,
-              "path": "kurssit/tie/ohj1/v/2025/kevat/demot/demo2"
-          },
-          {
-            "name": "Demo3",
-            "doc_id": 621242,
-            "path": "kurssit/tie/ohj1/v/2025/kevat/demot/demo3"
-        },
-        {
-          "name": "Demo4",
-          "doc_id": 621243,
-          "path": "kurssit/tie/ohj1/v/2025/kevat/demot/demo4"
-      }
-      
-
+      "name": "Data Structures",
+      "exercises": [
+        { "name": "VT01", "link": "https://example.com/courses/data-structures/vt01" },
+        { "name": "VT02", "link": "https://example.com/courses/data-structures/vt02" },
+        { "name": "VT03", "link": "https://example.com/courses/data-structures/vt03" },
+        { "name": "VT04", "link": "https://example.com/courses/data-structures/vt04" },
+        { "name": "VT05", "link": "https://example.com/courses/data-structures/vt05" }
       ]
-  }
-]
+    },
+    {
+      "name": "Machine Learning Basics",
+      "exercises": [
+        { "name": "VT01", "link": "https://example.com/courses/machine-learning-basics/vt01" },
+        { "name": "VT02", "link": "https://example.com/courses/machine-learning-basics/vt02" },
+        { "name": "VT03", "link": "https://example.com/courses/machine-learning-basics/vt03" },
+        { "name": "VT04", "link": "https://example.com/courses/machine-learning-basics/vt04" },
+        { "name": "VT05", "link": "https://example.com/courses/machine-learning-basics/vt05" },
+        { "name": "VT06", "link": "https://example.com/courses/machine-learning-basics/vt06" }
+      ]
+    }
+  ]
+}
