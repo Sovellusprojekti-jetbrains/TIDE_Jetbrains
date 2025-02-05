@@ -1,34 +1,47 @@
-{
-  "courses": [
-    {
-      "name": "Introduction to Programming",
-      "exercises": [
-        { "name": "VT01", "link": "https://example.com/courses/intro-to-programming/vt01" },
-        { "name": "VT02", "link": "https://example.com/courses/intro-to-programming/vt02" },
-        { "name": "VT03", "link": "https://example.com/courses/intro-to-programming/vt03" },
-        { "name": "VT04", "link": "https://example.com/courses/intro-to-programming/vt04" }
+[
+  {
+      "name": "ITKP101, ohjelmointi 1",
+      "id": 11203,
+      "path": "kurssit/tie/ohj1/2025k/demot",
+      "tasks": [
+          {
+              "name": "Demo1",
+              "doc_id": 401648,
+              "path": "kurssit/tie/ohj1/2025k/demot/Demo1"
+          },
+          {
+              "name": "Demo2",
+              "doc_id": 401649,
+              "path": "kurssit/tie/ohj1/2025k/demot/Demo2"
+          },
+          {
+            "name": "Demo3",
+            "doc_id": 401650,
+            "path": "kurssit/tie/ohj1/2025k/demot/Demo3"
+        }
       ]
-    },
-    {
-      "name": "Data Structures",
-      "exercises": [
-        { "name": "VT01", "link": "https://example.com/courses/data-structures/vt01" },
-        { "name": "VT02", "link": "https://example.com/courses/data-structures/vt02" },
-        { "name": "VT03", "link": "https://example.com/courses/data-structures/vt03" },
-        { "name": "VT04", "link": "https://example.com/courses/data-structures/vt04" },
-        { "name": "VT05", "link": "https://example.com/courses/data-structures/vt05" }
-      ]
-    },
-    {
-      "name": "Machine Learning Basics",
-      "exercises": [
-        { "name": "VT01", "link": "https://example.com/courses/machine-learning-basics/vt01" },
-        { "name": "VT02", "link": "https://example.com/courses/machine-learning-basics/vt02" },
-        { "name": "VT03", "link": "https://example.com/courses/machine-learning-basics/vt03" },
-        { "name": "VT04", "link": "https://example.com/courses/machine-learning-basics/vt04" },
-        { "name": "VT05", "link": "https://example.com/courses/machine-learning-basics/vt05" },
-        { "name": "VT06", "link": "https://example.com/courses/machine-learning-basics/vt06" }
-      ]
+      
+  },
+  {
+    "name": "ITKP102, ohjelmointi 2",
+    "id": 16103,
+    "path": "kurssit/tie/ohj2/2025k/demot",
+    "tasks": [
+        {
+            "name": "Demo1",
+            "doc_id": 501370,
+            "path": "kurssit/tie/ohj2/2025k/demot/Demo1"
+        },
+        {
+            "name": "Demo2",
+            "doc_id":  501372,
+            "path": "kurssit/tie/ohj2/2025k/demot/Demo2"
+        },
+        {
+          "name": "Demo3",
+          "doc_id":  501374,
+          "path": "kurssit/tie/ohj2/2025k/demot/Demo3"
+      }
+    ]
     }
-  ]
-}
+]
