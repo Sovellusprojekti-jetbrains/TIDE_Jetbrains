@@ -2,6 +2,7 @@ package com.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.views.SettingsScreen;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

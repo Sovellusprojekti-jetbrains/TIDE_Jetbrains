@@ -1,4 +1,4 @@
-package com.actions;
+package com.views;
 
 import javax.swing.*;
 

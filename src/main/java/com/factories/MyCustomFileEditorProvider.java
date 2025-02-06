@@ -1,11 +1,12 @@
-package com.example;
+package com.factories;
 
-import com.example.customfile.CustomFile;
+import com.customfile.CustomFile;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorPolicy;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.views.MyCustomFileEditor;
 import org.jetbrains.annotations.NotNull;
 
 public class MyCustomFileEditorProvider implements FileEditorProvider {

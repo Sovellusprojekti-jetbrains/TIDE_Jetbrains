@@ -1,7 +1,7 @@
 //author Jeremi Kantola
 //26.1.2025
 
-package com.example;
+package com.views;
 
 import javax.swing.*;
 
