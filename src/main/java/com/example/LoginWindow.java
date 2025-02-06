@@ -5,10 +5,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class MyToolWindow {
+public class LoginWindow {
     private JPanel content;
 
-    public MyToolWindow(@NotNull ToolWindow toolWindow) {
+    public LoginWindow(@NotNull ToolWindow toolWindow) {
         content = new CustomScreen().getContent();
 
     }

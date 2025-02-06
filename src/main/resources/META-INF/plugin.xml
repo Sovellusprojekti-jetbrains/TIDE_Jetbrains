@@ -16,7 +16,7 @@
     <!-- Tool Window -->
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Test Plugin Tool Window"
-                    factoryClass="com.example.MyToolWindowFactory"
+                    factoryClass="com.example.LoginWindowFactory"
                     anchor="left"
                     canCloseContents="true"
         />
@@ -25,8 +25,15 @@
                     anchor="right"
                     canCloseContents="true"
         />
+        <fileEditorProvider implementation="com.example.MyCustomFileEditorProvider"/>
     </extensions>
     <actions>
+        <action id="MyPlugin.OpenCustomView"
+                class="com.actions.OpenCustomEditorAction"
+                text="Open Custom View"
+                description="Opens the custom view in the editor">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
         <group
                 id="org.intellij.sdk.action.GroupedActions"
                 text="Tide"
@@ -41,5 +48,6 @@
             <action id="com.actions.Settings" class="com.actions.Settings" text="Settings" description="Tide settings">
             </action>
         </group>
+
     </actions>
 </idea-plugin>
