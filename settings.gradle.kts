@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "TestPlugin"
+rootProject.name = "TIDE-JetBrains"
