@@ -1,4 +1,4 @@
-package com.example;
+package com.views;
 
 import com.intellij.openapi.wm.ToolWindow;
 import org.jetbrains.annotations.NotNull;

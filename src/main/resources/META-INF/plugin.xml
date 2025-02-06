@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>com.example.TestPlugin</id>
+    <id>com.views.TestPlugin</id>
     <name>TestPlugin</name>
     <vendor email="matti.maikalainen@yritys.com" url="https://www.yritys.com">yritys</vendor>
 
@@ -16,16 +16,16 @@
     <!-- Tool Window -->
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Test Plugin Tool Window"
-                    factoryClass="com.example.LoginWindowFactory"
+                    factoryClass="com.factories.LoginWindowFactory"
                     anchor="left"
                     canCloseContents="true"
         />
         <toolWindow id="Course Task"
-                    factoryClass="com.example.CoursePaneWindowFactory"
+                    factoryClass="com.factories.CoursePaneWindowFactory"
                     anchor="right"
                     canCloseContents="true"
         />
-        <fileEditorProvider implementation="com.example.MyCustomFileEditorProvider"/>
+        <fileEditorProvider implementation="com.factories.MyCustomFileEditorProvider"/>
     </extensions>
     <actions>
         <action id="MyPlugin.OpenCustomView"

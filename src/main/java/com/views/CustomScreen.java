@@ -1,4 +1,4 @@
-package com.example;
+package com.views;
 
 import com.actions.Settings;
 import com.intellij.ui.components.JBScrollPane;

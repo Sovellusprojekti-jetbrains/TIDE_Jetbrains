@@ -1,4 +1,4 @@
-package com.example.customfile;
+package com.customfile;
 
 import com.intellij.testFramework.LightVirtualFile;
 

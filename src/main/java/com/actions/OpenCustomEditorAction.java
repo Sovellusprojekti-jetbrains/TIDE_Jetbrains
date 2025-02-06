@@ -1,6 +1,6 @@
 package com.actions;
 
-import com.example.customfile.CustomFile;
+import com.customfile.CustomFile;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
