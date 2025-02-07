@@ -15,6 +15,7 @@ import java.awt.event.WindowEvent;
 public class Settings extends AnAction {
     private SettingsScreen window = null; //Object reference to window content
     private static boolean visible = false; //To ensure that only one settings window can be open at a time
+    private static JFrame frame = null; //Object reference to JFrame containing window content
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
@@ -28,16 +29,16 @@ public class Settings extends AnAction {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    JFrame newWindow = new JFrame("Settings");
-                    newWindow.add(window.getContent());
-                    newWindow.addWindowListener(new WindowAdapter() {
+                    frame = new JFrame("Settings");
+                    frame.add(window.getContent());
+                    frame.addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosing(WindowEvent e) {
                             visible = false;
                         }
                     });
-                    newWindow.setSize(400, 300);
-                    newWindow.setVisible(true);
+                    frame.setSize(400, 300);
+                    frame.setVisible(true);
                 }
             });
         }
@@ -46,5 +47,10 @@ public class Settings extends AnAction {
     public void displaySettings() {
         this.window = new SettingsScreen();
         showSettings();
+    }
+
+    public static void close() {
+        frame.dispose();
+        visible = false;
     }
 }
