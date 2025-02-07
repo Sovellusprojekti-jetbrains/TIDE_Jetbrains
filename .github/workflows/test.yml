@@ -86,7 +86,7 @@ jobs:
       - name: Get log file path and print contents
         run: |
           echo "The verifier log file [${{steps.verify.outputs.verification-output-log-filename}}] contents : " ;
-          cat ${{steps.verify.outputs.verification-output-log-filename}}          ideaIC:2024.3
+          cat ${{steps.verify.outputs.verification-output-log-filename}}
 
   # dependency-submission:
 
