@@ -19,7 +19,7 @@ public class JsonHandler {
      * @param jsonString Json to parse
      * @return A list of courses
      */
-    public List<Course> jsonToCourses(String jsonString) {
+    public List<Course> jsonToCourses(final String jsonString) {
         Gson gson = new Gson();
         List<Course> courseList = new ArrayList<Course>();
 

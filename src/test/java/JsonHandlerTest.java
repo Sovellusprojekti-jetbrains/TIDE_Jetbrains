@@ -13,10 +13,13 @@ import java.util.List;
  * Test data on the tail end of this file.
  */
 public class JsonHandlerTest {
-    JsonHandler handler;
+    /**
+     * JsonHandler object to be used in tests.
+     */
+    private JsonHandler handler;
 
     /**
-     * Create a JsonHandler for tests
+     * Create a JsonHandler for tests.
      */
     @BeforeEach
     public void setUp() {
@@ -31,8 +34,9 @@ public class JsonHandlerTest {
     @DisplayName("Json maps to Course objects correctly")
     public void handleValidData() {
         List<Course> courseList = handler.jsonToCourses(validJsonData);
+        final int expectedTaskNumber = 3;
         assertEquals(2, courseList.size());
-        assertEquals(3, courseList
+        assertEquals(expectedTaskNumber, courseList
                 .get(1)
                 .getTasks()
                 .size());
@@ -48,7 +52,7 @@ public class JsonHandlerTest {
 
 
     /**
-     * Invalid Json objects should be omitted
+     * Invalid Json objects should be omitted.
      */
     @Test
     @DisplayName("An array of invalid Json data results in an empty list")
@@ -60,8 +64,7 @@ public class JsonHandlerTest {
 
 
     /**
-     * Json input that is not an array
-     * of objects returns an empty list.
+     * Json input that is not an array of objects returns an empty list.
      */
     @Test
     @DisplayName("Bare Json object input results in an empty list")
@@ -76,60 +79,61 @@ public class JsonHandlerTest {
      * Json data that correctly maps to Course objects.
      * The format is an array of Json objects.
      */
-    private final String validJsonData = "[\n" +
-            "  {\n" +
-            "      \"name\": \"ITKP101, ohjelmointi 1\",\n" +
-            "      \"id\": 11203,\n" +
-            "      \"path\": \"kurssit/tie/ohj1/2025k/demot\",\n" +
-            "      \"tasks\": [\n" +
-            "          {\n" +
-            "              \"name\": \"Demo1\",\n" +
-            "              \"doc_id\": 401648,\n" +
-            "              \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo1\"\n" +
-            "          },\n" +
-            "          {\n" +
-            "              \"name\": \"Demo2\",\n" +
-            "              \"doc_id\": 401649,\n" +
-            "              \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo2\"\n" +
-            "          },\n" +
-            "          {\n" +
-            "            \"name\": \"Demo3\",\n" +
-            "            \"doc_id\": 401650,\n" +
-            "            \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo3\"\n" +
-            "        }\n" +
-            "      ]\n" +
-            "      \n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"name\": \"ITKP102, ohjelmointi 2\",\n" +
-            "    \"id\": 16103,\n" +
-            "    \"path\": \"kurssit/tie/ohj2/2025k/demot\",\n" +
-            "    \"tasks\": [\n" +
-            "        {\n" +
-            "            \"name\": \"Demo1\",\n" +
-            "            \"doc_id\": 501370,\n" +
-            "            \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo1\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"name\": \"Demo2\",\n" +
-            "            \"doc_id\":  501372,\n" +
-            "            \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo2\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"name\": \"Demo3\",\n" +
-            "          \"doc_id\":  501374,\n" +
-            "          \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo3\"\n" +
-            "      }\n" +
-            "    ]\n" +
-            "    }\n" +
+    private final String validJsonData = "[\n"
+            + "  {\n"
+            + "      \"name\": \"ITKP101, ohjelmointi 1\",\n"
+            + "      \"id\": 11203,\n"
+            + "      \"path\": \"kurssit/tie/ohj1/2025k/demot\",\n"
+            + "      \"tasks\": [\n"
+            + "          {\n"
+            + "              \"name\": \"Demo1\",\n"
+            + "              \"doc_id\": 401648,\n"
+            + "              \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo1\"\n"
+            + "          },\n"
+            + "          {\n"
+            + "              \"name\": \"Demo2\",\n"
+            + "              \"doc_id\": 401649,\n"
+            + "              \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo2\"\n"
+            + "          },\n"
+            + "          {\n"
+            + "            \"name\": \"Demo3\",\n"
+            + "            \"doc_id\": 401650,\n"
+            + "            \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo3\"\n"
+            + "        }\n"
+            + "      ]\n"
+            + "      \n"
+            + "  },\n"
+            + "  {\n"
+            + "    \"name\": \"ITKP102, ohjelmointi 2\",\n"
+            + "    \"id\": 16103,\n"
+            + "    \"path\": \"kurssit/tie/ohj2/2025k/demot\",\n"
+            + "    \"tasks\": [\n"
+            + "        {\n"
+            + "            \"name\": \"Demo1\",\n"
+            + "            \"doc_id\": 501370,\n"
+            + "            \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo1\"\n"
+            + "        },\n"
+            + "        {\n"
+            + "            \"name\": \"Demo2\",\n"
+            + "            \"doc_id\":  501372,\n"
+            + "            \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo2\"\n"
+            + "        },\n"
+            + "        {\n"
+            + "          \"name\": \"Demo3\",\n"
+            + "          \"doc_id\":  501374,\n"
+            + "          \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo3\"\n"
+            + "      }\n"
+            + "    ]\n"
+            + "    }\n"
+            +
             "]";
 
     /**
-     * A bare Json object
+     * A bare Json object.
      */
     private final String bareJsonObject = "{\"field\": \"value\"}";
     /**
-     * An array of invalid objects
+     * An array of invalid objects.
      */
     private final String arrayOfInvalidObjects = "[{\"field\": \"value\"}]";
 }
