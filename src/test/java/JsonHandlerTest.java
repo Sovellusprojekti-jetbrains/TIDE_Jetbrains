@@ -50,7 +50,7 @@ public class JsonHandlerTest {
 
     /**
      * Json input that is not an array
-     * of objects throws an exception
+     * of objects returns an empty list.
      */
     @Test
     @DisplayName("Bare Json object input results in an empty list")
