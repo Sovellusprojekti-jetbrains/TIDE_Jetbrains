@@ -32,7 +32,18 @@ public class JsonHandlerTest {
     public void handleValidData() {
         List<Course> courseList = handler.jsonToCourses(validJsonData);
         assertEquals(2, courseList.size());
-        assertEquals(3, courseList.get(1).getTasks().size());
+        assertEquals(3, courseList
+                .get(1)
+                .getTasks()
+                .size());
+        assertEquals("ITKP101, ohjelmointi 1", courseList
+                .get(0)
+                .getName());
+        assertEquals("Demo2", courseList
+                .get(1)
+                .getTasks()
+                .get(1)
+                .getName());
     }
 
 
