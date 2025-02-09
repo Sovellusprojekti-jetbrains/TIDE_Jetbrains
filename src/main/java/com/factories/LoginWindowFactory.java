@@ -19,7 +19,7 @@ public class LoginWindowFactory implements ToolWindowFactory {
         ContentFactory contentFactory = ContentFactory.getInstance();
 
         // Create content for the tool window
-        Content content = contentFactory.createContent(loginWindow.getContent(), "", false);
+        Content content = contentFactory.createContent(loginWindow.getContent(), "Login and Courses", false);
         // Add the content to the tool window
         toolWindow.getContentManager().addContent(content);
     }

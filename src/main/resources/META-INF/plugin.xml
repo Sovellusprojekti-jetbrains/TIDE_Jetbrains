@@ -50,4 +50,10 @@
         </group>
 
     </actions>
+
+    <applicationListeners>
+        <listener class="com.listeners.LoginWindowListener"
+                  topic="com.intellij.openapi.wm.ex.ToolWindowManagerListener"/>
+    </applicationListeners>
+
 </idea-plugin>
