@@ -8,10 +8,17 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Class for opening a custom editor action.
+ */
 public class OpenCustomEditorAction extends AnAction {
 
+    /**
+     * What happens when the action is performed.
+     * @param event An action event.
+     */
     @Override
-    public void actionPerformed(@NotNull AnActionEvent event) {
+    public void actionPerformed(@NotNull final AnActionEvent event) {
         // Get the current project
         Project project = event.getProject();
         if (project == null) {
