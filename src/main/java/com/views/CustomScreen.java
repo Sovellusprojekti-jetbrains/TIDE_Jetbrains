@@ -10,8 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class CustomScreen {
@@ -37,8 +36,9 @@ public class CustomScreen {
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
 
-        // Kurssit nyt vaan näin kun JSON-parsimista ei tehdä
-        String[] courses = new String[]{"A", "B"};
+        // Courses nyt vaan näin kun JSON-parsimista ei tehdä
+        //TODO: pistä hakemaan myös taskit courseList oliosta, tällä hetkellä tehdään erikseen omassa aliohjelmassa, mutta olisi parempi ehkä hakea vain lsita nimistä, jota käsitellään.
+        String[] courses = getCourses(courselist);
 
         for (int i = 0; i < courses.length; i++) {
             JPanel panel = new JPanel(new GridBagLayout());
@@ -59,15 +59,7 @@ public class CustomScreen {
 
             // Random-viikkotehtävät
             // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
-            for (int j = 0; j < 10; j++) {
-                JPanel subPanel = createExercise(j);
-                subPanel.setBackground(bgColor);
-                gbc.gridy = j;
-                panel.add(subPanel, gbc);
-            }
-            panel.setBackground(bgColor);
-            panel.setOpaque(true);
-
+            createTasks(gbc,panel,courseList);
             // Tehdään scrollpane johon lätkäistään kaikki tähän mennessä tehty.
             JScrollPane scrollPane = new JBScrollPane(panel);
             scrollPane.setPreferredSize(new Dimension(300, 300)); // Set limited height
@@ -148,6 +140,34 @@ public class CustomScreen {
 
     }
 
+    private String[] getCourses(List<Course> courses) {
+        String[] names = new String[]{};
+        courses.forEach(course->{
+            names.add(course.getName());
+        });
+
+        return names;
+    }
+
+    /**
+     * Creates the Tasks for the courses in the course list
+     * @param gbc the gridbacconstraint used to put the tasks is their place in the grid bag
+     * @param panel The panel that the tasks are put into under the course
+     * @param courses the list of courses the student got from the TIDECLI call
+     */
+    private void createTasks(GridBagConstraints gbc,JPanel panel,List<Course> courses){
+        AtomicInteger j = new AtomicInteger();
+        courses.foreach(courseTask ->{
+            JPanel subPanel = createExercise(courseTask.getName());
+            subPanel.setBackground(bgColor);
+            gbc.gridy = j.get();
+            panel.add(subPanel, gbc);
+            panel.setBackground(bgColor);
+            panel.setOpaque(true);
+            j.getAndIncrement();
+        });
+    }
+
     public JPanel getContent() {
         return panel1;
     }
@@ -157,7 +177,7 @@ public class CustomScreen {
      * @param name annettu nimi
      * @return Viikkotehtävärivi
      */
-    JPanel createExercise(int name) {
+    JPanel createExercise(String name) {
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
         JLabel labelWeek = new JLabel();
