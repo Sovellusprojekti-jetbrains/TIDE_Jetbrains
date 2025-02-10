@@ -19,10 +19,19 @@ import java.beans.PropertyChangeListener;
  */
 public class MyCustomFileEditor implements FileEditor {
 
-    final int[] color = {40, 40, 40};
+    /**
+     * Dark grey color.
+     */
+    private final int[] color = {40, 40, 40};
 
+    /**
+     * Pain pane of the window.
+     */
     private final JPanel panel;
-    Color bgColor = new Color(color[0],color[1],color[2]);
+    /**
+     * Background color defined above.
+     */
+    private Color bgColor = new Color(color[0], color[1], color[2]);
 
     /**
      * Constructor for the custom file editor. TODO: This is a copy of another file
@@ -47,10 +56,10 @@ public class MyCustomFileEditor implements FileEditor {
             JPanel labelPanel = new JPanel(new BorderLayout());
             labelPanel.setBorder(BorderFactory.createEmptyBorder(content[0], content[1], content[2], content[3]));
 
-            final int FONTSIZE = 26;
+            final int fontSize = 26;
             JLabel label = new JLabel();
             label.setText("Course " + courses[i]);
-            label.setFont(new Font("Arial", Font.BOLD, FONTSIZE));
+            label.setFont(new Font("Arial", Font.BOLD, fontSize));
             labelPanel.add(label);
             panel1.add(labelPanel);
 
@@ -65,13 +74,13 @@ public class MyCustomFileEditor implements FileEditor {
             panel1.setBackground(bgColor);
             panel1.setOpaque(true);
 
-            final int SIZE = 300;
-            final int THICKNESS = 4;
+            final int size = 300;
+            final int thickness = 4;
 
             // Tehdään scrollpane johon lätkäistään kaikki tähän mennessä tehty.
             JScrollPane scrollPane = new JBScrollPane(panel1);
-            scrollPane.setPreferredSize(new Dimension(SIZE, SIZE)); // Set limited height
-            scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, THICKNESS));
+            scrollPane.setPreferredSize(new Dimension(size, size)); // Set limited height
+            scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, thickness));
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -100,12 +109,12 @@ public class MyCustomFileEditor implements FileEditor {
      * @return Viikkotehtävärivi
      */
     JPanel createExercise(final int name) {
-        final int FONTSIZE = 16;
+        final int fontSize = 16;
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
         JLabel labelWeek = new JLabel();
         labelWeek.setText("Label " + name);
-        labelWeek.setFont(new Font("Arial", Font.BOLD, FONTSIZE));
+        labelWeek.setFont(new Font("Arial", Font.BOLD, fontSize));
         subPanel.add(labelWeek, BorderLayout.WEST);
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -185,7 +194,7 @@ public class MyCustomFileEditor implements FileEditor {
     public FileEditorState getState(@NotNull final FileEditorStateLevel level) {
         return new FileEditorState() {
             @Override
-            public boolean canBeMergedWith(@NotNull FileEditorState otherState, @NotNull FileEditorStateLevel level) {
+            public boolean canBeMergedWith(@NotNull final FileEditorState otherState, @NotNull final FileEditorStateLevel level) {
                 return false; // No merging needed
             }
         };

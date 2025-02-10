@@ -14,9 +14,18 @@ import javax.swing.JFrame;
  * Class for showing a settings screen. TODO: make it do something useful
  */
 public class Settings extends AnAction {
-    final int WIDTH = 400;
-    final int HEIGHT = 300;
+    /**
+     * Width of the settings screen.
+     */
+    final int width = 400;
+    /**
+     * Height of the settings screen.
+     */
+    final int height = 300;
 
+    /**
+     * Variable for the settings screen window.
+     */
     private SettingsScreen window = null;
 
     /**
@@ -38,14 +47,14 @@ public class Settings extends AnAction {
             public void run() {
                 JFrame newWindow = new JFrame("Settings");
                 newWindow.add(window.getContent());
-                newWindow.setSize(WIDTH, HEIGHT);
+                newWindow.setSize(width, height);
                 newWindow.setVisible(true);
             }
         });
     }
 
     /**
-     * TODO: explain
+     * TODO: explain.
      */
     public void displaySettings() {
         this.window = new SettingsScreen();
