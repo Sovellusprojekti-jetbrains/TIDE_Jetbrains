@@ -11,13 +11,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class MyCustomFileEditorProvider implements FileEditorProvider {
     @Override
-    public boolean accept(@NotNull Project project, @NotNull VirtualFile file) {
+    public boolean accept(@NotNull final Project project, @NotNull final VirtualFile file) {
         return file instanceof CustomFile;
     }
 
     @NotNull
     @Override
-    public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile file) {
+    public FileEditor createEditor(@NotNull final Project project, @NotNull final VirtualFile file) {
         return new MyCustomFileEditor(file);
     }
 

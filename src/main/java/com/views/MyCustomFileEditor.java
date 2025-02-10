@@ -63,9 +63,10 @@ public class MyCustomFileEditor implements FileEditor {
             labelPanel.add(label);
             panel1.add(labelPanel);
 
+            final int tempNumber = 10;
             // Random-viikkotehtävät
             // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
-            for (int j = 0; j < 10; j++) {
+            for (int j = 0; j < tempNumber; j++) {
                 JPanel subPanel = createExercise(j);
                 subPanel.setBackground(bgColor);
                 gbc.gridy = j;
