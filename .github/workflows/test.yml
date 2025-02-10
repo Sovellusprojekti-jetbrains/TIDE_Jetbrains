@@ -58,7 +58,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   compatibility:
-    name: Ensure plugin compatibility against IDEA Community and RIDER
+    name: Ensure plugin compatibility against IDEA Community and Rider
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -81,7 +81,7 @@ jobs:
         with:
           ide-versions: |
             ideaIC:2024.3
-          # riderRD:2024.3
+            riderRD:2024.3
 
       - name: Get log file path and print contents
         run: |
