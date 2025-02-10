@@ -5,7 +5,7 @@ package com.views;
 
 import javax.swing.*;
 
-/*
+/**
 * Hoidetaan kaikki ruudun oikealla puolella olevan tehtävän palautuksen suorittavan ikkunan toiminnalliset sekä graaffiset toiminnot
 * Taskpane = Kaikki muut paneelit sisältävä pääpaneeli
 * demoTiedot = tidecli kautta saadut Demon numero sekä tehtävän numero sisältävä label
