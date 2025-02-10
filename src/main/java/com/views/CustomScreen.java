@@ -32,8 +32,14 @@ public class CustomScreen {
      * The pane containing the login and settings buttons.
      */
     private JPanel loginPane;
-    // private JPanel titlePanel;
-    // private JLabel courseLabel;
+    /**
+     * TitlePanel seems to exists for a test?
+     */
+    private JPanel titlePanel;
+    /**
+     * Label for the course. Investigate usefulness.
+     */
+    private JLabel courseLabel;
     /**
      * Course panel contains all the courses and their exercises.
      */
@@ -50,9 +56,21 @@ public class CustomScreen {
      * Button that opens the settings window.
      */
     private JButton settingsButton;
+    /**
+     * An integer for the red band of a color.
+     */
     private final int red = 40;
+    /**
+     * The green band of an RGB color.
+     */
     private final int green = 40;
+    /**
+     * The blue band of an RGB color.
+     */
     private final int blue = 40;
+    /**
+     * A color definition.
+     */
     private final Color bgColor = new Color(red, green, blue);
 
     /**
@@ -82,16 +100,17 @@ public class CustomScreen {
             final int right = 0;
             labelPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
 
-            final int FONTSIZE = 26;
+            final int fontSize = 26;
             JLabel label = new JLabel();
             label.setText("Course " + courses[i]);
-            label.setFont(new Font("Arial", Font.BOLD, FONTSIZE));
+            label.setFont(new Font("Arial", Font.BOLD, fontSize));
             labelPanel.add(label);
             coursePanel.add(labelPanel);
 
+            final int tempNumber = 10;
             // Random-viikkotehtävät
             // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
-            for (int j = 0; j < 10; j++) {
+            for (int j = 0; j < tempNumber; j++) {
                 JPanel subPanel = createExercise(j);
                 subPanel.setBackground(bgColor);
                 gbc.gridy = j;
