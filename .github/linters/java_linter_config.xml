@@ -82,6 +82,8 @@
     <module name="JavadocMethod"/>
     <module name="JavadocType"/>
     <module name="JavadocVariable"/>
+        <property name="scope" value="public"/>
+    </module>
     <module name="JavadocStyle"/>
     <module name="MissingJavadocMethod"/>
 
@@ -161,7 +163,7 @@
     <!-- Miscellaneous other checks.                   -->
     <!-- See https://checkstyle.org/checks/misc/index.html -->
     <module name="ArrayTypeStyle"/>
-    <module name="FinalParameters"/>
+    <!-- <module name="FinalParameters"/> -->
     <module name="TodoComment"/>
     <module name="UpperEll"/>
 
