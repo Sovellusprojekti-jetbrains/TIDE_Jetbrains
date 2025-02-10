@@ -13,25 +13,77 @@ import java.io.InputStreamReader;
 
 import com.course.*;
 import com.api.JsonHandler;
-
 import java.util.List;
 
-
+/**
+ * Class for displaying a template course window.
+ */
 public class CustomScreen {
+    /**
+     * The button that does the login action.
+     */
     private JButton loginButton;
+    /**
+     * The main pane for the window.
+     */
     private JPanel panel1;
+    /**
+     * The pane that contains all the tabs for the window.
+     */
     private JTabbedPane tabbedPane;
+    /**
+     * The pane containing the login and settings buttons.
+     */
     private JPanel loginPane;
+    /**
+     * TitlePanel seems to exists for a test?
+     */
     private JPanel titlePanel;
+    /**
+     * Label for the course. Investigate usefulness.
+     */
     private JLabel courseLabel;
+    /**
+     * Course panel contains all the courses and their exercises.
+     */
     private JPanel coursePanel;
+    /**
+     * Courses pane should be turned into a normal pane instead of a scrollPane.
+     */
     private JScrollPane coursesPane;
+    /**
+     * Button for logging out.
+     */
     private JButton logoutButton;
+    /**
+     * Button that opens the settings window.
+     */
     private JButton settingsButton;
+    /**
+     * Button that refreshes the available courses and tasks.
+     */
     private JButton refreshButton;
-    Color bgColor = new Color(40,40,40);
 
+    /**
+     * An integer for the red band of a color.
+     */
+    private final int red = 40;
+    /**
+     * The green band of an RGB color.
+     */
+    private final int green = 40;
+    /**
+     * The blue band of an RGB color.
+     */
+    private final int blue = 40;
+    /**
+     * A color definition.
+     */
+    private final Color bgColor = new Color(red, green, blue);
 
+    /**
+     * Constructor for CustomScreen.
+     */
     public CustomScreen() {
 
         /**
@@ -87,14 +139,14 @@ public class CustomScreen {
                 + "    }\n"
                 +
                 "]";
-        //Content loginContent = contentFactory.createContent(loginPane, "Login", false);
-        //Content logoutContent = contentFactory.createContent(coursesPane, "Content", false);
 
+        //A json handler is created to parse the json object.
         JsonHandler handler = new JsonHandler();
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
-
+        //Creating a list of course objects, for more information look at the com.course class.
         List<Course> courselist = handler.jsonToCourses(validJsonData);
+        //A panel that contains the courses and tasks is created in its own sub-program.
         createCourseListPane(courselist);
 
         // Piirretään uudelleen
@@ -102,7 +154,8 @@ public class CustomScreen {
         panel1.repaint();
         switchToLogin();
 
-        // Gets the demos and tasks from tidecli again
+        // currently uses a placeholder hard-coded jsondata, since we don't have the download capability yet.
+        // needs tests in the future
         refreshButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -198,6 +251,7 @@ public class CustomScreen {
             }
         });
 
+        // Adds an action listener for the settings button
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -206,6 +260,7 @@ public class CustomScreen {
             }
         });
 
+        // Adds an action listener for the logout button.
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -234,7 +289,12 @@ public class CustomScreen {
 
     }
 
+    /**
+     * Creates the panel that contains the list of available demos and tasks
+     * @param courselist list of courses with tidecli demos.
+     */
     private void createCourseListPane(List<Course> courselist) {
+        //Removes all previous courses added, to make refreshing possible. Might not bee the best solution
         coursePanel.removeAll();
         courselist.forEach(Course ->{
             JPanel panel = new JPanel(new GridBagLayout());
@@ -245,7 +305,11 @@ public class CustomScreen {
 
             // Kurssin nimelle vähän tilaa yläpuolelle
             JPanel labelPanel = new JPanel(new BorderLayout());
-            labelPanel.setBorder(BorderFactory.createEmptyBorder(20, 5, 5, 0));
+            final int top = 20;
+            final int left = 5;
+            final int bottom = 5;
+            final int right = 0;
+            labelPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
 
             JLabel label = new JLabel();
             label.setText("Course " + Course.getName());
@@ -266,10 +330,14 @@ public class CustomScreen {
                 panel.setOpaque(true);
                 j[0]++;
             });
+
+            final int paneSize = 300;
+            final int thickness = 4;
+
             // Tehdään scrollpane johon lätkäistään kaikki tähän mennessä tehty.
             JScrollPane scrollPane = new JBScrollPane(panel);
-            scrollPane.setPreferredSize(new Dimension(300, 300)); // Set limited height
-            scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
+            scrollPane.setPreferredSize(new Dimension(paneSize,paneSize)); // Set limited height
+            scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,thickness));
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -278,7 +346,10 @@ public class CustomScreen {
 
     }
 
-
+    /**
+     * Gets the content of the panel.
+     * @return main panel
+     */
     public JPanel getContent() {
         return panel1;
     }
@@ -290,11 +361,12 @@ public class CustomScreen {
      * @return the subpanel that contains the tasks name and the two buttons
      */
     JPanel createExercise(String name,String path) {
+        final int fontsize = 16;
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
         JLabel labelWeek = new JLabel();
         labelWeek.setText(name);
-        labelWeek.setFont(new Font("Arial", Font.BOLD, 16));
+        labelWeek.setFont(new Font("Arial", Font.BOLD, fontsize));
         subPanel.add(labelWeek, BorderLayout.WEST);
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -322,14 +394,18 @@ public class CustomScreen {
 
         return subPanel;
     }
-
+    /**
+     * Switches to a state where logging out is possible.
+     */
     private void switchToLogout() {
         //tabbedPane.remove(loginPane); // Hide Login tab
         tabbedPane.addTab("Courses", coursesPane); // Show Logout ta
         tabbedPane.setSelectedComponent(coursesPane);
         //loginButton.setText("Logout");
     }
-
+    /**
+     * Switches to a state where logging in is possible.
+     */
     private void switchToLogin() {
         tabbedPane.remove(coursesPane); // Hide Courses tab
         //tabbedPane.addTab("Login", loginPane); // Show Login tab

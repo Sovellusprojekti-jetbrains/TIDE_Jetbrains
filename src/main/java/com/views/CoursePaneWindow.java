@@ -9,15 +9,16 @@ import javax.swing.JPanel;
  * uudelleenaloittamiseen käytettävät toiminnot sisältävän paneelin.
  */
 public class CoursePaneWindow {
+    /**
+     * Panel that contains the task information and the buttons to submit and reset it.
+     */
     private JPanel coursePane;
 
     /**
      * haetaan Paneeli courseTaksPane luokalta.
-     * @param toolWindow TODO: explain?
+     * @param toolWindow the toolWindow that is used to contain the course task panel
      */
-    public CoursePaneWindow(ToolWindow toolWindow) {
-        coursePane = new courseTaskPane().getContent();
-    }
+    public CoursePaneWindow(ToolWindow toolWindow) {coursePane = new courseTaskPane().getContent();}
 
     /**
      * palautetaan paneeli.
