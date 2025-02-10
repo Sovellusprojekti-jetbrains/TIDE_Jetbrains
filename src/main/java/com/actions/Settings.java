@@ -14,6 +14,15 @@ import java.awt.event.WindowEvent;
  * This class is used to display settings window to configure tide-settings
  */
 public class Settings extends AnAction {
+    /**
+     * Width of the settings screen.
+     */
+    final int width = 400;
+    /**
+     * Height of the settings screen.
+     */
+    final int height = 300;
+  
     private SettingsScreen window = null; //Object reference to window content
     private static boolean visible = false; //To ensure that only one settings window can be open at a time
     private static JFrame frame = null; //Object reference to JFrame containing window content
@@ -43,7 +52,7 @@ public class Settings extends AnAction {
                         visible = false;
                     }
                 });
-                frame.setSize(400, 300);
+                frame.setSize(width, height);
                 frame.setVisible(true);
             });
         }

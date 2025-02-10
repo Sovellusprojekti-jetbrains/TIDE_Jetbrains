@@ -1,6 +1,6 @@
 <idea-plugin>
-    <id>com.views.TestPlugin</id>
-    <name>TestPlugin</name>
+    <id>com.views.TIDE-JetBrains</id>
+    <name>TIDE</name>
     <vendor email="matti.maikalainen@yritys.com" url="https://www.yritys.com">yritys</vendor>
 
     <description><![CDATA[
@@ -15,7 +15,7 @@
 
     <!-- Tool Window -->
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Test Plugin Tool Window"
+        <toolWindow id="TIDE Tool Window"
                     factoryClass="com.factories.LoginWindowFactory"
                     anchor="left"
                     canCloseContents="true"

@@ -4,15 +4,33 @@ import javax.swing.*;
 import java.io.File;
 
 /**
- * Content to be displayed in settings window
+ * Settings screen.
  */
 public class SettingsScreen {
+    /**
+     * Settings pane.
+     */
     private JPanel settings;
     private JTextField pathText;
+    /**
+     * Button that opens a file browser.
+     */
     private JButton browseButton;
+    /**
+     * Button that submits the changes.
+     */
     private JButton OKButton;
+    /**
+     * Button that cancels the changes.
+     */
     private JButton cancelButton;
+    /**
+     * Panel for the path.
+     */
     private JPanel path;
+    /**
+     * Panel for the ok and cancel buttons.
+     */
     private JPanel buttons;
 
     /**

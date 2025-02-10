@@ -3,6 +3,7 @@ package com.views;
 import com.actions.Settings;
 import com.intellij.ui.components.JBScrollPane;
 
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,27 +12,71 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-
-
-
+/**
+ * Class for displaying a template course window.
+ */
 public class CustomScreen {
+    /**
+     * The button that does the login action.
+     */
     private JButton loginButton;
+    /**
+     * The main pane for the window.
+     */
     private JPanel panel1;
+    /**
+     * The pane that contains all the tabs for the window.
+     */
     private JTabbedPane tabbedPane;
+    /**
+     * The pane containing the login and settings buttons.
+     */
     private JPanel loginPane;
+    /**
+     * TitlePanel seems to exists for a test?
+     */
     private JPanel titlePanel;
+    /**
+     * Label for the course. Investigate usefulness.
+     */
     private JLabel courseLabel;
+    /**
+     * Course panel contains all the courses and their exercises.
+     */
     private JPanel coursePanel;
+    /**
+     * Courses pane should be turned into a normal pane instead of a scrollPane.
+     */
     private JScrollPane coursesPane;
+    /**
+     * Button for logging out.
+     */
     private JButton logoutButton;
+    /**
+     * Button that opens the settings window.
+     */
     private JButton settingsButton;
-    Color bgColor = new Color(40,40,40);
+    /**
+     * An integer for the red band of a color.
+     */
+    private final int red = 40;
+    /**
+     * The green band of an RGB color.
+     */
+    private final int green = 40;
+    /**
+     * The blue band of an RGB color.
+     */
+    private final int blue = 40;
+    /**
+     * A color definition.
+     */
+    private final Color bgColor = new Color(red, green, blue);
 
-
+    /**
+     * Constructor for CustomScreen.
+     */
     public CustomScreen() {
-
-        //Content loginContent = contentFactory.createContent(loginPane, "Login", false);
-        //Content logoutContent = contentFactory.createContent(coursesPane, "Content", false);
 
 
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
@@ -49,17 +94,23 @@ public class CustomScreen {
 
             // Kurssin nimelle vähän tilaa yläpuolelle
             JPanel labelPanel = new JPanel(new BorderLayout());
-            labelPanel.setBorder(BorderFactory.createEmptyBorder(20, 5, 5, 0));
+            final int top = 20;
+            final int left = 5;
+            final int bottom = 5;
+            final int right = 0;
+            labelPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
 
+            final int fontSize = 26;
             JLabel label = new JLabel();
             label.setText("Course " + courses[i]);
-            label.setFont(new Font("Arial", Font.BOLD, 26));
+            label.setFont(new Font("Arial", Font.BOLD, fontSize));
             labelPanel.add(label);
             coursePanel.add(labelPanel);
 
+            final int tempNumber = 10;
             // Random-viikkotehtävät
             // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
-            for (int j = 0; j < 10; j++) {
+            for (int j = 0; j < tempNumber; j++) {
                 JPanel subPanel = createExercise(j);
                 subPanel.setBackground(bgColor);
                 gbc.gridy = j;
@@ -68,10 +119,13 @@ public class CustomScreen {
             panel.setBackground(bgColor);
             panel.setOpaque(true);
 
+            final int paneSize = 300;
+            final int thickness = 4;
+
             // Tehdään scrollpane johon lätkäistään kaikki tähän mennessä tehty.
             JScrollPane scrollPane = new JBScrollPane(panel);
-            scrollPane.setPreferredSize(new Dimension(300, 300)); // Set limited height
-            scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
+            scrollPane.setPreferredSize(new Dimension(paneSize, paneSize)); // Set limited height
+            scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, thickness));
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -84,13 +138,12 @@ public class CustomScreen {
         panel1.repaint();
         switchToLogin();
 
-
-        //currently assumes that the user has the TIM CLI installed
-        //need some checks and tests in the future
+         // currently assumes that the user has the TIM CLI installed
+         // need some checks and tests in the future.
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
+                try {
                     String command = "tide login";
 
                     ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
@@ -112,19 +165,22 @@ public class CustomScreen {
             }
         });
 
+        // Adds an action listener for the settings button
         settingsButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 Settings temp = new com.actions.Settings();
                 temp.displaySettings();
             }
         });
 
+
+        // Adds an action listener for the logout button.
         logoutButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 switchToLogin(); // Poistaa kurssinäkymän näkyvistä
-                try{
+                try {
                     String command = "tide logout";
 
                     ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
@@ -148,21 +204,26 @@ public class CustomScreen {
 
     }
 
+    /**
+     * Gets the content of the panel.
+     * @return main panel
+     */
     public JPanel getContent() {
         return panel1;
     }
 
     /**
-     * Luo rivin viikkotehtävälle nappeineen
+     * Luo rivin viikkotehtävälle nappeineen.
      * @param name annettu nimi
      * @return Viikkotehtävärivi
      */
     JPanel createExercise(int name) {
+        final int fontSize = 16;
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
         JLabel labelWeek = new JLabel();
         labelWeek.setText("Label " + name);
-        labelWeek.setFont(new Font("Arial", Font.BOLD, 16));
+        labelWeek.setFont(new Font("Arial", Font.BOLD, fontSize));
         subPanel.add(labelWeek, BorderLayout.WEST);
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -184,6 +245,9 @@ public class CustomScreen {
         return subPanel;
     }
 
+    /**
+     * Switches to a state where logging out is possible.
+     */
     private void switchToLogout() {
         //tabbedPane.remove(loginPane); // Hide Login tab
         tabbedPane.addTab("Courses", coursesPane); // Show Logout ta
@@ -191,6 +255,9 @@ public class CustomScreen {
         //loginButton.setText("Logout");
     }
 
+    /**
+     * Switches to a state where logging in is possible.
+     */
     private void switchToLogin() {
         tabbedPane.remove(coursesPane); // Hide Courses tab
         //tabbedPane.addTab("Login", loginPane); // Show Login tab
