@@ -26,6 +26,7 @@
                     canCloseContents="true"
         />
         <fileEditorProvider implementation="com.factories.MyCustomFileEditorProvider"/>
+        <applicationService serviceImplementation="com.actions.StateManager"/>
     </extensions>
     <actions>
         <action id="MyPlugin.OpenCustomView"

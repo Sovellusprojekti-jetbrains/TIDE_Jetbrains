@@ -2,16 +2,16 @@ package com.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.ApplicationManager;
 import com.views.SettingsScreen;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.SwingUtilities;
-import javax.swing.JFrame;
-
-
+import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
- * Class for showing a settings screen. TODO: make it do something useful
+ * This class is used to display settings window to configure tide-settings
  */
 public class Settings extends AnAction {
     /**
@@ -22,15 +22,14 @@ public class Settings extends AnAction {
      * Height of the settings screen.
      */
     final int height = 300;
+  
+    private SettingsScreen window = null; //Object reference to window content
+    private static boolean visible = false; //To ensure that only one settings window can be open at a time
+    private static JFrame frame = null; //Object reference to JFrame containing window content
 
     /**
-     * Variable for the settings screen window.
-     */
-    private SettingsScreen window = null;
-
-    /**
-     * TODO: What does this do?
-     * @param e TODO: what is this event?
+     * If settings is called via an action, this method is called
+     * @param e Action event (not used)
      */
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
@@ -39,25 +38,55 @@ public class Settings extends AnAction {
     }
 
     /**
-     * Shows the settings window.
+     * Displays settings window if one is not already open
      */
     private void showSettings() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                JFrame newWindow = new JFrame("Settings");
-                newWindow.add(window.getContent());
-                newWindow.setSize(width, height);
-                newWindow.setVisible(true);
-            }
-        });
+        if (!visible) {
+            visible = true;
+            SwingUtilities.invokeLater(() -> {
+                frame = new JFrame("Settings");
+                frame.add(window.getContent());
+                frame.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        visible = false;
+                    }
+                });
+                frame.setSize(width, height);
+                frame.setVisible(true);
+            });
+        }
     }
 
     /**
-     * TODO: explain.
+     * This method can be called from action listeners to open settings window
      */
     public void displaySettings() {
         this.window = new SettingsScreen();
         showSettings();
+    }
+
+    /**
+     * Closes settings window
+     */
+    public static void close() {
+        frame.dispose();
+        visible = false;
+    }
+
+    /**
+     * Calls StateManager for getting user defined file path
+     * @return File path as a String
+     */
+    public static String getPath() {
+       return ApplicationManager.getApplication().getService(StateManager.class).getPath();
+    }
+
+    /**
+     * Calls StateManager for setting new path defined by user
+     * @param path File path as a String
+     */
+    public static void savePath(String path) {
+        ApplicationManager.getApplication().getService(StateManager.class).setPath(path);
     }
 }
