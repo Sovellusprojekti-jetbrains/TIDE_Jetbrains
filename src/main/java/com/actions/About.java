@@ -5,9 +5,17 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.ui.Messages;
 
+/**
+ * Class for the about-screen.
+ */
 public class About extends AnAction {
+
+    /**
+     * Method for performed action.
+     * @param e Action event from somewhere.
+     */
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@NotNull final AnActionEvent e) {
         Messages.showMessageDialog(
                 "Tide 1.0",
                 "About",

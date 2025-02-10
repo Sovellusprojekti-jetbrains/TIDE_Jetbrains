@@ -21,17 +21,53 @@ import javax.swing.*;
 *  resetPane = paneeli, joka siältää resetButtonin.
 */
 public class courseTaskPane {
+    /**
+     * The main task pane.
+     */
     private JPanel Taskpane;
+    /**
+     * Information of the exercise.
+     */
     private JLabel demoTiedot;
+    /**
+     * Name of the task.
+     */
     private JLabel tehtavaNimi;
+    /**
+     * Button that opens the task.
+     */
     private JButton avaaTehtava;
+    /**
+     * Label for the task info.
+     */
     private JLabel tehtavaTiedot;
+    /**
+     * Points earned from the task.
+     */
     private JLabel pisteLabel;
+    /**
+     * A submit button.
+     */
     private JButton submitButton;
+    /**
+     * Button that shows the console output.
+     */
     private JButton showOutputButton;
+    /**
+     * Button for resetting.
+     */
     private JButton resetButton;
+    /**
+     * Panel for the submission.
+     */
     private JPanel submitPane;
+    /**
+     * Info panel.
+     */
     private JPanel InfoPane;
+    /**
+     * Reset panel.
+     */
     private JPanel resetPane;
 
     public JPanel getContent() {
