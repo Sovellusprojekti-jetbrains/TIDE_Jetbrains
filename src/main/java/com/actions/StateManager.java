@@ -1,6 +1,5 @@
 package com.actions;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +16,7 @@ public final class StateManager implements PersistentStateComponent<StateManager
     /**
      * Separate state class to hold the user defined settings.
      */
-    static class State {
+    public static class State {
         public String path;
     }
 

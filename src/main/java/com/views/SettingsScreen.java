@@ -1,8 +1,6 @@
 package com.views;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 /**
@@ -22,24 +20,9 @@ public class SettingsScreen {
      */
     public SettingsScreen() {
         this.pathText.setText(com.actions.Settings.getPath());
-        this.browseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                choosePath();
-            }
-        });
-        this.OKButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updatePath();
-            }
-        });
-        this.cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                com.actions.Settings.close();
-            }
-        });
+        this.browseButton.addActionListener(e -> choosePath());
+        this.OKButton.addActionListener(e -> updatePath());
+        this.cancelButton.addActionListener(e -> com.actions.Settings.close());
     }
 
     /**

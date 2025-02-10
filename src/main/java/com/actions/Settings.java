@@ -34,20 +34,17 @@ public class Settings extends AnAction {
     private void showSettings() {
         if (!visible) {
             visible = true;
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    frame = new JFrame("Settings");
-                    frame.add(window.getContent());
-                    frame.addWindowListener(new WindowAdapter() {
-                        @Override
-                        public void windowClosing(WindowEvent e) {
-                            visible = false;
-                        }
-                    });
-                    frame.setSize(400, 300);
-                    frame.setVisible(true);
-                }
+            SwingUtilities.invokeLater(() -> {
+                frame = new JFrame("Settings");
+                frame.add(window.getContent());
+                frame.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        visible = false;
+                    }
+                });
+                frame.setSize(400, 300);
+                frame.setVisible(true);
             });
         }
     }
