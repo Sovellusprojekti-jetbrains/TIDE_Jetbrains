@@ -38,7 +38,6 @@ public final class StateManager implements PersistentStateComponent<StateManager
      */
     @Override
     public void loadState(@NotNull State state) {
-        System.out.println("Settings loaded");
         myState = state;
     }
 
