@@ -5,14 +5,25 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
+/**
+ * Login window logic.
+ */
 public class LoginWindow {
     private JPanel content;
 
-    public LoginWindow(@NotNull ToolWindow toolWindow) {
+    /**
+     * Constructor for a login window.
+     * @param toolWindow some toolwindow?
+     */
+    public LoginWindow(@NotNull final ToolWindow toolWindow) {
         content = new CustomScreen().getContent();
 
     }
 
+    /**
+     * Gets the contents of the toolwindow.
+     * @return contents of the window.
+     */
     public JPanel getContent() {
         return content;
     }

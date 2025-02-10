@@ -8,11 +8,16 @@ import javax.swing.*;
 import java.nio.charset.StandardCharsets;
 
 
-
-
+/**
+ * Custom file type class.
+ */
 public class CustomFileType implements FileType {
     public static final CustomFileType INSTANCE = new CustomFileType();
 
+    /**
+     * Getter for the view name.
+     * @return Name of the view.
+     */
     @NotNull
     @Override
     public String getName() {
