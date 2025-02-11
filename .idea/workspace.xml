@@ -5,11 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1fdf2c49-750e-480c-af8d-5f78c1799ec3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/factories/MyCustomFileEditorProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/factories/MyCustomFileEditorProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/MyCustomFileEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/MyCustomFileEditor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/SettingsScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/SettingsScreen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/courseTaskPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/courseTaskPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_02_2025_19_03_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_02_2025_19_03_[Changes]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_02_2025_19_03__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +37,15 @@
               <task name="setupDependencies" />
             </after_sync>
           </activation>
+        </task>
+        <task path="$PROJECT_DIR$/rider">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/plugin">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/idea">
+          <activation />
         </task>
         <projects_view>
           <tree_state>
@@ -87,14 +103,14 @@
     "Gradle.TIDE_Jetbrains [setupDependencies].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "misc-lint-fixes",
+    "git-widget-placeholder": "rider-compat",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/kurssit/Sovellusprojekti/TIDE_Jetbrains",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "settings.editor.selected.configurable": "advanced.settings"
   }
 }]]></component>
   <component name="RunManager">

@@ -1,58 +1,106 @@
+val riderPlatformVersionProp = prop("riderPlatformVersion")
+val ideaPlatformVersionProp = prop("ideaPlatformVersion")
+val pluginSinceBuildProp = prop("pluginSinceBuild")
+val pluginUntilBuildProp = prop("pluginUntilBuild")
+val projectType = System.getenv("IDE_TYPE") ?: "IC"
+
+
 plugins {
+    idea
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.25"
-    id("org.jetbrains.intellij") version "1.17.4"
+    //id("org.jetbrains.intellij") version "1.17.4"
+    id("org.jetbrains.intellij.platform") version "2.2.1"
 }
 
-group = "com.example"
-version = "1.0-SNAPSHOT"
+    group = "com.example"
+    version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
+    intellijPlatform {
+        pluginConfiguration {
+            name = "TIDE-Jetbrains"
+        }
+    }
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    version.set("2024.1.7")
-    type.set("IC") // Target IDE Platform
+    apply {
+        plugin("idea")
+        plugin("java")
+        plugin("org.jetbrains.intellij.platform")
+    }
 
-    plugins.set(listOf("java"))
-}
-dependencies {
-    //testImplementation("com.intellij.automation:ui-test-framework:0.11.23")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
-    implementation("com.google.code.gson:gson:2.12.1")
-}
+    repositories {
+        mavenCentral()
+        intellijPlatform {
+            defaultRepositories()
+        }
+    }
+
+    dependencies {
+        intellijPlatform {
+            if (projectType == "RD") {
+                create("RD", riderPlatformVersionProp, useInstaller = false)
+            } else {
+                create("IC", ideaPlatformVersionProp, useInstaller = false)
+            }
+            bundledPlugins("com.intellij.java", "JUnit")
+        }
+        testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+        implementation("com.google.code.gson:gson:2.12.1")
+    }
+
+    tasks {
+        // Set the JVM compatibility versions
+        withType<JavaCompile> {
+            sourceCompatibility = "21"
+            targetCompatibility = "21"
+        }
+        withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+            kotlinOptions.jvmTarget = "17"
+        }
+
+        patchPluginXml {
+            sinceBuild.set(pluginSinceBuildProp)
+            if (pluginUntilBuildProp.isNotEmpty())
+                untilBuild.set(pluginUntilBuildProp)
+
+        }
+
+        signPlugin {
+            certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
+            privateKey.set(System.getenv("PRIVATE_KEY"))
+            password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
+        }
+
+        publishPlugin {
+            token.set(System.getenv("PUBLISH_TOKEN"))
+        }
+    }
+
 
 tasks.test {
     useJUnitPlatform()
 }
 
 
-tasks {
-    // Set the JVM compatibility versions
-    withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
-    }
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
-    }
-
-    patchPluginXml {
-        sinceBuild.set("241")
-        untilBuild.set("243.*")
-    }
-
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
-    }
-
-    publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
-    }
+fun File.isPluginJar(): Boolean {
+    if (!isFile) return false
+    if (extension != "jar") return false
+    return zipTree(this).files.any { it.isManifestFile() }
 }
+
+fun File.isManifestFile(): Boolean {
+    if (extension != "xml") return false
+    val rootNode = try {
+        val parser = groovy.xml.XmlParser()
+        parser.parse(this)
+    } catch (e: Exception) {
+        logger.error("Failed to parse $path", e)
+        return false
+    }
+    return rootNode.name() == "idea-plugin"
+}
+
+
+fun prop(key: String) = extra.properties[key] as? String
+    ?: error("Property `$key` is not defined in gradle.properties")
