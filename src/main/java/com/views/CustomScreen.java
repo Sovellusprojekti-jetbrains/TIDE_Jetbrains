@@ -135,6 +135,9 @@ public class CustomScreen {
             +
             "]";
 
+    /**
+     * Creator for the CustomScreen class, that holds the courses and tasks.
+     */
     public CustomScreen() {
         //A json handler is created to parse the json object.
         JsonHandler handler = new JsonHandler();
