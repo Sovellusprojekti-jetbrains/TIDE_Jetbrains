@@ -4,7 +4,7 @@ import com.intellij.openapi.components.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * This class implements persistent state component and provides a service for getting and setting user defined plugin settings
+ * This class implements persistent state component and provides a service for getting and setting user defined plugin settings.
  */
 @Service
 @State(
@@ -17,13 +17,16 @@ public final class StateManager implements PersistentStateComponent<StateManager
      * Separate state class to hold the user defined settings.
      */
     public static class State {
+        /**
+         * the path the user has chosen in string format. TODO:check that this is true
+         */
         public String path;
     }
 
     private State myState = new State(); //Object reference to state class
 
     /**
-     * This method is called when updating state class fields and to save the state of the State class when IDE is closed
+     * This method is called when updating state class fields and to save the state of the State class when IDE is closed.
      * @return Object reference to State class
      */
     @Override
@@ -32,7 +35,7 @@ public final class StateManager implements PersistentStateComponent<StateManager
     }
 
     /**
-     * This method is called when IDE is opened to load previous component state
+     * This method is called when IDE is opened to load previous component state.
      * @param state loaded component state
      */
     @Override
@@ -41,7 +44,7 @@ public final class StateManager implements PersistentStateComponent<StateManager
     }
 
     /**
-     * Sets new value to path field in State class
+     * Sets new value to path field in State class.
      * @param path File path as a String
      */
     public void setPath(String path) {
@@ -49,7 +52,7 @@ public final class StateManager implements PersistentStateComponent<StateManager
     }
 
     /**
-     * Gets the path fields value from State class
+     * Gets the path fields value from State class.
      * @return File ath as a String
      */
     public String getPath() {

@@ -11,7 +11,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * This class is used to display settings window to configure tide-settings
+ * This class is used to display settings window to configure tide-settings.
  */
 public class Settings extends AnAction {
     /**
@@ -22,13 +22,12 @@ public class Settings extends AnAction {
      * Height of the settings screen.
      */
     final int height = 300;
-  
-    private SettingsScreen window = null; //Object reference to window content
-    private static boolean visible = false; //To ensure that only one settings window can be open at a time
-    private static JFrame frame = null; //Object reference to JFrame containing window content
+    private SettingsScreen window = null; //Object reference to window content.
+    private static boolean visible = false; //To ensure that only one settings window can be open at a time.
+    private static JFrame frame = null; //Object reference to JFrame containing window content.
 
     /**
-     * If settings is called via an action, this method is called
+     * If settings is called via an action, this method is called.
      * @param e Action event (not used)
      */
     @Override
@@ -38,7 +37,7 @@ public class Settings extends AnAction {
     }
 
     /**
-     * Displays settings window if one is not already open
+     * Displays settings window if one is not already open.
      */
     private void showSettings() {
         if (!visible) {
@@ -59,7 +58,7 @@ public class Settings extends AnAction {
     }
 
     /**
-     * This method can be called from action listeners to open settings window
+     * This method can be called from action listeners to open settings window.
      */
     public void displaySettings() {
         this.window = new SettingsScreen();
@@ -67,7 +66,7 @@ public class Settings extends AnAction {
     }
 
     /**
-     * Closes settings window
+     * Closes settings window.
      */
     public static void close() {
         frame.dispose();
@@ -75,7 +74,7 @@ public class Settings extends AnAction {
     }
 
     /**
-     * Calls StateManager for getting user defined file path
+     * Calls StateManager for getting user defined file path.
      * @return File path as a String
      */
     public static String getPath() {
@@ -83,7 +82,7 @@ public class Settings extends AnAction {
     }
 
     /**
-     * Calls StateManager for setting new path defined by user
+     * Calls StateManager for setting new path defined by user.
      * @param path File path as a String
      */
     public static void savePath(String path) {
