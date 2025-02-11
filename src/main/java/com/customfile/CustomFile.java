@@ -7,7 +7,7 @@ import com.intellij.testFramework.LightVirtualFile;
  */
 public class CustomFile extends LightVirtualFile {
     /**
-     * The type of the custom file TODO:explain better
+     * The type of the custom file. TODO:explain better
      */
     public static final String FILE_TYPE = "my-custom-view";
 

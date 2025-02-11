@@ -81,6 +81,9 @@ public class CustomScreen {
      */
     private final Color bgColor = new Color(red, green, blue);
 
+    /**
+     * Creator for the CustomScreen class, that holds the courses and tasks.
+     */
     public CustomScreen() {
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
