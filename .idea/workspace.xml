@@ -6,8 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="1fdf2c49-750e-480c-af8d-5f78c1799ec3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/actions/Settings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/actions/Settings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/actions/StateManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/actions/StateManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/api/ApiHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/api/ApiHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/customfile/CustomFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/customfile/CustomFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/customfile/CustomFileType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/customfile/CustomFileType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/views/CoursePaneWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CoursePaneWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/MyCustomFileEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/MyCustomFileEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/SettingsScreen.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/SettingsScreen.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/SettingsScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/SettingsScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/courseTaskPane.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CourseTaskPane.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/courseTaskPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CourseTaskPane.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +53,13 @@
         </projects_view>
       </state>
     </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="package-info" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -116,5 +134,16 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/views/CourseTaskPane.java</url>
+          <line>78</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

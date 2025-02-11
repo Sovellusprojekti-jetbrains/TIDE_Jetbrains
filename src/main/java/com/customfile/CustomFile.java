@@ -6,6 +6,9 @@ import com.intellij.testFramework.LightVirtualFile;
  * Funky custom file thing that needs to be explained.
  */
 public class CustomFile extends LightVirtualFile {
+    /**
+     * The type of the custom file TODO:explain better
+     */
     public static final String FILE_TYPE = "my-custom-view";
 
     /**

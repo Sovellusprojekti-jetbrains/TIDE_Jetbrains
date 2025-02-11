@@ -36,7 +36,7 @@ public class CustomScreen {
      */
     private JPanel loginPane;
     /**
-     * TitlePanel seems to exists for a test?
+     * TitlePanel seems to exists for a test.
      */
     private JPanel titlePanel;
     /**
@@ -82,64 +82,60 @@ public class CustomScreen {
     private final Color bgColor = new Color(red, green, blue);
 
     /**
-     * Constructor for CustomScreen.
+     * Json data that correctly maps to Course objects.
+     * The format is an array of Json objects.
+     * This is for testing, since we cant download actual json data yet.
      */
+    public final String validJsonData = "[\n"
+            + "  {\n"
+            + "      \"name\": \"ITKP101, ohjelmointi 1\",\n"
+            + "      \"id\": 11203,\n"
+            + "      \"path\": \"kurssit/tie/ohj1/2025k/demot\",\n"
+            + "      \"tasks\": [\n"
+            + "          {\n"
+            + "              \"name\": \"Demo1\",\n"
+            + "              \"doc_id\": 401648,\n"
+            + "              \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo1\"\n"
+            + "          },\n"
+            + "          {\n"
+            + "              \"name\": \"Demo2\",\n"
+            + "              \"doc_id\": 401649,\n"
+            + "              \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo2\"\n"
+            + "          },\n"
+            + "          {\n"
+            + "            \"name\": \"Demo3\",\n"
+            + "            \"doc_id\": 401650,\n"
+            + "            \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo3\"\n"
+            + "        }\n"
+            + "      ]\n"
+            + "      \n"
+            + "  },\n"
+            + "  {\n"
+            + "    \"name\": \"ITKP102, ohjelmointi 2\",\n"
+            + "    \"id\": 16103,\n"
+            + "    \"path\": \"kurssit/tie/ohj2/2025k/demot\",\n"
+            + "    \"tasks\": [\n"
+            + "        {\n"
+            + "            \"name\": \"Demo1\",\n"
+            + "            \"doc_id\": 501370,\n"
+            + "            \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo1\"\n"
+            + "        },\n"
+            + "        {\n"
+            + "            \"name\": \"Demo2\",\n"
+            + "            \"doc_id\":  501372,\n"
+            + "            \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo2\"\n"
+            + "        },\n"
+            + "        {\n"
+            + "          \"name\": \"Demo3\",\n"
+            + "          \"doc_id\":  501374,\n"
+            + "          \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo3\"\n"
+            + "      }\n"
+            + "    ]\n"
+            + "    }\n"
+            +
+            "]";
+
     public CustomScreen() {
-
-        /**
-         * Json data that correctly maps to Course objects.
-         * The format is an array of Json objects.
-         * This is for testing, since we cant download actual json data yet
-         */
-        String validJsonData = "[\n"
-                + "  {\n"
-                + "      \"name\": \"ITKP101, ohjelmointi 1\",\n"
-                + "      \"id\": 11203,\n"
-                + "      \"path\": \"kurssit/tie/ohj1/2025k/demot\",\n"
-                + "      \"tasks\": [\n"
-                + "          {\n"
-                + "              \"name\": \"Demo1\",\n"
-                + "              \"doc_id\": 401648,\n"
-                + "              \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo1\"\n"
-                + "          },\n"
-                + "          {\n"
-                + "              \"name\": \"Demo2\",\n"
-                + "              \"doc_id\": 401649,\n"
-                + "              \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo2\"\n"
-                + "          },\n"
-                + "          {\n"
-                + "            \"name\": \"Demo3\",\n"
-                + "            \"doc_id\": 401650,\n"
-                + "            \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo3\"\n"
-                + "        }\n"
-                + "      ]\n"
-                + "      \n"
-                + "  },\n"
-                + "  {\n"
-                + "    \"name\": \"ITKP102, ohjelmointi 2\",\n"
-                + "    \"id\": 16103,\n"
-                + "    \"path\": \"kurssit/tie/ohj2/2025k/demot\",\n"
-                + "    \"tasks\": [\n"
-                + "        {\n"
-                + "            \"name\": \"Demo1\",\n"
-                + "            \"doc_id\": 501370,\n"
-                + "            \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo1\"\n"
-                + "        },\n"
-                + "        {\n"
-                + "            \"name\": \"Demo2\",\n"
-                + "            \"doc_id\":  501372,\n"
-                + "            \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo2\"\n"
-                + "        },\n"
-                + "        {\n"
-                + "          \"name\": \"Demo3\",\n"
-                + "          \"doc_id\":  501374,\n"
-                + "          \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo3\"\n"
-                + "      }\n"
-                + "    ]\n"
-                + "    }\n"
-                +
-                "]";
-
         //A json handler is created to parse the json object.
         JsonHandler handler = new JsonHandler();
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
@@ -155,7 +151,7 @@ public class CustomScreen {
         switchToLogin();
 
         // currently uses a placeholder hard-coded jsondata, since we don't have the download capability yet.
-        // needs tests in the future
+        // needs tests in the future.
         refreshButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -224,12 +220,12 @@ public class CustomScreen {
 
 
         });
-        //currently assumes that the user has the TIM CLI installed
-        //need some checks and tests in the future
+        //currently assumes that the user has the TIM CLI installed.
+        //need some checks and tests in the future.
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
+                try {
                     String command = "tide login";
 
                     ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
@@ -251,7 +247,7 @@ public class CustomScreen {
             }
         });
 
-        // Adds an action listener for the settings button
+        // Adds an action listener for the settings button.
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -265,7 +261,7 @@ public class CustomScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switchToLogin(); // Poistaa kurssinäkymän näkyvistä
-                try{
+                try {
                     String command = "tide logout";
 
                     ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
@@ -290,13 +286,13 @@ public class CustomScreen {
     }
 
     /**
-     * Creates the panel that contains the list of available demos and tasks
+     * Creates the panel that contains the list of available demos and tasks.
      * @param courselist list of courses with tidecli demos.
      */
     private void createCourseListPane(List<Course> courselist) {
-        //Removes all previous courses added, to make refreshing possible. Might not bee the best solution
+        //Removes all previous courses added, to make refreshing possible. TODO:better solution?
         coursePanel.removeAll();
-        courselist.forEach(Course ->{
+        courselist.forEach(Course -> {
             JPanel panel = new JPanel(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
@@ -309,19 +305,20 @@ public class CustomScreen {
             final int left = 5;
             final int bottom = 5;
             final int right = 0;
+            final int fontSize = 26;
             labelPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
 
             JLabel label = new JLabel();
             label.setText("Course " + Course.getName());
-            label.setFont(new Font("Arial", Font.BOLD, 26));
+            label.setFont(new Font("Arial", Font.BOLD, fontSize));
             labelPanel.add(label);
             coursePanel.add(labelPanel);
 
             // Makes own subpanel for every task
             // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
-            List<CourseTask>tasks = Course.getTasks();
+            List<CourseTask> tasks = Course.getTasks();
             final int[] j = {0};
-            tasks.forEach( CourseTask ->{
+            tasks.forEach(CourseTask -> {
                 JPanel subPanel = createExercise(CourseTask.getName(), CourseTask.getPath());
                 subPanel.setBackground(bgColor);
                 gbc.gridy = j[0];
@@ -336,8 +333,8 @@ public class CustomScreen {
 
             // Tehdään scrollpane johon lätkäistään kaikki tähän mennessä tehty.
             JScrollPane scrollPane = new JBScrollPane(panel);
-            scrollPane.setPreferredSize(new Dimension(paneSize,paneSize)); // Set limited height
-            scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,thickness));
+            scrollPane.setPreferredSize(new Dimension(paneSize, paneSize)); // Set limited height
+            scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, thickness));
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -360,7 +357,7 @@ public class CustomScreen {
      * @param path path used to download the demo
      * @return the subpanel that contains the tasks name and the two buttons
      */
-    JPanel createExercise(String name,String path) {
+    JPanel createExercise(String name, String path) {
         final int fontsize = 16;
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
