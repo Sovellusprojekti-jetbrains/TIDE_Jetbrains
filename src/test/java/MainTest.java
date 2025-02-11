@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
- * simple test class to test functionality of JUnit5
+ * simple test class to test functionality of JUnit5.
  */
 public class MainTest {
 
