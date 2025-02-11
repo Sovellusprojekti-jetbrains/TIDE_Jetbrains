@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
- * Tänne tide cli -kutsut
+ * Tänne tide cli -kutsut.
  */
 public class ApiHandler {
     private final String COURSES_COMMAND = "tide courses --json";
