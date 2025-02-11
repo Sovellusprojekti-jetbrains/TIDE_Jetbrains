@@ -1,6 +1,7 @@
 package com.views;
 
 import com.actions.Settings;
+import com.api.ApiHandler;
 import com.intellij.ui.components.JBScrollPane;
 
 import javax.swing.*;
@@ -12,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import com.course.*;
-import com.api.JsonHandler;
 import java.util.List;
 
 /**
@@ -81,68 +81,14 @@ public class CustomScreen {
      */
     private final Color bgColor = new Color(red, green, blue);
 
-    /**
-     * Json data that correctly maps to Course objects.
-     * The format is an array of Json objects.
-     * This is for testing, since we cant download actual json data yet.
-     */
-    public final String validJsonData = "[\n"
-            + "  {\n"
-            + "      \"name\": \"ITKP101, ohjelmointi 1\",\n"
-            + "      \"id\": 11203,\n"
-            + "      \"path\": \"kurssit/tie/ohj1/2025k/demot\",\n"
-            + "      \"tasks\": [\n"
-            + "          {\n"
-            + "              \"name\": \"Demo1\",\n"
-            + "              \"doc_id\": 401648,\n"
-            + "              \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo1\"\n"
-            + "          },\n"
-            + "          {\n"
-            + "              \"name\": \"Demo2\",\n"
-            + "              \"doc_id\": 401649,\n"
-            + "              \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo2\"\n"
-            + "          },\n"
-            + "          {\n"
-            + "            \"name\": \"Demo3\",\n"
-            + "            \"doc_id\": 401650,\n"
-            + "            \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo3\"\n"
-            + "        }\n"
-            + "      ]\n"
-            + "      \n"
-            + "  },\n"
-            + "  {\n"
-            + "    \"name\": \"ITKP102, ohjelmointi 2\",\n"
-            + "    \"id\": 16103,\n"
-            + "    \"path\": \"kurssit/tie/ohj2/2025k/demot\",\n"
-            + "    \"tasks\": [\n"
-            + "        {\n"
-            + "            \"name\": \"Demo1\",\n"
-            + "            \"doc_id\": 501370,\n"
-            + "            \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo1\"\n"
-            + "        },\n"
-            + "        {\n"
-            + "            \"name\": \"Demo2\",\n"
-            + "            \"doc_id\":  501372,\n"
-            + "            \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo2\"\n"
-            + "        },\n"
-            + "        {\n"
-            + "          \"name\": \"Demo3\",\n"
-            + "          \"doc_id\":  501374,\n"
-            + "          \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo3\"\n"
-            + "      }\n"
-            + "    ]\n"
-            + "    }\n"
-            +
-            "]";
-
     public CustomScreen() {
-        //A json handler is created to parse the json object.
-        JsonHandler handler = new JsonHandler();
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
-        //Creating a list of course objects, for more information look at the com.course class.
-        List<Course> courselist = handler.jsonToCourses(validJsonData);
-        //A panel that contains the courses and tasks is created in its own sub-program.
+        ApiHandler apiHandler = new ApiHandler();
+        // Fetching data from TIM and creating a list of course objects,
+        // for more information see package com.course and class ApiHandler.
+        List<Course> courselist = apiHandler.courses();
+        // A panel that contains the courses and tasks is created in its own sub-program.
         createCourseListPane(courselist);
 
         // Piirretään uudelleen
@@ -150,67 +96,11 @@ public class CustomScreen {
         panel1.repaint();
         switchToLogin();
 
-        // currently uses a placeholder hard-coded jsondata, since we don't have the download capability yet.
         // needs tests in the future.
         refreshButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                String validJsonData2 = "[\n"
-                        + "  {\n"
-                        + "      \"name\": \"ITKP101, ohjelmointi 1\",\n"
-                        + "      \"id\": 11203,\n"
-                        + "      \"path\": \"kurssit/tie/ohj1/2025k/demot\",\n"
-                        + "      \"tasks\": [\n"
-                        + "          {\n"
-                        + "              \"name\": \"Demo1\",\n"
-                        + "              \"doc_id\": 401648,\n"
-                        + "              \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo1\"\n"
-                        + "          },\n"
-                        + "          {\n"
-                        + "              \"name\": \"Demo2\",\n"
-                        + "              \"doc_id\": 401649,\n"
-                        + "              \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo2\"\n"
-                        + "          },\n"
-                        + "          {\n"
-                        + "            \"name\": \"Demo3\",\n"
-                        + "            \"doc_id\": 401650,\n"
-                        + "            \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo3\"\n"
-                        + "        },\n"
-                        + "          {\n"
-                        + "            \"name\": \"Demo4\",\n"
-                        + "            \"doc_id\": 401654,\n"
-                        + "            \"path\": \"kurssit/tie/ohj1/2025k/demot/Demo4\"\n"
-                        + "        }\n"
-                        + "      ]\n"
-                        + "      \n"
-                        + "  },\n"
-                        + "  {\n"
-                        + "    \"name\": \"ITKP102, ohjelmointi 2\",\n"
-                        + "    \"id\": 16103,\n"
-                        + "    \"path\": \"kurssit/tie/ohj2/2025k/demot\",\n"
-                        + "    \"tasks\": [\n"
-                        + "        {\n"
-                        + "            \"name\": \"Demo1\",\n"
-                        + "            \"doc_id\": 501370,\n"
-                        + "            \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo1\"\n"
-                        + "        },\n"
-                        + "        {\n"
-                        + "            \"name\": \"Demo2\",\n"
-                        + "            \"doc_id\":  501372,\n"
-                        + "            \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo2\"\n"
-                        + "        },\n"
-                        + "        {\n"
-                        + "          \"name\": \"Demo3\",\n"
-                        + "          \"doc_id\":  501374,\n"
-                        + "          \"path\": \"kurssit/tie/ohj2/2025k/demot/Demo3\"\n"
-                        + "      }\n"
-                        + "    ]\n"
-                        + "    }\n"
-                        +
-                        "]";
-                JsonHandler handler = new JsonHandler();
-                List<Course> refreshed = handler.jsonToCourses(validJsonData2);
+                List<Course> refreshed = apiHandler.courses();
                 createCourseListPane(refreshed);
 
                 // Piirretään uudelleen
@@ -226,23 +116,11 @@ public class CustomScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String command = "tide login";
-
-                    ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
-                    pb.redirectErrorStream(true);
-                    Process process = pb.start();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        System.out.println(line);
-                    }
-                    int exitCode = process.waitFor();
-                    System.out.println("Process exited with code: " + exitCode);
-
-                    switchToLogout(); // Poistaa loginin näkyvistä
+                    apiHandler.login();
                 } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
-                    switchToLogout();
+                } finally {
+                    switchToLogout(); // Poistaa loginin näkyvistä
                 }
             }
         });
@@ -262,20 +140,7 @@ public class CustomScreen {
             public void actionPerformed(ActionEvent e) {
                 switchToLogin(); // Poistaa kurssinäkymän näkyvistä
                 try {
-                    String command = "tide logout";
-
-                    ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
-                    pb.redirectErrorStream(true);
-                    Process process = pb.start();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        System.out.println(line);
-                    }
-                    int exitCode = process.waitFor();
-                    System.out.println("Process exited with code: " + exitCode);
-
-
+                    apiHandler.logout();
                 } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
                 }
