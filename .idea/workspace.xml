@@ -5,20 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1fdf2c49-750e-480c-af8d-5f78c1799ec3" name="Changes" comment="Login checks for content showing">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/listeners/LoginWindowListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/views/CourseView.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/views/Loginview.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/views/Loginview.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/api/ApiHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/api/ApiHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/factories/CoursePaneWindowFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/factories/CoursePaneWindowFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/factories/LoginWindowFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/factories/LoginWindowFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/LoginWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/LoginWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/MyCustomFileEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/MyCustomFileEditor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/listeners/LoginWindowListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/listeners/LoginWindowListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/LoginWindow.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/Loginview.form" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/Loginview.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -1,6 +1,7 @@
 package com.views;
 
 import com.actions.Settings;
+import com.api.ApiHandler;
 import com.intellij.ui.components.JBScrollPane;
 
 import javax.swing.*;
@@ -32,8 +33,74 @@ public class CustomScreen {
 
         //Content loginContent = contentFactory.createContent(loginPane, "Login", false);
         //Content logoutContent = contentFactory.createContent(coursesPane, "Content", false);
+        // Piirretään uudelleen
+        //panel1.revalidate();
+        //panel1.repaint();
+        ApiHandler api = new ApiHandler();
 
 
+
+
+
+        //currently assumes that the user has the TIM CLI installed
+        //need some checks and tests in the future
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ApiHandler api = new ApiHandler();
+                api.login();
+                if(api.isLoggedIn()){
+                    switchToLogout();
+                } else {
+                    //TODO: error message that the login failed
+                    return;
+                }
+
+
+            }
+        });
+
+        settingsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Settings temp = new com.actions.Settings();
+                temp.displaySettings();
+            }
+        });
+
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ApiHandler api = new ApiHandler();
+                api.logout();
+                if(!api.isLoggedIn()){
+                    switchToLogin(); // Poistaa kurssinäkymän näkyvistä
+                }else {
+                    //TODO: error for failed logout
+                    return;
+                }
+
+
+            }
+        }
+        );
+        //tabbedPane.addTab("Login", loginPane);
+        if(api.isLoggedIn()) {
+            switchToLogout();
+        } else {
+            switchToLogin();
+        }
+
+
+
+
+    }
+
+    public JPanel getContent() {
+        return panel1;
+    }
+
+    private void createCourseView() {
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
 
@@ -79,78 +146,10 @@ public class CustomScreen {
         }
 
 
-        // Piirretään uudelleen
-        panel1.revalidate();
-        panel1.repaint();
-        switchToLogin();
-
-
-        //currently assumes that the user has the TIM CLI installed
-        //need some checks and tests in the future
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try{
-                    String command = "tide login";
-
-                    ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
-                    pb.redirectErrorStream(true);
-                    Process process = pb.start();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        System.out.println(line);
-                    }
-                    int exitCode = process.waitFor();
-                    System.out.println("Process exited with code: " + exitCode);
-
-                    switchToLogout(); // Poistaa loginin näkyvistä
-                } catch (IOException | InterruptedException ex) {
-                    ex.printStackTrace();
-                    switchToLogout();
-                }
-            }
-        });
-
-        settingsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Settings temp = new com.actions.Settings();
-                temp.displaySettings();
-            }
-        });
-
-        logoutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                switchToLogin(); // Poistaa kurssinäkymän näkyvistä
-                try{
-                    String command = "tide logout";
-
-                    ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
-                    pb.redirectErrorStream(true);
-                    Process process = pb.start();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        System.out.println(line);
-                    }
-                    int exitCode = process.waitFor();
-                    System.out.println("Process exited with code: " + exitCode);
-
-
-                } catch (IOException | InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-        );
-
     }
 
-    public JPanel getContent() {
-        return panel1;
-    }
+
+
 
     /**
      * Luo rivin viikkotehtävälle nappeineen
@@ -186,14 +185,22 @@ public class CustomScreen {
 
     private void switchToLogout() {
         //tabbedPane.remove(loginPane); // Hide Login tab
-        tabbedPane.addTab("Courses", coursesPane); // Show Logout ta
+        createCourseView();
+        tabbedPane.addTab("Courses", coursesPane); // Show Logout tab
+        loginButton.setEnabled(false);
+        panel1.revalidate();
+        panel1.repaint();
         tabbedPane.setSelectedComponent(coursesPane);
+
         //loginButton.setText("Logout");
     }
 
     private void switchToLogin() {
         tabbedPane.remove(coursesPane); // Hide Courses tab
-        //tabbedPane.addTab("Login", loginPane); // Show Login tab
+        tabbedPane.addTab("Login", loginPane); // Show Login tab
+        loginButton.setEnabled(true);
+        panel1.revalidate();
+        panel1.repaint();
         tabbedPane.setSelectedComponent(loginPane);
     }
 

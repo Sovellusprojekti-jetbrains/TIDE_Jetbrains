@@ -20,7 +20,7 @@ public class CoursePaneWindowFactory implements ToolWindowFactory {
         ContentFactory contentFactory = ContentFactory.getInstance();
 
         // Create content for the tool window
-        Content content = contentFactory.createContent(myToolWindow.getContent(), "", false);
+        Content content = contentFactory.createContent(myToolWindow.getContent(), "Course View", false);
         // Add the content to the tool window
         coursePaneWindow.getContentManager().addContent(content);
     }
