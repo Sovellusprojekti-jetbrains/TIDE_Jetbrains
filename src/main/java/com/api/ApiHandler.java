@@ -1,10 +1,12 @@
 package com.api;
 
 import com.course.Course;
+import com.google.gson.Gson;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Tänne tide cli -kutsut.
@@ -13,7 +15,7 @@ public class ApiHandler {
     private final String COURSES_COMMAND = "tide courses --json";
     private final String LOGIN_COMMAND   = "tide login";
     private final String LOGOUT_COMMAND  = "tide logout";
-
+    private final String CHECK_LOGIN_COMMAND = "tide check-login --json";
     /**
      * Logs in to TIDE-CLI.
      * @throws IOException Method calls pb.start() and pb.readLine() may throw IOException
@@ -80,4 +82,36 @@ public class ApiHandler {
 
         return courses;
     }
+
+    /**
+     * asks tide-cli if there is a login and returns a boolean
+     * @return login status in boolean
+     */
+    public boolean  isLoggedIn() {
+        try{
+
+            ProcessBuilder pb = new ProcessBuilder(LOGIN_COMMAND.split("\\s+"));
+            pb.redirectErrorStream(true);
+
+            Process process = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String jsonOutput = reader.lines().collect(Collectors.joining("\n"));
+            System.out.println("Raw Output from Python: " + jsonOutput);
+            // Parse JSON
+            Gson gson = new Gson();
+            LoginOutput output = gson.fromJson(jsonOutput, LoginOutput.class);
+            if (output.logged_in != null) {return true;}
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+
+        return false;
+    }
+
+    class LoginOutput {
+        public String logged_in;
+    }
+
 }

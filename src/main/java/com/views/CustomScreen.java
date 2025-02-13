@@ -90,14 +90,12 @@ public class CustomScreen {
         ApiHandler apiHandler = new ApiHandler();
         // Fetching data from TIM and creating a list of course objects,
         // for more information see package com.course and class ApiHandler.
-        List<Course> courselist = apiHandler.courses();
-        // A panel that contains the courses and tasks is created in its own sub-program.
-        createCourseListPane(courselist);
+
 
         // Piirretään uudelleen
-        panel1.revalidate();
-        panel1.repaint();
-        switchToLogin();
+        //panel1.revalidate();
+        //panel1.repaint();
+        //switchToLogin();
 
         // needs tests in the future.
         refreshButton.addActionListener(new ActionListener() {
@@ -118,13 +116,21 @@ public class CustomScreen {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                ApiHandler api = new ApiHandler();
                 try {
-                    apiHandler.login();
-                } catch (IOException | InterruptedException ex) {
-                    ex.printStackTrace();
-                } finally {
-                    switchToLogout(); // Poistaa loginin näkyvistä
+                    api.login();
+                    if(api.isLoggedIn()){
+                        switchToLogout();
+                    } else {
+                        //TODO: error message that the login failed
+                        return;
+                    }
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
                 }
+
             }
         });
 
@@ -141,16 +147,27 @@ public class CustomScreen {
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                switchToLogin(); // Poistaa kurssinäkymän näkyvistä
+                ApiHandler api = new ApiHandler();
+                //switchToLogin(); // Poistaa kurssinäkymän näkyvistä
                 try {
-                    apiHandler.logout();
+                    api.logout();
+                    if(!api.isLoggedIn()){
+                        switchToLogin(); // Poistaa kurssinäkymän näkyvistä
+                    }else {
+                        //TODO: error for failed logout
+                        return;
+                    }
                 } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
                 }
             }
         }
         );
-
+        if(apiHandler.isLoggedIn()) {
+            switchToLogout();
+        } else {
+            switchToLogin();
+        }
     }
 
     /**
@@ -264,7 +281,14 @@ public class CustomScreen {
      */
     private void switchToLogout() {
         //tabbedPane.remove(loginPane); // Hide Login tab
-        tabbedPane.addTab("Courses", coursesPane); // Show Logout ta
+        ApiHandler apiHandler = new ApiHandler();
+        List<Course> courselist = apiHandler.courses();
+        // A panel that contains the courses and tasks is created in its own sub-program.
+        createCourseListPane(courselist);
+        tabbedPane.addTab("Courses", coursesPane); // Show Logout tab
+        loginButton.setEnabled(false);
+        panel1.revalidate();
+        panel1.repaint();
         tabbedPane.setSelectedComponent(coursesPane);
         //loginButton.setText("Logout");
     }
@@ -273,7 +297,10 @@ public class CustomScreen {
      */
     private void switchToLogin() {
         tabbedPane.remove(coursesPane); // Hide Courses tab
-        //tabbedPane.addTab("Login", loginPane); // Show Login tab
+        tabbedPane.addTab("Login", loginPane); // Show Login tab
+        loginButton.setEnabled(true);
+        panel1.revalidate();
+        panel1.repaint();
         tabbedPane.setSelectedComponent(loginPane);
     }
 
