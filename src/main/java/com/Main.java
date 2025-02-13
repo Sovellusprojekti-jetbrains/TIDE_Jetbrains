@@ -5,7 +5,7 @@ package com;
  */
 public class Main {
     /**
-     * Main method that does nothing
+     * Main method that does nothing.
      * @param args args
      */
     public static void main(String[] args) {

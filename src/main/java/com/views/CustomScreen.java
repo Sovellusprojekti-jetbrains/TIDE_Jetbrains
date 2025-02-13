@@ -1,8 +1,8 @@
 package com.views;
 
 import com.actions.Settings;
+import com.api.ApiHandler;
 import com.intellij.ui.components.JBScrollPane;
-
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +11,9 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import com.course.*;
+import java.util.List;
 
 /**
  * Class for displaying a template course window.
@@ -33,7 +36,7 @@ public class CustomScreen {
      */
     private JPanel loginPane;
     /**
-     * TitlePanel seems to exists for a test?
+     * TitlePanel seems to exists for a test.
      */
     private JPanel titlePanel;
     /**
@@ -57,6 +60,11 @@ public class CustomScreen {
      */
     private JButton settingsButton;
     /**
+     * Button that refreshes the available courses and tasks.
+     */
+    private JButton refreshButton;
+
+    /**
      * An integer for the red band of a color.
      */
     private final int red = 40;
@@ -74,18 +82,85 @@ public class CustomScreen {
     private final Color bgColor = new Color(red, green, blue);
 
     /**
-     * Constructor for CustomScreen.
+     * Creator for the CustomScreen class, that holds the courses and tasks.
      */
     public CustomScreen() {
-
-
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
+        ApiHandler apiHandler = new ApiHandler();
+        // Fetching data from TIM and creating a list of course objects,
+        // for more information see package com.course and class ApiHandler.
+        List<Course> courselist = apiHandler.courses();
+        // A panel that contains the courses and tasks is created in its own sub-program.
+        createCourseListPane(courselist);
 
-        // Kurssit nyt vaan näin kun JSON-parsimista ei tehdä
-        String[] courses = new String[]{"A", "B"};
+        // Piirretään uudelleen
+        panel1.revalidate();
+        panel1.repaint();
+        switchToLogin();
 
-        for (int i = 0; i < courses.length; i++) {
+        // needs tests in the future.
+        refreshButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Course> refreshed = apiHandler.courses();
+                createCourseListPane(refreshed);
+
+                // Piirretään uudelleen
+                panel1.revalidate();
+                panel1.repaint();
+            }
+
+
+        });
+        //currently assumes that the user has the TIM CLI installed.
+        //need some checks and tests in the future.
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    apiHandler.login();
+                } catch (IOException | InterruptedException ex) {
+                    ex.printStackTrace();
+                } finally {
+                    switchToLogout(); // Poistaa loginin näkyvistä
+                }
+            }
+        });
+
+        // Adds an action listener for the settings button.
+        settingsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Settings temp = new com.actions.Settings();
+                temp.displaySettings();
+            }
+        });
+
+        // Adds an action listener for the logout button.
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchToLogin(); // Poistaa kurssinäkymän näkyvistä
+                try {
+                    apiHandler.logout();
+                } catch (IOException | InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        );
+
+    }
+
+    /**
+     * Creates the panel that contains the list of available demos and tasks.
+     * @param courselist list of courses with tidecli demos.
+     */
+    private void createCourseListPane(List<Course> courselist) {
+        //Removes all previous courses added, to make refreshing possible. TODO:better solution?
+        coursePanel.removeAll();
+        courselist.forEach(Course -> {
             JPanel panel = new JPanel(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
@@ -98,26 +173,28 @@ public class CustomScreen {
             final int left = 5;
             final int bottom = 5;
             final int right = 0;
+            final int fontSize = 26;
             labelPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
 
-            final int fontSize = 26;
             JLabel label = new JLabel();
-            label.setText("Course " + courses[i]);
+            label.setText("Course " + Course.getName());
             label.setFont(new Font("Arial", Font.BOLD, fontSize));
             labelPanel.add(label);
             coursePanel.add(labelPanel);
 
-            final int tempNumber = 10;
-            // Random-viikkotehtävät
+            // Makes own subpanel for every task
             // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
-            for (int j = 0; j < tempNumber; j++) {
-                JPanel subPanel = createExercise(j);
+            List<CourseTask> tasks = Course.getTasks();
+            final int[] j = {0};
+            tasks.forEach(CourseTask -> {
+                JPanel subPanel = createExercise(CourseTask.getName(), CourseTask.getPath());
                 subPanel.setBackground(bgColor);
-                gbc.gridy = j;
+                gbc.gridy = j[0];
                 panel.add(subPanel, gbc);
-            }
-            panel.setBackground(bgColor);
-            panel.setOpaque(true);
+                panel.setBackground(bgColor);
+                panel.setOpaque(true);
+                j[0]++;
+            });
 
             final int paneSize = 300;
             final int thickness = 4;
@@ -130,77 +207,7 @@ public class CustomScreen {
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
             coursePanel.add(scrollPane);
-        }
-
-
-        // Piirretään uudelleen
-        panel1.revalidate();
-        panel1.repaint();
-        switchToLogin();
-
-         // currently assumes that the user has the TIM CLI installed
-         // need some checks and tests in the future.
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    String command = "tide login";
-
-                    ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
-                    pb.redirectErrorStream(true);
-                    Process process = pb.start();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        System.out.println(line);
-                    }
-                    int exitCode = process.waitFor();
-                    System.out.println("Process exited with code: " + exitCode);
-
-                    switchToLogout(); // Poistaa loginin näkyvistä
-                } catch (IOException | InterruptedException ex) {
-                    ex.printStackTrace();
-                    switchToLogout();
-                }
-            }
         });
-
-        // Adds an action listener for the settings button
-        settingsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                Settings temp = new com.actions.Settings();
-                temp.displaySettings();
-            }
-        });
-
-
-        // Adds an action listener for the logout button.
-        logoutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                switchToLogin(); // Poistaa kurssinäkymän näkyvistä
-                try {
-                    String command = "tide logout";
-
-                    ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
-                    pb.redirectErrorStream(true);
-                    Process process = pb.start();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        System.out.println(line);
-                    }
-                    int exitCode = process.waitFor();
-                    System.out.println("Process exited with code: " + exitCode);
-
-
-                } catch (IOException | InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-        );
 
     }
 
@@ -213,17 +220,18 @@ public class CustomScreen {
     }
 
     /**
-     * Luo rivin viikkotehtävälle nappeineen.
-     * @param name annettu nimi
-     * @return Viikkotehtävärivi
+     * Creates a panel for the task together with the buttons to download or open it.
+     * @param name  the name of the task
+     * @param path path used to download the demo
+     * @return the subpanel that contains the tasks name and the two buttons
      */
-    JPanel createExercise(int name) {
-        final int fontSize = 16;
+    JPanel createExercise(String name, String path) {
+        final int fontsize = 16;
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
         JLabel labelWeek = new JLabel();
-        labelWeek.setText("Label " + name);
-        labelWeek.setFont(new Font("Arial", Font.BOLD, fontSize));
+        labelWeek.setText(name);
+        labelWeek.setFont(new Font("Arial", Font.BOLD, fontsize));
         subPanel.add(labelWeek, BorderLayout.WEST);
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -233,6 +241,13 @@ public class CustomScreen {
         JButton dButton = new JButton();
         dButton.setText("Download");
         dButton.setBackground(bgColor);
+        dButton.addActionListener(new ActionListener() {
+            @Override
+            //TODO:muuta kutsumaan aliohjelmaa, joka lataa tiedoston koneelle.
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(path);
+                                      }
+                                  });
         buttonPanel.add(dButton);
 
         JButton oButton = new JButton();
@@ -244,7 +259,6 @@ public class CustomScreen {
 
         return subPanel;
     }
-
     /**
      * Switches to a state where logging out is possible.
      */
@@ -254,7 +268,6 @@ public class CustomScreen {
         tabbedPane.setSelectedComponent(coursesPane);
         //loginButton.setText("Logout");
     }
-
     /**
      * Switches to a state where logging in is possible.
      */
