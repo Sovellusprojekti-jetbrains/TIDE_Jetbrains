@@ -196,12 +196,10 @@ public class CustomScreen {
                 j[0]++;
             });
 
-            final int paneSize = 300;
             final int thickness = 4;
 
             // Tehdään scrollpane johon lätkäistään kaikki tähän mennessä tehty.
             JScrollPane scrollPane = new JBScrollPane(panel);
-            // scrollPane.setPreferredSize(new Dimension(paneSize, paneSize)); // Set limited height
             scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, thickness));
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
