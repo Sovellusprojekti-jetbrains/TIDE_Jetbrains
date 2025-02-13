@@ -1,3 +1,9 @@
+/**
+ * this package is used to create the factory needed to create the tool window that contains the Course task info
+ * @since 1.0
+ * @author jeremi
+ * @ver 1.0
+ */
 package com.factories;
 
 import com.intellij.openapi.project.Project;
@@ -9,6 +15,7 @@ import com.views.CoursePaneWindow;
 import org.jetbrains.annotations.NotNull;
 
 // luokka, joka luo ikkunan joka sisältää CoursePaneWindow luokassa haetun paneelin
+
 public class CoursePaneWindowFactory implements ToolWindowFactory {
 
     @Override
