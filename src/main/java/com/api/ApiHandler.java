@@ -63,8 +63,7 @@ public class ApiHandler {
             ProcessBuilder pb = new ProcessBuilder(COURSES_COMMAND.split("\\s+"));
             pb.redirectErrorStream(true);
             Process process = pb.start();
-            // need to use ISO_8859_1 to properly display TIM response in case of ääöö
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.ISO_8859_1));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 jsonString.append(line);
