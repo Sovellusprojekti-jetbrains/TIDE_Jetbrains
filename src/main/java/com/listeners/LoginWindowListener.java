@@ -48,7 +48,7 @@ public final class LoginWindowListener implements ToolWindowManagerListener  {
                 }
             }
             toolWindow.getContentManager().addContent(
-                    com.intellij.ui.content.ContentFactory.getInstance().createContent(new CoursePaneWindow(toolWindow).getContent(), "Courses", false));
+                    com.intellij.ui.content.ContentFactory.getInstance().createContent(new CoursePaneWindow(toolWindow).getContent(), "Course View", false));
         }
 
     }

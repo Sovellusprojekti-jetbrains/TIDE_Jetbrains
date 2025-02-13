@@ -90,7 +90,7 @@ public class ApiHandler {
     public boolean  isLoggedIn() {
         try{
 
-            ProcessBuilder pb = new ProcessBuilder(LOGIN_COMMAND.split("\\s+"));
+            ProcessBuilder pb = new ProcessBuilder(CHECK_LOGIN_COMMAND.split("\\s+"));
             pb.redirectErrorStream(true);
 
             Process process = pb.start();
