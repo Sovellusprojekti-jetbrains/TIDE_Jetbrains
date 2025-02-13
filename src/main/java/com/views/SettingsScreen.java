@@ -1,5 +1,7 @@
 package com.views;
 
+import com.intellij.openapi.ui.Messages;
+
 import javax.swing.*;
 import java.io.File;
 
@@ -58,9 +60,30 @@ public class SettingsScreen {
         }
     }
 
+    /**
+     * Displays error message on screen
+      * @param message Error message as String
+     * @param title Title for error message
+     */
+    private void displayError(String message, String title) {
+        Messages.showMessageDialog(
+                message,
+                title,
+                Messages.getInformationIcon()
+        );
+    }
+
+    /**
+     * Saves path to persistent state component
+     */
     private void updatePath() {
-        com.actions.Settings.savePath(this.pathText.getText());
-        com.actions.Settings.close();
+        File tempFile = new File(this.pathText.getText());
+        if (tempFile.exists()) {
+            com.actions.Settings.savePath(this.pathText.getText());
+            com.actions.Settings.close();
+        } else {
+            displayError("Directory doesn't exist!", "Path error");
+        }
     }
 
     /**
