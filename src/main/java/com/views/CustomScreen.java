@@ -201,9 +201,9 @@ public class CustomScreen {
 
             // Tehdään scrollpane johon lätkäistään kaikki tähän mennessä tehty.
             JScrollPane scrollPane = new JBScrollPane(panel);
-            scrollPane.setPreferredSize(new Dimension(paneSize, paneSize)); // Set limited height
+            // scrollPane.setPreferredSize(new Dimension(paneSize, paneSize)); // Set limited height
             scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, thickness));
-            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
             coursePanel.add(scrollPane);
