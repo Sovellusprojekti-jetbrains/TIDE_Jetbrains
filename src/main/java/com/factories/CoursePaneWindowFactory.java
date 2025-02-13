@@ -1,9 +1,4 @@
-/**
- * this package is used to create the factory needed to create the tool window that contains the Course task info
- * @since 1.0
- * @author jeremi
- * @ver 1.0
- */
+
 package com.factories;
 
 import com.intellij.openapi.project.Project;
