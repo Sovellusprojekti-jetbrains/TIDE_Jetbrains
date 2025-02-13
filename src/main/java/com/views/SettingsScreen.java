@@ -21,7 +21,7 @@ public class SettingsScreen {
     /**
      * Button that submits the changes.
      */
-    private JButton OKButton;
+    private JButton okButton;
     /**
      * Button that cancels the changes.
      */
@@ -36,17 +36,17 @@ public class SettingsScreen {
     private JPanel buttons;
 
     /**
-     * Constructor to add action listeners for buttons
+     * Constructor to add action listeners for buttons.
      */
     public SettingsScreen() {
         this.pathText.setText(com.actions.Settings.getPath());
         this.browseButton.addActionListener(e -> choosePath());
-        this.OKButton.addActionListener(e -> updatePath());
+        this.okButton.addActionListener(e -> updatePath());
         this.cancelButton.addActionListener(e -> com.actions.Settings.close());
     }
 
     /**
-     * Displays a new window where user can choose folder to which demos will be saved
+     * Displays a new window where user can choose folder to which demos will be saved.
      */
     private void choosePath() {
         JFileChooser chooser = new JFileChooser();
@@ -87,7 +87,7 @@ public class SettingsScreen {
     }
 
     /**
-     * Return main panel to be displayed
+     * Return main panel to be displayed.
      * @return JPanel containing all the elements
      */
     public JPanel getContent() {

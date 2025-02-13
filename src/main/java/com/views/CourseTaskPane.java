@@ -5,7 +5,7 @@ package com.views;
 
 import javax.swing.*;
 
-/*
+/**
 * Hoidetaan kaikki ruudun oikealla puolella olevan tehtävän palautuksen suorittavan ikkunan toiminnalliset sekä graaffiset toiminnot
 * Taskpane = Kaikki muut paneelit sisältävä pääpaneeli
 * demoTiedot = tidecli kautta saadut Demon numero sekä tehtävän numero sisältävä label
@@ -20,11 +20,11 @@ import javax.swing.*;
 * infoPane = paneeli, joka sisältää demoTiedot, tehtäväNimi, avaaTehtävä sekä tehtäväTiedot osat.
 *  resetPane = paneeli, joka siältää resetButtonin.
 */
-public class courseTaskPane {
+public class CourseTaskPane {
     /**
      * The main task pane.
      */
-    private JPanel Taskpane;
+    private JPanel taskPane;
     /**
      * Information of the exercise.
      */
@@ -64,14 +64,18 @@ public class courseTaskPane {
     /**
      * Info panel.
      */
-    private JPanel InfoPane;
+    private JPanel infoPane;
     /**
      * Reset panel.
      */
     private JPanel resetPane;
 
+    /**
+     * getter for the contents of the task panel.
+     * @return the task panel
+     */
     public JPanel getContent() {
-        return Taskpane;
+        return taskPane;
     }
 }
 

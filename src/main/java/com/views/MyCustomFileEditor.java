@@ -105,7 +105,7 @@ public class MyCustomFileEditor implements FileEditor {
     }
 
     /**
-     * Luo rivin viikkotehtävälle nappeineen
+     * Luo rivin viikkotehtävälle nappeineen.
      * @param name annettu nimi
      * @return Viikkotehtävärivi
      */
