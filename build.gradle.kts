@@ -18,7 +18,7 @@ plugins {
 
     intellijPlatform {
         pluginConfiguration {
-            name = "TIDE-Jetbrains"
+            name = "TIDE"
         }
     }
 
