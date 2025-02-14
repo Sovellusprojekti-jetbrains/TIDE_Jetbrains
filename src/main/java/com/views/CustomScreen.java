@@ -150,7 +150,7 @@ public class CustomScreen {
                 //switchToLogin(); // Poistaa kurssinäkymän näkyvistä
                 try {
                     api.logout();
-                    if (!api.isLoggedIn()){
+                    if (!api.isLoggedIn()) {
                         switchToLogin(); // Poistaa kurssinäkymän näkyvistä
                     } else {
                         //TODO: error for failed logout
