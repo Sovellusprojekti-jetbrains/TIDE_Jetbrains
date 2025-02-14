@@ -260,8 +260,19 @@ public class CustomScreen {
             //TODO:muuta kutsumaan aliohjelmaa, joka lataa tiedoston koneelle.
             public void actionPerformed(ActionEvent e) {
                 System.out.println(courseTask.getPath());
-                                      }
-                                  });
+                ApiHandler api = new ApiHandler();
+                try {
+                    api.loadExercise(courseTask.getPath());
+                } catch (IOException ex) {
+                    com.views.ErrorView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
+                    throw new RuntimeException(ex);
+                    //TODO: Keksi jokin tapa ilmoittaa virheestä
+                } catch (InterruptedException ex) {
+                    com.views.ErrorView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
         buttonPanel.add(dButton);
 
         JButton oButton = new JButton();
