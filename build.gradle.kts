@@ -38,7 +38,8 @@ plugins {
         intellijPlatform {
             if (projectType == "RD") {
                 create("RD", riderPlatformVersionProp, useInstaller = false)
-                bundledPlugins("JUnit")
+                //local("C:/Program Files/JetBrains/JetBrains Rider 2024.3.5")
+                //bundledPlugins("JUnit")
             } else {
                 create("IC", ideaPlatformVersionProp, useInstaller = false)
                 bundledPlugins("com.intellij.java", "JUnit")
