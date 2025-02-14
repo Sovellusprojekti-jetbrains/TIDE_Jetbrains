@@ -5,7 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2f4e1b01-2541-43a5-bf02-7d655370f51b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/actions/Settings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/actions/Settings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/actions/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/actions/package-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/factories/CoursePaneWindowFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/factories/CoursePaneWindowFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/factories/LoginWindowFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/factories/LoginWindowFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/factories/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/factories/package-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/package-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

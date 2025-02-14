@@ -8,7 +8,7 @@ import com.intellij.ui.content.ContentFactory;
 import com.views.LoginWindow;
 import org.jetbrains.annotations.NotNull;
 
-public class LoginWindowFactory implements ToolWindowFactory {
+final public class LoginWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {

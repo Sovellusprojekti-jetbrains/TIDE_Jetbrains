@@ -4,5 +4,6 @@
  * @since 1.0
  * @author jeremi,sasu
  * @version 1.0
+ *
  */
 package com.factories;

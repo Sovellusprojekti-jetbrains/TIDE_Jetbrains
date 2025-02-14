@@ -17,11 +17,11 @@ public class Settings extends AnAction {
     /**
      * Width of the settings screen.
      */
-    final int width = 400;
+    final private int width = 400;
     /**
      * Height of the settings screen.
      */
-    final int height = 300;
+    final private int height = 300;
     private SettingsScreen window = null; //Object reference to window content.
     private static boolean visible = false; //To ensure that only one settings window can be open at a time.
     private static JFrame frame = null; //Object reference to JFrame containing window content.

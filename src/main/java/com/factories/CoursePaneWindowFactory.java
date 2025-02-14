@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 // luokka, joka luo ikkunan joka sisältää CoursePaneWindow luokassa haetun paneelin
 
-public class CoursePaneWindowFactory implements ToolWindowFactory {
+final public class CoursePaneWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow coursePaneWindow) {
