@@ -11,7 +11,7 @@
     <idea-version since-build="231" until-build="231.*" />
 
     <!-- Dependencies -->
-    <depends>com.intellij.modules.java</depends>
+    <!-- <depends>com.intellij.modules.java</depends> -->
 
     <!-- Tool Window -->
     <extensions defaultExtensionNs="com.intellij">
