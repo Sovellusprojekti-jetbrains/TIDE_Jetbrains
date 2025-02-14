@@ -257,7 +257,6 @@ public class CustomScreen {
         dButton.setBackground(bgColor);
         dButton.addActionListener(new ActionListener() {
             @Override
-            //TODO:muuta kutsumaan aliohjelmaa, joka lataa tiedoston koneelle.
             public void actionPerformed(ActionEvent e) {
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
@@ -266,7 +265,7 @@ public class CustomScreen {
                 } catch (IOException ex) {
                     com.views.ErrorView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
-                    //TODO: Keksi jokin tapa ilmoittaa virheestä
+                    //Maybe there could be more advanced error reporting
                 } catch (InterruptedException ex) {
                     com.views.ErrorView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);

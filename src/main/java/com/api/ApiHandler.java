@@ -92,6 +92,7 @@ public class ApiHandler {
         String destination = Settings.getPath();
         String command = this.TASK_CREATE_COMMAND + " " + timPath +  " -d \"" + destination + "\""; //Probably safest to surround destination path with quotes in case it contains white space characters
         ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
+        pb.directory(new File(destination)); //Without this, is it assumed that destination folder is in sub path of plugin's working directory or something like that. The process will exit with exit code 1 when it discovers that files are saved elsewhere
         pb.redirectErrorStream(true);
         Process process = pb.start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream())); //Debug stuff
@@ -102,7 +103,7 @@ public class ApiHandler {
         int exitCode = process.waitFor();
         System.out.println("Process exited with code: " + exitCode);
         if (exitCode != 0) {
-            com.views.ErrorView.displayError("An error occurred during download", "Download error");
+            com.views.ErrorView.displayError("An error occurred during download", "Download error"); //Maybe there could be more advanced error reporting
         }
     }
 
