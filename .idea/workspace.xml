@@ -6,11 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="2f4e1b01-2541-43a5-bf02-7d655370f51b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/actions/Settings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/actions/Settings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/actions/StateManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/actions/StateManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/api/ApiHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/api/ApiHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/factories/MyCustomFileEditorProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/factories/MyCustomFileEditorProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/listeners/LoginWindowListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/listeners/LoginWindowListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/customfile/CustomFileType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/customfile/CustomFileType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/listeners/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/listeners/package-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/package-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/MyCustomFileEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/MyCustomFileEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/SettingsScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/SettingsScreen.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +58,12 @@
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jerem\Documents\GitHub\Jetbrains\src\test\java" />
+      <recent name="C:\Users\jerem\Documents\GitHub\Jetbrains\src\test" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">

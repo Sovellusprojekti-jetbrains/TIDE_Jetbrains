@@ -8,9 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+
 
 import com.course.*;
 import java.util.List;
@@ -119,7 +118,7 @@ public class CustomScreen {
                 ApiHandler api = new ApiHandler();
                 try {
                     api.login();
-                    if(api.isLoggedIn()){
+                    if (api.isLoggedIn()) {
                         switchToLogout();
                     } else {
                         //TODO: error message that the login failed
@@ -151,9 +150,9 @@ public class CustomScreen {
                 //switchToLogin(); // Poistaa kurssinäkymän näkyvistä
                 try {
                     api.logout();
-                    if(!api.isLoggedIn()){
+                    if (!api.isLoggedIn()){
                         switchToLogin(); // Poistaa kurssinäkymän näkyvistä
-                    }else {
+                    } else {
                         //TODO: error for failed logout
                         return;
                     }
@@ -163,7 +162,7 @@ public class CustomScreen {
             }
         }
         );
-        if(apiHandler.isLoggedIn()) {
+        if (apiHandler.isLoggedIn()) {
             switchToLogout();
         } else {
             switchToLogin();

@@ -8,4 +8,5 @@
  * @author jeremi,sasu,lari,henri,tero
  * @version 1.0
  *
- */package com;
+ */
+package com;

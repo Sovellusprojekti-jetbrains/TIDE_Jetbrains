@@ -61,7 +61,7 @@ public class SettingsScreen {
     }
 
     /**
-     * Displays error message on screen
+     * Displays error message on screen.
       * @param message Error message as String
      * @param title Title for error message
      */
@@ -74,7 +74,7 @@ public class SettingsScreen {
     }
 
     /**
-     * Saves path to persistent state component
+     * Saves path to persistent state component.
      */
     private void updatePath() {
         File tempFile = new File(this.pathText.getText());
