@@ -9,7 +9,6 @@ plugins {
     idea
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.25"
-    //id("org.jetbrains.intellij") version "1.17.4"
     id("org.jetbrains.intellij.platform") version "2.2.1"
 }
 
@@ -39,10 +38,12 @@ plugins {
         intellijPlatform {
             if (projectType == "RD") {
                 create("RD", riderPlatformVersionProp, useInstaller = false)
+                bundledPlugins("JUnit")
             } else {
                 create("IC", ideaPlatformVersionProp, useInstaller = false)
+                bundledPlugins("com.intellij.java", "JUnit")
             }
-            bundledPlugins("com.intellij.java", "JUnit")
+
         }
         testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
