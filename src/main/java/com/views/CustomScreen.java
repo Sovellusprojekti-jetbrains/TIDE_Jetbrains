@@ -177,7 +177,7 @@ public class CustomScreen {
     private void createCourseListPane(List<Course> courselist) {
         //Removes all previous courses added, to make refreshing possible. TODO:better solution?
         coursePanel.removeAll();
-        courselist.forEach(Course -> {
+        courselist.forEach(course -> {
             JPanel panel = new JPanel(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
@@ -194,17 +194,17 @@ public class CustomScreen {
             labelPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
 
             JLabel label = new JLabel();
-            label.setText("Course " + Course.getName());
+            label.setText("Course " + course.getName());
             label.setFont(new Font("Arial", Font.BOLD, fontSize));
             labelPanel.add(label);
             coursePanel.add(labelPanel);
 
             // Makes own subpanel for every task
             // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
-            List<CourseTask> tasks = Course.getTasks();
+            List<CourseTask> tasks = course.getTasks();
             final int[] j = {0};
-            tasks.forEach(CourseTask -> {
-                JPanel subPanel = createExercise(CourseTask.getName(), CourseTask.getPath());
+            tasks.forEach(courseTask -> {
+                JPanel subPanel = createExercise(courseTask);
                 subPanel.setBackground(bgColor);
                 gbc.gridy = j[0];
                 panel.add(subPanel, gbc);
@@ -236,16 +236,15 @@ public class CustomScreen {
 
     /**
      * Creates a panel for the task together with the buttons to download or open it.
-     * @param name  the name of the task
-     * @param path path used to download the demo
+     * @param courseTask a CourseTask object for which to create the panel
      * @return the subpanel that contains the tasks name and the two buttons
      */
-    JPanel createExercise(String name, String path) {
+    private JPanel createExercise(CourseTask courseTask) {
         final int fontsize = 16;
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
         JLabel labelWeek = new JLabel();
-        labelWeek.setText(name);
+        labelWeek.setText(courseTask.getName());
         labelWeek.setFont(new Font("Arial", Font.BOLD, fontsize));
         subPanel.add(labelWeek, BorderLayout.WEST);
 
@@ -260,7 +259,7 @@ public class CustomScreen {
             @Override
             //TODO:muuta kutsumaan aliohjelmaa, joka lataa tiedoston koneelle.
             public void actionPerformed(ActionEvent e) {
-                System.out.println(path);
+                System.out.println(courseTask.getPath());
                                       }
                                   });
         buttonPanel.add(dButton);
