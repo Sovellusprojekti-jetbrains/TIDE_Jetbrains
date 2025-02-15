@@ -120,13 +120,14 @@ public class CourseTaskPane {
                     .getSelectedEditor())
                     .getFile()
                     .getPath();
+            // kutsu tehtävänlataajaa vivulla -f
             System.out.println(path);
         });
 
         // placeholder for submitting exercises
         submitButton.addActionListener(event -> {
             String path = FileEditorManager.getInstance(project).getSelectedEditor().getFile().getPath();
-            // kutsu tehtävänlataajaa vivulla -f
+            // kutsu tide submitia
             System.out.println(path);
         });
     }
