@@ -96,6 +96,7 @@ public class CourseTaskPane {
      * A constructor that takes a ToolWindow as a parameter.
      * The Toolwindow instance lets us access the current project
      * and thus the path of the currently open file.
+     * TODO: implement actual functionality somewhere
      * @param toolWindow A ToolWindow instance
      */
     public CourseTaskPane(final ToolWindow toolWindow) {
