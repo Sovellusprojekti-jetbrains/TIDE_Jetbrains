@@ -2,6 +2,7 @@ package com.api;
 
 import com.course.Course;
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.*;
 import java.util.List;
@@ -98,7 +99,7 @@ public class ApiHandler {
             // Parse JSON
             Gson gson = new Gson();
             LoginOutput output = gson.fromJson(jsonOutput, LoginOutput.class);
-            if (output.logged_in != null) {
+            if (output.loggedIn != null) {
                 return true;
             }
 
@@ -111,7 +112,8 @@ public class ApiHandler {
     }
 
     class LoginOutput {
-        private String logged_in;
+        @SerializedName(value = "logged_in")
+        private String loggedIn;
     }
 
 }
