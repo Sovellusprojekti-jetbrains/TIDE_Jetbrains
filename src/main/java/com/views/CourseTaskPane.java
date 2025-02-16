@@ -139,7 +139,12 @@ public class CourseTaskPane {
 
         // placeholder for submitting exercises
         submitButton.addActionListener(event -> {
-            String path = FileEditorManager.getInstance(project).getSelectedEditor().getFile().getPath();
+            String path = FileEditorManager
+                    .getInstance(project)
+                    .getSelectedEditor()
+                    .getFile()
+                    .getPath();
+            
             // kutsu tide submitia
             System.out.println(path);
         });
