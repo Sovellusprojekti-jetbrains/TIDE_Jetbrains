@@ -105,10 +105,13 @@ public class CourseTaskPane {
 
         // placeholder for opening the current exercise in browser
         avaaTehtava.addActionListener(event -> {
-            try {
-                Desktop.getDesktop().browse(new URI("https://tim.jyu.fi"));
-            } catch (IOException | URISyntaxException e) {
-                throw new RuntimeException(e);
+            if (Desktop.isDesktopSupported()) {
+                Desktop desktop = Desktop.getDesktop();
+                try {
+                    desktop.browse(new URI("https://tim.jyu.fi"));
+                } catch (IOException | URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
