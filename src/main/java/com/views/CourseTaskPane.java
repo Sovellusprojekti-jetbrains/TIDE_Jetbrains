@@ -108,7 +108,7 @@ public class CourseTaskPane {
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
                 try {
-                    desktop.browse(new URI("https://tim.jyu.fi"));
+                    desktop.browse(new URI("https://timbeta01.tim.education"));
                 } catch (IOException | URISyntaxException e) {
                     throw new RuntimeException(e);
                 }
