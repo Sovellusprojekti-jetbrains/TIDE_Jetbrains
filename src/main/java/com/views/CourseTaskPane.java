@@ -6,6 +6,7 @@ package com.views;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.ui.Messages;
 
 import javax.swing.*;
 import java.awt.*;
@@ -120,6 +121,19 @@ public class CourseTaskPane {
                     .getSelectedEditor())
                     .getFile()
                     .getPath();
+
+            // show confirmation dialog and return
+            // if the user decides to cancel
+            if (Messages
+                    .showOkCancelDialog("Confirm exercise reset",
+                                        "Reset Exercise",
+                                        "OK",
+                                        "Cancel",
+                                        Messages.getWarningIcon())
+                == Messages.CANCEL) {
+                return;
+            }
+
             // kutsu tehtävänlataajaa vivulla -f
             System.out.println(path);
         });
