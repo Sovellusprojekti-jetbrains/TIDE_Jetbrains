@@ -147,7 +147,7 @@ public class CourseTaskPane {
                     .getSelectedEditor()
                     .getFile()
                     .getPath();
-            
+
             // kutsu tide submitia
             System.out.println(path);
         });
