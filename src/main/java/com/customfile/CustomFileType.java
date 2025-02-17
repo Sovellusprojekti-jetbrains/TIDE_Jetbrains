@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Custom file type class.
  */
-public class CustomFileType implements FileType {
+public final class CustomFileType implements FileType {
     /**
      * Creating a new custom file type called INSTANCE. TODO:explain better if possible
      */

@@ -20,7 +20,7 @@ public final class StateManager implements PersistentStateComponent<StateManager
         /**
          * the path the user has chosen in string format. TODO:check that this is true
          */
-        public String path;
+        private String path;
     }
 
     private State myState = new State(); //Object reference to state class
