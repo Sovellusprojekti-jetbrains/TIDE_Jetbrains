@@ -62,7 +62,7 @@
             </constraints>
             <properties>
               <background color="-7534336"/>
-              <borderPainted value="true"/>
+              <borderPainted value="false"/>
               <contentAreaFilled value="true"/>
               <enabled value="true"/>
               <focusable value="true"/>

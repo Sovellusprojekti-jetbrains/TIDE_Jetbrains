@@ -50,11 +50,11 @@ public class MyCustomFileEditor implements FileEditor {
             gbc.weightx = 1.0;
             gbc.fill = GridBagConstraints.HORIZONTAL;
 
-            final int[] content = {20, 5, 0};
+            final int[] content = {20, 5, 5, 0};
 
             // Kurssin nimelle vähän tilaa yläpuolelle
             JPanel labelPanel = new JPanel(new BorderLayout());
-            labelPanel.setBorder(BorderFactory.createEmptyBorder(content[0], content[1], content[1], content[2]));
+            labelPanel.setBorder(BorderFactory.createEmptyBorder(content[0], content[1], content[2], content[3]));
 
             final int fontSize = 26;
             JLabel label = new JLabel();
