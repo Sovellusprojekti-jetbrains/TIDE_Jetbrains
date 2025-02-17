@@ -3,9 +3,9 @@ package com.api;
 import com.actions.Settings;
 import com.course.Course;
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +24,7 @@ public class ApiHandler {
      * @throws InterruptedException Method call process.waitFor() may throw InterruptedException
      */
     public void login() throws IOException, InterruptedException {
-        ProcessBuilder pb = new ProcessBuilder(LOGIN_COMMAND.split("\\s+"));
+        ProcessBuilder pb = new ProcessBuilder(loginCommand.split("\\s+"));
         pb.redirectErrorStream(true);
         Process process = pb.start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -43,7 +43,7 @@ public class ApiHandler {
      * @throws InterruptedException Method call process.waitFor() may throw InterruptedException
      */
     public void logout() throws IOException, InterruptedException {
-        ProcessBuilder pb = new ProcessBuilder(LOGOUT_COMMAND.split("\\s+"));
+        ProcessBuilder pb = new ProcessBuilder(logoutCommand.split("\\s+"));
         pb.redirectErrorStream(true);
         Process process = pb.start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -64,7 +64,7 @@ public class ApiHandler {
         StringBuilder jsonString = new StringBuilder();
 
         try {
-            ProcessBuilder pb = new ProcessBuilder(COURSES_COMMAND.split("\\s+"));
+            ProcessBuilder pb = new ProcessBuilder(coursesCommand.split("\\s+"));
             pb.redirectErrorStream(true);
             Process process = pb.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -112,9 +112,9 @@ public class ApiHandler {
      * @return login status in boolean
      */
     public boolean  isLoggedIn() {
-        try{
+        try {
 
-            ProcessBuilder pb = new ProcessBuilder(CHECK_LOGIN_COMMAND.split("\\s+"));
+            ProcessBuilder pb = new ProcessBuilder(checkLoginCommand.split("\\s+"));
             pb.redirectErrorStream(true);
 
             Process process = pb.start();
@@ -124,7 +124,9 @@ public class ApiHandler {
             // Parse JSON
             Gson gson = new Gson();
             LoginOutput output = gson.fromJson(jsonOutput, LoginOutput.class);
-            if (output.logged_in != null) {return true;}
+            if (output.loggedIn != null) {
+                return true;
+            }
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -135,7 +137,8 @@ public class ApiHandler {
     }
 
     class LoginOutput {
-        public String logged_in;
+        @SerializedName(value = "logged_in")
+        private String loggedIn;
     }
 
 }
