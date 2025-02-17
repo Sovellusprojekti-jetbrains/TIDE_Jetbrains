@@ -9,7 +9,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.views.MyCustomFileEditor;
 import org.jetbrains.annotations.NotNull;
 
-public final class MyCustomFileEditorProvider implements FileEditorProvider {
+public class MyCustomFileEditorProvider implements FileEditorProvider {
     @Override
     public boolean accept(@NotNull final Project project, @NotNull final VirtualFile file) {
         return file instanceof CustomFile;
