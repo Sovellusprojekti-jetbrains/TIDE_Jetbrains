@@ -66,11 +66,7 @@ public class SettingsScreen {
      * @param title Title for error message
      */
     private void displayError(String message, String title) {
-        Messages.showMessageDialog(
-                message,
-                title,
-                Messages.getInformationIcon()
-        );
+        com.views.ErrorView.displayError(message, title);
     }
 
     /**
