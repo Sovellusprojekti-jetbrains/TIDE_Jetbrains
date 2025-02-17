@@ -48,6 +48,8 @@
             </action>
             <action id="com.actions.Settings" class="com.actions.Settings" text="Settings" description="Tide settings">
             </action>
+            <action id="com.actions.ResetExercise" class="com.actions.ResetExercise" text="Reset Exercise" description="Reset current exercise">
+            </action>
         </group>
 
     </actions>
