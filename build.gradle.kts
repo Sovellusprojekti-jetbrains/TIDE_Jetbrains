@@ -4,6 +4,21 @@ val pluginSinceBuildProp = prop("pluginSinceBuild")
 val pluginUntilBuildProp = prop("pluginUntilBuild")
 val projectType = System.getenv("IDE_TYPE") ?: "IC"
 
+val runIdeForUiTests by intellijPlatformTesting.runIde.registering {
+    task {
+        jvmArgumentProviders += CommandLineArgumentProvider {
+            listOf(
+                "-Drobot-server.port=8082",
+                "-Dide.mac.message.dialogs.as.sheets=false",
+                "-Djb.privacy.policy.text=<!--999.999-->",
+                "-Djb.consents.confirmation.enabled=false",
+            )
+        }
+    }
+    plugins {
+        robotServerPlugin()
+    }
+}
 
 plugins {
     idea
@@ -30,6 +45,7 @@ plugins {
 
     repositories {
         mavenCentral()
+        maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
         intellijPlatform {
             defaultRepositories()
         }
@@ -47,7 +63,11 @@ plugins {
         testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
         implementation("com.google.code.gson:gson:2.12.1")
+        testImplementation("com.intellij.remoterobot:remote-robot:0.11.23")
+        testImplementation ("com.intellij.remoterobot:remote-fixtures:0.11.23")
+
     }
+
 
     tasks {
         // Set the JVM compatibility versions
