@@ -30,7 +30,7 @@ public class Course {
      * @return Course name
      */
     public String getName() {
-        //Quick, dirty and temporary fix to problem caused by some components
+        // Quick, dirty and temporary fix to problem caused by some components
         // (this plugin, tim-server, something else...) inability to interpret char ä correctly.
         // Another characters other than ä may result to replacement
         // character also so the real problem must be found and fixed.
