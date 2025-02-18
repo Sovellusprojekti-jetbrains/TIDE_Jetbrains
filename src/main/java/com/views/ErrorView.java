@@ -2,9 +2,9 @@ package com.views;
 
 import com.intellij.openapi.ui.Messages;
 
-public class ErrorView {
+public final class ErrorView {
     /**
-     * Displays error message on screen
+     * Displays error message on screen.
      * @param message Error message as String
      * @param title Title for error message
      */
@@ -14,5 +14,13 @@ public class ErrorView {
                 title,
                 Messages.getInformationIcon()
         );
+    }
+
+
+    /**
+     * Hide utility class constructor so it can't be instantiated.
+     */
+    private ErrorView() {
+
     }
 }
