@@ -69,7 +69,7 @@
               <foreground color="-1712925"/>
               <hideActionText value="false"/>
               <opaque value="true"/>
-              <text value="reset exercise"/>
+              <text value="Reset exercise"/>
             </properties>
           </component>
         </children>
