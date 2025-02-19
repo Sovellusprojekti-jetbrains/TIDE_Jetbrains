@@ -85,14 +85,17 @@ public class ApiHandler {
     }
 
     /**
-     * Loads exercise into folder defined in settings
+     * Loads exercise into folder defined in settings.
      * @param timPath Path of the exercise in TIM
      */
     public void loadExercise(String timPath) throws IOException, InterruptedException {
         String destination = Settings.getPath();
-        String command = this.taskCreateCommand + " " + timPath +  " -d \"" + destination + "\""; //Probably safest to surround destination path with quotes in case it contains white space characters
+        // Probably safest to surround destination path with quotes in case it contains white space characters
+        String command = this.taskCreateCommand + " " + timPath +  " -d \"" + destination + "\"";
         ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
-        pb.directory(new File(destination)); //Without this, is it assumed that destination folder is in sub path of plugin's working directory or something like that. The process will exit with exit code 1 when it discovers that files are saved elsewhere
+        // Without the following, is it assumed that destination folder is in sub path of plugin's working directory or something like that.
+        // The process will exit with exit code 1 when it discovers that files are saved elsewhere
+        pb.directory(new File(destination));
         pb.redirectErrorStream(true);
         Process process = pb.start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream())); //Debug stuff
@@ -103,12 +106,13 @@ public class ApiHandler {
         int exitCode = process.waitFor();
         System.out.println("Process exited with code: " + exitCode);
         if (exitCode != 0) {
-            com.views.ErrorView.displayError("An error occurred during download", "Download error"); //Maybe there could be more advanced error reporting
+            // Maybe there could be more advanced error reporting
+            com.views.ErrorView.displayError("An error occurred during download", "Download error");
         }
     }
 
     /**
-     * asks tide-cli if there is a login and returns a boolean
+     * asks tide-cli if there is a login and returns a boolean.
      * @return login status in boolean
      */
     public boolean  isLoggedIn() {
