@@ -6,6 +6,7 @@ package com.views;
 import com.api.ApiHandler;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.ui.Messages;
 
@@ -80,6 +81,7 @@ public class CourseTaskPane {
      * Reset panel.
      */
     private JPanel resetPane;
+    private JCheckBox submitAllInDirectoryCheckBox;
     /**
      * Holds the current project.
      */
@@ -141,15 +143,15 @@ public class CourseTaskPane {
             System.out.println(path);
         });
 
-        // placeholder for submitting exercises
         submitButton.addActionListener(event -> {
-            String path = FileEditorManager
+            VirtualFile file = FileEditorManager
                     .getInstance(project)
                     .getSelectedEditor()
-                    .getFile()
-                    .getPath();
+                    .getFile();
 
-            // kutsu tide submitia
+            boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
+            String path = submitAll ? file.getParent().getPath() : file.getPath();
+
             new ApiHandler().submitExercise(path);
             System.out.println(path);
         });
