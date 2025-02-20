@@ -3,6 +3,7 @@
 
 package com.views;
 
+import com.api.ApiHandler;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -150,6 +151,7 @@ public class CourseTaskPane {
                     .getPath();
 
             // kutsu tide submitia
+            new ApiHandler().submitExercise(path);
             System.out.println(path);
         });
 
