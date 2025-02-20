@@ -18,6 +18,8 @@ public class ApiHandler {
     private final String logoutCommand  = "tide logout";
     private final String checkLoginCommand = "tide check-login --json";
     private final String taskCreateCommand = "tide task create --all";
+    private final String submitCommand = "tide submit";
+
     /**
      * Logs in to TIDE-CLI.
      * @throws IOException Method calls pb.start() and pb.readLine() may throw IOException
@@ -108,6 +110,25 @@ public class ApiHandler {
         if (exitCode != 0) {
             // Maybe there could be more advanced error reporting
             com.views.ErrorView.displayError("An error occurred during download", "Download error");
+        }
+    }
+
+
+    /**
+     * Submit an exercise.
+     * @param exercisePath Path of the file to be submitted
+     */
+    public void submitExercise(String exercisePath) {
+        try {
+            String command = submitCommand + " " + exercisePath;
+            ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String response = reader.lines().collect(Collectors.joining("\n"));
+            System.out.println("Raw Output from Python:\n" + response);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
