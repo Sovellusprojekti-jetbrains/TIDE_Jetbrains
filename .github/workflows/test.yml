@@ -81,7 +81,7 @@ jobs:
         with:
           ide-versions: |
             ideaIC:2024.3
-            riderRD:2024.3
+          #  riderRD:2024.3
 
       - name: Get log file path and print contents
         run: |
