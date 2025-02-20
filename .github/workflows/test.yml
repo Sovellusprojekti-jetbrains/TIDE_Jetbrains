@@ -3,7 +3,7 @@ name: Test
 on:
   workflow_dispatch:
   push:
-    branches: [ "main", "misc-workflow-config" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
