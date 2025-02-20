@@ -1,7 +1,5 @@
 package com.views;
 
-import com.intellij.openapi.ui.Messages;
-
 import javax.swing.*;
 import java.io.File;
 
@@ -61,20 +59,16 @@ public class SettingsScreen {
     }
 
     /**
-     * Displays error message on screen
+     * Displays error message on screen.
       * @param message Error message as String
      * @param title Title for error message
      */
     private void displayError(String message, String title) {
-        Messages.showMessageDialog(
-                message,
-                title,
-                Messages.getInformationIcon()
-        );
+        com.views.ErrorView.displayError(message, title);
     }
 
     /**
-     * Saves path to persistent state component
+     * Saves path to persistent state component.
      */
     private void updatePath() {
         File tempFile = new File(this.pathText.getText());

@@ -8,9 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+
 
 import com.course.*;
 import java.util.List;
@@ -119,7 +118,7 @@ public class CustomScreen {
                 ApiHandler api = new ApiHandler();
                 try {
                     api.login();
-                    if(api.isLoggedIn()){
+                    if (api.isLoggedIn()) {
                         switchToLogout();
                     } else {
                         //TODO: error message that the login failed
@@ -151,9 +150,9 @@ public class CustomScreen {
                 //switchToLogin(); // Poistaa kurssinäkymän näkyvistä
                 try {
                     api.logout();
-                    if(!api.isLoggedIn()){
+                    if (!api.isLoggedIn()) {
                         switchToLogin(); // Poistaa kurssinäkymän näkyvistä
-                    }else {
+                    } else {
                         //TODO: error for failed logout
                         return;
                     }
@@ -163,7 +162,7 @@ public class CustomScreen {
             }
         }
         );
-        if(apiHandler.isLoggedIn()) {
+        if (apiHandler.isLoggedIn()) {
             switchToLogout();
         } else {
             switchToLogin();
@@ -257,11 +256,21 @@ public class CustomScreen {
         dButton.setBackground(bgColor);
         dButton.addActionListener(new ActionListener() {
             @Override
-            //TODO:muuta kutsumaan aliohjelmaa, joka lataa tiedoston koneelle.
             public void actionPerformed(ActionEvent e) {
                 System.out.println(courseTask.getPath());
-                                      }
-                                  });
+                ApiHandler api = new ApiHandler();
+                try {
+                    api.loadExercise(courseTask.getPath());
+                } catch (IOException ex) {
+                    com.views.ErrorView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
+                    throw new RuntimeException(ex);
+                    //Maybe there could be more advanced error reporting
+                } catch (InterruptedException ex) {
+                    com.views.ErrorView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
         buttonPanel.add(dButton);
 
         JButton oButton = new JButton();

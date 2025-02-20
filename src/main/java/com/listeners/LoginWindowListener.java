@@ -21,15 +21,15 @@ public final class LoginWindowListener implements ToolWindowManagerListener  {
     public void toolWindowShown(ToolWindow toolWindow) {
         System.out.println("tool window listener was called");
         ApiHandler api = new ApiHandler();
-        var ContentManager = toolWindow.getContentManager();
+        var contentManager = toolWindow.getContentManager();
         if ("TIDE Tool Window".equals(toolWindow.getId())) { // the toolWindow here is the tool window that was opened
             System.out.println("login window was opened");
             boolean isLoggedIn = api.isLoggedIn();
 
-            for (Content content : ContentManager.getContents()) {
+            for (Content content : contentManager.getContents()) {
                 if ("Courses".equals(content.getTabName())) {
                     // Select existing tab instead of adding a new one
-                    ContentManager.setSelectedContent(content);
+                    contentManager.setSelectedContent(content);
                     System.out.println("Tab '" + "Courses" + "' already exists. Selecting it.");
                     return;
                 }
@@ -39,35 +39,36 @@ public final class LoginWindowListener implements ToolWindowManagerListener  {
         }
         if ("Course Task".equals(toolWindow.getId())) {
             System.out.println("course view was opened");
-            for (Content content : ContentManager.getContents()) {
+            for (Content content : contentManager.getContents()) {
                 if ("Course View".equals(content.getTabName())) {
                     // Select existing tab instead of adding a new one
-                    ContentManager.setSelectedContent(content);
+                    contentManager.setSelectedContent(content);
                     System.out.println("Tab '" + "Course View" + "' already exists. Selecting it.");
                     return;
                 }
             }
             toolWindow.getContentManager().addContent(
-                    com.intellij.ui.content.ContentFactory.getInstance().createContent(new CoursePaneWindow(toolWindow).getContent(), "Course View", false));
+                    com.intellij.ui.content.ContentFactory.getInstance().createContent(
+                            new CoursePaneWindow(toolWindow).getContent(), "Course View", false));
         }
 
     }
     //was used to update the login and courses view content but was replaced by a simpler method
-    private void updateToolWindowContent(@NotNull ToolWindow toolWindow, boolean isLoggedIn){
+    private void updateToolWindowContent(@NotNull ToolWindow toolWindow, boolean isLoggedIn) {
         //toolWindow.getContentManager().removeAllContents(true);
         //toolWindow.getContentManager().getContent(JPanel).getManager().removeAllContents(true);
-        var ContentManager = toolWindow.getContentManager();
+        var contentManager = toolWindow.getContentManager();
         JPanel panel;
-        if (isLoggedIn) {
+        //if (isLoggedIn) {
             //panel = new CourseView().getContent();  // UI for logged-in users
-        } else {
+       // } else {
             //panel = new Loginview().getContent();  // UI for login prompt
-        }
+        //}
 
-        for (Content content : ContentManager.getContents()) {
+        for (Content content : contentManager.getContents()) {
             if ("Login and Courses".equals(content.getTabName())) {
                 // Select existing tab instead of adding a new one
-                ContentManager.setSelectedContent(content);
+                contentManager.setSelectedContent(content);
                 System.out.println("Tab '" + "Login and Courses" + "' already exists. Selecting it.");
                 return;
             }

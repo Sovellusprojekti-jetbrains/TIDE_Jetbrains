@@ -1,3 +1,4 @@
+
 package com.factories;
 
 import com.intellij.openapi.project.Project;
@@ -9,7 +10,8 @@ import com.views.CoursePaneWindow;
 import org.jetbrains.annotations.NotNull;
 
 // luokka, joka luo ikkunan joka sisältää CoursePaneWindow luokassa haetun paneelin
-public class CoursePaneWindowFactory implements ToolWindowFactory {
+
+public final class CoursePaneWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow coursePaneWindow) {
