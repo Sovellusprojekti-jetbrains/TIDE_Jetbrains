@@ -4,6 +4,7 @@ import com.actions.Settings;
 import com.course.Course;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.views.InfoView;
 
 import java.io.*;
 import java.util.List;
@@ -110,7 +111,7 @@ public class ApiHandler {
         System.out.println("Process exited with code: " + exitCode);
         if (exitCode != 0) {
             // Maybe there could be more advanced error reporting
-            com.views.ErrorView.displayError("An error occurred during download", "Download error");
+            InfoView.displayError("An error occurred during download", "Download error");
         }
     }
 

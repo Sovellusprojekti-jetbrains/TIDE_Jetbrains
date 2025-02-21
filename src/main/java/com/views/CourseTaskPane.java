@@ -130,12 +130,7 @@ public class CourseTaskPane {
 
             // show confirmation dialog and return
             // if the user decides to cancel
-            if (Messages.showOkCancelDialog("Confirm exercise reset",
-                                            "Reset Exercise",
-                                            "OK",
-                                            "Cancel",
-                                            Messages.getWarningIcon())
-                == Messages.CANCEL) {
+            if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
                 return;
             }
 

@@ -64,7 +64,7 @@ public class SettingsScreen {
      * @param title Title for error message
      */
     private void displayError(String message, String title) {
-        com.views.ErrorView.displayError(message, title);
+        InfoView.displayError(message, title);
     }
 
     /**
