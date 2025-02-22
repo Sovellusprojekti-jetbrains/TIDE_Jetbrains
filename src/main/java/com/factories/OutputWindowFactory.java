@@ -30,6 +30,9 @@ public final class OutputWindowFactory implements ToolWindowFactory {
 
         // Create content for the tool window
         Content content = contentFactory.createContent(myToolWindow.getContent(), "Output", false);
+
+        content.setCloseable(false);
+
         // Add the content to the tool window
         outputWindow.getContentManager().addContent(content);
     }
