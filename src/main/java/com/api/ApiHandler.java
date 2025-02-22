@@ -8,7 +8,6 @@ import com.google.gson.annotations.SerializedName;
 import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.views.OutputWindow;
 
 /**
  * Tänne tide cli -kutsut.
@@ -72,7 +71,6 @@ public class ApiHandler {
             String line;
             while ((line = reader.readLine()) != null) {
                 jsonString.append(line);
-                OutputWindow.getInstance().printText(line); //TODO: poista
             }
             int exitCode = process.waitFor();
             System.out.println("Process exited with code: " + exitCode);
