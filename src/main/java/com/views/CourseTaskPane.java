@@ -7,6 +7,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.wm.ToolWindowManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -150,6 +151,17 @@ public class CourseTaskPane {
 
             // kutsu tide submitia
             System.out.println(path);
+        });
+
+        showOutputButton.addActionListener(event -> {
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            ToolWindow window = toolWindowManager.getToolWindow("Output Window");
+
+            if (window != null) {
+                window.show(null);
+                OutputWindow.getInstance().printText("TimBetan tehtävät palauttaa vaan yhden rivin virheen.\n"
+                        + "Tässä siis jotain mallitekstiä, kun merkkijonoja sieltä timistäkin vaan tulee."); //TODO: poista
+            }
         });
     }
 }
