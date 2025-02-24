@@ -1,12 +1,14 @@
 package com.course;
 
 
+import com.google.gson.annotations.SerializedName;
 
 public class SubTask {
 
     /**
      * the Task id in timdata.
      */
+    @SerializedName(value = "ide_task_id")
     private String ideTaskId;
 
     /**
@@ -22,6 +24,16 @@ public class SubTask {
      */
     public void setIdeTaskId(String id) {
         this.ideTaskId = id;
+    }
+
+    /**
+     * constructor for a subtask.
+     * @param id task id
+     * @param coursePath path to the course that the task belongs to
+     */
+    public SubTask(String id, String coursePath) {
+        this.ideTaskId = id;
+        this.path = coursePath;
     }
 
     /**
@@ -45,6 +57,6 @@ public class SubTask {
      * @return parent course task path
      */
     public String getPath() {
-        return this.ideTaskId;
+        return this.path;
     }
 }

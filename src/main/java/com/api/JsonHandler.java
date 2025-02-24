@@ -3,6 +3,7 @@ package com.api;
 import com.course.Course;
 import com.course.SubTask;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
@@ -42,22 +43,56 @@ public class JsonHandler {
      * If the Json does not map to an array of subtasks,
      * returns an empty list.
      * @param jsonString json to parse
-     * @param coursePath the path used to get the right subtasks from the jsonstring
      * @return a list of subtasks
      */
-    public List<SubTask> jsonToSubtask(final String jsonString, final String coursePath) {
-        //TODO: muuta käyttämään task list cmd komentoa ja käyttämään sen antamia nimiä.
+    public List<SubTask> jsonToSubtask(final String jsonString) {
         Gson gson = new Gson();
         List<SubTask> subTaskList = new ArrayList<>();
         try {
             JsonObject json = gson.fromJson(jsonString, JsonObject.class);
-            JsonObject Tasks = gson.fromJson((json.getAsJsonObject("")))
-            System.out.println();
+            JsonObject coursePart = gson.fromJson((json.getAsJsonObject("course_parts")), JsonObject.class);
+            List<String> tasks = getValuesInObject(coursePart, "tasks");
+            JsonObject[] objects = new JsonObject[tasks.size()];
+            for (int i = 0; i < tasks.size(); i++) {
+                JsonObject taskObject = gson.fromJson(tasks.get(i), JsonObject.class);
+                objects[i] = taskObject;
+            }
+            for (JsonObject object: objects) {
+                for (String currentKey : object.keySet()) {
+                    Object task = object.get(currentKey);
+                    subTaskList.add(gson.fromJson(task.toString(), SubTask.class));
+            }
+            }
         } catch (JsonParseException | IllegalStateException e) {
             System.err.println(e.getMessage());
         }
         // remove invalid json data
         subTaskList.removeIf(subTask -> subTask.getIdeTaskId() == null);
+        for (SubTask i : subTaskList) {
+            System.out.println(i.getIdeTaskId() + " " + i.getPath());
+        }
         return subTaskList;
     }
+
+    /**
+     * Gets the values from a specified key from a json object.
+     * @param jsonObject the object that is searched with the key
+     * @param key the key that contains the searched values
+     * @return list of values
+     */
+    public List<String> getValuesInObject(JsonObject jsonObject, String key) {
+        List<String> accumulatedValues = new ArrayList<>();
+        for (String currentKey : jsonObject.keySet()) {
+            Object value = jsonObject.get(currentKey);
+            if (currentKey.equals(key)) {
+                accumulatedValues.add(value.toString());
+            }
+            if (value instanceof JsonObject && !currentKey.equals(key)) {
+                accumulatedValues.addAll(getValuesInObject((JsonObject) value, key));
+            }
+        }
+
+        return accumulatedValues;
+    }
+
 }

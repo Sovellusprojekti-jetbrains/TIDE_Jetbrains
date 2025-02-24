@@ -313,8 +313,7 @@ public class CustomScreen {
                     sb.append(line).append(System.lineSeparator());
                     line = reader.readLine();
             }
-            System.out.println(sb.toString());
-            List<SubTask> subtasks = jsonHandler.jsonToSubtask(sb.toString(), courseTask.getPath());
+            List<SubTask> subtasks = jsonHandler.jsonToSubtask(sb.toString());
 
         } catch (IOException e) {
             throw new RuntimeException(e);
