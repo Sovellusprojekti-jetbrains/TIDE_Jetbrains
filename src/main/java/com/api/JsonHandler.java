@@ -68,9 +68,6 @@ public class JsonHandler {
         }
         // remove invalid json data
         subTaskList.removeIf(subTask -> subTask.getIdeTaskId() == null);
-        for (SubTask i : subTaskList) {
-            System.out.println(i.getIdeTaskId() + " " + i.getPath());
-        }
         return subTaskList;
     }
 
