@@ -193,7 +193,7 @@ public class CustomScreen {
             labelPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
 
             JLabel label = new JLabel();
-            label.setText("Course " + course.getName());
+            label.setText(course.getName());
             label.setFont(new Font("Arial", Font.BOLD, fontSize));
             labelPanel.add(label);
             coursePanel.add(labelPanel);
