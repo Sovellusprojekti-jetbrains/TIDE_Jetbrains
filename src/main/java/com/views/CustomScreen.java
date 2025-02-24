@@ -292,7 +292,11 @@ public class CustomScreen {
         // A panel that contains the courses and tasks is created in its own sub-program.
         createCourseListPane(courselist);
         tabbedPane.addTab("Courses", coursesPane); // Show Logout tab
-        loginButton.setEnabled(false);
+        loginButton.setText("logout");
+        ActionListener[] tempLogin = loginButton.getActionListeners(); //Need to change LoginButton into LogoutButton
+        loginButton.removeActionListener(tempLogin[0]);
+        ActionListener[] tempLogout = logoutButton.getActionListeners();
+        loginButton.addActionListener(tempLogout[0]);
         panel1.revalidate();
         panel1.repaint();
         tabbedPane.setSelectedComponent(coursesPane);
@@ -303,8 +307,30 @@ public class CustomScreen {
      */
     private void switchToLogin() {
         tabbedPane.remove(coursesPane); // Hide Courses tab
-        tabbedPane.addTab("Login", loginPane); // Show Login tab
-        loginButton.setEnabled(true);
+        tabbedPane.addTab("Menu", loginPane); // Show Login tab
+        loginButton.setText("login");
+        ActionListener[] tempLogin = loginButton.getActionListeners(); //Need to change LoginButton back
+        loginButton.removeActionListener(tempLogin[0]);
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ApiHandler api = new ApiHandler();
+                try {
+                    api.login();
+                    if (api.isLoggedIn()) {
+                        switchToLogout();
+                    } else {
+                        //TODO: error message that the login failed
+                        return;
+                    }
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+            }
+        });
         panel1.revalidate();
         panel1.repaint();
         tabbedPane.setSelectedComponent(loginPane);
