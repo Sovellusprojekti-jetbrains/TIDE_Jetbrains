@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2f4e1b01-2541-43a5-bf02-7d655370f51b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/api/JsonHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/api/JsonHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/course/CourseTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/course/CourseTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +44,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="package-info" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -74,8 +76,8 @@
     "Gradle.Run Plugin.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW": "false",
-    "git-widget-placeholder": "Robot-framework__implementation",
+    "UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW": "true",
+    "git-widget-placeholder": "20250220-04-ladatut__kurssit__kurssinakymaan",
     "kotlin-language-version-configured": "true",
     "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
   }
@@ -96,5 +98,15 @@
       <updated>1739447494193</updated>
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.io.FileNotFoundException" package="java.io" />
+          <option name="timeStamp" value="3" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
