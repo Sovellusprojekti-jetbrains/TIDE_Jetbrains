@@ -116,6 +116,15 @@ public class ApiHandler {
         }
     }
 
+    /**
+     * Overload method.
+     * @param timPath Path of the exercise in TIM
+     * @param flag Determines which task will be downloaded and how (overwrite or not)
+     */
+    public void loadExercise(String timPath, String flag) throws IOException, InterruptedException {
+        this.loadExercise(" " + timPath + " " + flag);
+    }
+
 
     /**
      * Submit an exercise.
