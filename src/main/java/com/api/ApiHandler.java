@@ -90,8 +90,8 @@ public class ApiHandler {
      */
     public void loadExercise(String timPath) throws IOException, InterruptedException {
         String destination = Settings.getPath();
-        // Probably safest to surround destination path with quotes in case it contains white space characters
-        String command = this.taskCreateCommand + " " + timPath +  " -d \"" + destination + "\"";
+        // Destination path is surrounded by quotes only if it contains spaces.
+        String command = this.taskCreateCommand + " " + timPath + " -d " + (destination.contains(" ") ? "\"" + destination + "\"" : destination);
         ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
         // Without the following, is it assumed that destination folder is in sub path of plugin's working directory or something like that.
         // The process will exit with exit code 1 when it discovers that files are saved elsewhere
