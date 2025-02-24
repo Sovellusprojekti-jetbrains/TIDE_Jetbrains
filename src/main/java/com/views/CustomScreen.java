@@ -304,7 +304,10 @@ public class CustomScreen {
         String pathToFile = Settings.getPath();
         JsonHandler jsonHandler = new JsonHandler();
         try {
-            Path path = Paths.get("C:\\Users\\jerem\\Documents\\Kurssi-demot\\.timdata");
+            StringBuilder settingsPath = new StringBuilder();
+            settingsPath.append(Settings.getPath());
+            settingsPath.append("\\.timdata");
+            Path path = Paths.get(settingsPath.toString());
             BufferedReader reader = Files.newBufferedReader(path);
             String line = reader.readLine();
             StringBuilder sb = new StringBuilder();
@@ -314,9 +317,8 @@ public class CustomScreen {
                     line = reader.readLine();
             }
             List<SubTask> subtasks = jsonHandler.jsonToSubtask(sb.toString());
-
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("File timdata was not found");
         }
     }
         /**
