@@ -307,7 +307,7 @@ public class CustomScreen {
      */
     private void switchToLogin() {
         tabbedPane.remove(coursesPane); // Hide Courses tab
-        tabbedPane.addTab("Login", loginPane); // Show Login tab
+        tabbedPane.addTab("Menu", loginPane); // Show Login tab
         loginButton.setText("login");
         ActionListener[] tempLogin = loginButton.getActionListeners(); //Need to change LoginButton back
         loginButton.removeActionListener(tempLogin[0]);
