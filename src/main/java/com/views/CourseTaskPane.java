@@ -15,6 +15,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -151,10 +152,9 @@ public class CourseTaskPane {
                 //List<SubTask> subtasks = handler.jsonToTasks(taskdata);
                 //TODO: Etsi oikea taskId tiedostonimen perusteella
                 //TODO: Kutsu ApiHandlerin load exercise metodia vivulla -f
-                //TODO: refaktoroi loadExercise
                 //TODO: mahd. virheiden/poikkeuksien käsitteleminen
             } catch (IOException e) {
-                com.views.InfoView.displayError("File not found!", "Task reset error");
+                InfoView.displayError(".timdata file not found!", "Task reset error");
                 throw new RuntimeException(e);
             }
         });
