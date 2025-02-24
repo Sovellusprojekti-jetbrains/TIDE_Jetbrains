@@ -3,6 +3,8 @@
 
 package com.views;
 
+import com.api.JsonHandler;
+import com.course.Course;
 import com.api.ApiHandler;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
@@ -16,6 +18,10 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -136,6 +142,21 @@ public class CourseTaskPane {
 
             // kutsu tehtävänlataajaa vivulla -f
             System.out.println(path);
+            try {
+                String timdata = com.actions.Settings.getPath() + "/.timdata";
+                System.out.println(timdata);
+                String taskdata = Files.readString(Path.of(timdata), StandardCharsets.UTF_8);
+                System.out.println(taskdata);
+                JsonHandler handler = new JsonHandler();
+                //List<SubTask> subtasks = handler.jsonToTasks(taskdata);
+                //TODO: Etsi oikea taskId tiedostonimen perusteella
+                //TODO: Kutsu ApiHandlerin load exercise metodia vivulla -f
+                //TODO: refaktoroi loadExercise
+                //TODO: mahd. virheiden/poikkeuksien käsitteleminen
+            } catch (IOException e) {
+                com.views.InfoView.displayError("File not found!", "Task reset error");
+                throw new RuntimeException(e);
+            }
         });
 
         // submit exercise

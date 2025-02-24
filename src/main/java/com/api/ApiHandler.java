@@ -90,8 +90,9 @@ public class ApiHandler {
     /**
      * Loads exercise into folder defined in settings.
      * @param timPath Path of the exercise in TIM
+     * @param flag Defines if all task will be downloaded or if a task will be reset etc.
      */
-    public void loadExercise(String timPath) throws IOException, InterruptedException {
+    public void loadExercise(String timPath, String flag) throws IOException, InterruptedException {
         String destination = Settings.getPath();
         // Destination path is surrounded by quotes only if it contains spaces.
         String command = this.taskCreateCommand + " " + timPath + " -d "

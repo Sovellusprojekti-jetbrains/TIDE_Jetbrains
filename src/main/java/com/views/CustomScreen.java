@@ -266,7 +266,7 @@ public class CustomScreen {
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
                 try {
-                    api.loadExercise(courseTask.getPath());
+                    api.loadExercise(courseTask.getPath(), "--all");
                 } catch (IOException ex) {
                     InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
