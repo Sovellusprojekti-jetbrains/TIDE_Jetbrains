@@ -25,6 +25,11 @@
                     anchor="right"
                     canCloseContents="true"
         />
+        <toolWindow id="Output Window"
+                    anchor="bottom"
+                    factoryClass="com.factories.OutputWindowFactory"
+                    canCloseContents="true"
+        />
         <fileEditorProvider implementation="com.factories.MyCustomFileEditorProvider"/>
         <applicationService serviceImplementation="com.actions.StateManager"/>
     </extensions>
