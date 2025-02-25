@@ -16,6 +16,7 @@ import java.nio.file.*;
 
 import com.course.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -141,7 +142,7 @@ public class CustomScreen {
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Settings temp = new com.actions.Settings();
+                Settings temp = new Settings();
                 temp.displaySettings();
             }
         });
@@ -269,11 +270,11 @@ public class CustomScreen {
                 try {
                     api.loadExercise(courseTask.getPath());
                 } catch (IOException ex) {
-                    com.views.ErrorView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
+                    ErrorView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
                     //Maybe there could be more advanced error reporting
                 } catch (InterruptedException ex) {
-                    com.views.ErrorView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
+                    ErrorView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
                 }
             }
@@ -318,10 +319,18 @@ public class CustomScreen {
                     line = reader.readLine();
             }
             List<SubTask> subtasks = jsonHandler.jsonToSubtask(sb.toString());
-            List<MutableTreeNode> chidlren;
-            
-
-
+            for (SubTask task: subtasks) {
+                if (task.getPath().equals(courseTask.getPath())) {
+                    root.add(new DefaultMutableTreeNode(task.getIdeTaskId()));
+                }
+                }
+            JTree tree = new JTree(root);
+            tree.setRootVisible(false);
+            JScrollPane container = new JScrollPane();
+            container.add(tree);
+            container.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            container.setViewportView(tree);
+            subPanel.add(container);
         } catch (IOException e) {
             System.out.println("File timdata was not found");
         }
