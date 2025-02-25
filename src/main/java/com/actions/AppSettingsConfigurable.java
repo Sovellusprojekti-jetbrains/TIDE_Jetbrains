@@ -1,74 +1,84 @@
 package com.actions;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.NlsContexts;
 import com.views.SettingsScreen;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.io.File;
+import java.util.Objects;
 
+/**
+ * This class provides controller functionality for application settings.
+ */
 public final class AppSettingsConfigurable implements Configurable {
 
-    private SettingsScreen mySettingsComponent;
+    private SettingsScreen mySettingsComponent; //Reference to the SettingsScreen panel
 
+    /**
+     * Header for TIDE settings
+     * @return header as String
+     */
     @Override
     public @NlsContexts.ConfigurableName String getDisplayName() {
         return "TIDE Settings";
     }
 
-    @Override
-    public @Nullable String getDisplayNameFast() {
-        return Configurable.super.getDisplayNameFast();
-    }
-
-    @Override
-    public @Nullable @NonNls String getHelpTopic() {
-        return Configurable.super.getHelpTopic();
-    }
-
-    @Override
-    public void focusOn(@NotNull @Nls String label) {
-        Configurable.super.focusOn(label);
-    }
-
+    /**
+     * Creates the content for TIDE settings. Uses SettingsScreen so ok and cancel buttons are removed.
+     * @return JPanel with content
+     */
     @Override
     public @Nullable JComponent createComponent() {
         this.mySettingsComponent = new SettingsScreen();
+        this.mySettingsComponent.noButtons();
         return this.mySettingsComponent.getContent();
     }
 
+    /**
+     * Checks if changes are made. Settings in idea provides functionality to revert changes.
+     * @return true if changes to settings were made, false otherwise
+     */
     @Override
-    public @Nullable JComponent getPreferredFocusedComponent() { //TODO: Tarvitaanko?
-        return Configurable.super.getPreferredFocusedComponent();
+    public boolean isModified() {
+        StateManager state =
+                Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
+        return !this.mySettingsComponent.getPathText().equals(state.getPath());
     }
 
+    /**
+     * Checks validity of the user defined settings and applies them if everything is ok.
+     * @throws ConfigurationException if validation fails
+     */
     @Override
-    public boolean isModified() { //TODO: Tarvitaanko?
-        return false;
+    public void apply() throws ConfigurationException {
+        File tempFile = new File(this.mySettingsComponent.getPathText());
+        if (tempFile.exists()) {
+            com.actions.Settings.savePath(this.mySettingsComponent.getPathText());
+        } else {
+            this.reset();
+            throw new ConfigurationException("Directory doesn't exist!");
+        }
     }
 
+    /**
+     * Reverts state back to the one found in StateManager.
+     */
     @Override
-    public void apply() throws ConfigurationException { //TODO: Tarvitaanko?
-
+    public void reset() {
+        StateManager state =
+                Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
+        this.mySettingsComponent.setPathText(state.getPath());
     }
 
-    @Override
-    public void reset() { //TODO: Tarvitaanko?
-        Configurable.super.reset();
-    }
-
+    /**
+     * Disposes SettingScreen.
+     */
     @Override
     public void disposeUIResources() {
-        //Configurable.super.disposeUIResources();
         this.mySettingsComponent = null;
-    }
-
-    @Override
-    public void cancel() { //TODO: Tarvitaanko?
-        Configurable.super.cancel();
     }
 }
