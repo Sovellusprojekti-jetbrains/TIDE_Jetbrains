@@ -6,8 +6,9 @@ import com.api.JsonHandler;
 import com.intellij.ui.components.JBScrollPane;
 
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +16,7 @@ import java.io.*;
 import java.nio.file.*;
 
 import com.course.*;
+import com.intellij.ui.treeStructure.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -305,6 +307,7 @@ public class CustomScreen {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(courseTask.getName());
         String pathToFile = Settings.getPath();
         JsonHandler jsonHandler = new JsonHandler();
+        ApiHandler api = new ApiHandler();
         try {
             StringBuilder settingsPath = new StringBuilder();
             settingsPath.append(pathToFile);
@@ -320,13 +323,26 @@ public class CustomScreen {
             }
             List<SubTask> subtasks = jsonHandler.jsonToSubtask(sb.toString());
             for (SubTask task: subtasks) {
+                List<SubTask> listForCourse = new ArrayList<>();
                 if (task.getPath().equals(courseTask.getPath())) {
-                    root.add(new DefaultMutableTreeNode(task.getIdeTaskId()));
+                    listForCourse.add(task);
+                    DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task.getIdeTaskId());
+                    root.add(new DefaultMutableTreeNode(leaf));
                 }
+                courseTask.setTasks(listForCourse);
                 }
-            JTree tree = new JTree(root);
+
+            Tree tree = new Tree(root);
             tree.setRootVisible(false);
-            JScrollPane container = new JScrollPane();
+            tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
+                @Override
+                public void valueChanged(TreeSelectionEvent e) {
+                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+                    DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
+                     api.openTaskProject(Settings.getPath() + "\\" + parent.toString() + "\\" + selectedNode.toString());
+                }
+            });
+            JBScrollPane container = new JBScrollPane();
             container.add(tree);
             container.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             container.setViewportView(tree);

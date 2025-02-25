@@ -18,6 +18,7 @@ public class ApiHandler {
     private final String logoutCommand  = "tide logout";
     private final String checkLoginCommand = "tide check-login --json";
     private final String taskCreateCommand = "tide task create --all";
+    private final String taskOpenCommand = "idea64.exe";
     /**
      * Logs in to TIDE-CLI.
      * @throws IOException Method calls pb.start() and pb.readLine() may throw IOException
@@ -139,6 +140,23 @@ public class ApiHandler {
 
 
         return false;
+    }
+
+    /**
+     * opens the clicked subtasks project.
+     * @param taskPath path to the folder that has the clicked subtask.
+     */
+    public void openTaskProject(String taskPath) {
+        try {
+            String command = taskOpenCommand + " " + taskPath;
+            ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            System.out.println("Process exited with code: " + exitCode);
+    } catch (IOException | InterruptedException ex) {
+        ex.printStackTrace();
+    }
     }
 
     class LoginOutput {
