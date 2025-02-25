@@ -32,6 +32,11 @@
         />
         <fileEditorProvider implementation="com.factories.MyCustomFileEditorProvider"/>
         <applicationService serviceImplementation="com.actions.StateManager"/>
+        <applicationConfigurable
+            parentId="tools"
+            instance="com.actions.AppSettingsConfigurable"
+            id="com.actions.AppSettingsConfigurable"
+            displayName="TIDE settings"/>
     </extensions>
     <actions>
         <action id="MyPlugin.OpenCustomView"
