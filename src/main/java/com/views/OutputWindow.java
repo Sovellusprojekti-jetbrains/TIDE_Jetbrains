@@ -1,5 +1,6 @@
 package com.views;
 
+import com.actions.ActiveStateManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTextArea;
@@ -63,6 +64,9 @@ public class OutputWindow {
      * Clears the text off the output window.
      */
     public void clearText() {
+        ActiveStateManager stateManager = ActiveStateManager.getInstance();
+        stateManager.increment();
+        ActiveStateManager.getInstance().updateState(String.valueOf(stateManager.getCount()));
         if (textArea != null) {
             textArea.setText("");
         }
