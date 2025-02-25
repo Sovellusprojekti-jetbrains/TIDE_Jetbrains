@@ -168,7 +168,6 @@ public class CustomScreen {
                 }
             }
         });
-        
         if (apiHandler.isLoggedIn()) {
             switchToLogout();
         } else {
