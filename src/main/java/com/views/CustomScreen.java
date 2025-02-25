@@ -7,6 +7,7 @@ import com.intellij.ui.components.JBScrollPane;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -300,12 +301,12 @@ public class CustomScreen {
      * @param courseTask The Course task that the subtasks belong to.
      */
     private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask) {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(subPanel);
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(courseTask.getName());
         String pathToFile = Settings.getPath();
         JsonHandler jsonHandler = new JsonHandler();
         try {
             StringBuilder settingsPath = new StringBuilder();
-            settingsPath.append(Settings.getPath());
+            settingsPath.append(pathToFile);
             settingsPath.append("\\.timdata");
             Path path = Paths.get(settingsPath.toString());
             BufferedReader reader = Files.newBufferedReader(path);
@@ -317,9 +318,14 @@ public class CustomScreen {
                     line = reader.readLine();
             }
             List<SubTask> subtasks = jsonHandler.jsonToSubtask(sb.toString());
+            List<MutableTreeNode> chidlren;
+            
+
+
         } catch (IOException e) {
             System.out.println("File timdata was not found");
         }
+
     }
         /**
      * Switches to a state where logging out is possible.
