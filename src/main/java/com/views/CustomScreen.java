@@ -149,24 +149,24 @@ public class CustomScreen {
 
         // Adds an action listener for the logout button.
         logoutButton.addActionListener(new ActionListener() {
-                                           @Override
-                                           public void actionPerformed(ActionEvent e) {
-                                               ApiHandler api = new ApiHandler();
-                                               //switchToLogin(); // Poistaa kurssinäkymän näkyvistä
-                                               try {
-                                                   api.logout();
-                                                   if (!api.isLoggedIn()) {
-                                                       switchToLogin(); // Poistaa kurssinäkymän näkyvistä
-                                                   } else {
-                                                       //TODO: error for failed logout
-                                                       return;
-                                                   }
-                                               } catch (IOException | InterruptedException ex) {
-                                                   ex.printStackTrace();
-                                               }
-                                           }
-                                       }
-        );
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ApiHandler api = new ApiHandler();
+                //switchToLogin(); // Poistaa kurssinäkymän näkyvistä
+                try {
+                    api.logout();
+                    if (!api.isLoggedIn()) {
+                        switchToLogin(); // Poistaa kurssinäkymän näkyvistä
+                    } else {
+                        //TODO: error for failed logout
+                        return;
+                    }
+                } catch (IOException | InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        
         if (apiHandler.isLoggedIn()) {
             switchToLogout();
         } else {
