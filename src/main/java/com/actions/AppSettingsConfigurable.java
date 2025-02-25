@@ -19,7 +19,7 @@ public final class AppSettingsConfigurable implements Configurable {
     private SettingsScreen mySettingsComponent; //Reference to the SettingsScreen panel
 
     /**
-     * Header for TIDE settings
+     * Header for TIDE settings.
      * @return header as String
      */
     @Override
