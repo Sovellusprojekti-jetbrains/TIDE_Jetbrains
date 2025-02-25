@@ -60,7 +60,7 @@ public class JsonHandler {
                 for (String currentKey : object.keySet()) {
                     Object task = object.get(currentKey);
                     subTaskList.add(gson.fromJson(task.toString(), SubTask.class));
-            }
+                }
             }
         } catch (JsonParseException | IllegalStateException e) {
             System.err.println(e.getMessage());
