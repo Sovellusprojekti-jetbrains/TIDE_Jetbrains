@@ -9,10 +9,8 @@ public class ActiveStateManager implements ActiveStateListener {
 
     /**
      * TODO.
-     * @param newState TODO.
      */
-    public void updateState(String newState) {
-        this.state.setState(newState);
+    public void updateState() {
 
         // Notify listeners
         ApplicationManager.getApplication()
@@ -27,7 +25,7 @@ public class ActiveStateManager implements ActiveStateListener {
      */
     @Override
     public void onStateChanged(ActiveState newState) {
-        updateState("asdas");
+        updateState();
     }
 
     /**
@@ -43,7 +41,7 @@ public class ActiveStateManager implements ActiveStateListener {
      */
     public void increment() {
         state.increment();
-        this.updateState("state");
+        this.updateState();
     }
 
     /**
