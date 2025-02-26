@@ -11,6 +11,8 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/com/views/CourseTaskPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CourseTaskPane.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/views/OutputWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/OutputWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
+
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,5 +118,15 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="GradleRunConfiguration">
+        <watch expression="((com.google.gson.internal.LinkedTreeMap)((JsonObject)((com.google.gson.internal.LinkedTreeMap.Node)jsonObject.members.entrySet().toArray()[0]).getValue()).members).entrySet().toArray()[0]" custom="com.google.gson.JsonObject,com.google.gson.internal.LinkedTreeMap.Node,com.google.gson.internal.LinkedTreeMap" />
+        <watch expression="((com.google.gson.internal.LinkedTreeMap)((JsonObject)((com.google.gson.internal.LinkedTreeMap.Node)jsonObject.members.entrySet().toArray()[0]).getValue()).members).entrySet().toArray()[0]" custom="com.google.gson.JsonObject,com.google.gson.internal.LinkedTreeMap.Node,com.google.gson.internal.LinkedTreeMap" />
+        <watch expression="((com.google.gson.internal.LinkedTreeMap)((JsonObject)((com.google.gson.internal.LinkedTreeMap.Node)jsonObject.members.entrySet().toArray()[0]).getValue()).members).entrySet().toArray()[0]" custom="com.google.gson.JsonObject,com.google.gson.internal.LinkedTreeMap.Node,com.google.gson.internal.LinkedTreeMap" />
+        <watch expression="subTaskList.get(0)" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
