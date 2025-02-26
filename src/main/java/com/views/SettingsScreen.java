@@ -60,7 +60,7 @@ public class SettingsScreen {
 
     /**
      * Displays error message on screen.
-      * @param message Error message as String
+     * @param message Error message as String
      * @param title Title for error message
      */
     private void displayError(String message, String title) {
@@ -86,5 +86,29 @@ public class SettingsScreen {
      */
     public JPanel getContent() {
         return settings;
+    }
+
+    /**
+     * Removes ok and cancel buttons when this view is used inside idea settings.
+     */
+    public void noButtons() {
+        this.buttons.remove(this.okButton);
+        this.buttons.remove(this.cancelButton);
+    }
+
+    /**
+     * This method is needed to check changes in the method in AppSettingsConfigurable.
+     * @return text in the text field
+     */
+    public String getPathText() {
+        return this.pathText.getText();
+    }
+
+    /**
+     * This method is needed to revert changes in the idea settings.
+     * @param text valid path to set into the pathText text field
+     */
+    public void setPathText(String text) {
+        this.pathText.setText(text);
     }
 }
