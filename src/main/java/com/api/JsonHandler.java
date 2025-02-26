@@ -2,9 +2,7 @@ package com.api;
 
 import com.course.Course;
 import com.course.SubTask;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +16,7 @@ public class JsonHandler {
      * Parses Json data from a string to Course objects.
      * If the Json does not map to an array of Courses,
      * returns an empty list.
+     *
      * @param jsonString Json to parse
      * @return A list of courses
      */
@@ -41,6 +40,7 @@ public class JsonHandler {
      * Parses Json data from a string to subtask objects.
      * If the Json does not map to an array of subtasks,
      * returns an empty list.
+     *
      * @param jsonString json to parse
      * @return a list of subtasks
      */
@@ -56,10 +56,13 @@ public class JsonHandler {
                 JsonObject taskObject = gson.fromJson(tasks.get(i), JsonObject.class);
                 objects[i] = taskObject;
             }
-            for (JsonObject object: objects) {
+            for (JsonObject object : objects) {
                 for (String currentKey : object.keySet()) {
-                    Object task = object.get(currentKey);
-                    subTaskList.add(gson.fromJson(task.toString(), SubTask.class));
+                    JsonObject task = object.getAsJsonObject(currentKey);
+                    SubTask sub = gson.fromJson(task, SubTask.class);
+                    List<String> files = getValuesInObject(task, "file_name");
+                    sub.setFileNames(files);
+                    subTaskList.add(sub);
                 }
             }
         } catch (JsonParseException | IllegalStateException e) {
@@ -72,6 +75,7 @@ public class JsonHandler {
 
     /**
      * Gets the values from a specified key from a json object.
+     *
      * @param jsonObject the object that is searched with the key
      * @param key the key that contains the searched values
      * @return list of values
@@ -83,12 +87,33 @@ public class JsonHandler {
             if (currentKey.equals(key)) {
                 accumulatedValues.add(value.toString());
             }
-            if (value instanceof JsonObject && !currentKey.equals(key)) {
-                accumulatedValues.addAll(getValuesInObject((JsonObject) value, key));
+                if (value instanceof JsonObject) {
+                    accumulatedValues.addAll(getValuesInObject((JsonObject) value, key));
+                } else if (value instanceof JsonArray) {
+            accumulatedValues.addAll(getValuesInArray((JsonArray) value, key));
+        }
+        }
+        return accumulatedValues;
+    }
+
+    /**
+     * Gets the values from a specified key from a json array.
+     * @param jsonArray the array that is searched with the key
+     * @param key the key that contains the searched values
+     * @return list of values.
+     */
+    public List<String> getValuesInArray(JsonArray jsonArray, String key) {
+        List<String> accumulatedValues = new ArrayList<>();
+        for (Object obj : jsonArray) {
+            if (obj instanceof JsonArray) {
+                accumulatedValues.addAll(getValuesInArray((JsonArray) obj, key));
+            } else if (obj instanceof JsonObject) {
+                accumulatedValues.addAll(getValuesInObject((JsonObject) obj, key));
             }
         }
 
         return accumulatedValues;
     }
 
-}
+    }
+

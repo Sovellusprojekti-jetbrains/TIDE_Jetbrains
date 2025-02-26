@@ -19,6 +19,7 @@ import com.course.*;
 import com.intellij.ui.treeStructure.Tree;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -304,9 +305,9 @@ public class CustomScreen {
      */
     private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(courseTask.getName());
+        ApiHandler api = new ApiHandler();
         String pathToFile = Settings.getPath();
         JsonHandler jsonHandler = new JsonHandler();
-        ApiHandler api = new ApiHandler();
         try {
             StringBuilder settingsPath = new StringBuilder();
             settingsPath.append(pathToFile);
@@ -322,10 +323,15 @@ public class CustomScreen {
             }
             List<SubTask> subtasks = jsonHandler.jsonToSubtask(sb.toString());
             for (SubTask task: subtasks) {
+
                 List<SubTask> listForCourse = new ArrayList<>();
                 if (task.getPath().equals(courseTask.getPath())) {
                     listForCourse.add(task);
                     DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task.getIdeTaskId());
+                    if (task.getFileNames().size() == 1) {
+                        DefaultMutableTreeNode file = new DefaultMutableTreeNode(task.getFileNames().get(0));
+                        leaf.add(file);
+                    }
                     root.add(new DefaultMutableTreeNode(leaf));
                 }
                 courseTask.setTasks(listForCourse);
@@ -338,7 +344,12 @@ public class CustomScreen {
                 public void valueChanged(TreeSelectionEvent e) {
                     DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
                     DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
-                     api.openTaskProject(Settings.getPath() + "\\" + parent.toString() + "\\" + selectedNode.toString());
+                    if (selectedNode.getChildCount() != 0) {
+                        api.openTaskProject(Settings.getPath() + "\\" + parent.toString() + "\\" + selectedNode.toString()
+                                + "\\" + selectedNode.getFirstChild().toString());
+                    } else {
+                        api.openTaskProject(Settings.getPath() + "\\" + parent.toString() + "\\" + selectedNode.toString());
+                    }
                 }
             });
             JBScrollPane container = new JBScrollPane();

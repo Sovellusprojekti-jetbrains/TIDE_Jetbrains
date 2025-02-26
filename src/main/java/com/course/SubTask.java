@@ -3,6 +3,8 @@ package com.course;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class SubTask {
 
     /**
@@ -16,7 +18,10 @@ public class SubTask {
      */
     private String path;
 
-
+    /**
+     * filenames of the subtasks.
+     */
+    private List<String> filenames;
 
     /**
      * set the task name for the task.
@@ -58,5 +63,20 @@ public class SubTask {
      */
     public String getPath() {
         return this.path;
+    }
+
+    /**
+     * Setter for the subtask filenames.
+     * @param names filenames of the subtasks
+     */
+    public void setFileNames(List<String> names) {
+        this.filenames = names;
+    }
+    /**
+     * getter for the subtask filenames.
+     * @return filenames of the subtasks
+     */
+    public List<String> getFileNames() {
+        return this.filenames;
     }
 }
