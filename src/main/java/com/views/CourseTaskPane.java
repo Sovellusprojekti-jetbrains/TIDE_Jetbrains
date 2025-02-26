@@ -171,7 +171,7 @@ public class CourseTaskPane {
             }
         });
 
-        // Listen for state changes
+        // Listen for state changes TODO: This just slaps a number on the label, change.
         MessageBusConnection connection = project.getMessageBus().connect();
         connection.subscribe(ActiveStateListener.TOPIC, new ActiveStateListener() {
             @Override
