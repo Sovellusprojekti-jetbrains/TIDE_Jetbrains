@@ -144,7 +144,12 @@ public class CourseTaskPane {
             System.out.println(path);
         });
 
+        // submit exercise
         submitButton.addActionListener(event -> {
+            if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
+                return;
+            }
+
             VirtualFile file = FileEditorManager
                     .getInstance(project)
                     .getSelectedEditor()
