@@ -1,6 +1,8 @@
 package com.views;
 
 import com.actions.ActiveStateManager;
+import com.api.ActiveStateListener;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTextArea;
@@ -70,5 +72,6 @@ public class OutputWindow {
         if (textArea != null) {
             textArea.setText("");
         }
+
     }
 }

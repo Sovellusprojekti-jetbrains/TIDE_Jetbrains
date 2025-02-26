@@ -1,4 +1,5 @@
 package com.api;
+import com.actions.ActiveState;
 import com.intellij.util.messages.Topic;
 
 public interface ActiveStateListener {
@@ -9,13 +10,10 @@ public interface ActiveStateListener {
 
     /**
      * TODO.
-     * @param newState TODO.
+     * @param state TODO.
      */
-    void onStateChanged(String newState);
+    void onStateChanged(ActiveState state);
 
-    /**
-     * TODO.
-     * @return TODO.
-     */
-    int getCount();
 }
+
+

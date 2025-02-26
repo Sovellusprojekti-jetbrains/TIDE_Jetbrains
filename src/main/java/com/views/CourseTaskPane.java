@@ -3,6 +3,7 @@
 
 package com.views;
 
+import com.actions.ActiveState;
 import com.actions.ActiveStateManager;
 import com.api.ActiveStateListener;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -174,13 +175,8 @@ public class CourseTaskPane {
         MessageBusConnection connection = project.getMessageBus().connect();
         connection.subscribe(ActiveStateListener.TOPIC, new ActiveStateListener() {
             @Override
-            public void onStateChanged(String newState) {
-                showOutputButton.setText("Show Output " + newState);
-            }
-
-            @Override
-            public int getCount() {
-                return 0;
+            public void onStateChanged(ActiveState state) {
+                showOutputButton.setText("Show Output " + state.getCount());
             }
         });
     }
