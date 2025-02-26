@@ -5,21 +5,20 @@ import com.intellij.openapi.application.ApplicationManager;
 
 public class ActiveStateManager implements ActiveStateListener {
 
-    private int count = 0;
-    private String state = "";
+    private ActiveState state = new ActiveState();
 
     /**
      * TODO.
      * @param newState TODO.
      */
     public void updateState(String newState) {
-        this.state = newState;
+        this.state.setState(newState);
 
         // Notify listeners
         ApplicationManager.getApplication()
                 .getMessageBus()
                 .syncPublisher(ActiveStateListener.TOPIC)
-                .onStateChanged(newState);
+                .onStateChanged(state);
     }
 
     /**
@@ -27,8 +26,8 @@ public class ActiveStateManager implements ActiveStateListener {
      * @param newState TODO.
      */
     @Override
-    public void onStateChanged(String newState) {
-        increment();
+    public void onStateChanged(ActiveState newState) {
+        updateState("asdas");
     }
 
     /**
@@ -36,14 +35,15 @@ public class ActiveStateManager implements ActiveStateListener {
      * @return TODO.
      */
     public int getCount() {
-        return count;
+        return state.getCount();
     }
 
     /**
      * Increments count.
      */
     public void increment() {
-        count++;
+        state.increment();
+        this.updateState("state");
     }
 
     /**
@@ -53,4 +53,8 @@ public class ActiveStateManager implements ActiveStateListener {
     public static ActiveStateManager getInstance() {
         return ApplicationManager.getApplication().getService(ActiveStateManager.class);
     }
+
+
 }
+
+
