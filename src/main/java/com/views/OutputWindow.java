@@ -65,7 +65,7 @@ public class OutputWindow {
      */
     public void clearText() {
         ActiveStateManager stateManager = ActiveStateManager.getInstance();
-        stateManager.increment();
+        stateManager.increment(); // Increments the dummy number TODO:Remove
         if (textArea != null) {
             textArea.setText("");
         }
