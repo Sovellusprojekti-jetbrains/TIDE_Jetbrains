@@ -2,16 +2,19 @@ package com.views;
 
 import com.actions.Settings;
 import com.api.ApiHandler;
+import com.api.JsonHandler;
 import com.intellij.ui.components.JBScrollPane;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-
+import java.io.*;
+import java.nio.file.*;
 
 import com.course.*;
+
 import java.util.List;
 
 /**
@@ -35,7 +38,7 @@ public class CustomScreen {
      */
     private JPanel loginPane;
     /**
-     * TitlePanel seems to exists for a test.
+     * TitlePanel seems to exist for a test.
      */
     private JPanel titlePanel;
     /**
@@ -160,8 +163,8 @@ public class CustomScreen {
                     ex.printStackTrace();
                 }
             }
-        }
-        );
+        });
+
         if (apiHandler.isLoggedIn()) {
             switchToLogout();
         } else {
@@ -171,6 +174,7 @@ public class CustomScreen {
 
     /**
      * Creates the panel that contains the list of available demos and tasks.
+     *
      * @param courselist list of courses with tidecli demos.
      */
     private void createCourseListPane(List<Course> courselist) {
@@ -227,6 +231,7 @@ public class CustomScreen {
 
     /**
      * Gets the content of the panel.
+     *
      * @return main panel
      */
     public JPanel getContent() {
@@ -235,6 +240,7 @@ public class CustomScreen {
 
     /**
      * Creates a panel for the task together with the buttons to download or open it.
+     *
      * @param courseTask a CourseTask object for which to create the panel
      * @return the subpanel that contains the tasks name and the two buttons
      */
@@ -279,10 +285,43 @@ public class CustomScreen {
         buttonPanel.add(oButton);
 
         subPanel.add(buttonPanel, BorderLayout.EAST);
-
+        try {
+            createSubTaskpanel(subPanel, courseTask);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return subPanel;
     }
+
     /**
+     * Creates a tree view of the subtasks under the Task which was downloaded.
+     *
+     * @param subPanel the panel that the tree is appended to.
+     * @param courseTask The Course task that the subtasks belong to.
+     */
+    private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask) {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(subPanel);
+        String pathToFile = Settings.getPath();
+        JsonHandler jsonHandler = new JsonHandler();
+        try {
+            StringBuilder settingsPath = new StringBuilder();
+            settingsPath.append(Settings.getPath());
+            settingsPath.append("\\.timdata");
+            Path path = Paths.get(settingsPath.toString());
+            BufferedReader reader = Files.newBufferedReader(path);
+            String line = reader.readLine();
+            StringBuilder sb = new StringBuilder();
+            while (line != null) {
+                    // read next line
+                    sb.append(line).append(System.lineSeparator());
+                    line = reader.readLine();
+            }
+            List<SubTask> subtasks = jsonHandler.jsonToSubtask(sb.toString());
+        } catch (IOException e) {
+            System.out.println("File timdata was not found");
+        }
+    }
+        /**
      * Switches to a state where logging out is possible.
      */
     private void switchToLogout() {
@@ -302,6 +341,7 @@ public class CustomScreen {
         tabbedPane.setSelectedComponent(coursesPane);
         //loginButton.setText("Logout");
     }
+
     /**
      * Switches to a state where logging in is possible.
      */
@@ -336,5 +376,5 @@ public class CustomScreen {
         tabbedPane.setSelectedComponent(loginPane);
     }
 
-}
 
+}
