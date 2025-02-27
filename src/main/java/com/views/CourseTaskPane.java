@@ -158,20 +158,30 @@ public class CourseTaskPane {
             boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
             String path = submitAll ? file.getParent().getPath() : file.getPath();
 
-            new ApiHandler().submitExercise(path);
+            String response = new ApiHandler().submitExercise(path);
+            printOutput(response);
             System.out.println(path);
         });
 
         showOutputButton.addActionListener(event -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow("Output Window");
-
-            if (window != null) {
-                window.show(null);
-                OutputWindow.getInstance().printText("TimBetan tehtävät palauttaa vaan yhden rivin virheen.\n"
-                        + "Tässä siis jotain mallitekstiä, kun merkkijonoja sieltä timistäkin vaan tulee."); //TODO: poista
-            }
+            printOutput("TimBetan tehtävät palauttaa vaan yhden rivin virheen.\n"
+                    + "Tässä siis jotain mallitekstiä, kun merkkijonoja sieltä timistäkin vaan tulee."); //TODO: poista
         });
+    }
+
+
+    /**
+     * Prints a string to the output toolWindow.
+     * @param output String to print
+     */
+    public void printOutput(String output) {
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        ToolWindow window = toolWindowManager.getToolWindow("Output Window");
+
+        if (window != null) {
+            window.show(null);
+            OutputWindow.getInstance().printText(output);
+        }
     }
 }
 

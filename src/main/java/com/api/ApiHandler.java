@@ -118,20 +118,25 @@ public class ApiHandler {
     /**
      * Submit an exercise.
      * @param exercisePath Path of the file to be submitted
+     * @return Response from TIM as a string or an error message
      */
-    public void submitExercise(String exercisePath) {
+    public String submitExercise(String exercisePath) {
+        String response = "";
         try {
             String command = submitCommand + " " + exercisePath;
             ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
             pb.redirectErrorStream(true);
             Process process = pb.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String response = reader.lines().collect(Collectors.joining("\n"));
+            response = reader.lines().collect(Collectors.joining("\n"));
             System.out.println("Raw Output from Python:\n" + response);
         } catch (IOException ex) {
             ex.printStackTrace();
+            response = "IOException:\r\n" +  ex.toString();
         }
+        return response;
     }
+
 
     /**
      * asks tide-cli if there is a login and returns a boolean.
