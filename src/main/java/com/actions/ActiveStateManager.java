@@ -10,14 +10,16 @@ public class ActiveStateManager {
 
 
     /**
-     * Add listener for a specific property change in the ActiveState.
+     * Add listener for property change.
+     * @param listener Listener to be added.
      */
     public void addStatePropertyChangeListener(PropertyChangeListener listener) {
         state.addPropertyChangeListener(listener);
     }
 
     /**
-     * Remove listener for a specific property change in the ActiveState.
+     * Remove listener for property change.
+     * @param listener Listener to be removed.
      */
     public void removeStatePropertyChangeListener(PropertyChangeListener listener) {
         state.removePropertyChangeListener(listener);
