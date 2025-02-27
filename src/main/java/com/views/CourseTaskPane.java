@@ -82,7 +82,6 @@ public class CourseTaskPane {
      * Reset panel.
      */
     private JPanel resetPane;
-    private JCheckBox submitAllInDirectoryCheckBox;
     /**
      * Holds the current project.
      */
@@ -156,8 +155,12 @@ public class CourseTaskPane {
                     .getSelectedEditor()
                     .getFile();
 
-            boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
-            String path = submitAll ? file.getParent().getPath() : file.getPath();
+            String path = file.getPath();
+            // TODO: do something like the following to use the TIDE-CLI
+            // function to submit all task files in a directory by checking
+            // a checkbox, or find a more sensible way to implement it
+            // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
+            // String path = submitAll ? file.getParent().getPath() : file.getPath();
 
             String response = new ApiHandler().submitExercise(path);
             printOutput(response);

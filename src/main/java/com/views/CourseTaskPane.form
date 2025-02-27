@@ -43,14 +43,6 @@
               <text value="Show output"/>
             </properties>
           </component>
-          <component id="2e919" class="javax.swing.JCheckBox" binding="submitAllInDirectoryCheckBox" default-binding="true">
-            <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Submit all in directory"/>
-            </properties>
-          </component>
         </children>
       </grid>
       <grid id="bfbc" binding="resetPane" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
