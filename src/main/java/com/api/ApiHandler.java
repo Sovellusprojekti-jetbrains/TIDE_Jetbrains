@@ -132,7 +132,7 @@ public class ApiHandler {
             System.out.println("Raw Output from Python:\n" + response);
         } catch (IOException ex) {
             ex.printStackTrace();
-            response = "IOException:\r\n" +  ex.toString();
+            response = "IOException:\r\n" + ex;
         }
         return response;
     }
