@@ -2,11 +2,15 @@ package com.api;
 
 import com.actions.Settings;
 import com.course.Course;
+import com.course.SubTask;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.views.InfoView;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -148,6 +152,21 @@ public class ApiHandler {
         return response;
     }
 
+
+    public void resetSubTask(String path) throws IOException {
+        String timData = com.actions.Settings.getPath() + "/.timData"; //.timdata should be where the task was downloaded
+        String taskData = Files.readString(Path.of(timData), StandardCharsets.UTF_8);
+        JsonHandler handler = new JsonHandler();
+        List<SubTask> subtasks = handler.jsonToSubtask(taskData); //List of subtasks related to task
+        String taskId = null; //base case (file open in editor is not subtask of a task)
+        for (SubTask subtask : subtasks) { //finds id_ask_id for the subtask
+            if (path.contains(subtask.getFileName())) {
+                taskId = subtask.getIdeTaskId();
+                break;
+            }
+        }
+        System.out.println(taskId);
+    }
 
     /**
      * asks tide-cli if there is a login and returns a boolean.

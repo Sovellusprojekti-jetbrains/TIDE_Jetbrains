@@ -3,6 +3,7 @@
 
 package com.views;
 
+import com.api.ApiHandler;
 import com.api.JsonHandler;
 import com.course.SubTask;
 import com.course.Course;
@@ -19,10 +20,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -144,14 +141,8 @@ public class CourseTaskPane {
             // kutsu tehtävänlataajaa vivulla -f
             System.out.println(path);
             try {
-                String timdata = com.actions.Settings.getPath() + "/.timdata";
-                System.out.println(timdata);
-                String taskdata = Files.readString(Path.of(timdata), StandardCharsets.UTF_8);
-                System.out.println(taskdata);
-                JsonHandler handler = new JsonHandler();
-                List<SubTask> subtasks = handler.jsonToSubtask(taskdata);
-                System.out.println(subtasks);
-                //TODO: Etsi oikea taskId tiedostonimen perusteella
+                ApiHandler handler = new ApiHandler();
+                handler.resetSubTask(path);
                 //TODO: Kutsu ApiHandlerin load exercise metodia vivulla -f
                 //TODO: mahd. virheiden/poikkeuksien käsitteleminen
             } catch (IOException e) {
