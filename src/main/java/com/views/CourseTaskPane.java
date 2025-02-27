@@ -3,8 +3,10 @@
 
 package com.views;
 
+import com.api.ApiHandler;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -141,28 +143,49 @@ public class CourseTaskPane {
             System.out.println(path);
         });
 
-        // placeholder for submitting exercises
+        // submit exercise
         submitButton.addActionListener(event -> {
-            String path = FileEditorManager
+            if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
+                printOutput("Please open a file to submit in the editor.");
+                return;
+            }
+
+            VirtualFile file = FileEditorManager
                     .getInstance(project)
                     .getSelectedEditor()
-                    .getFile()
-                    .getPath();
+                    .getFile();
 
-            // kutsu tide submitia
+            String path = file.getPath();
+            // TODO: do something like the following to use the TIDE-CLI
+            // function to submit all task files in a directory by checking
+            // a checkbox, or find a more sensible way to implement it
+            // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
+            // String path = submitAll ? file.getParent().getPath() : file.getPath();
+
+            String response = new ApiHandler().submitExercise(path);
+            printOutput(response);
             System.out.println(path);
         });
 
         showOutputButton.addActionListener(event -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow("Output Window");
-
-            if (window != null) {
-                window.show(null);
-                OutputWindow.getInstance().printText("TimBetan tehtävät palauttaa vaan yhden rivin virheen.\n"
-                        + "Tässä siis jotain mallitekstiä, kun merkkijonoja sieltä timistäkin vaan tulee."); //TODO: poista
-            }
+            printOutput("TimBetan tehtävät palauttaa vaan yhden rivin virheen.\n"
+                    + "Tässä siis jotain mallitekstiä, kun merkkijonoja sieltä timistäkin vaan tulee."); //TODO: poista
         });
+    }
+
+
+    /**
+     * Prints a string to the output toolWindow.
+     * @param output String to print
+     */
+    public void printOutput(String output) {
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        ToolWindow window = toolWindowManager.getToolWindow("Output Window");
+
+        if (window != null) {
+            window.show(null);
+            OutputWindow.getInstance().printText(output);
+        }
     }
 }
 
