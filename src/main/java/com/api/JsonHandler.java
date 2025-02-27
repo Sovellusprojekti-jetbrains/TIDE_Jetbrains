@@ -51,12 +51,8 @@ public class JsonHandler {
             JsonObject json = gson.fromJson(jsonString, JsonObject.class);
             JsonObject coursePart = gson.fromJson((json.getAsJsonObject("course_parts")), JsonObject.class);
             List<String> tasks = getValuesInObject(coursePart, "tasks");
-            JsonObject[] objects = new JsonObject[tasks.size()];
-            for (int i = 0; i < tasks.size(); i++) {
-                JsonObject taskObject = gson.fromJson(tasks.get(i), JsonObject.class);
-                objects[i] = taskObject;
-            }
-            for (JsonObject object : objects) {
+            for (String taskJson: tasks) {
+                JsonObject object = gson.fromJson(taskJson, JsonObject.class);
                 for (String currentKey : object.keySet()) {
                     JsonObject task = object.getAsJsonObject(currentKey);
                     SubTask sub = gson.fromJson(task, SubTask.class);
