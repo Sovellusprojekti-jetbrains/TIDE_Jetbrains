@@ -124,13 +124,19 @@ public class CourseTaskPane {
 
         // placeholder for resetting exercises;
         // should behave similar to com.actions.Reset, so both
-        // can delegate processing the path to a third party
+        // can delegate processing the path to a third party //TODO: Pitäisi saada toteutumaan actionista myös
         resetButton.addActionListener(event -> {
-            String path = Objects.requireNonNull(FileEditorManager
+            if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
+                com.views.InfoView.displayError("No files open in editor!", "task reset error");
+                return;
+            }
+
+            VirtualFile file = FileEditorManager
                     .getInstance(project)
-                    .getSelectedEditor())
-                    .getFile()
-                    .getPath();
+                    .getSelectedEditor()
+                    .getFile();
+
+            String path = file.getPath();
 
             // show confirmation dialog and return
             // if the user decides to cancel
@@ -138,15 +144,14 @@ public class CourseTaskPane {
                 return;
             }
 
-            // kutsu tehtävänlataajaa vivulla -f
-            System.out.println(path);
             try {
                 ApiHandler handler = new ApiHandler();
                 handler.resetSubTask(path);
-                //TODO: Kutsu ApiHandlerin load exercise metodia vivulla -f
-                //TODO: mahd. virheiden/poikkeuksien käsitteleminen
             } catch (IOException e) {
                 InfoView.displayError(".timdata file not found!", "Task reset error");
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                InfoView.displayError("An error occurred during task reset! Check Tide CLI", "Task reset error");
                 throw new RuntimeException(e);
             }
         });

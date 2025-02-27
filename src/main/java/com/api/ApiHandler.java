@@ -155,17 +155,26 @@ public class ApiHandler {
 
     public void resetSubTask(String path) throws IOException {
         String timData = com.actions.Settings.getPath() + "/.timData"; //.timdata should be where the task was downloaded
+    public void resetSubTask(String path) throws IOException, InterruptedException {
+        String timData = com.actions.Settings.getPath() + "/.timData"; //.timdata should be saved where the task was downloaded
         String taskData = Files.readString(Path.of(timData), StandardCharsets.UTF_8);
         JsonHandler handler = new JsonHandler();
-        List<SubTask> subtasks = handler.jsonToSubtask(taskData); //List of subtasks related to task
-        String taskId = null; //base case (file open in editor is not subtask of a task)
+        List<SubTask> subtasks = handler.jsonToSubtask(taskData); //List of subtasks related to a task
+        String taskId = null; //base case (file open in editor is not a subtask of a task)
+        String taskPath = null;
         for (SubTask subtask : subtasks) { //finds id_ask_id for the subtask
             if (path.contains(subtask.getFileName())) {
                 taskId = subtask.getIdeTaskId();
+                taskPath = subtask.getPath();
                 break;
             }
         }
-        System.out.println(taskId);
+        if (taskId != null) {
+            this.loadExercise(taskPath + " " + taskId, "-f");
+            //TODO: Miten editorissa auki oleva tiedosto saadaan päivitettyä, jotta muutokset näkyy
+        } else {
+            com.views.InfoView.displayError("File open in editor is not a tide task!", "task reset error");
+        }
     }
 
     /**
