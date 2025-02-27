@@ -147,6 +147,7 @@ public class CourseTaskPane {
         // submit exercise
         submitButton.addActionListener(event -> {
             if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
+                printOutput("Please open a file to submit in the editor.");
                 return;
             }
 
