@@ -12,6 +12,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
 import java.nio.file.*;
 
@@ -19,7 +21,6 @@ import com.course.*;
 import com.intellij.ui.treeStructure.Tree;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -323,34 +324,38 @@ public class CustomScreen {
             }
             List<SubTask> subtasks = jsonHandler.jsonToSubtask(sb.toString());
             for (SubTask task: subtasks) {
-
                 List<SubTask> listForCourse = new ArrayList<>();
                 if (task.getPath().equals(courseTask.getPath())) {
                     listForCourse.add(task);
                     DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task.getIdeTaskId());
-                    if (task.getFileNames().size() == 1) {
-                        DefaultMutableTreeNode file = new DefaultMutableTreeNode(task.getFileNames().get(0));
-                        leaf.add(file);
+                    for (String file : task.getFileNames()) {
+                        leaf.add(new DefaultMutableTreeNode(file.replaceAll("\"", "")));
                     }
-                    root.add(new DefaultMutableTreeNode(leaf));
+                    root.add(leaf);
                 }
                 courseTask.setTasks(listForCourse);
                 }
 
             Tree tree = new Tree(root);
             tree.setRootVisible(false);
-            tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-                @Override
-                public void valueChanged(TreeSelectionEvent e) {
-                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-                    DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
-                    if (selectedNode.getChildCount() != 0) {
-                        api.openTaskProject(Settings.getPath() + "\\" + parent.toString() + "\\" + selectedNode.toString()
-                                + "\\" + selectedNode.getFirstChild().toString());
-                    } else {
-                        api.openTaskProject(Settings.getPath() + "\\" + parent.toString() + "\\" + selectedNode.toString());
+            tree.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() == 2) {
+                        DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                                tree.getLastSelectedPathComponent();
+                        if (node == null) {
+                            return;
+                        }
+                        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+                        DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
+                        if (selectedNode.getChildCount() == 0) {
+                            api.openTaskProject(Settings.getPath() + "\\" + selectedNode.getRoot() + "\\" + parent.toString()
+                                    + "\\" + selectedNode);
+                        } else {
+                            api.openTaskProject(Settings.getPath() + "\\" + parent.toString() + "\\" + selectedNode.toString());
+                        }
                     }
-                }
+                    }
             });
             JBScrollPane container = new JBScrollPane();
             container.add(tree);
