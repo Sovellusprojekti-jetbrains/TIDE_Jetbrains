@@ -1,31 +1,26 @@
 package com.actions;
 
-import com.api.ActiveStateListener;
 import com.intellij.openapi.application.ApplicationManager;
 
-public class ActiveStateManager implements ActiveStateListener {
+import java.beans.PropertyChangeListener;
+
+public class ActiveStateManager {
 
     private ActiveState state = new ActiveState();
 
-    /**
-     * TODO.
-     */
-    public void updateState() {
 
-        // Notify listeners
-        ApplicationManager.getApplication()
-                .getMessageBus()
-                .syncPublisher(ActiveStateListener.TOPIC)
-                .onStateChanged(state);
+    /**
+     * Add listener for a specific property change in the ActiveState.
+     */
+    public void addStatePropertyChangeListener(PropertyChangeListener listener) {
+        state.addPropertyChangeListener(listener);
     }
 
     /**
-     * TODO.
-     * @param newState TODO.
+     * Remove listener for a specific property change in the ActiveState.
      */
-    @Override
-    public void onStateChanged(ActiveState newState) {
-        updateState();
+    public void removeStatePropertyChangeListener(PropertyChangeListener listener) {
+        state.removePropertyChangeListener(listener);
     }
 
     /**
@@ -41,15 +36,21 @@ public class ActiveStateManager implements ActiveStateListener {
      */
     public void increment() {
         state.increment();
-        this.updateState();
     }
 
     /**
-     * Calls the state manaager for use.
+     * Calls the state manager for use.
      * @return The state manager.
      */
     public static ActiveStateManager getInstance() {
         return ApplicationManager.getApplication().getService(ActiveStateManager.class);
+    }
+
+    /**
+     * Forwards the course fetch command to the state.
+     */
+    public void updateCourses() {
+        state.updateCourses();
     }
 
 

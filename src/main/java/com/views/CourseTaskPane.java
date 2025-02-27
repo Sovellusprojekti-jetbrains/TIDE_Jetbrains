@@ -3,15 +3,11 @@
 
 package com.views;
 
-import com.actions.ActiveState;
-import com.actions.ActiveStateManager;
-import com.api.ActiveStateListener;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.util.messages.MessageBusConnection;
 
 import javax.swing.*;
 import java.awt.*;
@@ -157,7 +153,6 @@ public class CourseTaskPane {
             System.out.println(path);
         });
 
-        showOutputButton.setText("Show Output " + ActiveStateManager.getInstance().getCount());
 
         showOutputButton.addActionListener(event -> {
             ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
@@ -171,14 +166,6 @@ public class CourseTaskPane {
             }
         });
 
-        // Listen for state changes TODO: This just slaps a number on the label, change.
-        MessageBusConnection connection = project.getMessageBus().connect();
-        connection.subscribe(ActiveStateListener.TOPIC, new ActiveStateListener() {
-            @Override
-            public void onStateChanged(ActiveState state) {
-                showOutputButton.setText("Show Output " + state.getCount());
-            }
-        });
     }
 }
 
