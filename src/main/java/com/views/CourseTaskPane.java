@@ -167,10 +167,12 @@ public class CourseTaskPane {
             System.out.println(path);
         });
 
+
         showOutputButton.addActionListener(event -> {
             printOutput("TimBetan tehtävät palauttaa vaan yhden rivin virheen.\n"
                     + "Tässä siis jotain mallitekstiä, kun merkkijonoja sieltä timistäkin vaan tulee."); //TODO: poista
         });
+
     }
 
 

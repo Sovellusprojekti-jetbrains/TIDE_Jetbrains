@@ -32,6 +32,7 @@
         />
         <fileEditorProvider implementation="com.factories.MyCustomFileEditorProvider"/>
         <applicationService serviceImplementation="com.actions.StateManager"/>
+        <applicationService serviceImplementation="com.actions.ActiveStateManager"/>
         <applicationConfigurable
             parentId="tools"
             instance="com.actions.AppSettingsConfigurable"
