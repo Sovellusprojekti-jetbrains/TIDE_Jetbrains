@@ -20,6 +20,7 @@ public class ApiHandler {
     private final String taskCreateCommand = "tide task create --all";
     private final String submitCommand = "tide submit";
     private final String taskOpenCommand = "idea64.exe";
+
     /**
      * Logs in to TIDE-CLI.
      * @throws IOException Method calls pb.start() and pb.readLine() may throw IOException
@@ -113,6 +114,30 @@ public class ApiHandler {
             com.views.ErrorView.displayError("An error occurred during download", "Download error");
         }
     }
+
+
+    /**
+     * Submit an exercise.
+     * @param exercisePath Path of the file to be submitted
+     * @return Response from TIM as a string or an error message
+     */
+    public String submitExercise(String exercisePath) {
+        String response = "";
+        try {
+            String command = submitCommand + " " + exercisePath;
+            ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            response = reader.lines().collect(Collectors.joining("\n"));
+            System.out.println("Raw Output from Python:\n" + response);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            response = "IOException:\r\n" + ex;
+        }
+        return response;
+    }
+
 
     /**
      * asks tide-cli if there is a login and returns a boolean.
