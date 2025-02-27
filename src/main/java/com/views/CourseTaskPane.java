@@ -4,6 +4,7 @@
 package com.views;
 
 import com.api.JsonHandler;
+import com.course.SubTask;
 import com.course.Course;
 import com.api.ApiHandler;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -15,7 +16,6 @@ import com.intellij.openapi.wm.ToolWindowManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -149,7 +149,8 @@ public class CourseTaskPane {
                 String taskdata = Files.readString(Path.of(timdata), StandardCharsets.UTF_8);
                 System.out.println(taskdata);
                 JsonHandler handler = new JsonHandler();
-                //List<SubTask> subtasks = handler.jsonToTasks(taskdata);
+                List<SubTask> subtasks = handler.jsonToSubtask(taskdata);
+                System.out.println(subtasks);
                 //TODO: Etsi oikea taskId tiedostonimen perusteella
                 //TODO: Kutsu ApiHandlerin load exercise metodia vivulla -f
                 //TODO: mahd. virheiden/poikkeuksien käsitteleminen
