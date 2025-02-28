@@ -3,6 +3,7 @@
 
 package com.views;
 
+import com.actions.ActiveState;
 import com.api.ApiHandler;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
@@ -13,6 +14,8 @@ import com.intellij.openapi.wm.ToolWindowManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -173,6 +176,20 @@ public class CourseTaskPane {
                     + "Tässä siis jotain mallitekstiä, kun merkkijonoja sieltä timistäkin vaan tulee."); //TODO: poista
         });
 
+        ActiveState stateManager = ActiveState.getInstance();
+        stateManager.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("logout".equals(evt.getPropertyName())) {
+                    hideWindow();
+                }
+                if ("login".equals(evt.getPropertyName())) {
+                    showWindow();
+                }
+            }
+        });
+
+        hideWindow();
     }
 
 
@@ -188,6 +205,22 @@ public class CourseTaskPane {
             window.show(null);
             OutputWindow.getInstance().printText(output);
         }
+    }
+
+
+
+    private void hideWindow() {
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        ToolWindow window = toolWindowManager.getToolWindow("Course Task");
+        assert window != null;
+        window.setAvailable(false);
+    }
+
+    private void showWindow() {
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        ToolWindow window = toolWindowManager.getToolWindow("Course Task");
+        assert window != null;
+        window.setAvailable(true);
     }
 }
 

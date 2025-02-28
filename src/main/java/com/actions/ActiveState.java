@@ -2,6 +2,7 @@ package com.actions;
 
 import com.api.ApiHandler;
 import com.course.Course;
+import com.intellij.openapi.application.ApplicationManager;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -14,6 +15,7 @@ public class ActiveState {
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private int count;
     private List<Course> courseList;
+    private boolean isLoggedIn = false;
 
 
     /**
@@ -22,6 +24,14 @@ public class ActiveState {
      */
     public int getCount() {
         return count;
+    }
+
+    /**
+     * Calls the state manager for use.
+     * @return The state manager.
+     */
+    public static ActiveState getInstance() {
+        return ApplicationManager.getApplication().getService(ActiveState.class);
     }
 
     /**
@@ -65,6 +75,20 @@ public class ActiveState {
         ApiHandler apiHandler = new ApiHandler();
         courseList = apiHandler.courses();
         pcs.firePropertyChange("courseList", oldCourseList, courseList);
+    }
+
+    public void login() {
+        if (!isLoggedIn) {
+            isLoggedIn = true;
+            pcs.firePropertyChange("login", false, isLoggedIn);
+        }
+    }
+
+    public void logout() {
+        if (isLoggedIn) {
+            isLoggedIn = false;
+            pcs.firePropertyChange("logout", true, isLoggedIn);
+        }
     }
 }
 

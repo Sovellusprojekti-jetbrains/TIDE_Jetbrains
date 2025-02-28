@@ -1,18 +1,23 @@
 package com.views;
 
-import com.actions.ActiveStateManager;
+import com.actions.ActiveState;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTextArea;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class OutputWindow {
     private JPanel panel;
     private JTextArea textArea;
     private static OutputWindow instance;
+    private Project project;
 
     /**
      * Tool window for the output of submitted tasks.
@@ -31,6 +36,7 @@ public class OutputWindow {
 
         panel.add(scrollPane, BorderLayout.CENTER);
         panel.add(clearButton, BorderLayout.SOUTH);
+
     }
 
     /**
@@ -64,7 +70,7 @@ public class OutputWindow {
      * Clears the text off the output window.
      */
     public void clearText() {
-        ActiveStateManager stateManager = ActiveStateManager.getInstance();
+        ActiveState stateManager = ActiveState.getInstance();
         stateManager.increment(); // Increments the dummy number TODO:Remove
         if (textArea != null) {
             textArea.setText("");
