@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.views.InfoView;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

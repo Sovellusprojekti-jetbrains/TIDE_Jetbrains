@@ -57,7 +57,8 @@ public class JsonHandler {
             for (JsonObject object: objects) {
                 for (String currentKey : object.keySet()) {
                     Object task = object.get(currentKey);
-                    JsonObject temp = gson.fromJson((object.getAsJsonObject(currentKey)), JsonObject.class); //Need to store filename into SubTask object
+                    //Need to store filename into SubTask object
+                    JsonObject temp = gson.fromJson((object.getAsJsonObject(currentKey)), JsonObject.class);
                     JsonArray filePart = temp.get("task_files").getAsJsonArray();
                     JsonElement temp2 = filePart.get(0); //This thing works only as long as timdata's representation doesn't change
                     JsonObject temp3 = temp2.getAsJsonObject(); //Should consider making proper pattern matcher to parse Json data

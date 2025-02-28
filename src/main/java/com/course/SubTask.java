@@ -67,14 +67,14 @@ public class SubTask {
 
     /**
      * setter for the file name of a subtask.
-     * @param fileName file name as String
+     * @param name file name as String
      */
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFileName(String name) {
+        this.fileName = name;
     }
 
     /**
-     * getter for the file name of a subtask
+     * getter for the file name of a subtask.
      * @return file name as String
      */
     public String getFileName() {
