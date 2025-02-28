@@ -123,7 +123,7 @@ public class CourseTaskPane {
         });
 
         // should behave similar to com.actions.Reset, so both
-        // can delegate processing the path to a third party //TODO: Pitäisi saada toteutumaan actionista myös
+        // can delegate processing the path to a third party
         resetButton.addActionListener(event -> {
             if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
                 com.views.InfoView.displayError("No files open in editor!", "task reset error");
