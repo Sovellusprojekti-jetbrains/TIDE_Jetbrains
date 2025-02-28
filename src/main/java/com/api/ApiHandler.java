@@ -24,9 +24,8 @@ public class ApiHandler {
     private final String loginCommand   = "tide login";
     private final String logoutCommand  = "tide logout";
     private final String checkLoginCommand = "tide check-login --json";
-    private final String taskCreateCommand = "tide task create --all";
+    private final String taskCreateCommand = "tide task create";
     private final String submitCommand = "tide submit";
-
     /**
      * Logs in to TIDE-CLI.
      * @throws IOException Method calls pb.start() and pb.readLine() may throw IOException
@@ -96,9 +95,8 @@ public class ApiHandler {
     /**
      * Loads exercise into folder defined in settings.
      * @param timPath Path of the exercise in TIM
-     * @param flag Defines if all task will be downloaded or if a task will be reset etc.
      */
-    public void loadExercise(String timPath, String flag) throws IOException, InterruptedException {
+    public void loadExercise(String timPath) throws IOException, InterruptedException {
         String destination = Settings.getPath();
         // Destination path is surrounded by quotes only if it contains spaces.
         String command = this.taskCreateCommand + " " + timPath + " -d "
@@ -118,7 +116,7 @@ public class ApiHandler {
         System.out.println("Process exited with code: " + exitCode);
         if (exitCode != 0) {
             // Maybe there could be more advanced error reporting
-            InfoView.displayError("An error occurred during download", "Download error");
+            com.views.InfoView.displayError("An error occurred during download", "Download error");
         }
     }
 
@@ -131,33 +129,6 @@ public class ApiHandler {
         this.loadExercise(" " + timPath + " " + flag);
     }
 
-
-    /**
-     * Submit an exercise.
-     * @param exercisePath Path of the file to be submitted
-     * @return Response from TIM as a string or an error message
-     */
-    public String submitExercise(String exercisePath) {
-        String response = "";
-        try {
-            String command = submitCommand + " " + exercisePath;
-            ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
-            pb.redirectErrorStream(true);
-            Process process = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            response = reader.lines().collect(Collectors.joining("\n"));
-            System.out.println("Raw Output from Python:\n" + response);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            response = "IOException:\r\n" + ex;
-        }
-        return response;
-    }
-
-
-    public void resetSubTask(String path) throws IOException {
-        String timData = com.actions.Settings.getPath() + "/.timData"; //.timdata should be where the task was downloaded
-    public void resetSubTask(String path) throws IOException, InterruptedException {
     /**
      * Resets subtask back to the state of latest submit.
      * @param path Tim-path of the subtask.
@@ -192,6 +163,28 @@ public class ApiHandler {
         } else {
             com.views.InfoView.displayError("File open in editor is not a tide task!", "task reset error");
         }
+    }
+
+    /**
+     * Submit an exercise.
+     * @param exercisePath Path of the file to be submitted
+     * @return Response from TIM as a string or an error message
+     */
+    public String submitExercise(String exercisePath) {
+        String response = "";
+        try {
+            String command = submitCommand + " " + exercisePath;
+            ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            response = reader.lines().collect(Collectors.joining("\n"));
+            System.out.println("Raw Output from Python:\n" + response);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            response = "IOException:\r\n" + ex;
+        }
+        return response;
     }
 
     /**

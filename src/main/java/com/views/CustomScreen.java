@@ -268,11 +268,11 @@ public class CustomScreen {
                 try {
                     api.loadExercise(courseTask.getPath(), "--all");
                 } catch (IOException ex) {
-                    InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
+                    com.views.InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
                     //Maybe there could be more advanced error reporting
                 } catch (InterruptedException ex) {
-                    InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
+                    com.views.InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
                 }
             }

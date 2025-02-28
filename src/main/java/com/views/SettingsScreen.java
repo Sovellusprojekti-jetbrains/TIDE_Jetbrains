@@ -60,11 +60,11 @@ public class SettingsScreen {
 
     /**
      * Displays error message on screen.
-      * @param message Error message as String
+     * @param message Error message as String
      * @param title Title for error message
      */
     private void displayError(String message, String title) {
-        InfoView.displayError(message, title);
+        com.views.InfoView.displayError(message, title);
     }
 
     /**

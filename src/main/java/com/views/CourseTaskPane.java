@@ -4,15 +4,10 @@
 package com.views;
 
 import com.api.ApiHandler;
-import com.api.JsonHandler;
-import com.course.SubTask;
-import com.course.Course;
-import com.api.ApiHandler;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindowManager;
 
 import javax.swing.*;
@@ -181,9 +176,7 @@ public class CourseTaskPane {
             printOutput("TimBetan tehtävät palauttaa vaan yhden rivin virheen.\n"
                     + "Tässä siis jotain mallitekstiä, kun merkkijonoja sieltä timistäkin vaan tulee."); //TODO: poista
         });
-
     }
-
 
     /**
      * Prints a string to the output toolWindow.
