@@ -122,7 +122,6 @@ public class CourseTaskPane {
             }
         });
 
-        // placeholder for resetting exercises;
         // should behave similar to com.actions.Reset, so both
         // can delegate processing the path to a third party //TODO: Pitäisi saada toteutumaan actionista myös
         resetButton.addActionListener(event -> {
@@ -138,15 +137,14 @@ public class CourseTaskPane {
 
             String path = file.getPath();
 
-            // show confirmation dialog and return
-            // if the user decides to cancel
+            // show confirmation dialog and return if the user decides to cancel
             if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
                 return;
             }
 
             try {
                 ApiHandler handler = new ApiHandler();
-                handler.resetSubTask(path);
+                handler.resetSubTask(path, file);
             } catch (IOException e) {
                 InfoView.displayError(".timdata file not found!", "Task reset error");
                 throw new RuntimeException(e);

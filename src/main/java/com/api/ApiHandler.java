@@ -5,6 +5,8 @@ import com.course.Course;
 import com.course.SubTask;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.views.InfoView;
 
 import java.io.*;
@@ -156,6 +158,14 @@ public class ApiHandler {
     public void resetSubTask(String path) throws IOException {
         String timData = com.actions.Settings.getPath() + "/.timData"; //.timdata should be where the task was downloaded
     public void resetSubTask(String path) throws IOException, InterruptedException {
+    /**
+     * Resets subtask back to the state of latest submit.
+     * @param path Tim-path of the subtask.
+     * @param file Virtual file to get files local path and to communicate changes to idea's UI.
+     * @throws IOException If .timdata file is not found or some other file reading error occurs.
+     * @throws InterruptedException If TIDE CLI process fails or something else goes wrong.
+     */
+    public void resetSubTask(String path, VirtualFile file) throws IOException, InterruptedException {
         String timData = com.actions.Settings.getPath() + "/.timData"; //.timdata should be saved where the task was downloaded
         String taskData = Files.readString(Path.of(timData), StandardCharsets.UTF_8);
         JsonHandler handler = new JsonHandler();
@@ -171,7 +181,14 @@ public class ApiHandler {
         }
         if (taskId != null) {
             this.loadExercise(taskPath + " " + taskId, "-f");
-            //TODO: Miten editorissa auki oleva tiedosto saadaan päivitettyä, jotta muutokset näkyy
+            if (file != null) { //Virtual file must be refreshed and intellij idea's UI notified
+                file.refresh(true, true);
+                ApplicationManager.getApplication().invokeLater(() -> {
+                    if (file.isValid()) {
+                        file.getParent().refresh(false, false);
+                    }
+                });
+            }
         } else {
             com.views.InfoView.displayError("File open in editor is not a tide task!", "task reset error");
         }
