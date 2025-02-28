@@ -136,7 +136,7 @@ public class ApiHandler {
      * @throws InterruptedException If TIDE CLI process fails or something else goes wrong.
      */
     public void resetSubTask(String path, VirtualFile file) throws IOException, InterruptedException {
-        String timData = com.actions.Settings.getPath() + "/.timData"; //.timdata should be saved where the task was downloaded
+        String timData = com.actions.Settings.getPath() + "/.timdata"; //.timdata should be saved where the task was downloaded
         String taskData = Files.readString(Path.of(timData), StandardCharsets.UTF_8);
         JsonHandler handler = new JsonHandler();
         List<SubTask> subtasks = handler.jsonToSubtask(taskData); //List of subtasks related to a task
