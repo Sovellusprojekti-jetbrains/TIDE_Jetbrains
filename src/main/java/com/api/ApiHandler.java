@@ -130,7 +130,7 @@ public class ApiHandler {
 
     /**
      * Resets subtask back to the state of latest submit.
-     * @param path Tim-path of the subtask.
+     * @param path local path of the subtask.
      * @param file Virtual file to get files local path and to communicate changes to idea's UI.
      * @throws IOException If .timdata file is not found or some other file reading error occurs.
      * @throws InterruptedException If TIDE CLI process fails or something else goes wrong.
@@ -143,6 +143,7 @@ public class ApiHandler {
         String taskId = null; //base case (file open in editor is not a subtask of a task)
         String taskPath = null;
         for (SubTask subtask : subtasks) { //finds ide_task_id and path for the subtask
+            //TODO: How to distinguish between two files with the same name
             if (path.contains(subtask.getFileName())) {
                 taskId = subtask.getIdeTaskId();
                 taskPath = subtask.getPath();
