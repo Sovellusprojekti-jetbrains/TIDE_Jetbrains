@@ -16,6 +16,7 @@ public class JsonHandler {
      * Parses Json data from a string to Course objects.
      * If the Json does not map to an array of Courses,
      * returns an empty list.
+     *
      * @param jsonString Json to parse
      * @return A list of courses
      */
@@ -39,6 +40,7 @@ public class JsonHandler {
      * Parses Json data from a string to subtask objects.
      * If the Json does not map to an array of subtasks,
      * returns an empty list.
+     *
      * @param jsonString json to parse
      * @return a list of subtasks
      */
@@ -49,22 +51,14 @@ public class JsonHandler {
             JsonObject json = gson.fromJson(jsonString, JsonObject.class);
             JsonObject coursePart = gson.fromJson((json.getAsJsonObject("course_parts")), JsonObject.class);
             List<String> tasks = getValuesInObject(coursePart, "tasks");
-            JsonObject[] objects = new JsonObject[tasks.size()];
-            for (int i = 0; i < tasks.size(); i++) {
-                JsonObject taskObject = gson.fromJson(tasks.get(i), JsonObject.class);
-                objects[i] = taskObject;
-            }
-            for (JsonObject object: objects) {
+            for (String taskJson: tasks) {
+                JsonObject object = gson.fromJson(taskJson, JsonObject.class);
                 for (String currentKey : object.keySet()) {
-                    Object task = object.get(currentKey);
-                    //Need to store filename into SubTask object
-                    JsonObject temp = gson.fromJson((object.getAsJsonObject(currentKey)), JsonObject.class);
-                    JsonArray filePart = temp.get("task_files").getAsJsonArray();
-                    JsonElement temp2 = filePart.get(0); //This thing works only as long as timdata's representation doesn't change
-                    JsonObject temp3 = temp2.getAsJsonObject(); //Should consider making proper pattern matcher to parse Json data
-                    String fileName = temp3.get("file_name").getAsString();
-                    subTaskList.add(gson.fromJson(task.toString(), SubTask.class));
-                    subTaskList.getLast().setFileName(fileName);
+                    JsonObject task = object.getAsJsonObject(currentKey);
+                    SubTask sub = gson.fromJson(task, SubTask.class);
+                    List<String> files = getValuesInObject(task, "file_name");
+                    sub.setFileName(files);
+                    subTaskList.add(sub);
                 }
             }
         } catch (JsonParseException | IllegalStateException e) {
@@ -77,6 +71,7 @@ public class JsonHandler {
 
     /**
      * Gets the values from a specified key from a json object.
+     *
      * @param jsonObject the object that is searched with the key
      * @param key the key that contains the searched values
      * @return list of values
@@ -88,12 +83,33 @@ public class JsonHandler {
             if (currentKey.equals(key)) {
                 accumulatedValues.add(value.toString());
             }
-            if (value instanceof JsonObject && !currentKey.equals(key)) {
-                accumulatedValues.addAll(getValuesInObject((JsonObject) value, key));
+                if (value instanceof JsonObject) {
+                    accumulatedValues.addAll(getValuesInObject((JsonObject) value, key));
+                } else if (value instanceof JsonArray) {
+            accumulatedValues.addAll(getValuesInArray((JsonArray) value, key));
+        }
+        }
+        return accumulatedValues;
+    }
+
+    /**
+     * Gets the values from a specified key from a json array.
+     * @param jsonArray the array that is searched with the key
+     * @param key the key that contains the searched values
+     * @return list of values.
+     */
+    public List<String> getValuesInArray(JsonArray jsonArray, String key) {
+        List<String> accumulatedValues = new ArrayList<>();
+        for (Object obj : jsonArray) {
+            if (obj instanceof JsonArray) {
+                accumulatedValues.addAll(getValuesInArray((JsonArray) obj, key));
+            } else if (obj instanceof JsonObject) {
+                accumulatedValues.addAll(getValuesInObject((JsonObject) obj, key));
             }
         }
 
         return accumulatedValues;
     }
 
-}
+    }
+

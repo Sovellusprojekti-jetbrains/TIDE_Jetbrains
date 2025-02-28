@@ -10,11 +10,15 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
 import java.nio.file.*;
 
 import com.course.*;
+import com.intellij.ui.treeStructure.Tree;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -140,7 +144,7 @@ public class CustomScreen {
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Settings temp = new com.actions.Settings();
+                Settings temp = new Settings();
                 temp.displaySettings();
             }
         });
@@ -164,7 +168,6 @@ public class CustomScreen {
                 }
             }
         });
-
         if (apiHandler.isLoggedIn()) {
             switchToLogout();
         } else {
@@ -294,34 +297,94 @@ public class CustomScreen {
     }
 
     /**
-     * Creates a tree view of the subtasks under the Task which was downloaded.
-     *
-     * @param subPanel the panel that the tree is appended to.
+     * Creates and adds a panel of clickable subtasks to the panel containing the course that the subtasks belong to.
+     * @param subPanel the panel that the panel of subtasks is appended to.
      * @param courseTask The Course task that the subtasks belong to.
      */
     private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask) {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(subPanel);
         String pathToFile = Settings.getPath();
         JsonHandler jsonHandler = new JsonHandler();
+        String timData = readTimData(pathToFile);
+        if (!timData.isEmpty()) {
+            List<SubTask> subtasks = jsonHandler.jsonToSubtask(timData);
+            Tree tree = createTree(subtasks, courseTask);
+            JBScrollPane container = new JBScrollPane();
+            container.add(tree);
+            container.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            container.setViewportView(tree);
+            subPanel.add(container);
+        }
+    }
+
+    /**
+     * Creates a clickable Tree view used to show subtasks and their files.
+     * @param subtasks Subtask for a course that also contain the files for the subtask.
+     * @param courseTask The coursetask that the subtasks belong to
+     * @return The created tree view.
+     */
+    private Tree createTree(List<SubTask> subtasks, CourseTask courseTask) {
+        ApiHandler api = new ApiHandler();
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(courseTask.getName());
+        for (SubTask task: subtasks) {
+            List<SubTask> listForCourse = new ArrayList<>();
+            if (task.getPath().equals(courseTask.getPath())) {
+                listForCourse.add(task);
+                DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task.getIdeTaskId());
+                for (String file : task.getFileName()) {
+                    leaf.add(new DefaultMutableTreeNode(file.replaceAll("\"", "")));
+                }
+                root.add(leaf);
+            }
+            courseTask.setTasks(listForCourse);
+        }
+        Tree tree = new Tree(root);
+        tree.setRootVisible(false);
+        tree.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                            tree.getLastSelectedPathComponent();
+                    if (node == null) {
+                        return;
+                    }
+                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+                    DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
+                    if (selectedNode.getChildCount() == 0) {
+                        api.openTaskProject(Settings.getPath() + "\\" + selectedNode.getRoot() + "\\" + parent.toString()
+                                + "\\" + selectedNode);
+                    } else {
+                        api.openTaskProject(Settings.getPath() + "\\" + parent.toString() + "\\" + selectedNode.toString());
+                    }
+                }
+            }
+        });
+        return tree;
+    }
+
+    /**
+     * Reads the timdata file that is located in the path.
+     * @param pathToFile Path in the settings where the timdata file is located after downloading a task.
+     * @return timdata in string format, empy if file was not found
+     */
+    private String readTimData(String pathToFile) {
+        StringBuilder sb = new StringBuilder();
         try {
-            StringBuilder settingsPath = new StringBuilder();
-            settingsPath.append(Settings.getPath());
-            settingsPath.append("\\.timdata");
-            Path path = Paths.get(settingsPath.toString());
+            String settingsPath = pathToFile + "\\.timdata";
+            Path path = Paths.get(settingsPath);
             BufferedReader reader = Files.newBufferedReader(path);
             String line = reader.readLine();
-            StringBuilder sb = new StringBuilder();
             while (line != null) {
-                    // read next line
-                    sb.append(line).append(System.lineSeparator());
-                    line = reader.readLine();
+                // read next line
+                sb.append(line).append(System.lineSeparator());
+                line = reader.readLine();
             }
-            List<SubTask> subtasks = jsonHandler.jsonToSubtask(sb.toString());
         } catch (IOException e) {
             System.out.println("File timdata was not found");
         }
+        return sb.toString();
     }
-        /**
+
+    /**
      * Switches to a state where logging out is possible.
      */
     private void switchToLogout() {

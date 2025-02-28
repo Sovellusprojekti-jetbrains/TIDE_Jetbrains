@@ -25,6 +25,8 @@ public class ApiHandler {
     private final String checkLoginCommand = "tide check-login --json";
     private final String taskCreateCommand = "tide task create";
     private final String submitCommand = "tide submit";
+    private final String taskOpenCommand = "idea64.exe";
+
     /**
      * Logs in to TIDE-CLI.
      * @throws IOException Method calls pb.start() and pb.readLine() may throw IOException
@@ -143,11 +145,12 @@ public class ApiHandler {
         String taskId = null; //base case (file open in editor is not a subtask of a task)
         String taskPath = null;
         for (SubTask subtask : subtasks) { //finds ide_task_id and path for the subtask
-            //TODO: How to distinguish between two files with the same name
-            if (path.contains(subtask.getFileName())) {
-                taskId = subtask.getIdeTaskId();
-                taskPath = subtask.getPath();
-                break;
+            for (String name : subtask.getFileName()) {
+                if (path.contains(name.replaceAll("\"", ""))) {
+                    taskId = subtask.getIdeTaskId();
+                    taskPath = subtask.getPath();
+                    break;
+                }
             }
         }
         if (taskId != null) {
@@ -214,6 +217,23 @@ public class ApiHandler {
 
 
         return false;
+    }
+
+    /**
+     * opens the clicked subtasks project.
+     * @param taskPath path to the folder that has the clicked subtask.
+     */
+    public void openTaskProject(String taskPath) {
+        try {
+            String command = taskOpenCommand + " " + taskPath;
+            ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            System.out.println("Process exited with code: " + exitCode);
+    } catch (IOException | InterruptedException ex) {
+        ex.printStackTrace();
+    }
     }
 
     class LoginOutput {
