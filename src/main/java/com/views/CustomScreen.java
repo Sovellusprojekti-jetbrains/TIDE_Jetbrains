@@ -330,7 +330,7 @@ public class CustomScreen {
             if (task.getPath().equals(courseTask.getPath())) {
                 listForCourse.add(task);
                 DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task.getIdeTaskId());
-                for (String file : task.getFileNames()) {
+                for (String file : task.getFileName()) {
                     leaf.add(new DefaultMutableTreeNode(file.replaceAll("\"", "")));
                 }
                 root.add(leaf);

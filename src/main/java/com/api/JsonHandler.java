@@ -57,7 +57,7 @@ public class JsonHandler {
                     JsonObject task = object.getAsJsonObject(currentKey);
                     SubTask sub = gson.fromJson(task, SubTask.class);
                     List<String> files = getValuesInObject(task, "file_name");
-                    sub.setFileNames(files);
+                    sub.setFileName(files);
                     subTaskList.add(sub);
                 }
             }

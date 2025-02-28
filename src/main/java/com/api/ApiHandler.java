@@ -145,11 +145,12 @@ public class ApiHandler {
         String taskId = null; //base case (file open in editor is not a subtask of a task)
         String taskPath = null;
         for (SubTask subtask : subtasks) { //finds ide_task_id and path for the subtask
-            //TODO: How to distinguish between two files with the same name
-            if (path.contains(subtask.getFileName())) {
-                taskId = subtask.getIdeTaskId();
-                taskPath = subtask.getPath();
-                break;
+            for (String name : subtask.getFileName()) {
+                if (path.contains(name.replaceAll("\"", "")) && path.contains(subtask.getIdeTaskId())) {
+                    taskId = subtask.getIdeTaskId();
+                    taskPath = subtask.getPath();
+                    break;
+                }
             }
         }
         if (taskId != null) {
