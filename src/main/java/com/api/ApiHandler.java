@@ -146,7 +146,7 @@ public class ApiHandler {
         String taskPath = null;
         for (SubTask subtask : subtasks) { //finds ide_task_id and path for the subtask
             for (String name : subtask.getFileName()) {
-                if (path.contains(name.replaceAll("\"", "")) && path.contains(subtask.getIdeTaskId())) {
+                if (path.contains(name.replaceAll("\"", ""))) {
                     taskId = subtask.getIdeTaskId();
                     taskPath = subtask.getPath();
                     break;
