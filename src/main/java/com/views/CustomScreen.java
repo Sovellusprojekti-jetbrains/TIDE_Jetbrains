@@ -266,13 +266,13 @@ public class CustomScreen {
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
                 try {
-                    api.loadExercise(courseTask.getPath());
+                    api.loadExercise(courseTask.getPath(), "--all");
                 } catch (IOException ex) {
-                    com.views.ErrorView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
+                    com.views.InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
                     //Maybe there could be more advanced error reporting
                 } catch (InterruptedException ex) {
-                    com.views.ErrorView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
+                    com.views.InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
                 }
             }

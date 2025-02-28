@@ -2,9 +2,7 @@ package com.api;
 
 import com.course.Course;
 import com.course.SubTask;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +57,14 @@ public class JsonHandler {
             for (JsonObject object: objects) {
                 for (String currentKey : object.keySet()) {
                     Object task = object.get(currentKey);
+                    //Need to store filename into SubTask object
+                    JsonObject temp = gson.fromJson((object.getAsJsonObject(currentKey)), JsonObject.class);
+                    JsonArray filePart = temp.get("task_files").getAsJsonArray();
+                    JsonElement temp2 = filePart.get(0); //This thing works only as long as timdata's representation doesn't change
+                    JsonObject temp3 = temp2.getAsJsonObject(); //Should consider making proper pattern matcher to parse Json data
+                    String fileName = temp3.get("file_name").getAsString();
                     subTaskList.add(gson.fromJson(task.toString(), SubTask.class));
+                    subTaskList.getLast().setFileName(fileName);
                 }
             }
         } catch (JsonParseException | IllegalStateException e) {

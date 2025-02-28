@@ -16,6 +16,11 @@ public class SubTask {
      */
     private String path;
 
+    /**
+     * Filename of an individual subtask.
+     */
+    private String fileName;
+
 
 
     /**
@@ -58,5 +63,21 @@ public class SubTask {
      */
     public String getPath() {
         return this.path;
+    }
+
+    /**
+     * setter for the file name of a subtask.
+     * @param name file name as String
+     */
+    public void setFileName(String name) {
+        this.fileName = name;
+    }
+
+    /**
+     * getter for the file name of a subtask.
+     * @return file name as String
+     */
+    public String getFileName() {
+        return this.fileName;
     }
 }
