@@ -66,17 +66,18 @@ public class SubTask {
     }
 
     /**
-     * Setter for the subtask filenames.
-     * @param names filenames of the subtasks
+     * setter for the file names of a subtask.
+     * @param name file name as String
      */
-    public void setFileNames(List<String> names) {
-        this.filenames = names;
+    public void setFileName(List<String> name) {
+        this.fileName = name;
     }
+
     /**
-     * getter for the subtask filenames.
-     * @return filenames of the subtasks
+     * getter for the file names of a subtask.
+     * @return file name as String
      */
-    public List<String> getFileNames() {
-        return this.filenames;
+    public List<String> getFileName() {
+        return this.fileName;
     }
 }

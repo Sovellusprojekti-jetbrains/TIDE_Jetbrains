@@ -8,7 +8,6 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindowManager;
 
 import javax.swing.*;
@@ -16,7 +15,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Objects;
 
 /**
 * Hoidetaan kaikki ruudun oikealla puolella olevan tehtävän palautuksen suorittavan ikkunan toiminnalliset sekä graaffiset toiminnot
@@ -118,29 +116,35 @@ public class CourseTaskPane {
             }
         });
 
-        // placeholder for resetting exercises;
-        // should behave similar to com.actions.Reset, so both
-        // can delegate processing the path to a third party
+        //Resets subtask back to the state of last submit.
         resetButton.addActionListener(event -> {
-            String path = Objects.requireNonNull(FileEditorManager
-                    .getInstance(project)
-                    .getSelectedEditor())
-                    .getFile()
-                    .getPath();
-
-            // show confirmation dialog and return
-            // if the user decides to cancel
-            if (Messages.showOkCancelDialog("Confirm exercise reset",
-                                            "Reset Exercise",
-                                            "OK",
-                                            "Cancel",
-                                            Messages.getWarningIcon())
-                == Messages.CANCEL) {
+            if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
+                com.views.InfoView.displayError("No files open in editor!", "task reset error");
                 return;
             }
 
-            // kutsu tehtävänlataajaa vivulla -f
-            System.out.println(path);
+            VirtualFile file = FileEditorManager
+                    .getInstance(project)
+                    .getSelectedEditor()
+                    .getFile();
+
+            String path = file.getPath();
+
+            // show confirmation dialog and return if the user decides to cancel
+            if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
+                return;
+            }
+
+            try {
+                ApiHandler handler = new ApiHandler();
+                handler.resetSubTask(path, file);
+            } catch (IOException e) {
+                InfoView.displayError(".timdata file not found!", "Task reset error");
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                InfoView.displayError("An error occurred during task reset! Check Tide CLI", "Task reset error");
+                throw new RuntimeException(e);
+            }
         });
 
         // submit exercise
@@ -172,9 +176,7 @@ public class CourseTaskPane {
             printOutput("TimBetan tehtävät palauttaa vaan yhden rivin virheen.\n"
                     + "Tässä siis jotain mallitekstiä, kun merkkijonoja sieltä timistäkin vaan tulee."); //TODO: poista
         });
-
     }
-
 
     /**
      * Prints a string to the output toolWindow.

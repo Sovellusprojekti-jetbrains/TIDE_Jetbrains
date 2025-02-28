@@ -34,10 +34,10 @@
         <applicationService serviceImplementation="com.actions.StateManager"/>
         <applicationService serviceImplementation="com.actions.ActiveStateManager"/>
         <applicationConfigurable
-            parentId="tools"
-            instance="com.actions.AppSettingsConfigurable"
-            id="com.actions.AppSettingsConfigurable"
-            displayName="TIDE settings"/>
+                parentId="tools"
+                instance="com.actions.AppSettingsConfigurable"
+                id="com.actions.AppSettingsConfigurable"
+                displayName="TIDE settings"/>
     </extensions>
     <actions>
         <action id="MyPlugin.OpenCustomView"
@@ -50,11 +50,11 @@
                 id="org.intellij.sdk.action.GroupedActions"
                 text="Tide"
                 popup="true"
-                >
-        <add-to-group
-                group-id="MainMenu"
-                anchor="last"
-                />
+        >
+            <add-to-group
+                    group-id="MainMenu"
+                    anchor="last"
+            />
             <action id="com.actions.About" class="com.actions.About" text="TIDE" description="TIDE menu">
             </action>
             <action id="com.actions.Settings" class="com.actions.Settings" text="Settings" description="Tide settings">
