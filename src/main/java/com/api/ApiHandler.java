@@ -172,7 +172,7 @@ public class ApiHandler {
         List<SubTask> subtasks = handler.jsonToSubtask(taskData); //List of subtasks related to a task
         String taskId = null; //base case (file open in editor is not a subtask of a task)
         String taskPath = null;
-        for (SubTask subtask : subtasks) { //finds id_ask_id for the subtask
+        for (SubTask subtask : subtasks) { //finds ide_task_id and path for the subtask
             if (path.contains(subtask.getFileName())) {
                 taskId = subtask.getIdeTaskId();
                 taskPath = subtask.getPath();

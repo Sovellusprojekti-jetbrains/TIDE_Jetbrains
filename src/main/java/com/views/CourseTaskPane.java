@@ -20,7 +20,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Objects;
 
 /**
 * Hoidetaan kaikki ruudun oikealla puolella olevan tehtävän palautuksen suorittavan ikkunan toiminnalliset sekä graaffiset toiminnot
@@ -122,8 +121,7 @@ public class CourseTaskPane {
             }
         });
 
-        // should behave similar to com.actions.Reset, so both
-        // can delegate processing the path to a third party
+        //Resets subtask back to the state of last submit.
         resetButton.addActionListener(event -> {
             if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
                 com.views.InfoView.displayError("No files open in editor!", "task reset error");

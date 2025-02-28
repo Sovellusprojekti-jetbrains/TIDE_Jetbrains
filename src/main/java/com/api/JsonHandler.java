@@ -60,7 +60,7 @@ public class JsonHandler {
                     JsonObject temp = gson.fromJson((object.getAsJsonObject(currentKey)), JsonObject.class); //Need to store filename into SubTask object
                     JsonArray filePart = temp.get("task_files").getAsJsonArray();
                     JsonElement temp2 = filePart.get(0); //This thing works only as long as timdata's representation doesn't change
-                    JsonObject temp3 = temp2.getAsJsonObject(); //Should consider proper pattern matcher to parse Json data
+                    JsonObject temp3 = temp2.getAsJsonObject(); //Should consider making proper pattern matcher to parse Json data
                     String fileName = temp3.get("file_name").getAsString();
                     subTaskList.add(gson.fromJson(task.toString(), SubTask.class));
                     subTaskList.getLast().setFileName(fileName);
