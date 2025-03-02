@@ -287,7 +287,9 @@ public class CustomScreen {
         oButton.setText("Open as Project");
         oButton.setBackground(bgColor);
         oButton.addActionListener(event -> {
-            new ApiHandler().openTaskProject(Settings.getPath() + "/" + courseName + courseTask.getPath().substring(courseTask.getPath().lastIndexOf('/')));
+            int lastPartStart = courseTask.getPath().lastIndexOf('/');
+            String demoDirectory = courseTask.getPath().substring(lastPartStart);
+            new ApiHandler().openTaskProject(Settings.getPath() + "/" + courseName + demoDirectory);
         });
         buttonPanel.add(oButton);
 
