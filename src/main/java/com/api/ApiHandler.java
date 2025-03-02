@@ -25,7 +25,7 @@ public class ApiHandler {
     private final String checkLoginCommand = "tide check-login --json";
     private final String taskCreateCommand = "tide task create";
     private final String submitCommand = "tide submit";
-    private final String taskOpenCommand = "idea64.exe";
+    private final String taskOpenCommand = "idea";
 
     /**
      * Logs in to TIDE-CLI.
@@ -96,9 +96,14 @@ public class ApiHandler {
     /**
      * Loads exercise into folder defined in settings.
      * @param timPath Path of the exercise in TIM
+     * @param courseDirectory Subdirectory for the course
      */
-    public void loadExercise(String timPath) throws IOException, InterruptedException {
-        String destination = Settings.getPath();
+    public void loadExercise(String timPath, String courseDirectory) throws IOException, InterruptedException {
+        File courseDirFile = new File(Settings.getPath(), courseDirectory);
+        if (!courseDirFile.exists()) {
+            courseDirFile.mkdir();
+        }
+        String destination = Settings.getPath() + "/" + courseDirectory;
         // Destination path is surrounded by quotes only if it contains spaces.
         String command = this.taskCreateCommand + " " + timPath + " -d "
                 + (destination.contains(" ") ? "\"" + destination + "\"" : destination);
@@ -125,9 +130,10 @@ public class ApiHandler {
      * Overload method.
      * @param timPath Path of the exercise in TIM
      * @param flag Determines which task will be downloaded and how (overwrite or not)
+     * @param courseDirectory Subdirectory for the course
      */
-    public void loadExercise(String timPath, String flag) throws IOException, InterruptedException {
-        this.loadExercise(" " + timPath + " " + flag);
+    public void loadExercise(String timPath, String flag, String courseDirectory) throws IOException, InterruptedException {
+        this.loadExercise(" " + timPath + " " + flag, courseDirectory);
     }
 
     /**
@@ -225,7 +231,14 @@ public class ApiHandler {
      */
     public void openTaskProject(String taskPath) {
         try {
-            String command = taskOpenCommand + " " + taskPath;
+            String command = "";
+            String os = System.getProperty("os.name");
+            if (os.contains("Linux")) {
+                command = System.getenv("SHELL") + " " + taskOpenCommand + " " + taskPath;
+            } else if (os.contains("Windows")) {
+                command = "powershell" + " " + taskOpenCommand + " " + taskPath;
+            }
+
             ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
             pb.redirectErrorStream(true);
             Process process = pb.start();
@@ -233,7 +246,7 @@ public class ApiHandler {
             System.out.println("Process exited with code: " + exitCode);
     } catch (IOException | InterruptedException ex) {
         ex.printStackTrace();
-    }
+        }
     }
 
     class LoginOutput {

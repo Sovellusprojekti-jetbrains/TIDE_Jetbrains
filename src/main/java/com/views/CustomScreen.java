@@ -210,7 +210,7 @@ public class CustomScreen {
             List<CourseTask> tasks = course.getTasks();
             final int[] j = {0};
             tasks.forEach(courseTask -> {
-                JPanel subPanel = createExercise(courseTask);
+                JPanel subPanel = createExercise(courseTask, course.getName());
                 subPanel.setBackground(bgColor);
                 gbc.gridy = j[0];
                 panel.add(subPanel, gbc);
@@ -245,9 +245,10 @@ public class CustomScreen {
      * Creates a panel for the task together with the buttons to download or open it.
      *
      * @param courseTask a CourseTask object for which to create the panel
+     * @param courseName Course name for save path
      * @return the subpanel that contains the tasks name and the two buttons
      */
-    private JPanel createExercise(CourseTask courseTask) {
+    private JPanel createExercise(CourseTask courseTask, String courseName) {
         final int fontsize = 16;
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
@@ -269,7 +270,7 @@ public class CustomScreen {
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
                 try {
-                    api.loadExercise(courseTask.getPath(), "--all");
+                    api.loadExercise(courseTask.getPath(), "--all", courseName);
                 } catch (IOException ex) {
                     com.views.InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
@@ -285,6 +286,9 @@ public class CustomScreen {
         JButton oButton = new JButton();
         oButton.setText("Open as Project");
         oButton.setBackground(bgColor);
+        oButton.addActionListener(event -> {
+            new ApiHandler().openTaskProject(Settings.getPath() + "/" + courseName + courseTask.getPath().substring(courseTask.getPath().lastIndexOf('/')));
+        });
         buttonPanel.add(oButton);
 
         subPanel.add(buttonPanel, BorderLayout.EAST);
