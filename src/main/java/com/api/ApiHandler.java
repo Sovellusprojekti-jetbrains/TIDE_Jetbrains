@@ -12,6 +12,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,6 +100,7 @@ public class ApiHandler {
      * @param courseDirectory Subdirectory for the course
      */
     public void loadExercise(String timPath, String courseDirectory) throws IOException, InterruptedException {
+        System.out.println(timPath);
         File courseDirFile = new File(Settings.getPath(), courseDirectory);
         if (!courseDirFile.exists()) {
             courseDirFile.mkdir();
@@ -107,7 +109,12 @@ public class ApiHandler {
         // Destination path is surrounded by quotes only if it contains spaces.
         String command = this.taskCreateCommand + " " + timPath + " -d "
                 + (destination.contains(" ") ? "\"" + destination + "\"" : destination);
-        ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
+        //List<String> loadExerciseCommand = new ArrayList<>();
+        //loadExerciseCommand.add(this.taskCreateCommand);loadExerciseCommand.add()
+        //ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
+        String[] tidecommmand = this.taskCreateCommand.split(" ");
+        String[] timPathSlit = timPath.split(" ");
+        ProcessBuilder pb = new ProcessBuilder(tidecommmand[0], tidecommmand[1], tidecommmand[2], timPathSlit[0], timPathSlit[1], "-d", destination);
         // Without the following, is it assumed that destination folder is in sub path of plugin's working directory or something like that.
         // The process will exit with exit code 1 when it discovers that files are saved elsewhere
         pb.directory(new File(destination));
@@ -133,7 +140,7 @@ public class ApiHandler {
      * @param courseDirectory Subdirectory for the course
      */
     public void loadExercise(String timPath, String flag, String courseDirectory) throws IOException, InterruptedException {
-        this.loadExercise(" " + timPath + " " + flag, courseDirectory);
+        this.loadExercise(timPath + " " + flag, courseDirectory);
     }
 
     /**
