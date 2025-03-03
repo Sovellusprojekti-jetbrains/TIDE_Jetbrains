@@ -24,6 +24,7 @@ public class OutputWindow {
      * @param toolWindow A tool window.
      */
     public OutputWindow(@NotNull final ToolWindow toolWindow) {
+        this.project = toolWindow.getProject();
         instance = this; // Store instance for access
         panel = new JPanel(new BorderLayout());
 
@@ -37,6 +38,18 @@ public class OutputWindow {
         panel.add(scrollPane, BorderLayout.CENTER);
         panel.add(clearButton, BorderLayout.SOUTH);
 
+        ActiveState stateManager = ActiveState.getInstance();
+        stateManager.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("logout".equals(evt.getPropertyName())) {
+                    hideWindow();
+                }
+                if ("login".equals(evt.getPropertyName())) {
+                    showWindow();
+                }
+            }
+        });
     }
 
     /**
@@ -70,11 +83,31 @@ public class OutputWindow {
      * Clears the text off the output window.
      */
     public void clearText() {
-        ActiveState stateManager = ActiveState.getInstance();
-        stateManager.increment(); // Increments the dummy number TODO:Remove
         if (textArea != null) {
             textArea.setText("");
         }
 
+    }
+
+    /**
+     * Makes the toolwindow unavailable.
+     */
+    private void hideWindow() {
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        ToolWindow window = toolWindowManager.getToolWindow("Output Window");
+        assert window != null;
+        window.setAvailable(false);
+        System.out.println("Hide Window");
+    }
+
+    /**
+     * Makes the toolwindow available.
+     */
+    private void showWindow() {
+        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        ToolWindow window = toolWindowManager.getToolWindow("Output Window");
+        assert window != null;
+        window.setAvailable(true);
+        System.out.println("Show Window");
     }
 }

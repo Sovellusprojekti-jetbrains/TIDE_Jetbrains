@@ -208,7 +208,9 @@ public class CourseTaskPane {
     }
 
 
-
+    /**
+     * Makes the toolwindow unavailable.
+     */
     private void hideWindow() {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow window = toolWindowManager.getToolWindow("Course Task");
@@ -216,6 +218,9 @@ public class CourseTaskPane {
         window.setAvailable(false);
     }
 
+    /**
+     * Makes the toolwindow available.
+     */
     private void showWindow() {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow window = toolWindowManager.getToolWindow("Course Task");
