@@ -21,7 +21,7 @@ public class SubTask {
     /**
      * filenames of the subtasks.
      */
-    private List<String> filenames;
+    private List<String> fileNames;
 
     /**
      * set the task name for the task.
@@ -29,16 +29,6 @@ public class SubTask {
      */
     public void setIdeTaskId(String id) {
         this.ideTaskId = id;
-    }
-
-    /**
-     * constructor for a subtask.
-     * @param id task id
-     * @param coursePath path to the course that the task belongs to
-     */
-    public SubTask(String id, String coursePath) {
-        this.ideTaskId = id;
-        this.path = coursePath;
     }
 
     /**
@@ -66,17 +56,18 @@ public class SubTask {
     }
 
     /**
-     * Setter for the subtask filenames.
-     * @param names filenames of the subtasks
+     * setter for the file names of a subtask.
+     * @param name file name as String
      */
-    public void setFileNames(List<String> names) {
-        this.filenames = names;
+    public void setFileName(List<String> name) {
+        this.fileNames = name;
     }
+
     /**
-     * getter for the subtask filenames.
-     * @return filenames of the subtasks
+     * getter for the file names of a subtask.
+     * @return file name as String
      */
-    public List<String> getFileNames() {
-        return this.filenames;
+    public List<String> getFileName() {
+        return this.fileNames;
     }
 }

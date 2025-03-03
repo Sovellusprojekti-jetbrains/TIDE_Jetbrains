@@ -2,10 +2,16 @@ package com.api;
 
 import com.actions.Settings;
 import com.course.Course;
+import com.course.SubTask;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +23,7 @@ public class ApiHandler {
     private final String loginCommand   = "tide login";
     private final String logoutCommand  = "tide logout";
     private final String checkLoginCommand = "tide check-login --json";
-    private final String taskCreateCommand = "tide task create --all";
+    private final String taskCreateCommand = "tide task create";
     private final String submitCommand = "tide submit";
     private final String taskOpenCommand = "idea64.exe";
 
@@ -111,10 +117,56 @@ public class ApiHandler {
         System.out.println("Process exited with code: " + exitCode);
         if (exitCode != 0) {
             // Maybe there could be more advanced error reporting
-            com.views.ErrorView.displayError("An error occurred during download", "Download error");
+            com.views.InfoView.displayError("An error occurred during download", "Download error");
         }
     }
 
+    /**
+     * Overload method.
+     * @param timPath Path of the exercise in TIM
+     * @param flag Determines which task will be downloaded and how (overwrite or not)
+     */
+    public void loadExercise(String timPath, String flag) throws IOException, InterruptedException {
+        this.loadExercise(" " + timPath + " " + flag);
+    }
+
+    /**
+     * Resets subtask back to the state of latest submit.
+     * @param path local path of the subtask.
+     * @param file Virtual file to get files local path and to communicate changes to idea's UI.
+     * @throws IOException If .timdata file is not found or some other file reading error occurs.
+     * @throws InterruptedException If TIDE CLI process fails or something else goes wrong.
+     */
+    public void resetSubTask(String path, VirtualFile file) throws IOException, InterruptedException {
+        String timData = com.actions.Settings.getPath() + "/.timdata"; //.timdata should be saved where the task was downloaded
+        String taskData = Files.readString(Path.of(timData), StandardCharsets.UTF_8);
+        JsonHandler handler = new JsonHandler();
+        List<SubTask> subtasks = handler.jsonToSubtask(taskData); //List of subtasks related to a task
+        String taskId = null; //base case (file open in editor is not a subtask of a task)
+        String taskPath = null;
+        for (SubTask subtask : subtasks) { //finds ide_task_id and path for the subtask
+            for (String name : subtask.getFileName()) {
+                if (path.contains(name.replaceAll("\"", ""))) {
+                    taskId = subtask.getIdeTaskId();
+                    taskPath = subtask.getPath();
+                    break;
+                }
+            }
+        }
+        if (taskId != null) {
+            this.loadExercise(taskPath + " " + taskId, "-f");
+            if (file != null) { //Virtual file must be refreshed and intellij idea's UI notified
+                file.refresh(true, true);
+                ApplicationManager.getApplication().invokeLater(() -> {
+                    if (file.isValid()) {
+                        file.getParent().refresh(false, false);
+                    }
+                });
+            }
+        } else {
+            com.views.InfoView.displayError("File open in editor is not a tide task!", "task reset error");
+        }
+    }
 
     /**
      * Submit an exercise.
@@ -137,7 +189,6 @@ public class ApiHandler {
         }
         return response;
     }
-
 
     /**
      * asks tide-cli if there is a login and returns a boolean.

@@ -1,5 +1,6 @@
 package com.actions;
 
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.components.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 @Service
 @State(
         name = "StateManager",
-        storages = @Storage("$APP_CONFIG$/mySettings.xml")
+        storages = @Storage("MySettings.xml")
 )
 public final class StateManager implements PersistentStateComponent<StateManager.State> {
 
@@ -48,7 +49,11 @@ public final class StateManager implements PersistentStateComponent<StateManager
      * @param path File path as a String
      */
     public void setPath(String path) {
-        getState().path = path;
+        PropertiesComponent properties = PropertiesComponent.getInstance();
+        properties.setValue("myPlugin.path", path);
+        //String value = properties.getValue("myPlugin.path", System.getProperty("user.dir"));
+        //getState().path = path;
+
     }
 
     /**
@@ -56,9 +61,15 @@ public final class StateManager implements PersistentStateComponent<StateManager
      * @return File ath as a String
      */
     public String getPath() {
+        /*
         if (getState().path == null) {
             return System.getProperty("user.dir");
         }
-        return getState().path;
+        */
+
+        PropertiesComponent properties = PropertiesComponent.getInstance();
+        String value = properties.getValue("myPlugin.path", System.getProperty("user.dir"));
+        //System.out.println(getState().path);
+        return value;
     }
 }
