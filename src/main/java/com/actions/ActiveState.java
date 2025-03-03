@@ -8,23 +8,14 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
 
+
 /**
  * Contains all the information the running plugin needs to synchronize.
  */
 public class ActiveState {
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private int count;
     private List<Course> courseList;
     private boolean isLoggedIn = false;
-
-
-    /**
-     * Gets the number that doesn't do anything and should be removed.
-     * @return An integer.
-     */
-    public int getCount() {
-        return count;
-    }
 
     /**
      * Calls the state manager for use.
@@ -34,15 +25,6 @@ public class ActiveState {
         return ApplicationManager.getApplication().getService(ActiveState.class);
     }
 
-    /**
-     * Sets the pointless dummy number.
-     * @param number The number to set to.
-     */
-    public void setCount(int number) {
-        int oldCount = this.count;
-        this.count = number;
-        pcs.firePropertyChange("count", oldCount, number);
-    }
 
     /**
      * Add listener for property change.
@@ -61,13 +43,6 @@ public class ActiveState {
     }
 
     /**
-     * Increments the count.
-     */
-    public void increment() {
-        setCount(count + 1);
-    }
-
-    /**
      * Fetches the courses, changes the courseList property and fires an event for it.
      */
     public void updateCourses() {
@@ -77,6 +52,9 @@ public class ActiveState {
         pcs.firePropertyChange("courseList", oldCourseList, courseList);
     }
 
+    /**
+     * Sets login state to true and fires the related event.
+     */
     public void login() {
         if (!isLoggedIn) {
             isLoggedIn = true;
@@ -84,25 +62,29 @@ public class ActiveState {
         }
     }
 
+    /**
+     * Sets login state to false and fires the related event.
+     */
     public void logout() {
         if (isLoggedIn) {
             isLoggedIn = false;
             pcs.firePropertyChange("logout", true, isLoggedIn);
         }
     }
+
 }
 
 /*
-    Example usage of a listener for courseList for toolwindows
-
-    ActiveStateManager stateManager = ActiveStateManager.getInstance();
-    stateManager.addStatePropertyChangeListener(new PropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if ("courseList".equals(evt.getPropertyName())) {
-                // Handle the change here
-                List<Course> updatedCourses = evt.getNewValue());
+    ActiveState stateManager = ActiveState.getInstance();
+        stateManager.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("logout".equals(evt.getPropertyName())) {
+                    hideWindow();
+                }
+                if ("login".equals(evt.getPropertyName())) {
+                    showWindow();
+                }
             }
-        }
-    });
+        });
  */
