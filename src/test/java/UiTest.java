@@ -4,10 +4,11 @@ import com.intellij.remoterobot.fixtures.*;
 import com.intellij.remoterobot.search.locators.Locator;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.TimeUnit;
+
 import static com.intellij.remoterobot.search.locators.Locators.byXpath;
-import static java.time.Duration.ofMinutes;
 import static java.time.Duration.ofSeconds;
-import static org.apache.commons.io.FileUtils.waitFor;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -52,7 +53,6 @@ public class UiTest {
         public IdeaFrame(@NotNull RemoteRobot robot, @NotNull RemoteComponent remoteComponent) {
             super(robot, remoteComponent);
         }
-
         /**
          * checks if ide is in dumb mode
          * @return true if ide is in dumb mode, false if not.
@@ -68,7 +68,6 @@ public class UiTest {
                     """, true);
         }
     }
-    
     /**
      * Tests the text contents of the tide and Courses task tool windows and the buttons.
      */
@@ -80,16 +79,18 @@ public class UiTest {
         final ComponentFixture createFixture = remoteRobot.find(ComponentFixture.class, createButton);
         createFixture.click();
         final IdeaFrame idea = remoteRobot.find(IdeaFrame.class, ofSeconds(10));
-        waitFor(ofMinutes(2), () -> !idea.isDumbMode());
+        while (idea.isDumbMode()) {
+            TimeUnit.SECONDS.sleep(1);
+        }
         final Locator tideButtonLocator = byXpath("//div[@tooltiptext='TIDE Tool Window']");
         final Locator courseButtonLocator = byXpath("//div[@tooltiptext='Course Task']");
         final ComponentFixture tideButton = remoteRobot.find(ComponentFixture.class, tideButtonLocator);
         final ComponentFixture courseButton = remoteRobot.find(ComponentFixture.class, courseButtonLocator);
-
+        TimeUnit.MINUTES.sleep(1);
         tideButton.click();
         courseButton.click();
         // Remote robot locators that are needed to find the components from the xpath file.
-
+        TimeUnit.MINUTES.sleep(1);
 
         final Locator tideLocator = byXpath("//div[@class='TabPanel'][.//div[@text='Courses']]");
         final Locator courseTaskLocator = byXpath("//div[@class='TabPanel'][.//div[@text='Course Task']]");
