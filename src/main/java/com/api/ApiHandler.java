@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.application.PathManager;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -111,7 +110,7 @@ public class ApiHandler {
         }
         String destination = Settings.getPath() + "/" + courseDirectory;
         // Destination path is surrounded by quotes only if it contains spaces.
-        destination = destination.contains(" ") ? "\"" + destination + "\"" : destination;
+        // destination = destination.contains(" ") ? "\"" + destination + "\"" : destination;
 
         List<String> pbArgs = new ArrayList<String>(Arrays.asList(taskCreateCommand.split(" ")));
         for (String arg: cmdArgs) {
@@ -155,13 +154,19 @@ public class ApiHandler {
         String filePath = file.getPath();
         for (SubTask subtask : subtasks) { //finds ide_task_id and path for the subtask
             for (String name : subtask.getFileName()) {
-                if (filePath.contains(name.replaceAll("\"", ""))) {
-                    taskId = subtask.getIdeTaskId();
-                    taskPath = subtask.getPath();
-                    break;
+                if (filePath.contains(subtask.getIdeTaskId())) {
+                    if (filePath.contains(name.replaceAll("\"", ""))) {
+                        taskId = subtask.getIdeTaskId();
+                        taskPath = subtask.getPath();
+                        break;
+                    }
                 }
             }
+            if (taskId != null) {
+                break;
+            }
         }
+
         if (taskId != null) {
             this.loadExercise(courseDirectory, taskPath, taskId, "-f");
             //Virtual file must be refreshed and intellij idea's UI notified
@@ -184,8 +189,9 @@ public class ApiHandler {
     public String submitExercise(String exercisePath) {
         String response = "";
         try {
-            String command = submitCommand + " " + exercisePath;
-            ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
+            List<String> cmdLst = new ArrayList<String>(Arrays.asList(submitCommand.split("\\s+")));
+            cmdLst.add(exercisePath);
+            ProcessBuilder pb = new ProcessBuilder(cmdLst);
             pb.redirectErrorStream(true);
             Process process = pb.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
