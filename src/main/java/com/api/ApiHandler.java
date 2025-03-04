@@ -139,13 +139,12 @@ public class ApiHandler {
 
     /**
      * Resets subtask back to the state of latest submit.
-     * @param path local path of the subtask.
      * @param file Virtual file to get files local path and to communicate changes to idea's UI.
      * @param courseDirectory Course directory
      * @throws IOException If .timdata file is not found or some other file reading error occurs.
      * @throws InterruptedException If TIDE CLI process fails or something else goes wrong.
      */
-    public void resetSubTask(String path, VirtualFile file, String courseDirectory) throws IOException, InterruptedException {
+    public void resetSubTask(VirtualFile file, String courseDirectory) throws IOException, InterruptedException {
         String timData = com.actions.Settings.getPath() + "/"
                 + courseDirectory + "/.timdata"; //.timdata should be saved where the task was downloaded
         String taskData = Files.readString(Path.of(timData), StandardCharsets.UTF_8);
@@ -153,9 +152,10 @@ public class ApiHandler {
         List<SubTask> subtasks = handler.jsonToSubtask(taskData); //List of subtasks related to a task
         String taskId = null; //base case (file open in editor is not a subtask of a task)
         String taskPath = null;
+        String filePath = file.getPath();
         for (SubTask subtask : subtasks) { //finds ide_task_id and path for the subtask
             for (String name : subtask.getFileName()) {
-                if (path.contains(name.replaceAll("\"", ""))) {
+                if (filePath.contains(name.replaceAll("\"", ""))) {
                     taskId = subtask.getIdeTaskId();
                     taskPath = subtask.getPath();
                     break;
@@ -164,14 +164,13 @@ public class ApiHandler {
         }
         if (taskId != null) {
             this.loadExercise(courseDirectory, taskPath, taskId, "-f");
-            if (file != null) { //Virtual file must be refreshed and intellij idea's UI notified
-                file.refresh(true, true);
-                ApplicationManager.getApplication().invokeLater(() -> {
-                    if (file.isValid()) {
-                        file.getParent().refresh(false, false);
-                    }
-                });
-            }
+            //Virtual file must be refreshed and intellij idea's UI notified
+            file.refresh(true, true);
+            ApplicationManager.getApplication().invokeLater(() -> {
+                if (file.isValid()) {
+                    file.getParent().refresh(false, false);
+                }
+            });
         } else {
             com.views.InfoView.displayError("File open in editor is not a tide task!", "task reset error");
         }

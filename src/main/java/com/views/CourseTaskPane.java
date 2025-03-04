@@ -131,8 +131,6 @@ public class CourseTaskPane {
                     .getSelectedEditor()
                     .getFile();
 
-            String path = file.getPath();
-
             // show confirmation dialog and return if the user decides to cancel
             if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
                 return;
@@ -141,8 +139,8 @@ public class CourseTaskPane {
             try {
                 ApiHandler handler = new ApiHandler();
                 ActiveState stateManager = ActiveState.getInstance();
-                String coursePath = stateManager.getCourseName(path);
-                handler.resetSubTask(path, file, coursePath);
+                String coursePath = stateManager.getCourseName(file.getPath());
+                handler.resetSubTask(file, coursePath);
             } catch (IOException e) {
                 InfoView.displayError(".timdata file not found!", "Task reset error");
                 throw new RuntimeException(e);
