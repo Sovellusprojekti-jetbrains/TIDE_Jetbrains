@@ -192,8 +192,6 @@ public class CourseTaskPane {
                 }
             }
         });
-
-        hideWindow();
     }
 
 
