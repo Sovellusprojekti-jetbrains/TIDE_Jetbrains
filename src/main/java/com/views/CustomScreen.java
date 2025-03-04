@@ -1,5 +1,6 @@
 package com.views;
 
+import com.actions.ActiveState;
 import com.actions.Settings;
 import com.api.ApiHandler;
 import com.api.JsonHandler;
@@ -127,6 +128,8 @@ public class CustomScreen {
                     api.login();
                     if (api.isLoggedIn()) {
                         switchToLogout();
+                        ActiveState stateManager = ActiveState.getInstance();
+                        stateManager.login();
                     } else {
                         //TODO: error message that the login failed
                         return;
@@ -159,6 +162,8 @@ public class CustomScreen {
                     api.logout();
                     if (!api.isLoggedIn()) {
                         switchToLogin(); // Poistaa kurssinäkymän näkyvistä
+                        ActiveState stateManager = ActiveState.getInstance();
+                        stateManager.logout();
                     } else {
                         //TODO: error for failed logout
                         return;
@@ -170,8 +175,12 @@ public class CustomScreen {
         });
         if (apiHandler.isLoggedIn()) {
             switchToLogout();
+            ActiveState stateManager = ActiveState.getInstance();
+            stateManager.login();
         } else {
             switchToLogin();
+            ActiveState stateManager = ActiveState.getInstance();
+            stateManager.logout();
         }
     }
 
@@ -428,6 +437,8 @@ public class CustomScreen {
                     api.login();
                     if (api.isLoggedIn()) {
                         switchToLogout();
+                        ActiveState stateManager = ActiveState.getInstance();
+                        stateManager.login();
                     } else {
                         //TODO: error message that the login failed
                         return;
