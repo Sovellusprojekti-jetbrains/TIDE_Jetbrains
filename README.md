@@ -13,3 +13,5 @@ This extension enables you to upload and submit TIM programming tasks directly f
 
 ## Sovellusprojektin tietoja
 Project backlog https://trello.com/b/ZLrTEmqk/sovellusprojekti-jetbrains
+
+https://docs.google.com/spreadsheets/d/1fyXXzn89EN-S_8BctHsfbqE67Dqf_ngfjyqjkLs7wWc/edit?usp=sharing
