@@ -108,7 +108,8 @@ public class CustomScreen {
         refreshButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                List<Course> refreshed = apiHandler.courses();
+                ActiveState.getInstance().updateCourses();
+                List<Course> refreshed = ActiveState.getInstance().getCourses();
                 createCourseListPane(refreshed);
 
                 // Piirretään uudelleen
@@ -404,8 +405,9 @@ public class CustomScreen {
      */
     private void switchToLogout() {
         //tabbedPane.remove(loginPane); // Hide Login tab
-        ApiHandler apiHandler = new ApiHandler();
-        List<Course> courselist = apiHandler.courses();
+        ActiveState stateManager = ActiveState.getInstance();
+        stateManager.updateCourses();
+        List<Course> courselist = stateManager.getCourses();
         // A panel that contains the courses and tasks is created in its own sub-program.
         createCourseListPane(courselist);
         tabbedPane.addTab("Courses", coursesPane); // Show Logout tab

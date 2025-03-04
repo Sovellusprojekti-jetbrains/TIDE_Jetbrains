@@ -140,7 +140,9 @@ public class CourseTaskPane {
 
             try {
                 ApiHandler handler = new ApiHandler();
-                handler.resetSubTask(path, file);
+                ActiveState stateManager = ActiveState.getInstance();
+                String coursePath = stateManager.getCourseName(path);
+                handler.resetSubTask(path, file, coursePath);
             } catch (IOException e) {
                 InfoView.displayError(".timdata file not found!", "Task reset error");
                 throw new RuntimeException(e);

@@ -34,6 +34,8 @@ public class ResetExercise extends AnAction {
         }
         try {
             ApiHandler handler = new ApiHandler();
+            ActiveState stateManager = ActiveState.getInstance();
+            String coursePath = stateManager.getCourseName(path);
             handler.resetSubTask(path, file, coursePath);
         } catch (IOException ex) {
             InfoView.displayError(".timdata file not found!", "Task reset error");

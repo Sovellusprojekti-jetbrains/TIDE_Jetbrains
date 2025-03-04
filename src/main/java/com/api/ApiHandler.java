@@ -146,7 +146,8 @@ public class ApiHandler {
      * @throws InterruptedException If TIDE CLI process fails or something else goes wrong.
      */
     public void resetSubTask(String path, VirtualFile file, String courseDirectory) throws IOException, InterruptedException {
-        String timData = com.actions.Settings.getPath() + "/.timdata"; //.timdata should be saved where the task was downloaded
+        String timData = com.actions.Settings.getPath() + "/"
+                + courseDirectory + "/.timdata"; //.timdata should be saved where the task was downloaded
         String taskData = Files.readString(Path.of(timData), StandardCharsets.UTF_8);
         JsonHandler handler = new JsonHandler();
         List<SubTask> subtasks = handler.jsonToSubtask(taskData); //List of subtasks related to a task
@@ -162,7 +163,7 @@ public class ApiHandler {
             }
         }
         if (taskId != null) {
-            this.loadExercise(courseDirectory, taskPath, "-f");
+            this.loadExercise(courseDirectory, taskPath, taskId, "-f");
             if (file != null) { //Virtual file must be refreshed and intellij idea's UI notified
                 file.refresh(true, true);
                 ApplicationManager.getApplication().invokeLater(() -> {
