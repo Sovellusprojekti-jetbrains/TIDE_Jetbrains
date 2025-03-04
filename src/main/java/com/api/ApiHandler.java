@@ -242,12 +242,19 @@ public class ApiHandler {
             String command = "";
             String os = System.getProperty("os.name");
             if (os.contains("Linux")) {
-                command = System.getenv("SHELL") + " " + taskOpenCommand + " " + taskPath;
+                command = System.getenv("SHELL") + " " + taskOpenCommand;
             } else if (os.contains("Windows")) {
-                command = "powershell" + " " + taskOpenCommand + " " + taskPath;
+                command = "powershell" + " " + taskOpenCommand;
             }
 
-            ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
+            // is this needed? if so, in which operating systems?
+            if (taskPath.contains(" ")) {
+                taskPath = "\"" + taskPath + "\"";
+            }
+
+            List<String> cmdLst = new ArrayList<String>(Arrays.asList(command.split("\\s+")));
+            cmdLst.add(taskPath);
+            ProcessBuilder pb = new ProcessBuilder(cmdLst);
             pb.redirectErrorStream(true);
             Process process = pb.start();
             int exitCode = process.waitFor();

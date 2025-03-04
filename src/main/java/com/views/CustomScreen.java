@@ -305,7 +305,7 @@ public class CustomScreen {
 
         subPanel.add(buttonPanel, BorderLayout.EAST);
         try {
-            createSubTaskpanel(subPanel, courseTask);
+            createSubTaskpanel(subPanel, courseTask, courseName);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -316,9 +316,10 @@ public class CustomScreen {
      * Creates and adds a panel of clickable subtasks to the panel containing the course that the subtasks belong to.
      * @param subPanel the panel that the panel of subtasks is appended to.
      * @param courseTask The Course task that the subtasks belong to.
+     * @param courseName Course name for subdirectory
      */
-    private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask) {
-        String pathToFile = Settings.getPath();
+    private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask, String courseName) {
+        String pathToFile = Settings.getPath() + "/" + courseName;
         JsonHandler jsonHandler = new JsonHandler();
         String timData = readTimData(pathToFile);
         if (!timData.isEmpty()) {
@@ -347,7 +348,7 @@ public class CustomScreen {
                 listForCourse.add(task);
                 DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task.getIdeTaskId());
                 for (String file : task.getFileName()) {
-                    leaf.add(new DefaultMutableTreeNode(file.replaceAll("/", "")));
+                    leaf.add(new DefaultMutableTreeNode(file.replaceAll("\"", "")));
                 }
                 root.add(leaf);
             }
