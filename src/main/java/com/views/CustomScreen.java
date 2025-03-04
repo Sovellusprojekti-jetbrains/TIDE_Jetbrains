@@ -270,7 +270,7 @@ public class CustomScreen {
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
                 try {
-                    api.loadExercise(courseTask.getPath(), "--all", courseName);
+                    api.loadExercise(courseName, courseTask.getPath(), "--all");
                 } catch (IOException ex) {
                     com.views.InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
@@ -337,7 +337,7 @@ public class CustomScreen {
                 listForCourse.add(task);
                 DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task.getIdeTaskId());
                 for (String file : task.getFileName()) {
-                    leaf.add(new DefaultMutableTreeNode(file.replaceAll("\"", "")));
+                    leaf.add(new DefaultMutableTreeNode(file.replaceAll("/", "")));
                 }
                 root.add(leaf);
             }
@@ -356,10 +356,10 @@ public class CustomScreen {
                     DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
                     DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
                     if (selectedNode.getChildCount() == 0) {
-                        api.openTaskProject(Settings.getPath() + "\\" + selectedNode.getRoot() + "\\" + parent.toString()
-                                + "\\" + selectedNode);
+                        api.openTaskProject(Settings.getPath() + "/" + selectedNode.getRoot() + "/" + parent.toString()
+                                + "/" + selectedNode);
                     } else {
-                        api.openTaskProject(Settings.getPath() + "\\" + parent.toString() + "\\" + selectedNode.toString());
+                        api.openTaskProject(Settings.getPath() + "/" + parent.toString() + "/" + selectedNode.toString());
                     }
                 }
             }
@@ -375,7 +375,7 @@ public class CustomScreen {
     private String readTimData(String pathToFile) {
         StringBuilder sb = new StringBuilder();
         try {
-            String settingsPath = pathToFile + "\\.timdata";
+            String settingsPath = pathToFile + "/.timdata";
             Path path = Paths.get(settingsPath);
             BufferedReader reader = Files.newBufferedReader(path);
             String line = reader.readLine();

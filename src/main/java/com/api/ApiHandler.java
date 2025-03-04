@@ -7,12 +7,14 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.application.PathManager;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,25 +98,26 @@ public class ApiHandler {
 
     /**
      * Loads exercise into folder defined in settings.
-     * @param timPath Path of the exercise in TIM
      * @param courseDirectory Subdirectory for the course
+     * @param cmdArgs Arguments for the tide create command, e.g. Tim path and flags
      */
-    public void loadExercise(String timPath, String courseDirectory) throws IOException, InterruptedException {
-        System.out.println(timPath);
+    public void loadExercise(String courseDirectory, String... cmdArgs) throws IOException, InterruptedException {
+        if (cmdArgs.length < 1) {
+            System.err.println("No arguments for tide create");
+        }
         File courseDirFile = new File(Settings.getPath(), courseDirectory);
         if (!courseDirFile.exists()) {
             courseDirFile.mkdir();
         }
         String destination = Settings.getPath() + "/" + courseDirectory;
         // Destination path is surrounded by quotes only if it contains spaces.
-        String command = this.taskCreateCommand + " " + timPath + " -d "
-                + (destination.contains(" ") ? "\"" + destination + "\"" : destination);
-        //List<String> loadExerciseCommand = new ArrayList<>();
-        //loadExerciseCommand.add(this.taskCreateCommand);loadExerciseCommand.add()
-        //ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
-        String[] tidecommmand = this.taskCreateCommand.split(" ");
-        String[] timPathSlit = timPath.split(" ");
-        ProcessBuilder pb = new ProcessBuilder(tidecommmand[0], tidecommmand[1], tidecommmand[2], timPathSlit[0], timPathSlit[1], "-d", destination);
+        destination = destination.contains(" ") ? "\"" + destination + "\"" : destination;
+
+        List<String> pbArgs = new ArrayList<String>(Arrays.asList(taskCreateCommand.split(" ")));
+        for (String arg: cmdArgs) {
+            pbArgs.add(arg);
+        }
+        ProcessBuilder pb = new ProcessBuilder(pbArgs);
         // Without the following, is it assumed that destination folder is in sub path of plugin's working directory or something like that.
         // The process will exit with exit code 1 when it discovers that files are saved elsewhere
         pb.directory(new File(destination));
@@ -133,24 +136,16 @@ public class ApiHandler {
         }
     }
 
-    /**
-     * Overload method.
-     * @param timPath Path of the exercise in TIM
-     * @param flag Determines which task will be downloaded and how (overwrite or not)
-     * @param courseDirectory Subdirectory for the course
-     */
-    public void loadExercise(String timPath, String flag, String courseDirectory) throws IOException, InterruptedException {
-        this.loadExercise(timPath + " " + flag, courseDirectory);
-    }
 
     /**
      * Resets subtask back to the state of latest submit.
      * @param path local path of the subtask.
      * @param file Virtual file to get files local path and to communicate changes to idea's UI.
+     * @param courseDirectory Course directory
      * @throws IOException If .timdata file is not found or some other file reading error occurs.
      * @throws InterruptedException If TIDE CLI process fails or something else goes wrong.
      */
-    public void resetSubTask(String path, VirtualFile file) throws IOException, InterruptedException {
+    public void resetSubTask(String path, VirtualFile file, String courseDirectory) throws IOException, InterruptedException {
         String timData = com.actions.Settings.getPath() + "/.timdata"; //.timdata should be saved where the task was downloaded
         String taskData = Files.readString(Path.of(timData), StandardCharsets.UTF_8);
         JsonHandler handler = new JsonHandler();
@@ -167,7 +162,7 @@ public class ApiHandler {
             }
         }
         if (taskId != null) {
-            this.loadExercise(taskPath + " " + taskId, "-f");
+            this.loadExercise(courseDirectory, taskPath, "-f");
             if (file != null) { //Virtual file must be refreshed and intellij idea's UI notified
                 file.refresh(true, true);
                 ApplicationManager.getApplication().invokeLater(() -> {
@@ -251,8 +246,8 @@ public class ApiHandler {
             Process process = pb.start();
             int exitCode = process.waitFor();
             System.out.println("Process exited with code: " + exitCode);
-    } catch (IOException | InterruptedException ex) {
-        ex.printStackTrace();
+        } catch (IOException | InterruptedException ex) {
+            ex.printStackTrace();
         }
     }
 
