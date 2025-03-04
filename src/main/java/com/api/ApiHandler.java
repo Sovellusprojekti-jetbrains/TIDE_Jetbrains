@@ -108,7 +108,7 @@ public class ApiHandler {
         if (!courseDirFile.exists()) {
             courseDirFile.mkdir();
         }
-        String destination = Settings.getPath() + "/" + courseDirectory;
+
         // Destination path is surrounded by quotes only if it contains spaces.
         // destination = destination.contains(" ") ? "\"" + destination + "\"" : destination;
 
@@ -119,7 +119,7 @@ public class ApiHandler {
         ProcessBuilder pb = new ProcessBuilder(pbArgs);
         // Without the following, is it assumed that destination folder is in sub path of plugin's working directory or something like that.
         // The process will exit with exit code 1 when it discovers that files are saved elsewhere
-        pb.directory(new File(destination));
+        pb.directory(courseDirFile);
         pb.redirectErrorStream(true);
         Process process = pb.start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream())); //Debug stuff
