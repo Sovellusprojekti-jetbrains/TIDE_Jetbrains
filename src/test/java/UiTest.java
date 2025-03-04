@@ -54,7 +54,7 @@ public class UiTest {
             super(robot, remoteComponent);
         }
         /**
-         * checks if ide is in dumb mode
+         * checks if ide is in dumb mode.
          * @return true if ide is in dumb mode, false if not.
          */
         public boolean isDumbMode() {
@@ -77,6 +77,9 @@ public class UiTest {
         welcomeFrame.createNewProjectLink().click();
         final Locator createButton = byXpath("//div[@text='Create']");
         final ComponentFixture createFixture = remoteRobot.find(ComponentFixture.class, createButton);
+        final Locator sampleLocator = byXpath("//div[@text='Add sample code']");
+        final ComponentFixture sampleComponent = remoteRobot.find(ComponentFixture.class, sampleLocator);
+        sampleComponent.click();
         createFixture.click();
         final IdeaFrame idea = remoteRobot.find(IdeaFrame.class, ofSeconds(10));
         while (idea.isDumbMode()) {
@@ -86,11 +89,13 @@ public class UiTest {
         final Locator courseButtonLocator = byXpath("//div[@tooltiptext='Course Task']");
         final ComponentFixture tideButton = remoteRobot.find(ComponentFixture.class, tideButtonLocator);
         final ComponentFixture courseButton = remoteRobot.find(ComponentFixture.class, courseButtonLocator);
-        TimeUnit.MINUTES.sleep(1);
         tideButton.click();
         courseButton.click();
+        while (idea.isDumbMode()) {
+            TimeUnit.SECONDS.sleep(1);
+        }
         // Remote robot locators that are needed to find the components from the xpath file.
-        TimeUnit.MINUTES.sleep(1);
+
 
         final Locator tideLocator = byXpath("//div[@class='TabPanel'][.//div[@text='Courses']]");
         final Locator courseTaskLocator = byXpath("//div[@class='TabPanel'][.//div[@text='Course Task']]");
@@ -121,7 +126,13 @@ public class UiTest {
         assertTrue(submitButton.hasText("Submit"),  "Submit button has wrong text or doesn't render");
         assertTrue(outputButton.hasText("Show output"), "Show output button has wrong text or doesn't render");
         assertTrue(resetButton.hasText("Reset exercise"),  "Reset exercise button has wrong text or doesn't render");
-
+        settings.click();
+        final Locator settingsFrame = byXpath("//div[@class='JFrame']");
+        final ComponentFixture settingsWindow = remoteRobot.find(ComponentFixture.class, settingsFrame);
+        assertTrue(settingsWindow.hasText("Task download folder"), "Error inside settings window, should say Task download folder");
+        assertTrue(settingsWindow.hasText("Browse"), "Error inside settings window,, button should have text Browse");
+        assertTrue(settingsWindow.hasText("Save path"), "Error inside settings window, button should have text Save path");
+        assertTrue(settingsWindow.hasText("Cancel"), "Error inside settings window, button should have text cancel");
     }
 
 }
