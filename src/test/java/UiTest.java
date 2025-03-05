@@ -96,36 +96,26 @@ public class UiTest {
         }
         // Remote robot locators that are needed to find the components from the xpath file.
 
-
-        final Locator tideLocator = byXpath("//div[@class='TabPanel'][.//div[@text='Courses']]");
-        final Locator courseTaskLocator = byXpath("//div[@class='TabPanel'][.//div[@text='Course Task']]");
-        final Locator loginLocator = byXpath("//div[@text='Login']");
+        final Locator tideLocator = byXpath("//div[@class='ToolWindowPane']");
         final Locator settingsLocator = byXpath("//div[@text='Settings']");
-        final Locator openButtonLocator = byXpath("//div[@text='Open exercise']");
-        final Locator submitButtonLocator = byXpath("//div[@text='Submit']");
-        final Locator outputButtonLocator = byXpath("//div[@text='Show output']");
-        final  Locator resetButtonLocator = byXpath("//div[@text='Reset exercise']");
+
         //The components that are used for the tests.
         final ComponentFixture tide = remoteRobot.find(ComponentFixture.class, tideLocator);
-        final ComponentFixture courses = remoteRobot.find(ComponentFixture.class, courseTaskLocator);
-        final ComponentFixture login = remoteRobot.find(ComponentFixture.class, loginLocator);
+
         final ComponentFixture settings = remoteRobot.find(ComponentFixture.class, settingsLocator);
-        final ComponentFixture openButton = remoteRobot.find(ComponentFixture.class, openButtonLocator);
-        final ComponentFixture submitButton = remoteRobot.find(ComponentFixture.class, submitButtonLocator);
-        final ComponentFixture outputButton = remoteRobot.find(ComponentFixture.class, outputButtonLocator);
-        final ComponentFixture resetButton = remoteRobot.find(ComponentFixture.class, resetButtonLocator);
+
 
         assertTrue(tide.hasText("TIDE Tool Window"), "TIDE Tool Window has wrong text or doesn't render");
         assertTrue(tide.hasText("Courses"), "TIDE Tool Windows Courses tab has wrong text or doesn't render");
-        assertTrue(login.hasText("Login"), "Login button has wrong text or doesn't render");
-        assertTrue(settings.hasText("Settings"), "Settings button has wrong text or doesn't render");
+        assertTrue(tide.hasText("Login"), "Login button has wrong text or doesn't render");
+        assertTrue(tide.hasText("Settings"), "Settings button has wrong text or doesn't render");
 
-        assertTrue(courses.hasText("Course Task"), "Course Task Window has wrong text or doesn't render");
-        assertTrue(courses.hasText("Course View"), "Course Task Windows Course View tab has wrong text or doesn't render");
-        assertTrue(openButton.hasText("Open exercise"), "Open exercise button has wrong text or doesn't render");
-        assertTrue(submitButton.hasText("Submit"),  "Submit button has wrong text or doesn't render");
-        assertTrue(outputButton.hasText("Show output"), "Show output button has wrong text or doesn't render");
-        assertTrue(resetButton.hasText("Reset exercise"),  "Reset exercise button has wrong text or doesn't render");
+        assertTrue(tide.hasText("Course Task"), "Course Task Window has wrong text or doesn't render");
+        assertTrue(tide.hasText("Course View"), "Course Task Windows Course View tab has wrong text or doesn't render");
+        assertTrue(tide.hasText("Open exercise"), "Open exercise button has wrong text or doesn't render");
+        assertTrue(tide.hasText("Submit"),  "Submit button has wrong text or doesn't render");
+        assertTrue(tide.hasText("Show output"), "Show output button has wrong text or doesn't render");
+        assertTrue(tide.hasText("Reset exercise"),  "Reset exercise button has wrong text or doesn't render");
         settings.click();
         final Locator settingsFrame = byXpath("//div[@class='JFrame']");
         final ComponentFixture settingsWindow = remoteRobot.find(ComponentFixture.class, settingsFrame);
@@ -148,3 +138,4 @@ public class UiTest {
 //div[@tooltiptext='TIDE Tool Window']
 //div[@tooltiptext='Course Task']
 
+//div[@class='ToolWindowPane']
