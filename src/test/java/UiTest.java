@@ -81,9 +81,10 @@ public class UiTest {
         final ComponentFixture sampleComponent = remoteRobot.find(ComponentFixture.class, sampleLocator);
         sampleComponent.click();
         createFixture.click();
+         final int sleeptime = 10;
         final IdeaFrame idea = remoteRobot.find(IdeaFrame.class, ofSeconds(10));
         while (idea.isDumbMode()) {
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.SECONDS.sleep(sleeptime);
         }
         final Locator tideButtonLocator = byXpath("//div[@tooltiptext='TIDE Tool Window']");
         final Locator courseButtonLocator = byXpath("//div[@tooltiptext='Course Task']");
@@ -92,7 +93,7 @@ public class UiTest {
         tideButton.click();
         courseButton.click();
         while (idea.isDumbMode()) {
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.SECONDS.sleep(sleeptime);
         }
         // Remote robot locators that are needed to find the components from the xpath file.
 
