@@ -2,8 +2,10 @@ package com.views;
 
 import com.actions.ActiveState;
 import com.actions.Settings;
+import com.actions.StateManager;
 import com.api.ApiHandler;
 import com.api.JsonHandler;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.components.JBScrollPane;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -17,6 +19,7 @@ import java.nio.file.*;
 
 import com.course.*;
 import com.intellij.ui.treeStructure.Tree;
+import org.apache.lucene.index.DocIDMerger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -218,6 +221,7 @@ public class CustomScreen {
             List<CourseTask> tasks = course.getTasks();
             final int[] j = {0};
             tasks.forEach(courseTask -> {
+                courseTask.setParent(course);
                 JPanel subPanel = createExercise(courseTask);
                 subPanel.setBackground(bgColor);
                 gbc.gridy = j[0];
@@ -339,6 +343,18 @@ public class CustomScreen {
                 listForCourse.add(task);
                 DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task.getIdeTaskId());
                 for (String file : task.getFileName()) {
+                    List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
+                    //TODO: vaihda ikonin asettamiseen
+                    JLabel mark = new JLabel("Submitted");
+                    String regex = courseTask.getParent().getName() + "/" + courseTask.getName() + "/" + task.getIdeTaskId() + "/" + file.replaceAll("\"", "");
+                    if (submits != null) {
+                    for (String s : submits) {
+                        if (s.matches(regex)) {
+                            leaf.add(new DefaultMutableTreeNode(file.replaceAll("\"", "") + " " + mark));
+                            break;
+                        }
+                    }
+                    }
                     leaf.add(new DefaultMutableTreeNode(file.replaceAll("\"", "")));
                 }
                 root.add(leaf);

@@ -4,13 +4,16 @@
 package com.views;
 
 import com.actions.ActiveState;
+import com.actions.StateManager;
 import com.api.ApiHandler;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 
+import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -163,6 +166,10 @@ public class CourseTaskPane {
                     .getFile();
 
             String path = file.getPath();
+            List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
+            if (submits != null && !submits.contains(path)) {
+                ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path);
+            }
             // TODO: do something like the following to use the TIDE-CLI
             // function to submit all task files in a directory by checking
             // a checkbox, or find a more sensible way to implement it
@@ -172,6 +179,7 @@ public class CourseTaskPane {
             String response = new ApiHandler().submitExercise(path);
             printOutput(response);
             System.out.println(path);
+
         });
 
 

@@ -14,7 +14,7 @@ public class SubTask {
     private String ideTaskId;
 
     /**
-     * the path to the course task that.
+     * the path to the course task that the subtask is a part of.
      */
     private String path;
 
