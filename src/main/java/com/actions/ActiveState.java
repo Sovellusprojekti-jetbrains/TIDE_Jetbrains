@@ -6,8 +6,10 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.util.ui.JBImageIcon;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -45,6 +47,7 @@ public class ActiveState {
     private void hideWindow(String id) {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow window = toolWindowManager.getToolWindow(id);
+        window.setIcon(IconLoader.getIcon("/icons/timgray.svg"));
         assert window != null;
         window.setAvailable(false);
     }
@@ -56,6 +59,7 @@ public class ActiveState {
     private void showWindow(String id) {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow window = toolWindowManager.getToolWindow(id);
+        window.setIcon(IconLoader.getIcon("/icons/tim.svg"));
         assert window != null;
         window.setAvailable(true);
     }
