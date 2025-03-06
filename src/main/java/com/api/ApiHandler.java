@@ -155,13 +155,17 @@ public class ApiHandler {
         String filePath = file.getPath();
         for (SubTask subtask : subtasks) { //finds ide_task_id and path for the subtask
             for (String name : subtask.getFileName()) {
-                if (filePath.contains(subtask.getIdeTaskId())) {
-                    if (filePath.contains(name.replaceAll("\"", ""))) {
-                        taskId = subtask.getIdeTaskId();
-                        taskPath = subtask.getPath();
-                        break;
-                    }
+                if ((subtask.getIdeTaskId() == null || !filePath.contains(subtask.getIdeTaskId()))
+                 && (subtask.getTaskDirectory() == null || !filePath.contains(subtask.getTaskDirectory()))) {
+                    continue;
                 }
+
+                if (filePath.contains(name.replaceAll("\"", ""))) {
+                    taskId = subtask.getIdeTaskId();
+                    taskPath = subtask.getPath();
+                    break;
+                }
+
             }
             if (taskId != null) {
                 break;

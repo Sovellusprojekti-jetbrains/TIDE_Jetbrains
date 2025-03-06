@@ -24,6 +24,12 @@ public class SubTask {
     private List<String> fileNames;
 
     /**
+     * Task directory in timdata.
+     */
+    @SerializedName(value = "task_directory")
+    private String taskDirectory;
+
+    /**
      * set the task name for the task.
      * @param id the name of the task
      */
@@ -69,5 +75,21 @@ public class SubTask {
      */
     public List<String> getFileName() {
         return this.fileNames;
+    }
+
+    /**
+     * Get task directory.
+     * @return directory as string
+     */
+    public String getTaskDirectory() {
+        return this.taskDirectory;
+    }
+
+    /**
+     * Sets task directory.
+     * @param taskDir new task directory
+     */
+    public void setTaskDirectory(String taskDir) {
+        this.taskDirectory = taskDir;
     }
 }
