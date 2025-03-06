@@ -73,6 +73,7 @@ public class UiTest {
      */
     @Test
     public void textTest() throws InterruptedException {
+        final int sleeptime = 10;
         WelcomeFrameFixture welcomeFrame = remoteRobot.find(WelcomeFrameFixture.class);
         welcomeFrame.createNewProjectLink().click();
         final Locator createButton = byXpath("//div[@text='Create']");
@@ -81,7 +82,6 @@ public class UiTest {
         final ComponentFixture sampleComponent = remoteRobot.find(ComponentFixture.class, sampleLocator);
         sampleComponent.click();
         createFixture.click();
-         final int sleeptime = 10;
         final IdeaFrame idea = remoteRobot.find(IdeaFrame.class, ofSeconds(10));
         while (idea.isDumbMode()) {
             TimeUnit.SECONDS.sleep(sleeptime);
@@ -127,16 +127,3 @@ public class UiTest {
     }
 
 }
-
-//div[@class='TabPanel'][.//div[@text='Courses']]
-//div[@text='Login']
-//div[@text='Settings']
-//div[@text='Course View']
-//div[@text='Open exercise']
-//div[@text='Submit']
-//div[@text='reset exercise']
-
-//div[@tooltiptext='TIDE Tool Window']
-//div[@tooltiptext='Course Task']
-
-//div[@class='ToolWindowPane']
