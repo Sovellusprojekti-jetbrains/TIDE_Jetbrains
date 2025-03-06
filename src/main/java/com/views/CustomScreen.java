@@ -5,7 +5,6 @@ import com.actions.Settings;
 import com.api.ApiHandler;
 import com.api.JsonHandler;
 import com.intellij.ui.components.JBScrollPane;
-
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -280,11 +279,11 @@ public class CustomScreen {
                 try {
                     api.loadExercise(courseTask.getPath(), "--all");
                 } catch (IOException ex) {
-                    com.views.InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
+                    InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
                     //Maybe there could be more advanced error reporting
                 } catch (InterruptedException ex) {
-                    com.views.InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
+                    InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
                 }
             }
@@ -403,7 +402,7 @@ public class CustomScreen {
         // A panel that contains the courses and tasks is created in its own sub-program.
         createCourseListPane(courselist);
         tabbedPane.addTab("Courses", coursesPane); // Show Logout tab
-        loginButton.setText("logout");
+        loginButton.setText("Logout");
         ActionListener[] tempLogin = loginButton.getActionListeners(); //Need to change LoginButton into LogoutButton
         loginButton.removeActionListener(tempLogin[0]);
         ActionListener[] tempLogout = logoutButton.getActionListeners();
@@ -420,7 +419,7 @@ public class CustomScreen {
     private void switchToLogin() {
         tabbedPane.remove(coursesPane); // Hide Courses tab
         tabbedPane.addTab("Menu", loginPane); // Show Login tab
-        loginButton.setText("login");
+        loginButton.setText("Login");
         ActionListener[] tempLogin = loginButton.getActionListeners(); //Need to change LoginButton back
         loginButton.removeActionListener(tempLogin[0]);
         loginButton.addActionListener(new ActionListener() {
