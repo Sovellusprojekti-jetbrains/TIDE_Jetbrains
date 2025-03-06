@@ -192,6 +192,8 @@ public class CourseTaskPane {
                 }
             }
         });
+
+        stateManager.updateCourses();
     }
 
 
