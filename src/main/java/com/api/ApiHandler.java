@@ -29,7 +29,6 @@ public class ApiHandler {
     private final String checkLoginCommand = "tide check-login --json";
     private final String taskCreateCommand = "tide task create";
     private final String submitCommand = "tide submit";
-    private final String taskOpenCommand = "idea";
 
     /**
      * Logs in to TIDE-CLI.
