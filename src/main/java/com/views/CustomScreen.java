@@ -298,8 +298,8 @@ public class CustomScreen {
         oButton.setBackground(bgColor);
         oButton.addActionListener(event -> {
             int lastPartStart = courseTask.getPath().lastIndexOf('/');
-            String demoDirectory = courseTask.getPath().substring(lastPartStart);
-            new ApiHandler().openTaskProject(Settings.getPath() + "/" + courseName + demoDirectory);
+            String demoDirectory = File.separatorChar + courseTask.getPath().substring(lastPartStart + 1);
+            new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName + demoDirectory);
         });
         buttonPanel.add(oButton);
 
@@ -319,7 +319,7 @@ public class CustomScreen {
      * @param courseName Course name for subdirectory
      */
     private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask, String courseName) {
-        String pathToFile = Settings.getPath() + "/" + courseName;
+        String pathToFile = Settings.getPath() + File.separatorChar + courseName;
         JsonHandler jsonHandler = new JsonHandler();
         String timData = readTimData(pathToFile);
         if (!timData.isEmpty()) {
@@ -367,10 +367,11 @@ public class CustomScreen {
                     DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
                     DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
                     if (selectedNode.getChildCount() == 0) {
-                        api.openTaskProject(Settings.getPath() + "/" + selectedNode.getRoot() + "/" + parent.toString()
-                                + "/" + selectedNode);
+                        api.openTaskProject(Settings.getPath() + File.separatorChar + selectedNode.getRoot()
+                                + File.separatorChar + parent.toString() + File.separatorChar + selectedNode);
                     } else {
-                        api.openTaskProject(Settings.getPath() + "/" + parent.toString() + "/" + selectedNode.toString());
+                        api.openTaskProject(Settings.getPath() + File.separatorChar + parent.toString()
+                                + File.separatorChar + selectedNode);
                     }
                 }
             }
@@ -386,7 +387,7 @@ public class CustomScreen {
     private String readTimData(String pathToFile) {
         StringBuilder sb = new StringBuilder();
         try {
-            String settingsPath = pathToFile + "/.timdata";
+            String settingsPath = pathToFile + File.separatorChar + ".timdata";
             Path path = Paths.get(settingsPath);
             BufferedReader reader = Files.newBufferedReader(path);
             String line = reader.readLine();

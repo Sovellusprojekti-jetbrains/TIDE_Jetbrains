@@ -6,6 +6,7 @@ import com.course.SubTask;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.*;
@@ -15,6 +16,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -144,8 +146,8 @@ public class ApiHandler {
      * @throws InterruptedException If TIDE CLI process fails or something else goes wrong.
      */
     public void resetSubTask(VirtualFile file, String courseDirectory) throws IOException, InterruptedException {
-        String timData = com.actions.Settings.getPath() + "/"
-                + courseDirectory + "/.timdata"; //.timdata should be saved where the task was downloaded
+        String timData = com.actions.Settings.getPath() + File.separatorChar + courseDirectory
+                + File.separatorChar + ".timdata"; //.timdata should be saved where the task was downloaded
         String taskData = Files.readString(Path.of(timData), StandardCharsets.UTF_8);
         JsonHandler handler = new JsonHandler();
         List<SubTask> subtasks = handler.jsonToSubtask(taskData); //List of subtasks related to a task
@@ -240,21 +242,23 @@ public class ApiHandler {
     public void openTaskProject(String taskPath) {
         try {
             String command = "";
-            String os = System.getProperty("os.name");
-            if (os.contains("Linux")) {
-                command = System.getenv("SHELL") + " " + taskOpenCommand;
-            } else if (os.contains("Windows")) {
-                command = "powershell" + " " + taskOpenCommand;
+            if (Objects.equals(System.getenv("DEVELOP"), "true")) {
+                command = System.getenv("IDEA_LOCATION");
+                var env = System.getenv();
+                System.out.println(env);
+            } else {
+                command = PathManager.getHomePath();
             }
 
             // is this needed? if so, in which operating systems?
-            if (taskPath.contains(" ")) {
-                taskPath = "\"" + taskPath + "\"";
-            }
+            // if (taskPath.contains(" ")) {
+            //     taskPath = "\"" + taskPath + "\"";
+            // }
 
             List<String> cmdLst = new ArrayList<String>(Arrays.asList(command.split("\\s+")));
             cmdLst.add(taskPath);
             ProcessBuilder pb = new ProcessBuilder(cmdLst);
+            System.out.println(pb.command());
             pb.redirectErrorStream(true);
             Process process = pb.start();
             int exitCode = process.waitFor();
