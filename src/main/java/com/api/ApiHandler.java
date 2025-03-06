@@ -250,11 +250,6 @@ public class ApiHandler {
                 command = PathManager.getHomePath();
             }
 
-            // is this needed? if so, in which operating systems?
-            // if (taskPath.contains(" ")) {
-            //     taskPath = "\"" + taskPath + "\"";
-            // }
-
             List<String> cmdLst = new ArrayList<String>(Arrays.asList(command.split("\\s+")));
             cmdLst.add(taskPath);
             ProcessBuilder pb = new ProcessBuilder(cmdLst);
