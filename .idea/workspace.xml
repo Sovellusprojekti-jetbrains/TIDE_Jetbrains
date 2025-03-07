@@ -14,6 +14,10 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/com/course/SubTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/course/SubTask.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/views/CourseTaskPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CourseTaskPane.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/actions/ActiveState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/actions/ActiveState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/icons/tim40.svg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/icons/tim.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/icons/tim40gray.svg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/icons/timgray.svg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +101,7 @@
     "UI_DESIGNER_EDITOR_MODE.PaletteManager.STATE": "right",
     "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW": "true",
     "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.STATE": "left",
-    "git-widget-placeholder": "20250220-06-kayttoliittymaan__palautetut__tehtavat",
+    "git-widget-placeholder": "20250305-02-tim-icon",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "project.structure.last.edited": "Project",
@@ -108,6 +112,8 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Kurssit\jetbrains\TIDE_Jetbrains\src\main\resources\icons" />
+      <recent name="C:\Kurssit\jetbrains\TIDE_Jetbrains\src\main\java\com\icons" />
       <recent name="C:\Users\jerem\Documents\GitHub\Jetbrains\src\test\java" />
       <recent name="C:\Users\jerem\Documents\GitHub\Jetbrains\src\test" />
     </key>

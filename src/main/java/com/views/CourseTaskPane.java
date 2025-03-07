@@ -134,8 +134,6 @@ public class CourseTaskPane {
                     .getSelectedEditor()
                     .getFile();
 
-            String path = file.getPath();
-
             // show confirmation dialog and return if the user decides to cancel
             if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
                 return;
@@ -143,7 +141,9 @@ public class CourseTaskPane {
 
             try {
                 ApiHandler handler = new ApiHandler();
-                handler.resetSubTask(path, file);
+                ActiveState stateManager = ActiveState.getInstance();
+                String coursePath = stateManager.getCourseName(file.getPath());
+                handler.resetSubTask(file, coursePath);
             } catch (IOException e) {
                 InfoView.displayError(".timdata file not found!", "Task reset error");
                 throw new RuntimeException(e);
@@ -176,7 +176,7 @@ public class CourseTaskPane {
             // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
             // String path = submitAll ? file.getParent().getPath() : file.getPath();
 
-            String response = new ApiHandler().submitExercise(path);
+            String response = new ApiHandler().submitExercise(file);
             printOutput(response);
             System.out.println(path);
 
@@ -187,6 +187,7 @@ public class CourseTaskPane {
             printOutput("TimBetan tehtävät palauttaa vaan yhden rivin virheen.\n"
                     + "Tässä siis jotain mallitekstiä, kun merkkijonoja sieltä timistäkin vaan tulee."); //TODO: poista
         });
+
 
         ActiveState stateManager = ActiveState.getInstance();
         stateManager.addPropertyChangeListener(new PropertyChangeListener() {
@@ -200,6 +201,8 @@ public class CourseTaskPane {
                 }
             }
         });
+
+        stateManager.updateCourses();
     }
 
 
@@ -224,8 +227,9 @@ public class CourseTaskPane {
     private void hideWindow() {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow window = toolWindowManager.getToolWindow("Course Task");
-        assert window != null;
-        window.setAvailable(false);
+        if (window != null) {
+            window.setAvailable(false);
+        }
     }
 
     /**
@@ -234,8 +238,9 @@ public class CourseTaskPane {
     private void showWindow() {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow window = toolWindowManager.getToolWindow("Course Task");
-        assert window != null;
-        window.setAvailable(true);
+        if (window != null) {
+            window.setAvailable(true);
+        }
     }
 }
 

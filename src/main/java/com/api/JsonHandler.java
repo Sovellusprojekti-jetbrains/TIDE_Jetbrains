@@ -58,6 +58,12 @@ public class JsonHandler {
                     SubTask sub = gson.fromJson(task, SubTask.class);
                     List<String> files = getValuesInObject(task, "file_name");
                     sub.setFileName(files);
+
+                    List<String> taskDir = getValuesInObject(task, "task_directory");
+                    if (!taskDir.isEmpty()) {
+                        sub.setTaskDirectory(taskDir.get(0));
+                    }
+
                     subTaskList.add(sub);
                 }
             }

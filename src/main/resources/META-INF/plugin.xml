@@ -19,16 +19,19 @@
                     factoryClass="com.factories.LoginWindowFactory"
                     anchor="left"
                     canCloseContents="true"
+                    icon="/icons/tim.svg"
         />
         <toolWindow id="Course Task"
                     factoryClass="com.factories.CoursePaneWindowFactory"
                     anchor="right"
                     canCloseContents="true"
+                    icon="/icons/timgray.svg"
         />
         <toolWindow id="Output Window"
                     anchor="bottom"
                     factoryClass="com.factories.OutputWindowFactory"
                     canCloseContents="true"
+                    icon="/icons/timgray.svg"
         />
         <fileEditorProvider implementation="com.factories.MyCustomFileEditorProvider"/>
         <applicationService serviceImplementation="com.actions.StateManager"/>
