@@ -2,14 +2,12 @@ package com.actions;
 
 import com.api.ApiHandler;
 import com.course.Course;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.util.ui.JBImageIcon;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -23,12 +21,17 @@ public class ActiveState {
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private List<Course> courseList;
     private boolean isLoggedIn = false;
-    Project project;
+    private Project project;
 
+    /**
+     * Constructor for active state attempts to hide the right and bottom toolwindows.
+     */
     public ActiveState() {
         project = ProjectManager.getInstance().getOpenProjects()[0];
-        hideWindow("Course Task");
-        hideWindow("Output Window");
+        ApplicationManager.getApplication().invokeLater(() -> {
+            hideWindow("Course Task");
+            hideWindow("Output Window");
+        });
     }
 
 
@@ -97,6 +100,10 @@ public class ActiveState {
     public void login() {
         if (!isLoggedIn) {
             isLoggedIn = true;
+            pcs.firePropertyChange("login", false, isLoggedIn);
+            showWindow("Course Task");
+            showWindow("Output Window");
+        } else {
             pcs.firePropertyChange("login", false, isLoggedIn);
             showWindow("Course Task");
             showWindow("Output Window");
