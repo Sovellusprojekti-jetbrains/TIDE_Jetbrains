@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.*;
@@ -136,6 +138,18 @@ public class ApiHandler {
         }
     }
 
+    /**
+     * This method is used to save changes in virtual file to physical file on disk.
+     * @param file Virtual file
+     */
+    private void syncChanges(VirtualFile file) {
+        FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
+        Document document = fileDocumentManager.getDocument(file);
+        if (document != null) {
+            fileDocumentManager.saveDocument(document);
+        }
+    }
+
 
     /**
      * Resets subtask back to the state of latest submit.
@@ -174,6 +188,7 @@ public class ApiHandler {
         }
 
         if (taskId != null) {
+            this.syncChanges(file); //sync changes before reset
             this.loadExercise(courseDirectory, taskPath, taskId, "-f");
             //Virtual file must be refreshed and intellij idea's UI notified
             file.refresh(true, true);
@@ -189,12 +204,14 @@ public class ApiHandler {
 
     /**
      * Submit an exercise.
-     * @param exercisePath Path of the file to be submitted
+     * @param file Virtual file containing subtask to be submitted
      * @return Response from TIM as a string or an error message
      */
-    public String submitExercise(String exercisePath) {
+    public String submitExercise(VirtualFile file) {
+        this.syncChanges(file); //sync changes before submit
         String response = "";
         try {
+            String exercisePath = file.getPath();
             List<String> cmdLst = new ArrayList<String>(Arrays.asList(submitCommand.split("\\s+")));
             cmdLst.add(exercisePath);
             ProcessBuilder pb = new ProcessBuilder(cmdLst);
