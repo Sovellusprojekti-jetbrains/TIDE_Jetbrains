@@ -3,6 +3,8 @@ package com.actions;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.components.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -84,6 +86,9 @@ public final class StateManager implements PersistentStateComponent<StateManager
     public void setSubmit(String taskPath) {
         PropertiesComponent properties = PropertiesComponent.getInstance();
         List<String> submits = getSubmits();
+        if( submits == null)  {
+            submits = new ArrayList<>();
+        }
         submits.add(taskPath);
         properties.setList("myPlugin.submits", submits);
         //String value = properties.getValue("myPlugin.path", System.getProperty("user.dir"));
