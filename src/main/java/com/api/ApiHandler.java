@@ -155,10 +155,11 @@ public class ApiHandler {
         String filePath = file.getPath();
         for (SubTask subtask : subtasks) { //finds ide_task_id and path for the subtask
             for (String name : subtask.getFileName()) {
-                if ((subtask.getIdeTaskId() == null || !filePath.contains(subtask.getIdeTaskId()))
-                 && (subtask.getTaskDirectory() == null || !filePath.contains(subtask.getTaskDirectory()))) {
-                    continue;
-                }
+                /* checks in case of similar filenames, not enough to handle the problem
+                   if ((subtask.getIdeTaskId() == null || !filePath.contains(subtask.getIdeTaskId()))
+                   && (subtask.getTaskDirectory() == null || !filePath.contains(subtask.getTaskDirectory()))) {
+                      continue;
+                  } */
 
                 if (filePath.contains(name.replaceAll("\"", ""))) {
                     taskId = subtask.getIdeTaskId();
