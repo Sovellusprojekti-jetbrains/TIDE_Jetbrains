@@ -27,13 +27,13 @@ public class Course {
 
     /**
      * Getter for course name.
+     * Should you encounter character encoding issues
+     * while running this plugin in Windows, go to:
+     * region settings -> check the beta option to use
+     * UTF-8. TODO: add to user documentation.
      * @return Course name
      */
     public String getName() {
-        // Should you encounter character encoding issues
-        // while running this plugin in Windows, go to:
-        // region settings -> check the beta option to use
-        // UTF-8.
         return this.name;
     }
 
