@@ -180,6 +180,7 @@ public class CourseTaskPane {
                     + "Tässä siis jotain mallitekstiä, kun merkkijonoja sieltä timistäkin vaan tulee."); //TODO: poista
         });
 
+
         ActiveState stateManager = ActiveState.getInstance();
         stateManager.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
@@ -218,8 +219,9 @@ public class CourseTaskPane {
     private void hideWindow() {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow window = toolWindowManager.getToolWindow("Course Task");
-        assert window != null;
-        window.setAvailable(false);
+        if (window != null) {
+            window.setAvailable(false);
+        }
     }
 
     /**
@@ -228,8 +230,9 @@ public class CourseTaskPane {
     private void showWindow() {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow window = toolWindowManager.getToolWindow("Course Task");
-        assert window != null;
-        window.setAvailable(true);
+        if (window != null) {
+            window.setAvailable(true);
+        }
     }
 }
 
