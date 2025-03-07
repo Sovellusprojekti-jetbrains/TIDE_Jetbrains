@@ -107,7 +107,8 @@ public class CustomScreen {
         refreshButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                List<Course> refreshed = apiHandler.courses();
+                ActiveState.getInstance().updateCourses();
+                List<Course> refreshed = ActiveState.getInstance().getCourses();
                 createCourseListPane(refreshed);
 
                 // Piirretään uudelleen
@@ -218,7 +219,7 @@ public class CustomScreen {
             List<CourseTask> tasks = course.getTasks();
             final int[] j = {0};
             tasks.forEach(courseTask -> {
-                JPanel subPanel = createExercise(courseTask);
+                JPanel subPanel = createExercise(courseTask, course.getName());
                 subPanel.setBackground(bgColor);
                 gbc.gridy = j[0];
                 panel.add(subPanel, gbc);
@@ -253,9 +254,10 @@ public class CustomScreen {
      * Creates a panel for the task together with the buttons to download or open it.
      *
      * @param courseTask a CourseTask object for which to create the panel
+     * @param courseName Course name for save path
      * @return the subpanel that contains the tasks name and the two buttons
      */
-    private JPanel createExercise(CourseTask courseTask) {
+    private JPanel createExercise(CourseTask courseTask, String courseName) {
         final int fontsize = 16;
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
@@ -277,7 +279,7 @@ public class CustomScreen {
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
                 try {
-                    api.loadExercise(courseTask.getPath(), "--all");
+                    api.loadExercise(courseName, courseTask.getPath(), "--all");
                 } catch (IOException ex) {
                     InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
@@ -293,11 +295,16 @@ public class CustomScreen {
         JButton oButton = new JButton();
         oButton.setText("Open as Project");
         oButton.setBackground(bgColor);
+        oButton.addActionListener(event -> {
+            int lastPartStart = courseTask.getPath().lastIndexOf('/');
+            String demoDirectory = File.separatorChar + courseTask.getPath().substring(lastPartStart + 1);
+            new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName + demoDirectory);
+        });
         buttonPanel.add(oButton);
 
         subPanel.add(buttonPanel, BorderLayout.EAST);
         try {
-            createSubTaskpanel(subPanel, courseTask);
+            createSubTaskpanel(subPanel, courseTask, courseName);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -308,9 +315,10 @@ public class CustomScreen {
      * Creates and adds a panel of clickable subtasks to the panel containing the course that the subtasks belong to.
      * @param subPanel the panel that the panel of subtasks is appended to.
      * @param courseTask The Course task that the subtasks belong to.
+     * @param courseName Course name for subdirectory
      */
-    private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask) {
-        String pathToFile = Settings.getPath();
+    private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask, String courseName) {
+        String pathToFile = Settings.getPath() + File.separatorChar + courseName;
         JsonHandler jsonHandler = new JsonHandler();
         String timData = readTimData(pathToFile);
         if (!timData.isEmpty()) {
@@ -358,10 +366,11 @@ public class CustomScreen {
                     DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
                     DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
                     if (selectedNode.getChildCount() == 0) {
-                        api.openTaskProject(Settings.getPath() + "\\" + selectedNode.getRoot() + "\\" + parent.toString()
-                                + "\\" + selectedNode);
+                        api.openTaskProject(Settings.getPath() + File.separatorChar + selectedNode.getRoot()
+                                + File.separatorChar + parent.toString() + File.separatorChar + selectedNode);
                     } else {
-                        api.openTaskProject(Settings.getPath() + "\\" + parent.toString() + "\\" + selectedNode.toString());
+                        api.openTaskProject(Settings.getPath() + File.separatorChar + parent.toString()
+                                + File.separatorChar + selectedNode);
                     }
                 }
             }
@@ -377,7 +386,7 @@ public class CustomScreen {
     private String readTimData(String pathToFile) {
         StringBuilder sb = new StringBuilder();
         try {
-            String settingsPath = pathToFile + "\\.timdata";
+            String settingsPath = pathToFile + File.separatorChar + ".timdata";
             Path path = Paths.get(settingsPath);
             BufferedReader reader = Files.newBufferedReader(path);
             String line = reader.readLine();
@@ -397,8 +406,9 @@ public class CustomScreen {
      */
     private void switchToLogout() {
         //tabbedPane.remove(loginPane); // Hide Login tab
-        ApiHandler apiHandler = new ApiHandler();
-        List<Course> courselist = apiHandler.courses();
+        ActiveState stateManager = ActiveState.getInstance();
+        stateManager.updateCourses();
+        List<Course> courselist = stateManager.getCourses();
         // A panel that contains the courses and tasks is created in its own sub-program.
         createCourseListPane(courselist);
         tabbedPane.addTab("Courses", coursesPane); // Show Logout tab

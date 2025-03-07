@@ -28,13 +28,14 @@ public class ResetExercise extends AnAction {
                 .getSelectedEditor()
                 .getFile();
 
-        String path = file.getPath();
         if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
             return;
         }
         try {
             ApiHandler handler = new ApiHandler();
-            handler.resetSubTask(path, file);
+            ActiveState stateManager = ActiveState.getInstance();
+            String coursePath = stateManager.getCourseName(file.getPath());
+            handler.resetSubTask(file, coursePath);
         } catch (IOException ex) {
             InfoView.displayError(".timdata file not found!", "Task reset error");
             throw new RuntimeException(ex);

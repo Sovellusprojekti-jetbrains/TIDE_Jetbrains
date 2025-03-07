@@ -52,6 +52,31 @@ public class ActiveState {
         pcs.firePropertyChange("courseList", oldCourseList, courseList);
     }
 
+
+    /**
+     * Get the course list.
+     * @return Course list
+     */
+    public List<Course> getCourses() {
+        return this.courseList;
+    }
+
+
+    /**
+     * Gets a course name by file path.
+     * @param path File path
+     * @return Course name
+     */
+    public String getCourseName(String path) {
+        for (Course crs: courseList) {
+            if (path.contains(crs.getName())) {
+                return crs.getName();
+            }
+        }
+        return "";
+    }
+
+
     /**
      * Sets login state to true and fires the related event.
      */
