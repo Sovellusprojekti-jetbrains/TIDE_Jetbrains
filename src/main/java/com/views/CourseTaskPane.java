@@ -169,7 +169,7 @@ public class CourseTaskPane {
             // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
             // String path = submitAll ? file.getParent().getPath() : file.getPath();
 
-            String response = new ApiHandler().submitExercise(path);
+            String response = new ApiHandler().submitExercise(file);
             printOutput(response);
             System.out.println(path);
         });
