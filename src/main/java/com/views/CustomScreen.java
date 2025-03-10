@@ -19,8 +19,6 @@ import java.nio.file.*;
 
 import com.course.*;
 import com.intellij.ui.treeStructure.Tree;
-import org.apache.lucene.index.DocIDMerger;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -353,12 +351,12 @@ public class CustomScreen {
                 for (String file : task.getFileName()) {
                     List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
                     //TODO: vaihda ikonin asettamiseen
-                    JLabel mark = new JLabel("Submitted");
-                    String regex = courseTask.getParent().getName() + "/" + courseTask.getName() + "/" + task.getIdeTaskId() + "/" + file.replaceAll("\"", "");
+                    String regex = /*courseTask.getParent().getName() +*/ "/"
+                            + courseTask.getName() + "/" + task.getIdeTaskId() + "/" + file.replaceAll("\"", "");
                     if (submits != null) {
                     for (String s : submits) {
-                        if (s.matches(regex)) {
-                            leaf.add(new DefaultMutableTreeNode(file.replaceAll("\"", "") + " " + mark));
+                        if (s.contains(regex)) {
+                            leaf.add(new DefaultMutableTreeNode(file.replaceAll("\"", "") + " submitted"));
                             break;
                         }
                     }

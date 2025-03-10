@@ -13,6 +13,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import java.awt.*;
@@ -167,6 +168,9 @@ public class CourseTaskPane {
 
             String path = file.getPath();
             List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
+            if (submits == null) {
+                submits = new ArrayList<>();
+            }
             if (submits != null && !submits.contains(path)) {
                 ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path);
             }

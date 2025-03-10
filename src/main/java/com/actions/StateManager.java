@@ -86,7 +86,7 @@ public final class StateManager implements PersistentStateComponent<StateManager
     public void setSubmit(String taskPath) {
         PropertiesComponent properties = PropertiesComponent.getInstance();
         List<String> submits = getSubmits();
-        if( submits == null)  {
+        if (submits == null)  {
             submits = new ArrayList<>();
         }
         submits.add(taskPath);
