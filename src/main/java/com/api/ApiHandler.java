@@ -38,7 +38,7 @@ public class ApiHandler {
      * @throws InterruptedException Method call process.waitFor() may throw InterruptedException
      */
     public void login() throws IOException, InterruptedException {
-        String exitCode =  CLIHandler(loginCommand);
+        String exitCode =  handleCommandLine(loginCommand);
         System.out.println("Process exited with code: " + exitCode);
     }
 
@@ -49,7 +49,7 @@ public class ApiHandler {
      * @throws InterruptedException Method call process.waitFor() may throw InterruptedException
      */
     public void logout() throws IOException, InterruptedException {
-        String exitCode = CLIHandler(logoutCommand);
+        String exitCode = handleCommandLine(logoutCommand);
         System.out.println("Process exited with code: " + exitCode);
     }
 
@@ -62,7 +62,7 @@ public class ApiHandler {
 
         String jsonString = null;
         try {
-            jsonString = CLIHandler(coursesCommand);
+            jsonString = handleCommandLine(coursesCommand);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -92,7 +92,7 @@ public class ApiHandler {
         for (String arg: cmdArgs) {
             pbArgs.add(arg);
         }
-        CLIHandler(pbArgs,courseDirFile);
+        handleCommandLine(pbArgs, courseDirFile);
     }
 
     /**
@@ -169,7 +169,7 @@ public class ApiHandler {
         String response = "";
         try {
             String command = submitCommand + " " + file.getPath();
-            response = CLIHandler(command);
+            response = handleCommandLine(command);
         } catch (IOException ex) {
             ex.printStackTrace();
             response = "IOException:\r\n" + ex;
@@ -184,7 +184,7 @@ public class ApiHandler {
     public boolean  isLoggedIn() {
         try {
 
-            String jsonOutput = CLIHandler(checkLoginCommand);
+            String jsonOutput = handleCommandLine(checkLoginCommand);
             // Parse JSON
             Gson gson = new Gson();
             LoginOutput output = gson.fromJson(jsonOutput, LoginOutput.class);
@@ -215,7 +215,7 @@ public class ApiHandler {
                 command = PathManager.getHomePath();
             }
 
-            CLIHandler(command + " " + taskPath);
+            handleCommandLine(command + " " + taskPath);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -234,7 +234,7 @@ public class ApiHandler {
      * @return the results of the execution.
      * @throws IOException if the command is wrong or can't be executed then an error is thrown.
      */
-    public String CLIHandler(String command) throws IOException {
+    public String handleCommandLine(String command) throws IOException {
 
         ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
         pb.redirectErrorStream(true);
@@ -254,7 +254,7 @@ public class ApiHandler {
      * @param destination the file save destination
      * @throws IOException if the command is wrong or can't be executed then an error is thrown.
      */
-    public void CLIHandler(List<String> command, File destination) throws IOException, InterruptedException {
+    public void handleCommandLine(List<String> command, File destination) throws IOException, InterruptedException {
 
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.directory(destination);
