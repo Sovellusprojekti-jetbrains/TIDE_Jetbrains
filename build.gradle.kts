@@ -65,9 +65,6 @@ plugins {
         implementation("com.google.code.gson:gson:2.12.1")
         testImplementation("com.intellij.remoterobot:remote-robot:0.11.23")
         testImplementation ("com.intellij.remoterobot:remote-fixtures:0.11.23")
-        implementation("org.slf4j:slf4j-api:1.7.32") //Lokitus
-        implementation("ch.qos.logback:logback-classic:1.2.6")
-        implementation("ch.qos.logback:logback-core:1.2.6")
     }
 
 

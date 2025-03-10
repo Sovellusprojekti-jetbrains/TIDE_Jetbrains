@@ -1,23 +1,31 @@
 package com.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LogHandler {
-    private static Logger logger = LoggerFactory.getLogger(LogHandler.class);
+    private static final Logger LOGGER = Logger.getLogger("com.api.logToFile");
     public static void logToFile(String level, String message) {
-        switch (level) {
-            case "info":
-                logger.info(message);
-                break;
-            case "debug":
-                logger.debug(message);
-                break;
-            case "error":
-                logger.error(message);
-                break;
-            default:
-                System.err.println("Unknown logging level");
+        try {
+            Handler fh = new FileHandler("%t/tidecli_log/mylog.txt");
+            LOGGER.addHandler(fh);
+            LOGGER.setLevel(Level.ALL);
+            switch (level) {
+                case "debug":
+                    LOGGER.log(Level.INFO, message);
+                    break;
+                case "error":
+                    //logger.error(message);
+                    break;
+                default:
+                    System.err.println("Unknown logging level");
+            }
+        } catch (IOException e) {
+            com.views.InfoView.displayError("Couldn't create or write to log file!", "Logging error");
+            throw new RuntimeException(e);
         }
     }
 }
