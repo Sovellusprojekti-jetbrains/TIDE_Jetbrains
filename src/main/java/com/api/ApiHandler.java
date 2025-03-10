@@ -38,15 +38,7 @@ public class ApiHandler {
      * @throws InterruptedException Method call process.waitFor() may throw InterruptedException
      */
     public void login() throws IOException, InterruptedException {
-        ProcessBuilder pb = new ProcessBuilder(loginCommand.split("\\s+"));
-        pb.redirectErrorStream(true);
-        Process process = pb.start();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            System.out.println(line);
-        }
-        int exitCode = process.waitFor();
+        String exitCode =  handleCommandLine(loginCommand);
         System.out.println("Process exited with code: " + exitCode);
     }
 
@@ -57,15 +49,7 @@ public class ApiHandler {
      * @throws InterruptedException Method call process.waitFor() may throw InterruptedException
      */
     public void logout() throws IOException, InterruptedException {
-        ProcessBuilder pb = new ProcessBuilder(logoutCommand.split("\\s+"));
-        pb.redirectErrorStream(true);
-        Process process = pb.start();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            System.out.println(line);
-        }
-        int exitCode = process.waitFor();
+        String exitCode = handleCommandLine(logoutCommand);
         System.out.println("Process exited with code: " + exitCode);
     }
 
@@ -75,27 +59,16 @@ public class ApiHandler {
      * @return A list of Course objects
      */
     public List<Course> courses() {
-        StringBuilder jsonString = new StringBuilder();
 
+        String jsonString = null;
         try {
-            ProcessBuilder pb = new ProcessBuilder(coursesCommand.split("\\s+"));
-            pb.redirectErrorStream(true);
-            Process process = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                jsonString.append(line);
-            }
-            int exitCode = process.waitFor();
-            System.out.println("Process exited with code: " + exitCode);
-        } catch (IOException | InterruptedException ex) {
-            ex.printStackTrace();
+            jsonString = handleCommandLine(coursesCommand);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
         JsonHandler handler = new JsonHandler();
-        List<Course> courses = handler.jsonToCourses(jsonString.toString());
 
-        return courses;
+        return handler.jsonToCourses(jsonString);
     }
 
     /**
@@ -119,23 +92,7 @@ public class ApiHandler {
         for (String arg: cmdArgs) {
             pbArgs.add(arg);
         }
-        ProcessBuilder pb = new ProcessBuilder(pbArgs);
-        // Without the following, is it assumed that destination folder is in sub path of plugin's working directory or something like that.
-        // The process will exit with exit code 1 when it discovers that files are saved elsewhere
-        pb.directory(courseDirFile);
-        pb.redirectErrorStream(true);
-        Process process = pb.start();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream())); //Debug stuff
-        String line;
-        while ((line = reader.readLine()) != null) {
-            System.out.println(line);
-        }
-        int exitCode = process.waitFor();
-        System.out.println("Process exited with code: " + exitCode);
-        if (exitCode != 0) {
-            // Maybe there could be more advanced error reporting
-            com.views.InfoView.displayError("An error occurred during download", "Download error");
-        }
+        handleCommandLine(pbArgs, courseDirFile);
     }
 
     /**
@@ -211,15 +168,8 @@ public class ApiHandler {
         this.syncChanges(file); //sync changes before submit
         String response = "";
         try {
-            String exercisePath = file.getPath();
-            List<String> cmdLst = new ArrayList<String>(Arrays.asList(submitCommand.split("\\s+")));
-            cmdLst.add(exercisePath);
-            ProcessBuilder pb = new ProcessBuilder(cmdLst);
-            pb.redirectErrorStream(true);
-            Process process = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            response = reader.lines().collect(Collectors.joining("\n"));
-            System.out.println("Raw Output from Python:\n" + response);
+            String command = submitCommand + " " + file.getPath();
+            response = handleCommandLine(command);
         } catch (IOException ex) {
             ex.printStackTrace();
             response = "IOException:\r\n" + ex;
@@ -234,13 +184,7 @@ public class ApiHandler {
     public boolean  isLoggedIn() {
         try {
 
-            ProcessBuilder pb = new ProcessBuilder(checkLoginCommand.split("\\s+"));
-            pb.redirectErrorStream(true);
-
-            Process process = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String jsonOutput = reader.lines().collect(Collectors.joining("\n"));
-            System.out.println("Raw Output from Python: " + jsonOutput);
+            String jsonOutput = handleCommandLine(checkLoginCommand);
             // Parse JSON
             Gson gson = new Gson();
             LoginOutput output = gson.fromJson(jsonOutput, LoginOutput.class);
@@ -271,15 +215,8 @@ public class ApiHandler {
                 command = PathManager.getHomePath();
             }
 
-            List<String> cmdLst = new ArrayList<String>(Arrays.asList(command.split("\\s+")));
-            cmdLst.add(taskPath);
-            ProcessBuilder pb = new ProcessBuilder(cmdLst);
-            System.out.println(pb.command());
-            pb.redirectErrorStream(true);
-            Process process = pb.start();
-            int exitCode = process.waitFor();
-            System.out.println("Process exited with code: " + exitCode);
-        } catch (IOException | InterruptedException ex) {
+            handleCommandLine(command + " " + taskPath);
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
@@ -289,4 +226,48 @@ public class ApiHandler {
         private String loggedIn;
     }
 
+
+
+    /**
+     *
+     * @param command the command that is executed .
+     * @return the results of the execution.
+     * @throws IOException if the command is wrong or can't be executed then an error is thrown.
+     */
+    public String handleCommandLine(String command) throws IOException {
+
+        ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
+        pb.redirectErrorStream(true);
+        Process process = pb.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String jsonOutput = reader.lines().collect(Collectors.joining("\n"));
+        System.out.println("Raw Output from Python: " + jsonOutput);
+
+        return jsonOutput;
+    }
+
+    /**
+     * This is needed because the TIDE-CLI python crashed if the destination folder
+     * is not the subfolder of the gradle test environment. Might not be needed in the production version.
+     *
+     * @param command     command that is executed.
+     * @param destination the file save destination
+     * @throws IOException if the command is wrong or can't be executed then an error is thrown.
+     */
+    public void handleCommandLine(List<String> command, File destination) throws IOException, InterruptedException {
+
+        ProcessBuilder pb = new ProcessBuilder(command);
+        pb.directory(destination);
+        pb.redirectErrorStream(true);
+        Process process = pb.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String jsonOutput = reader.lines().collect(Collectors.joining("\n"));
+        System.out.println("Raw Output from Python: " + jsonOutput);
+        int exitCode = process.waitFor();
+        System.out.println("Process exited with code: " + exitCode);
+        if (exitCode != 0) {
+            // Maybe there could be more advanced error reporting
+            com.views.InfoView.displayError("An error occurred during download", "Download error");
+        }
+    }
 }
