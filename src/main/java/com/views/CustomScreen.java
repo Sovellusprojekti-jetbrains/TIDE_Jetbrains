@@ -327,7 +327,7 @@ public class CustomScreen {
     private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask, String courseName) {
         // TODO: Need to implement actual character replacement for illegal filenames.
         // This is a bandage to prevent exceptions when showing illegal test data on screen.
-        courseName = courseName.replaceAll("^(\\s+.*|.*[\\\\/:\\\"?*|<>].*|.*\\s+||.*\\.)$", "");
+        courseName = courseName.replaceAll("[\\\\/:\"?*|<>]", "_");
 
         String pathToFile = Settings.getPath() + File.separatorChar + courseName;
         JsonHandler jsonHandler = new JsonHandler();
