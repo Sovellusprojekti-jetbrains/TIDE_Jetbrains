@@ -11,13 +11,13 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
-import java.net.URL;
 import java.nio.file.*;
 
 import com.course.*;
@@ -352,21 +352,8 @@ public class CustomScreen {
                 listForCourse.add(task);
                 DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task.getIdeTaskId());
                 for (String file : task.getFileName()) {
-                    List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
-                    //TODO: vaihda ikonin asettamiseen
-                    String regex = /*courseTask.getParent().getName() +*/ "/"
-                            + courseTask.getName() + "/" + task.getIdeTaskId() + "/" + file.replaceAll("\"", "");
-                    if (submits != null) {
-                    for (String s : submits) {
-                        if (s.contains(regex)) {
                             DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file.replaceAll("\"", ""));
-
                             leaf.add(submitNode);
-                            break;
-                        }
-                    }
-                    }
-                    leaf.add(new DefaultMutableTreeNode(file.replaceAll("\"", "")));
                 }
                 root.add(leaf);
             }
@@ -394,9 +381,8 @@ public class CustomScreen {
                 }
             }
         });
-        DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
-        renderer.setLeafIcon(Allicons.Debugger.Db_set_breakpoint);
-        tree.setCellRenderer(renderer);
+        //TODO: vaihda ikonin asettamiseen
+        tree.setCellRenderer(new SubmitRenderer());
         return tree;
     }
 

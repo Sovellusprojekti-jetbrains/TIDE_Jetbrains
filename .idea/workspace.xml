@@ -8,8 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2f4e1b01-2541-43a5-bf02-7d655370f51b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/actions/StateManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/actions/StateManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/CourseTaskPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CourseTaskPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,8 +51,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="package-info" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -97,6 +96,7 @@
     "git-widget-placeholder": "20250220-06-kayttoliittymaan__palautetut__tehtavat",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/jerem/Documents/GitHub/Jetbrains",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
@@ -104,6 +104,9 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.views" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Kurssit\jetbrains\TIDE_Jetbrains\src\main\resources\icons" />
       <recent name="C:\Kurssit\jetbrains\TIDE_Jetbrains\src\main\java\com\icons" />
@@ -134,6 +137,15 @@
     </option>
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java</url>
+          <line>384</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="GradleRunConfiguration">
         <watch expression="regex" language="JAVA" />
