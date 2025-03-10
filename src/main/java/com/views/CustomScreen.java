@@ -1,5 +1,5 @@
 package com.views;
-
+import com.intellij.icons.AllIcons;
 import com.actions.ActiveState;
 import com.actions.Settings;
 import com.actions.StateManager;
@@ -9,12 +9,15 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.components.JBScrollPane;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
+import java.net.URL;
 import java.nio.file.*;
 
 import com.course.*;
@@ -356,7 +359,9 @@ public class CustomScreen {
                     if (submits != null) {
                     for (String s : submits) {
                         if (s.contains(regex)) {
-                            leaf.add(new DefaultMutableTreeNode(file.replaceAll("\"", "") + " submitted"));
+                            DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file.replaceAll("\"", ""));
+
+                            leaf.add(submitNode);
                             break;
                         }
                     }
@@ -389,6 +394,9 @@ public class CustomScreen {
                 }
             }
         });
+        DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+        renderer.setLeafIcon(Allicons.Debugger.Db_set_breakpoint);
+        tree.setCellRenderer(renderer);
         return tree;
     }
 
