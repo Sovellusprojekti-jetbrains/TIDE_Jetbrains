@@ -199,7 +199,7 @@ public class CustomScreen {
     private void createCourseListPane(List<Course> courselist) {
         //Removes all previous courses added, to make refreshing possible. TODO:better solution?
         coursePanel.removeAll();
-        courselist.forEach(course -> {
+        for (Course course: courselist) {
             JPanel panel = new JPanel(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
@@ -225,7 +225,7 @@ public class CustomScreen {
             // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
             List<CourseTask> tasks = course.getTasks();
             final int[] j = {0};
-            tasks.forEach(courseTask -> {
+            for (CourseTask courseTask: tasks) {
                 JPanel subPanel = createExercise(courseTask, course.getName());
                 subPanel.setBackground(bgColor);
                 gbc.gridy = j[0];
@@ -233,7 +233,7 @@ public class CustomScreen {
                 panel.setBackground(bgColor);
                 panel.setOpaque(true);
                 j[0]++;
-            });
+            }
 
             final int thickness = 4;
 
@@ -244,7 +244,7 @@ public class CustomScreen {
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
             coursePanel.add(scrollPane);
-        });
+        }
 
     }
 
@@ -325,6 +325,10 @@ public class CustomScreen {
      * @param courseName Course name for subdirectory
      */
     private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask, String courseName) {
+        // TODO: Need to implement actual character replacement for illegal filenames.
+        // This is a bandage to prevent exceptions when showing illegal test data on screen.
+        courseName = courseName.replaceAll("^(\\s+.*|.*[\\\\/:\\\"?*|<>].*|.*\\s+||.*\\.)$", "");
+
         String pathToFile = Settings.getPath() + File.separatorChar + courseName;
         JsonHandler jsonHandler = new JsonHandler();
         String timData = readTimData(pathToFile);
