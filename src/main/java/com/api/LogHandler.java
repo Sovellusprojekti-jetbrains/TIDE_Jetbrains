@@ -4,6 +4,35 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.logging.*;
 
+/**
+ * This class contains methods for logging with custom style entries.
+ * Use examples:
+ * ===============================
+ * call logInfo method E.g. at the start and end of method you are inspecting,
+ * with descriptive messages
+ * E.g. com.api.LogHandler.logInfo(ApiHandler.isLoggedIn() called);
+ * E.g. com.api.LogHandler.logInfo(ApiHandler.isLoggedIn() returned ...);
+ * ===============================
+ * Call logDebug method somewhere in the method you are inspecting,
+ * by giving lists of variable names and corresponding values
+ * E.g. com.api.LogHandler.logDebug(new String[]{String name}, newString[]{name});
+ * ===============================
+ * Call logError method in catch clauses with method's name you are inspecting,
+ * and Exception
+ * E.g. com.api.LogHandler.logError("Action listener of avaaTehtava", exception);
+ * ===============================
+ * Example output:
+ * [2025-03-11 15:56:21:470] [INFO] - ApiHandler.isLoggedIn() called
+ *     [DEBUG] - Variable names and values:
+ *         String jsonOutput = foobar
+ * [2025-03-11 15:56:23:587] [INFO] - ApiHandler.isLoggedIn() returned true
+ * ===============================
+ * [2025-03-11 16:45:31:005] [ERROR] [SEVERITY:900]
+ *     Method: Action listener of avaaTehtava
+ *     Failed to open ???. Error message: Määritettyä tiedostoa ei löydy.
+ *     Stack trace:
+ *         .....
+ */
 public final class LogHandler extends Formatter {
     private static final Logger LOGGER = Logger.getLogger("com.api.logToFile");
     private static final String LOG_PATH = "%t/tide-cli_log.txt";
