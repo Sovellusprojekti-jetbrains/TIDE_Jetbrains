@@ -66,7 +66,8 @@ public final class StateManager implements PersistentStateComponent<StateManager
             return System.getProperty("user.dir");
         }
         */
-        com.api.LogHandler.logToFile("info", "StateManager.getPath() called");
+        //com.api.LogHandler.logToFile("info", "StateManager.getPath() called");
+        com.api.LogHandler.logInfo("StateManager.getPath() called");
         PropertiesComponent properties = PropertiesComponent.getInstance();
         String value = properties.getValue("myPlugin.path", System.getProperty("user.dir"));
         //com.api.LogHandler.logToFile("info", ("String value = " + value));
