@@ -6,7 +6,7 @@ import java.util.logging.*;
 
 public final class LogHandler extends Formatter {
     private static final Logger LOGGER = Logger.getLogger("com.api.logToFile");
-    private static final String LOG_PATH = "%t/tidecli_log/mylog.txt"; //TODO: remove subfolder
+    private static final String LOG_PATH = "%t/tide-cli_log.txt";
     private static FileHandler fh = null;
 
     private LogHandler() {
@@ -31,6 +31,13 @@ public final class LogHandler extends Formatter {
             message.append(record.getMessage());
             return message.toString();
         }
+        if (record.getLevel() == Level.WARNING) {
+            message.append("[").append(date.format(record.getMillis()))
+                    .append("] ").append("[ERROR] [SEVERITY:").append(Level.WARNING.intValue())
+                    .append("]").append(System.lineSeparator());
+            message.append(record.getMessage());
+            return message.toString();
+        }
         return "";
     }
 
@@ -43,7 +50,7 @@ public final class LogHandler extends Formatter {
             fh = new FileHandler(LOG_PATH, true);
             LOGGER.addHandler(fh);
             LOGGER.setLevel(Level.ALL);
-            fh.setFormatter(new LogHandler());
+            fh.setFormatter(new LogHandler()); //comment this if you fancy java's default logging style
         }
     }
 
@@ -62,8 +69,11 @@ public final class LogHandler extends Formatter {
                 case "debug":
                     LOGGER.info(message);
                     break;
+                case "error":
+                    LOGGER.warning(message);
+                    break;
                 default:
-                    LOGGER.warning("Check LogHandler.java internal configuration");
+                    LOGGER.warning("Unknown logging level. Debug LogHandler.java's internal method calls\r\n");
             }
         } catch (IOException e) {
             com.views.InfoView.displayError("Couldn't create or write to log file!", "Logging error");
@@ -97,5 +107,24 @@ public final class LogHandler extends Formatter {
         }
         list.append(System.lineSeparator());
         log(list.toString(), "debug");
+    }
+
+    /**
+     * This method is used to log error details for example when exception is caught.
+     * @param methodName Name of the class and method, Eg. ApiHandler.submitExercise().
+     * @param e Exception that was caught.
+     */
+    public static void logError(String methodName, Exception e) {
+        StringBuilder error = new StringBuilder();
+        StackTraceElement[] stack = e.getStackTrace();
+        error.append("\t").append("Method: ").append(methodName)
+                .append(System.lineSeparator()).append(System.lineSeparator());
+        error.append("\t").append(e.getMessage()).append(System.lineSeparator());
+        error.append("\t").append("Stack trace:").append(System.lineSeparator());
+        for (StackTraceElement se : stack) {
+            error.append("\t\t").append(se.toString()).append(System.lineSeparator());
+        }
+        error.append(System.lineSeparator());
+        log(error.toString(), "error");
     }
 }
