@@ -7,7 +7,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 import java.util.List;
 
@@ -26,8 +25,8 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
                 tree, value, sel,
                 expanded, leaf, row,
                 hasFocus);
-        if (leaf && isSubmitted(value)) {
-            setIcon(AllIcons.Debugger.Db_set_breakpoint);
+        if (leaf) {
+            setIcon(isSubmitted(value));
         } //else {
             //setIcon(AllIcons.Debugger.Db_no_suspend_breakpoint);
         //}
@@ -35,16 +34,22 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
         return this;
     }
 
-    private boolean isSubmitted(Object value) {
+    private Icon isSubmitted(Object value) {
         List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
         String regex = node.getParent().getParent().toString() + "/" + node.getParent().toString() + "/" + node.toString();
         System.out.println(regex);
         for (String s : submits) {
             if (s.contains(regex)) {
-                return true;
+                if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == 0 && node.getChildCount() == 0) {
+                    return AllIcons.Debugger.Db_set_breakpoint;
+                }
+                if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) > 0 && node.getChildCount() == 0) {
+                    return AllIcons.Debugger.Db_no_suspend_breakpoint;
+                }
             }
+
         }
-        return false;
+        return AllIcons.Empty;
     }
 }

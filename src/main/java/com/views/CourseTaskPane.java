@@ -2,7 +2,7 @@
 //26.1.2025
 
 package com.views;
-
+import java.util.regex.*;
 import com.actions.ActiveState;
 import com.actions.StateManager;
 import com.api.ApiHandler;
@@ -167,20 +167,33 @@ public class CourseTaskPane {
                     .getFile();
 
             String path = file.getPath();
-            List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
-            if (submits == null) {
-                submits = new ArrayList<>();
-            }
-            if (submits != null && !submits.contains(path)) {
-                ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path);
-            }
             // TODO: do something like the following to use the TIDE-CLI
             // function to submit all task files in a directory by checking
             // a checkbox, or find a more sensible way to implement it
             // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
             // String path = submitAll ? file.getParent().getPath() : file.getPath();
 
+
             String response = new ApiHandler().submitExercise(file);
+            Pattern pattern = Pattern.compile("\\d+");
+            Matcher matcher = pattern.matcher(response);
+            List<Integer> n = new ArrayList<>();
+            if (!response.contains("error")) {
+                while (matcher.find()) {
+                    n.add(Integer.parseInt(matcher.group()));
+                }
+                }
+            if (n.isEmpty()) {
+                n.add(0);
+            }
+            List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
+            if (submits == null) {
+                submits = new ArrayList<>();
+            }
+            if (submits != null && !submits.contains(path)
+                    | ApplicationManager.getApplication().getService(StateManager.class).getPoints(path) != n.get(0)) {
+                ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
+            }
             printOutput(response);
             System.out.println(path);
 
