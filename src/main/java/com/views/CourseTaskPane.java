@@ -176,8 +176,7 @@ public class CourseTaskPane {
 
 
         showOutputButton.addActionListener(event -> {
-            printOutput("TimBetan tehtävät palauttaa vaan yhden rivin virheen.\n"
-                    + "Tässä siis jotain mallitekstiä, kun merkkijonoja sieltä timistäkin vaan tulee."); //TODO: poista
+            showOutputWindow();
         });
 
 
@@ -199,15 +198,29 @@ public class CourseTaskPane {
 
 
     /**
-     * Prints a string to the output toolWindow.
-     * @param output String to print
+     * Show and return output window.
+     * @return Output window
      */
-    public void printOutput(String output) {
+    public ToolWindow showOutputWindow() {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow window = toolWindowManager.getToolWindow("Output Window");
 
         if (window != null) {
             window.show(null);
+        }
+
+        return window;
+    }
+
+
+    /**
+     * Prints a string to the output toolWindow.
+     * @param output String to print
+     */
+    public void printOutput(String output) {
+        ToolWindow window = showOutputWindow();
+
+        if (window != null) {
             OutputWindow.getInstance().printText(output);
         }
     }
