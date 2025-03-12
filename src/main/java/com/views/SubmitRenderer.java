@@ -39,16 +39,18 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
         String regex = node.getParent().getParent().toString() + "/" + node.getParent().toString() + "/" + node.toString();
         System.out.println(regex);
-        for (String s : submits) {
-            if (s.contains(regex)) {
-                if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == 0 && node.getChildCount() == 0) {
-                    return AllIcons.Debugger.Db_set_breakpoint;
+        if (submits != null) {
+            for (String s : submits) {
+                if (s.contains(regex)) {
+                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == 0 && node.getChildCount() == 0) {
+                        return AllIcons.Debugger.Db_set_breakpoint;
+                    }
+                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) > 0 && node.getChildCount() == 0) {
+                        return AllIcons.Debugger.Db_no_suspend_breakpoint;
+                    }
                 }
-                if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) > 0 && node.getChildCount() == 0) {
-                    return AllIcons.Debugger.Db_no_suspend_breakpoint;
-                }
-            }
 
+            }
         }
         return AllIcons.Empty;
     }
