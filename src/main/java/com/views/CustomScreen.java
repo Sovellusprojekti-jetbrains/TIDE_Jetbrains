@@ -7,6 +7,9 @@ import com.api.ApiHandler;
 import com.api.JsonHandler;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.openapi.options.ShowSettingsUtil;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -151,8 +154,12 @@ public class CustomScreen {
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Settings temp = new Settings();
-                temp.displaySettings();
+                Project project = ProjectManager.getInstance().getDefaultProject();
+                ShowSettingsUtil.getInstance().showSettingsDialog(project, "TIDE settings");
+
+
+                //Settings temp = new Settings();
+                //temp.displaySettings();
             }
         });
 
