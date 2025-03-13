@@ -96,6 +96,9 @@ public class CustomScreen {
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
         ApiHandler apiHandler = new ApiHandler();
+        int scrollSpeed = 16;
+        coursesPane.getVerticalScrollBar().setUnitIncrement(scrollSpeed);
+
         // Fetching data from TIM and creating a list of course objects,
         // for more information see package com.course and class ApiHandler.
 
@@ -364,10 +367,10 @@ public class CustomScreen {
             rowCount = rowCount + listForCourse.size();
             courseTask.setTasks(listForCourse);
         }
-        //+5min 20:17
         Tree tree = new Tree(root);
         tree.setRootVisible(false);
         tree.setVisibleRowCount(rowCount);
+        //TODO: korjaa avaaminen tuplaklikillä lisäämällä  kurssifolderi.
         tree.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
