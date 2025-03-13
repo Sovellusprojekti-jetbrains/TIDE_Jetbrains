@@ -72,6 +72,7 @@ public class CustomScreen {
      * Button that refreshes the available courses and tasks.
      */
     private JButton refreshButton;
+    private JLabel timLabel;
 
     /**
      * An integer for the red band of a color.
