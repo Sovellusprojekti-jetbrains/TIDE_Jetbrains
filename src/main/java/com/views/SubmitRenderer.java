@@ -3,6 +3,7 @@ package com.views;
 import com.actions.StateManager;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.ui.JBColor;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -27,10 +28,8 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
                 hasFocus);
         if (leaf) {
             setIcon(isSubmitted(value));
-        } //else {
-            //setIcon(AllIcons.Debugger.Db_no_suspend_breakpoint);
-        //}
-
+        }
+        setBackgroundNonSelectionColor(JBColor.background());
         return this;
     }
 
@@ -38,7 +37,6 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
         List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
         String regex = node.getParent().getParent().toString() + "/" + node.getParent().toString() + "/" + node.toString();
-        System.out.println(regex);
         if (submits != null) {
             for (String s : submits) {
                 if (s.contains(regex)) {

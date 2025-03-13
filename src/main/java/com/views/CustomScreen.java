@@ -1,20 +1,15 @@
 package com.views;
-import com.intellij.icons.AllIcons;
 import com.actions.ActiveState;
 import com.actions.Settings;
-import com.actions.StateManager;
 import com.api.ApiHandler;
 import com.api.JsonHandler;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeCellRenderer;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -92,7 +87,7 @@ public class CustomScreen {
     /**
      * A color definition.
      */
-    private final Color bgColor = new Color(red, green, blue);
+    private final Color bgColor = JBColor.background();
 
     /**
      * Creator for the CustomScreen class, that holds the courses and tasks.
@@ -338,7 +333,7 @@ public class CustomScreen {
             Tree tree = createTree(subtasks, courseTask);
             JBScrollPane container = new JBScrollPane();
             container.add(tree);
-            container.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            container.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             container.setViewportView(tree);
             subPanel.add(container);
         }
@@ -353,6 +348,7 @@ public class CustomScreen {
     private Tree createTree(List<SubTask> subtasks, CourseTask courseTask) {
         ApiHandler api = new ApiHandler();
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(courseTask.getName());
+        int rowCount = 0;
         for (SubTask task: subtasks) {
             List<SubTask> listForCourse = new ArrayList<>();
             if (task.getPath().equals(courseTask.getPath())) {
@@ -361,13 +357,17 @@ public class CustomScreen {
                 for (String file : task.getFileName()) {
                             DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file.replaceAll("\"", ""));
                             leaf.add(submitNode);
+                            rowCount = rowCount + 1;
                 }
                 root.add(leaf);
             }
+            rowCount = rowCount + listForCourse.size();
             courseTask.setTasks(listForCourse);
         }
+        //+5min 20:17
         Tree tree = new Tree(root);
         tree.setRootVisible(false);
+        tree.setVisibleRowCount(rowCount);
         tree.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
@@ -388,7 +388,6 @@ public class CustomScreen {
                 }
             }
         });
-        //TODO: vaihda ikonin asettamiseen
         tree.setCellRenderer(new SubmitRenderer());
         return tree;
     }
