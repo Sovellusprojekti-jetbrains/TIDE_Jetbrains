@@ -38,7 +38,7 @@ public class ApiHandler {
      * @throws InterruptedException Method call process.waitFor() may throw InterruptedException
      */
     public void login() throws IOException, InterruptedException {
-        String exitCode =  handleCommandLine(loginCommand);
+        String exitCode =  handleCommandLine(List.of(loginCommand.split(" ")));
         System.out.println("Process exited with code: " + exitCode);
     }
 
@@ -49,7 +49,7 @@ public class ApiHandler {
      * @throws InterruptedException Method call process.waitFor() may throw InterruptedException
      */
     public void logout() throws IOException, InterruptedException {
-        String exitCode = handleCommandLine(logoutCommand);
+        String exitCode = handleCommandLine(List.of(logoutCommand.split(" ")));
         System.out.println("Process exited with code: " + exitCode);
     }
 
@@ -62,14 +62,15 @@ public class ApiHandler {
 
         String jsonString = null;
         try {
-            jsonString = handleCommandLine(coursesCommand);
-        } catch (IOException e) {
+            jsonString = handleCommandLine(List.of(coursesCommand.split(" ")));
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
         JsonHandler handler = new JsonHandler();
 
         return handler.jsonToCourses(jsonString);
     }
+
 
     /**
      * Loads exercise into folder defined in settings.
@@ -88,12 +89,13 @@ public class ApiHandler {
         // Destination path is surrounded by quotes only if it contains spaces.
         // destination = destination.contains(" ") ? "\"" + destination + "\"" : destination;
 
-        List<String> pbArgs = new ArrayList<String>(Arrays.asList(taskCreateCommand.split(" ")));
+        List<String> pbArgs = new ArrayList<>(Arrays.asList(taskCreateCommand.split(" ")));
         for (String arg: cmdArgs) {
             pbArgs.add(arg);
         }
         handleCommandLine(pbArgs, courseDirFile);
     }
+
 
     /**
      * This method is used to save changes in virtual file to physical file on disk.
@@ -159,6 +161,7 @@ public class ApiHandler {
         }
     }
 
+
     /**
      * Submit an exercise.
      * @param file Virtual file containing subtask to be submitted
@@ -168,23 +171,24 @@ public class ApiHandler {
         this.syncChanges(file); //sync changes before submit
         String response = "";
         try {
-            String command = submitCommand + " " + file.getPath();
-            response = handleCommandLine(command);
-        } catch (IOException ex) {
+            List<String> commandlineArgs = new ArrayList<>(Arrays.asList(submitCommand.split(" ")));
+            commandlineArgs.add(file.getPath());
+            response = handleCommandLine(commandlineArgs);
+        } catch (IOException | InterruptedException ex) {
             ex.printStackTrace();
-            response = "IOException:\r\n" + ex;
+            response = "IOException:" + System.lineSeparator() + ex;
         }
         return response;
     }
+
 
     /**
      * asks tide-cli if there is a login and returns a boolean.
      * @return login status in boolean
      */
-    public boolean  isLoggedIn() {
+    public boolean isLoggedIn() {
         try {
-
-            String jsonOutput = handleCommandLine(checkLoginCommand);
+            String jsonOutput = handleCommandLine(List.of(checkLoginCommand.split(" ")));
             // Parse JSON
             Gson gson = new Gson();
             LoginOutput output = gson.fromJson(jsonOutput, LoginOutput.class);
@@ -192,13 +196,14 @@ public class ApiHandler {
                 return true;
             }
 
-        } catch (IOException ex) {
+        } catch (IOException | InterruptedException ex) {
             ex.printStackTrace();
         }
 
 
         return false;
     }
+
 
     /**
      * opens the clicked subtasks project.
@@ -215,11 +220,12 @@ public class ApiHandler {
                 command = PathManager.getHomePath();
             }
 
-            handleCommandLine(command + " " + taskPath);
-        } catch (IOException ex) {
+            handleCommandLine(List.of(command, taskPath));
+        } catch (IOException | InterruptedException ex) {
             ex.printStackTrace();
         }
     }
+
 
     class LoginOutput {
         @SerializedName(value = "logged_in")
@@ -227,47 +233,48 @@ public class ApiHandler {
     }
 
 
-
     /**
      *
-     * @param command the command that is executed .
+     * @param command the command that is executed.
      * @return the results of the execution.
      * @throws IOException if the command is wrong or can't be executed then an error is thrown.
      */
-    public String handleCommandLine(String command) throws IOException {
-
-        ProcessBuilder pb = new ProcessBuilder(command.split("\\s+"));
-        pb.redirectErrorStream(true);
-        Process process = pb.start();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String jsonOutput = reader.lines().collect(Collectors.joining("\n"));
-        System.out.println("Raw Output from Python: " + jsonOutput);
-
-        return jsonOutput;
+    public String handleCommandLine(List<String> command) throws IOException, InterruptedException {
+        return handleCommandLine(command, null);
     }
 
     /**
-     * This is needed because the TIDE-CLI python crashed if the destination folder
-     * is not the subfolder of the gradle test environment. Might not be needed in the production version.
+     * Executes a process with given arguments.
+     * A working directory is needed for the TIDE command
+     * 'tide task create' which is supposed to be executed
+     * in the course subdirectory.
      *
      * @param command     command that is executed.
-     * @param destination the file save destination
+     * @param workingDirectory working directory for TIDE-CLI
+     * @return the results of the execution
      * @throws IOException if the command is wrong or can't be executed then an error is thrown.
      */
-    public void handleCommandLine(List<String> command, File destination) throws IOException, InterruptedException {
-
+    public String handleCommandLine(List<String> command, File workingDirectory) throws IOException, InterruptedException {
         ProcessBuilder pb = new ProcessBuilder(command);
-        pb.directory(destination);
+
+        if (workingDirectory != null) {
+            pb.directory(workingDirectory);
+        }
+
         pb.redirectErrorStream(true);
         Process process = pb.start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String jsonOutput = reader.lines().collect(Collectors.joining("\n"));
-        System.out.println("Raw Output from Python: " + jsonOutput);
+        String tideOutput = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+        System.out.println("Raw Output from Python:" + System.lineSeparator() + tideOutput);
+
         int exitCode = process.waitFor();
         System.out.println("Process exited with code: " + exitCode);
+
         if (exitCode != 0) {
             // Maybe there could be more advanced error reporting
-            com.views.InfoView.displayError("An error occurred during download", "Download error");
+            com.views.InfoView.displayError("An error occurred during TIDE call", "TIDE error");
         }
+
+        return tideOutput;
     }
 }
