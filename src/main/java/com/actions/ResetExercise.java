@@ -31,15 +31,19 @@ public class ResetExercise extends AnAction {
         if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
             return;
         }
+        ApiHandler handler = new ApiHandler();
+        ActiveState stateManager = ActiveState.getInstance();
+        String coursePath = stateManager.getCourseName(file.getPath());
         try {
-            ApiHandler handler = new ApiHandler();
-            ActiveState stateManager = ActiveState.getInstance();
-            String coursePath = stateManager.getCourseName(file.getPath());
             handler.resetSubTask(file, coursePath);
         } catch (IOException ex) {
+            com.api.LogHandler.logError("ResetExercise action performer", ex);
+            com.api.LogHandler.logDebug(new String[]{"26 VirtualFile file", "36 String coursePath"},
+                    new String[]{file.toString(), coursePath});
             InfoView.displayError(".timdata file not found!", "Task reset error");
             throw new RuntimeException(ex);
         } catch (InterruptedException ex) {
+            com.api.LogHandler.logError("ResetExercise action performer", ex);
             InfoView.displayError("An error occurred during task reset! Check Tide CLI", "Task reset error");
             throw new RuntimeException(ex);
         }
