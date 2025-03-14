@@ -28,6 +28,8 @@ public class JsonHandler {
             Course[] courseArray = gson.fromJson(jsonString, Course[].class);
             courseList = new ArrayList<Course>(Arrays.asList(courseArray));
         } catch (JsonParseException | IllegalStateException e) {
+            com.api.LogHandler.logError("23 JsonHandler.jsonToCourses(final String jsonString)", e);
+            com.api.LogHandler.logDebug(new String[]{"23 String jsonString"}, new String[]{jsonString});
             System.err.println(e.getMessage());
         }
 
@@ -68,6 +70,8 @@ public class JsonHandler {
                 }
             }
         } catch (JsonParseException | IllegalStateException e) {
+            com.api.LogHandler.logError("49 JsonHandler.jsonToSubtask(final String jsonString)", e);
+            com.api.LogHandler.logDebug(new String[]{"49 String jsonString"}, new String[]{jsonString});
             System.err.println(e.getMessage());
         }
         // remove invalid json data
