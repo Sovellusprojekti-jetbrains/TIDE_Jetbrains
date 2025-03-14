@@ -64,6 +64,7 @@ public class ApiHandler {
         try {
             jsonString = handleCommandLine(List.of(coursesCommand.split(" ")));
         } catch (IOException | InterruptedException e) {
+            com.api.LogHandler.logError("61: ApiHandler.courses()", e);
             throw new RuntimeException(e);
         }
         JsonHandler handler = new JsonHandler();
@@ -175,6 +176,8 @@ public class ApiHandler {
             commandlineArgs.add(file.getPath());
             response = handleCommandLine(commandlineArgs);
         } catch (IOException | InterruptedException ex) {
+            com.api.LogHandler.logError("171: ApiHandler.submitExercise(VirtualFile file)", ex);
+            com.api.LogHandler.logDebug(new String[]{"171 VirtualFile file"}, new String[]{file.toString()});
             ex.printStackTrace();
             response = "IOException:" + System.lineSeparator() + ex;
         }
@@ -197,6 +200,7 @@ public class ApiHandler {
             }
 
         } catch (IOException | InterruptedException ex) {
+            com.api.LogHandler.logError("192: ApiHandler.isLoggedIn()", ex);
             ex.printStackTrace();
         }
 
@@ -222,6 +226,8 @@ public class ApiHandler {
 
             handleCommandLine(List.of(command, taskPath));
         } catch (IOException | InterruptedException ex) {
+            com.api.LogHandler.logError("216 ApiHandler.openTasProject(String taskPath", ex);
+            com.api.LogHandler.logDebug(new String[]{"216 String taskPath"}, new String[]{taskPath});
             ex.printStackTrace();
         }
     }
