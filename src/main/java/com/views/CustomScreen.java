@@ -99,6 +99,7 @@ public class CustomScreen {
         ApiHandler apiHandler = new ApiHandler();
         int scrollSpeed = 16;
         coursesPane.getVerticalScrollBar().setUnitIncrement(scrollSpeed);
+        coursesPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         // Fetching data from TIM and creating a list of course objects,
         // for more information see package com.course and class ApiHandler.
@@ -337,7 +338,7 @@ public class CustomScreen {
             Tree tree = createTree(subtasks, courseTask);
             JBScrollPane container = new JBScrollPane();
             container.add(tree);
-            container.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            container.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
             container.setViewportView(tree);
             subPanel.add(container);
         }
