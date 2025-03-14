@@ -138,9 +138,8 @@ public class CustomScreen {
                         //TODO: error message that the login failed
                         return;
                     }
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                } catch (InterruptedException ex) {
+                } catch (IOException | InterruptedException ex) {
+                    com.api.LogHandler.logError("CustomScreen, line: 132: api.login()", ex);
                     throw new RuntimeException(ex);
                 }
 
@@ -177,6 +176,7 @@ public class CustomScreen {
                         return;
                     }
                 } catch (IOException | InterruptedException ex) {
+                    com.api.LogHandler.logError("CustomScreen, line 169: api.logout()", ex);
                     ex.printStackTrace();
                 }
             }
@@ -289,10 +289,13 @@ public class CustomScreen {
                 try {
                     api.loadExercise(courseName, courseTask.getPath(), "--all");
                 } catch (IOException ex) {
+                    com.api.LogHandler.logError("268 CustomScreen.createExercise(CourseTask courseTask, String courseName)", ex);
+                    com.api.LogHandler.logDebug(new String[]{"268 CourseTask courseTask", "268 String courseName"},
+                            new String[]{courseTask.toString(), courseName});
                     InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
-                    //Maybe there could be more advanced error reporting
                 } catch (InterruptedException ex) {
+                    com.api.LogHandler.logError("268 CustomScreen.createExercise(CourseTask courseTask, String courseName)", ex);
                     InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
                     throw new RuntimeException(ex);
                 }
@@ -314,6 +317,7 @@ public class CustomScreen {
         try {
             createSubTaskpanel(subPanel, courseTask, courseName);
         } catch (Exception e) {
+            com.api.LogHandler.logError("318 CustomScreen.createExercise createSubTaskpanel", e);
             throw new RuntimeException(e);
         }
         return subPanel;
@@ -408,6 +412,8 @@ public class CustomScreen {
                 line = reader.readLine();
             }
         } catch (IOException e) {
+            com.api.LogHandler.logError("CustomScreen.readTimData(String pathToFile), lines: 405-413", e);
+            com.api.LogHandler.logDebug(new String[]{"402 String pathToFile"}, new String[]{pathToFile});
             System.out.println("File timdata was not found");
         }
         return sb.toString();
@@ -458,9 +464,8 @@ public class CustomScreen {
                         //TODO: error message that the login failed
                         return;
                     }
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                } catch (InterruptedException ex) {
+                } catch (IOException | InterruptedException ex) {
+                    com.api.LogHandler.logError("CustomScreen.switchToLogin(), line 458: api.login()", ex);
                     throw new RuntimeException(ex);
                 }
 
