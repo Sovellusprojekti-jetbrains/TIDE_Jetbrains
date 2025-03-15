@@ -119,7 +119,7 @@ public class JsonHandler {
     }
 
     /**
-     * Custom deserializer to handle invalid characters.
+     * Custom deserializer to ensure course names are valid for file paths.
      */
     public class CourseDeserializer implements JsonDeserializer<Course> {
         /**
