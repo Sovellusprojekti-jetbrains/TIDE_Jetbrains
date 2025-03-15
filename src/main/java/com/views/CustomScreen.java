@@ -99,6 +99,7 @@ public class CustomScreen {
         ApiHandler apiHandler = new ApiHandler();
         int scrollSpeed = 16;
         coursesPane.getVerticalScrollBar().setUnitIncrement(scrollSpeed);
+        coursesPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         // Fetching data from TIM and creating a list of course objects,
         // for more information see package com.course and class ApiHandler.
