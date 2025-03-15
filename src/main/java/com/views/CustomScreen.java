@@ -337,7 +337,6 @@ public class CustomScreen {
             Tree tree = createTree(subtasks, courseTask);
             JBScrollPane container = new JBScrollPane();
             container.add(tree);
-            container.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             container.setViewportView(tree);
             subPanel.add(container);
         }

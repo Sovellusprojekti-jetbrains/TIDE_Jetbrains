@@ -10,9 +10,6 @@ public class Main {
      */
     public static void main(String[] args) {
 
-
-    }
-
     /**
      * Method that adds two numbers together.
      * @param x first number
