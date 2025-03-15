@@ -144,7 +144,8 @@ public class JsonHandler {
                                        // rationale: "course 1: topic" -> "course 1 - topic"
                                        .replaceAll("\\S[:]\\s+", " - ")
                                        // replace remaining colons
-                                       .replaceAll("[:]", "-").trim();
+                                       .replaceAll("[:]", "-")
+                                       .trim();
                 course.setName(courseName);
             }
 
