@@ -138,10 +138,14 @@ public class JsonHandler {
 
             String courseName = course.getName();
             if (courseName != null) {
-                course.setName(courseName.replaceAll("[\\\\/\"?*|<>]", "-").trim());
-                // rationale: "course 1: topic" -> "course 1 - topic"
-                course.setName(course.getName().replaceAll("\\S[:]\\s+", " - "));
-                course.setName(course.getName().replaceAll("[:]", "-"));
+                                       // replace \, /, ", ?, *, |, < and >
+                courseName = courseName.replaceAll("[\\\\/\"?*|<>]", "-")
+                                       // replace : preceded by non-whitespace and followed by whitespace
+                                       // rationale: "course 1: topic" -> "course 1 - topic"
+                                       .replaceAll("\\S[:]\\s+", " - ")
+                                       // replace remaining colons
+                                       .replaceAll("[:]", "-").trim();
+                course.setName(courseName);
             }
 
             return course;
