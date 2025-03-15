@@ -9,6 +9,7 @@ public class Main {
      * @param args args
      */
     public static void main(String[] args) {
+    }
 
     /**
      * Method that adds two numbers together.

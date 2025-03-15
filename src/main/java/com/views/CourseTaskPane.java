@@ -175,12 +175,12 @@ public class CourseTaskPane {
 
 
             String response = new ApiHandler().submitExercise(file);
-            Pattern pattern = Pattern.compile("\\d+");
+            Pattern pattern = Pattern.compile("run: \\d+");
             Matcher matcher = pattern.matcher(response);
             List<Integer> n = new ArrayList<>();
             if (!response.contains("error")) {
                 while (matcher.find()) {
-                    n.add(Integer.parseInt(matcher.group()));
+                    n.add(Integer.parseInt(String.valueOf(matcher.group().charAt(matcher.group().length() - 1))));
                 }
                 }
             if (n.isEmpty()) {
