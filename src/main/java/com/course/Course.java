@@ -38,6 +38,14 @@ public class Course {
     }
 
     /**
+     * Setter for name attribute.
+     * @param newName New name
+     */
+    public void setName(String newName) {
+        this.name = newName;
+    }
+
+    /**
      * Getter for course path.
      * @return Course path
      */

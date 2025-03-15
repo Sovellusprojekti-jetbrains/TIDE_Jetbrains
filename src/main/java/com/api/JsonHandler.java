@@ -4,6 +4,7 @@ import com.course.Course;
 import com.course.SubTask;
 import com.google.gson.*;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +22,7 @@ public class JsonHandler {
      * @return A list of courses
      */
     public List<Course> jsonToCourses(final String jsonString) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Course.class, new CourseDeserializer()).create();
         List<Course> courseList = new ArrayList<Course>();
 
         try {
@@ -117,5 +118,34 @@ public class JsonHandler {
         return accumulatedValues;
     }
 
+    /**
+     * Custom deserializer to handle invalid characters.
+     */
+    public class CourseDeserializer implements JsonDeserializer<Course> {
+        /**
+         * Custom deserializer to replace invalid characters so that course names are valid for file paths.
+         * @param courseJsonElement Course element to deserialize
+         * @param courseType Course type to deserialize to
+         * @param context Deserialization context
+         * @return A Course type object
+         * @throws JsonParseException if Json is not in the expected format
+         */
+        @Override
+        public Course deserialize(
+                JsonElement courseJsonElement, Type courseType, JsonDeserializationContext context)
+                throws JsonParseException {
+            Course course = new Gson().fromJson(courseJsonElement.getAsJsonObject(), Course.class);
+
+            String courseName = course.getName();
+            if (courseName != null) {
+                course.setName(courseName.replaceAll("[\\\\/\"?*|<>]", "-").trim());
+                // rationale: "course 1: topic" -> "course 1 - topic"
+                course.setName(course.getName().replaceAll("[:]\\s+", " - "));
+                course.setName(course.getName().replaceAll("[:]", "-"));
+            }
+
+            return course;
+        }
     }
+}
 
