@@ -90,11 +90,11 @@ public class JsonHandler {
             if (currentKey.equals(key)) {
                 accumulatedValues.add(value.toString());
             }
-                if (value instanceof JsonObject) {
-                    accumulatedValues.addAll(getValuesInObject((JsonObject) value, key));
-                } else if (value instanceof JsonArray) {
-                    accumulatedValues.addAll(getValuesInArray((JsonArray) value, key));
-                }
+            if (value instanceof JsonObject) {
+                accumulatedValues.addAll(getValuesInObject((JsonObject) value, key));
+            } else if (value instanceof JsonArray) {
+                accumulatedValues.addAll(getValuesInArray((JsonArray) value, key));
+            }
         }
         return accumulatedValues;
     }
