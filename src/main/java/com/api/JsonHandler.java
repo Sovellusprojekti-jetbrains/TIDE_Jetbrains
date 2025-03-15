@@ -93,8 +93,8 @@ public class JsonHandler {
                 if (value instanceof JsonObject) {
                     accumulatedValues.addAll(getValuesInObject((JsonObject) value, key));
                 } else if (value instanceof JsonArray) {
-            accumulatedValues.addAll(getValuesInArray((JsonArray) value, key));
-        }
+                    accumulatedValues.addAll(getValuesInArray((JsonArray) value, key));
+                }
         }
         return accumulatedValues;
     }
@@ -140,7 +140,7 @@ public class JsonHandler {
             if (courseName != null) {
                 course.setName(courseName.replaceAll("[\\\\/\"?*|<>]", "-").trim());
                 // rationale: "course 1: topic" -> "course 1 - topic"
-                course.setName(course.getName().replaceAll("[:]\\s+", " - "));
+                course.setName(course.getName().replaceAll("\\S[:]\\s+", " - "));
                 course.setName(course.getName().replaceAll("[:]", "-"));
             }
 
