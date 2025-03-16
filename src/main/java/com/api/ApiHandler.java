@@ -1,5 +1,6 @@
 package com.api;
 
+import com.actions.ActiveState;
 import com.actions.Settings;
 import com.course.Course;
 import com.course.SubTask;
@@ -10,6 +11,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.Consumer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -37,9 +39,15 @@ public class ApiHandler {
      * @throws IOException Method calls pb.start() and pb.readLine() may throw IOException
      * @throws InterruptedException Method call process.waitFor() may throw InterruptedException
      */
-    public void login() throws IOException, InterruptedException {
-        String exitCode =  handleCommandLine(loginCommand);
-        System.out.println("Process exited with code: " + exitCode);
+    public void login(Consumer<Boolean> callback) {
+        TideCommandExecutor.INSTANCE.login(success -> {
+            if (success) {
+                ActiveState stateManager = ActiveState.getInstance();
+                stateManager.login();
+            }
+            callback.accept(success);
+            return null;
+        });
     }
 
 

@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.nio.file.*;
 
@@ -129,21 +131,18 @@ public class CustomScreen {
             public void actionPerformed(ActionEvent e) {
                 ApiHandler api = new ApiHandler();
                 try {
-                    api.login();
-                    if (api.isLoggedIn()) {
-                        switchToLogout();
-                        ActiveState stateManager = ActiveState.getInstance();
-                        stateManager.login();
-                    } else {
-                        //TODO: error message that the login failed
-                        return;
-                    }
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                } catch (InterruptedException ex) {
+                    api.login(success -> SwingUtilities.invokeLater(() -> {
+                        if (success) {
+                            ActiveState stateManager = ActiveState.getInstance();
+                            stateManager.login();
+                        } else {
+                            //TODO: error message that the login failed
+                            return;
+                        }
+                    }));
+                } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
-
             }
         });
 
@@ -169,7 +168,6 @@ public class CustomScreen {
                 try {
                     api.logout();
                     if (!api.isLoggedIn()) {
-                        switchToLogin(); // Poistaa kurssinäkymän näkyvistä
                         ActiveState stateManager = ActiveState.getInstance();
                         stateManager.logout();
                     } else {
@@ -182,14 +180,25 @@ public class CustomScreen {
             }
         });
         if (apiHandler.isLoggedIn()) {
-            switchToLogout();
             ActiveState stateManager = ActiveState.getInstance();
             stateManager.login();
         } else {
-            switchToLogin();
             ActiveState stateManager = ActiveState.getInstance();
             stateManager.logout();
         }
+
+        ActiveState stateManager = ActiveState.getInstance();
+        stateManager.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("logout".equals(evt.getPropertyName())) {
+                    switchToLogin(); // Poistaa kurssinäkymän näkyvistä
+                }
+                if ("login".equals(evt.getPropertyName())) {
+                    switchToLogout();
+                }
+            }
+        });
     }
 
     /**
@@ -445,18 +454,17 @@ public class CustomScreen {
             public void actionPerformed(ActionEvent e) {
                 ApiHandler api = new ApiHandler();
                 try {
-                    api.login();
-                    if (api.isLoggedIn()) {
-                        switchToLogout();
-                        ActiveState stateManager = ActiveState.getInstance();
-                        stateManager.login();
-                    } else {
-                        //TODO: error message that the login failed
-                        return;
-                    }
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                } catch (InterruptedException ex) {
+                    api.login(success -> SwingUtilities.invokeLater(() -> {
+                        if (success) {
+                            switchToLogout();
+                            ActiveState stateManager = ActiveState.getInstance();
+                            stateManager.login();
+                        } else {
+                            //TODO: error message that the login failed
+                            return;
+                        }
+                    }));
+                } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
 
