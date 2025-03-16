@@ -74,6 +74,7 @@ public class CustomScreen {
      */
     private JButton refreshButton;
     private JLabel timLabel;
+    private JProgressBar progressBar1;
 
     /**
      * An integer for the red band of a color.
@@ -137,6 +138,7 @@ public class CustomScreen {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setLoginProgress(true,"Logging in...");
                 ApiHandler api = new ApiHandler();
                 try {
                     api.login();
@@ -172,6 +174,7 @@ public class CustomScreen {
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setLoginProgress(true,"Logging out...");
                 ApiHandler api = new ApiHandler();
                 //switchToLogin(); // Poistaa kurssinäkymän näkyvistä
                 try {
@@ -212,6 +215,8 @@ public class CustomScreen {
                 }
             }
         });
+        setLoginProgress(false,"Logging in...");
+        switchToLogin();
     }
 
     /**
@@ -464,6 +469,7 @@ public class CustomScreen {
         panel1.repaint();
         tabbedPane.setSelectedComponent(coursesPane);
         //loginButton.setText("Logout");
+        setLoginProgress(false,"");
     }
 
     /**
@@ -478,6 +484,7 @@ public class CustomScreen {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setLoginProgress(true,"Logging in...");
                 ApiHandler api = new ApiHandler();
                 try {
                     api.login();
@@ -499,6 +506,16 @@ public class CustomScreen {
         panel1.revalidate();
         panel1.repaint();
         tabbedPane.setSelectedComponent(loginPane);
+        setLoginProgress(false,"");
+    }
+
+    private void setLoginProgress(boolean state, String text) {
+        SwingUtilities.invokeLater(() -> {
+            progressBar1.setString(text);
+            progressBar1.setVisible(state);
+            panel1.revalidate();
+            panel1.repaint();
+        });
     }
 
 
