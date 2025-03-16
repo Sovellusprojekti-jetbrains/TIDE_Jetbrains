@@ -75,6 +75,7 @@ public class CustomScreen {
      */
     private JButton refreshButton;
     private JLabel timLabel;
+    private JProgressBar progressBar1;
 
     /**
      * An integer for the red band of a color.
@@ -129,6 +130,7 @@ public class CustomScreen {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setLoginProgress(true,"Logging in...");
                 ApiHandler api = new ApiHandler();
                 try {
                     api.login(success -> SwingUtilities.invokeLater(() -> {
@@ -163,17 +165,19 @@ public class CustomScreen {
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setLoginProgress(true,"Logging out...");
                 ApiHandler api = new ApiHandler();
                 //switchToLogin(); // Poistaa kurssinäkymän näkyvistä
                 try {
-                    api.logout();
-                    if (!api.isLoggedIn()) {
-                        ActiveState stateManager = ActiveState.getInstance();
-                        stateManager.logout();
-                    } else {
-                        //TODO: error for failed logout
-                        return;
-                    }
+                    api.logout(success -> SwingUtilities.invokeLater(() -> {
+                        if (success) {
+                            ActiveState stateManager = ActiveState.getInstance();
+                            stateManager.logout();
+                        } else {
+                            //TODO: error for failed logout
+                            return;
+                        }
+                    }));
                 } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
                 }
@@ -199,6 +203,8 @@ public class CustomScreen {
                 }
             }
         });
+        setLoginProgress(false,"Logging in...");
+        switchToLogin();
     }
 
     /**
@@ -438,6 +444,7 @@ public class CustomScreen {
         panel1.repaint();
         tabbedPane.setSelectedComponent(coursesPane);
         //loginButton.setText("Logout");
+        setLoginProgress(false,"");
     }
 
     /**
@@ -452,6 +459,7 @@ public class CustomScreen {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setLoginProgress(true,"Logging in...");
                 ApiHandler api = new ApiHandler();
                 try {
                     api.login(success -> SwingUtilities.invokeLater(() -> {
@@ -473,6 +481,16 @@ public class CustomScreen {
         panel1.revalidate();
         panel1.repaint();
         tabbedPane.setSelectedComponent(loginPane);
+        setLoginProgress(false,"");
+    }
+
+    private void setLoginProgress(boolean state, String text) {
+        SwingUtilities.invokeLater(() -> {
+            progressBar1.setString(text);
+            progressBar1.setVisible(state);
+            panel1.revalidate();
+            panel1.repaint();
+        });
     }
 
 

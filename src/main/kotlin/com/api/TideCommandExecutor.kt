@@ -6,6 +6,7 @@ import java.io.*
 object TideCommandExecutor {
 
     private const val loginCommand = "tide login"
+    private const val logoutCommand = "tide logout"
 
     /**
      * Logs in to TIDE-CLI asynchronously.
@@ -14,6 +15,24 @@ object TideCommandExecutor {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val result = handleCommandLine(loginCommand.split(" "))
+                withContext(Dispatchers.Main) {
+                    callback(true) // Login success
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    callback(false) // Login failed
+                }
+            }
+        }
+    }
+
+    /**
+     * Logs out of TIDE-CLI asynchronously.
+     */
+    fun logout(callback: (Boolean) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val result = handleCommandLine(logoutCommand.split(" "))
                 withContext(Dispatchers.Main) {
                     callback(true) // Login success
                 }

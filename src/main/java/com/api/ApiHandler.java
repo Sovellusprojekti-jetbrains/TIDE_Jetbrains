@@ -48,6 +48,8 @@ public class ApiHandler {
             callback.accept(success);
             return null;
         });
+        //String exitCode = handleCommandLine(loginCommand);
+        //System.out.println("Process exited with code: " + exitCode);
     }
 
 
@@ -56,9 +58,17 @@ public class ApiHandler {
      * @throws IOException Method calls pb.start() and pb.readLine() may throw IOException
      * @throws InterruptedException Method call process.waitFor() may throw InterruptedException
      */
-    public void logout() throws IOException, InterruptedException {
-        String exitCode = handleCommandLine(logoutCommand);
-        System.out.println("Process exited with code: " + exitCode);
+    public void logout(Consumer<Boolean> callback) throws IOException, InterruptedException {
+        TideCommandExecutor.INSTANCE.logout(success -> {
+            if (success) {
+                ActiveState stateManager = ActiveState.getInstance();
+                stateManager.logout();
+            }
+            callback.accept(success);
+            return null;
+        });
+        //String exitCode = handleCommandLine(logoutCommand);
+        //System.out.println("Process exited with code: " + exitCode);
     }
 
 
