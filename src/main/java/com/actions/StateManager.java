@@ -75,15 +75,14 @@ public final class StateManager implements PersistentStateComponent<StateManager
         }
         */
         PropertiesComponent properties = PropertiesComponent.getInstance();
-        String value = properties.getValue("myPlugin.path", System.getProperty("user.dir"));
+        return properties.getValue("myPlugin.path", System.getProperty("user.dir"));
         //System.out.println(getState().path);
-        return value;
     }
     /**
      * adds a new value to the list of submitted tasks.
      *
      * @param taskPath path to the task that has been submitted.
-     * @param points
+     * @param points points given for the submitted subtask
      */
     public void setSubmit(String taskPath, Integer points) {
         PropertiesComponent properties = PropertiesComponent.getInstance();

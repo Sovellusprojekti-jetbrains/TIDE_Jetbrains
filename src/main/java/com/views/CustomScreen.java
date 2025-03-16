@@ -91,13 +91,18 @@ public class CustomScreen {
     private final Color bgColor = JBColor.background();
 
     /**
+     * the scrollspeed for the jscrollpanels.
+     */
+    private final int scrollSpeed = 16;
+
+    /**
      * Creator for the CustomScreen class, that holds the courses and tasks.
      */
     public CustomScreen() {
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
         ApiHandler apiHandler = new ApiHandler();
-        int scrollSpeed = 16;
+
         coursesPane.getVerticalScrollBar().setUnitIncrement(scrollSpeed);
         coursesPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 

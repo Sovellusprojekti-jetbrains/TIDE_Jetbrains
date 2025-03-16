@@ -190,7 +190,7 @@ public class CourseTaskPane {
             if (submits == null) {
                 submits = new ArrayList<>();
             }
-            if (submits != null && !submits.contains(path)
+            if (!submits.contains(path)
                     | ApplicationManager.getApplication().getService(StateManager.class).getPoints(path) != n.get(0)) {
                 ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
             }

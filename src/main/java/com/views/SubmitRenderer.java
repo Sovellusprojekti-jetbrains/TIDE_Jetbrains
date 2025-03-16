@@ -11,8 +11,22 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * renderer for the leaf nodes of subtasks that have been submitted.
+ */
 public class SubmitRenderer extends DefaultTreeCellRenderer {
-    //AllIcons.Debugger.Db_set_breakpoint
+
+    /**
+     * The constructor for the tree rendering component.
+     * @param tree      the receiver is being configured for
+     * @param value     the value to render
+     * @param sel  whether node is selected
+     * @param expanded  whether node is expanded
+     * @param leaf      whether node is a lead node
+     * @param row       row index
+     * @param hasFocus  whether node has focus
+     * @return the rendered component
+     */
     public Component getTreeCellRendererComponent(
             JTree tree,
             Object value,
@@ -33,6 +47,11 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
         return this;
     }
 
+    /**
+     * method used to set icons for subtasks with 0 or more points.
+     * @param value the node that the icon belongs to
+     * @return the correct icon depending on the points given
+     */
     private Icon isSubmitted(Object value) {
         List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
