@@ -1,5 +1,6 @@
 package com.api;
 
+import com.actions.ActiveState;
 import com.actions.Settings;
 import com.course.Course;
 import com.course.SubTask;
@@ -10,6 +11,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.Consumer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

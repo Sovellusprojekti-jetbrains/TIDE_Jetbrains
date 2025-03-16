@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.nio.file.*;
 
@@ -150,7 +152,6 @@ public class CustomScreen {
                     com.api.LogHandler.logError("CustomScreen, line: 132: api.login()", ex);
                     throw new RuntimeException(ex);
                 }
-
             }
         });
 
@@ -198,6 +199,19 @@ public class CustomScreen {
             ActiveState stateManager = ActiveState.getInstance();
             stateManager.logout();
         }
+
+        ActiveState stateManager = ActiveState.getInstance();
+        stateManager.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("logout".equals(evt.getPropertyName())) {
+                    switchToLogin(); // Poistaa kurssinäkymän näkyvistä
+                }
+                if ("login".equals(evt.getPropertyName())) {
+                    switchToLogout();
+                }
+            }
+        });
     }
 
     /**
