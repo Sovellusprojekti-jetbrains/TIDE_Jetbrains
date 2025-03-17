@@ -114,6 +114,7 @@ public class CourseTaskPane {
                 try {
                     desktop.browse(new URI("https://timbeta01.tim.education"));
                 } catch (IOException | URISyntaxException e) {
+                    com.api.LogHandler.logError("111 CourseTaskPane avaaTehtava ActionListener", e);
                     throw new RuntimeException(e);
                 }
             }
@@ -135,16 +136,19 @@ public class CourseTaskPane {
             if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
                 return;
             }
-
+            ApiHandler handler = new ApiHandler();
+            ActiveState stateManager = ActiveState.getInstance();
+            String coursePath = stateManager.getCourseName(file.getPath());
             try {
-                ApiHandler handler = new ApiHandler();
-                ActiveState stateManager = ActiveState.getInstance();
-                String coursePath = stateManager.getCourseName(file.getPath());
                 handler.resetSubTask(file, coursePath);
             } catch (IOException e) {
+                com.api.LogHandler.logError("124 CourseTaskPane resetButton ActionListener", e);
+                com.api.LogHandler.logDebug(new String[]{"130 VirtualFile file", "141 String coursePath"},
+                        new String[]{file.toString(), coursePath});
                 InfoView.displayError(".timdata file not found!", "Task reset error");
                 throw new RuntimeException(e);
             } catch (InterruptedException e) {
+                com.api.LogHandler.logError("CourseTaskPane resetButton ActionListener", e);
                 InfoView.displayError("An error occurred during task reset! Check Tide CLI", "Task reset error");
                 throw new RuntimeException(e);
             }
