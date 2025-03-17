@@ -54,18 +54,8 @@ public class ApiHandler {
      * Fetches IDE courses from TIM via TIDE-CLI.
      * @return A list of Course objects
      */
-    public List<Course> courses() {
-
-        String jsonString = null;
-        try {
-            jsonString = handleCommandLine(List.of(coursesCommand.split(" ")));
-        } catch (IOException | InterruptedException e) {
-            com.api.LogHandler.logError("61: ApiHandler.courses()", e);
-            throw new RuntimeException(e);
-        }
-        JsonHandler handler = new JsonHandler();
-
-        return handler.jsonToCourses(jsonString);
+    public void courses() {
+        TideCommandExecutor.INSTANCE.fetchCoursesAsync();
     }
 
 
@@ -202,6 +192,10 @@ public class ApiHandler {
 
 
         return false;
+    }
+
+    public void checkLogin() {
+        TideCommandExecutor.INSTANCE.checkLogin();
     }
 
 

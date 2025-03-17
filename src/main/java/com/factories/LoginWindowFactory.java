@@ -20,6 +20,8 @@ public final class LoginWindowFactory implements ToolWindowFactory {
 
         // Create content for the tool window
         Content content = contentFactory.createContent(loginWindow.getContent(), "Courses", false);
+
+        content.setCloseable(false);
         // Add the content to the tool window
         toolWindow.getContentManager().addContent(content);
     }
