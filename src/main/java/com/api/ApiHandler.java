@@ -39,8 +39,6 @@ public class ApiHandler {
      */
     public void login() {
         TideCommandExecutor.INSTANCE.login();
-        //String exitCode = handleCommandLine(loginCommand);
-        //System.out.println("Process exited with code: " + exitCode);
     }
 
 
@@ -49,8 +47,6 @@ public class ApiHandler {
      */
     public void logout() {
         TideCommandExecutor.INSTANCE.logout();
-        //String exitCode = handleCommandLine(logoutCommand);
-        //System.out.println("Process exited with code: " + exitCode);
     }
 
 
