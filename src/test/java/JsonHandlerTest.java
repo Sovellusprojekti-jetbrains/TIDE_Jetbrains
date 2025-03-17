@@ -1,12 +1,14 @@
 import com.api.JsonHandler;
 import com.course.Course;
+import com.course.SubTask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collections;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for Json handling.
@@ -76,6 +78,48 @@ public class JsonHandlerTest {
 
 
     /**
+     * Parse SubTask objects from .timdata Json.
+     */
+    @Test
+    @DisplayName("SubTasks correctly parsed from .timdata")
+    public void parseSubtaskFromJson() {
+        List<SubTask> subtaskList = handler.jsonToSubtask(timdata);
+        final int taskCount = 3;
+        assertEquals(taskCount, subtaskList.size());
+        // test first subtask in the test data
+        SubTask subTask = subtaskList.getFirst();
+        assertEquals("testidemo1.java", subTask.getFileName().get(0));
+        assertEquals("view/demo1/path", subTask.getPath());
+        assertEquals("t1", subTask.getIdeTaskId());
+        assertNull(subTask.getTaskDirectory());
+        // test last subtask in the test data
+        subTask = subtaskList.getLast();
+        assertEquals("testidemo4.java", subTask.getFileName().get(0));
+        assertEquals("view/demo1/anotherpath", subTask.getPath());
+        assertEquals("t4", subTask.getIdeTaskId());
+        assertEquals("hasTaskDirectory", subTask.getTaskDirectory());
+        // inner task_directory field has priority
+        subTask = subtaskList.get(1);
+        assertEquals("innerField", subTask.getTaskDirectory());
+    }
+
+
+    /**
+     * Test handling incorrect subtask data.
+     */
+    @Test
+    @DisplayName("Parsing Json data with no subtasks returns an empty list")
+    public void jsonToSubtaskHandlesInvalidJson() {
+        List<SubTask> subtaskList = handler.jsonToSubtask(validJsonData);
+        assertEquals(0, subtaskList.size());
+        subtaskList = handler.jsonToSubtask(arrayOfInvalidObjects);
+        assertEquals(0, subtaskList.size());
+        subtaskList = handler.jsonToSubtask(bareJsonObject);
+        assertEquals(0, subtaskList.size());
+    }
+
+
+    /**
      * Json data that correctly maps to Course objects.
      * The format is an array of Json objects.
      */
@@ -136,4 +180,103 @@ public class JsonHandlerTest {
      * An array of invalid objects.
      */
     private final String arrayOfInvalidObjects = "[{\"field\": \"value\"}]";
+    /**
+     * A timdata file. Four tasks, one of them missing ide_task_id and thus
+     * should not be included in the list returned by JsonHandler.
+     */
+    private final String timdata = "{\n"
+        + "    \"course_parts\": {\n"
+        + "        \"task/top/level/path\": {\n"
+        + "            \"tasks\": {\n"
+        + "                \"t1\": {\n"
+        + "                    \"path\": \"view/demo1/path\",\n"
+        + "                    \"type\": \"java\",\n"
+        + "                    \"doc_id\": 135,\n"
+        + "                    \"ide_task_id\": \"t1\",\n"
+        + "                    \"task_files\": [\n"
+        + "                        {\n"
+        + "                            \"task_id_ext\": \"135.testidemo.Dp1JOmNgeSym\",\n"
+        + "                            \"content\": \"testi = \\\"Tämä on testi\\\"\\nprint(testi)\",\n"
+        + "                            \"file_name\": \"testidemo1.java\",\n"
+        + "                            \"source\": \"editor\",\n"
+        + "                            \"task_directory\": null,\n"
+        + "                            \"task_type\": \"java\",\n"
+        + "                            \"user_input\": \"\",\n"
+        + "                            \"user_args\": \"\"\n"
+        + "                        }\n"
+        + "                    ],\n"
+        + "                    \"supplementary_files\": [],\n"
+        + "                    \"stem\": null,\n"
+        + "                    \"task_directory\": null,\n"
+        + "                    \"header\": null\n"
+        + "                },\n"
+        + "                \"t2\": {\n"
+        + "                    \"path\": \"view/demo1/t2path\",\n"
+        + "                    \"type\": \"java\",\n"
+        + "                    \"doc_id\": 135,\n"
+        + "                    \"ide_task_id\": \"t2\",\n"
+        + "                    \"task_files\": [\n"
+        + "                        {\n"
+        + "                            \"task_id_ext\": \"135.testidemo2.cyftskDFkgmm\",\n"
+        + "                            \"content\": \"testi = \\\"Tämä on testi useammalle demolle\\\"\\nprint(testi)\",\n"
+        + "                            \"file_name\": \"testidemo2.java\",\n"
+        + "                            \"source\": \"editor\",\n"
+        + "                            \"task_directory\": innerField,\n"
+        + "                            \"task_type\": \"java\",\n"
+        + "                            \"user_input\": \"\",\n"
+        + "                            \"user_args\": \"\"\n"
+        + "                        }\n"
+        + "                    ],\n"
+        + "                    \"supplementary_files\": [],\n"
+        + "                    \"stem\": null,\n"
+        + "                    \"task_directory\": outerField,\n"
+        + "                    \"header\": null\n"
+        + "                },\n"
+        + "                \"t3\": {\n"
+        + "                    \"path\": \"view/demo1/notaskid\",\n"
+        + "                    \"type\": \"java\",\n"
+        + "                    \"doc_id\": 135,\n"
+        + "                    \"task_files\": [\n"
+        + "                        {\n"
+        + "                            \"task_id_ext\": \"135.testidemo2.cyfthsEFkgmm\",\n"
+        + "                            \"content\": \"testi = \\\"Task with no task id should not get parsed into an object\",\n"
+        + "                            \"file_name\": \"testidemo3.java\",\n"
+        + "                            \"source\": \"editor\",\n"
+        + "                            \"task_directory\": null,\n"
+        + "                            \"task_type\": \"java\",\n"
+        + "                            \"user_input\": \"\",\n"
+        + "                            \"user_args\": \"\"\n"
+        + "                        }\n"
+        + "                    ],\n"
+        + "                    \"supplementary_files\": [],\n"
+        + "                    \"stem\": null,\n"
+        + "                    \"task_directory\": null,\n"
+        + "                    \"header\": null\n"
+        + "                },\n"
+        + "                \"t4\": {\n"
+        + "                    \"path\": \"view/demo1/anotherpath\",\n"
+        + "                    \"type\": \"java\",\n"
+        + "                    \"doc_id\": 135,\n"
+        + "                    \"ide_task_id\": \"t4\",\n"
+        + "                    \"task_files\": [\n"
+        + "                        {\n"
+        + "                            \"task_id_ext\": \"135.testidemo4.YHKv5HpmFgP9\",\n"
+        + "                            \"content\": \"testi = \\\"Tämä on testi kolmannelle demolle\\\"\\nprint(testi)\",\n"
+        + "                            \"file_name\": \"testidemo4.java\",\n"
+        + "                            \"source\": \"editor\",\n"
+        + "                            \"task_directory\": null,\n"
+        + "                            \"task_type\": \"java\",\n"
+        + "                            \"user_input\": \"\",\n"
+        + "                            \"user_args\": \"\"\n"
+        + "                        }\n"
+        + "                    ],\n"
+        + "                    \"supplementary_files\": [],\n"
+        + "                    \"stem\": null,\n"
+        + "                    \"task_directory\": \"hasTaskDirectory\",\n"
+        + "                    \"header\": null\n"
+        + "                }\n"
+        + "            }\n"
+        + "        }"
+        + "    }"
+        + "}";
 }

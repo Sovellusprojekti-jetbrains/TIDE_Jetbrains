@@ -385,7 +385,7 @@ public class CustomScreen {
                 listForCourse.add(task);
                 DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task.getIdeTaskId());
                 for (String file : task.getFileName()) {
-                            DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file.replaceAll("\"", ""));
+                            DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file);
                             leaf.add(submitNode);
                             rowCount = rowCount + 1;
                 }

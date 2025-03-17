@@ -39,6 +39,7 @@ public class JsonHandler {
         return courseList;
     }
 
+
     /**
      * Parses Json data from a string to subtask objects.
      * If the Json does not map to an array of subtasks,
@@ -53,7 +54,17 @@ public class JsonHandler {
         try {
             JsonObject json = gson.fromJson(jsonString, JsonObject.class);
             JsonObject coursePart = gson.fromJson((json.getAsJsonObject("course_parts")), JsonObject.class);
-            List<String> tasks = getValuesInObject(coursePart, "tasks");
+            List<String> tasks = new ArrayList<>();
+
+            try {
+                tasks = getValuesInObject(coursePart, "tasks");
+            } catch (NullPointerException e) {
+                com.api.LogHandler.logError("48: JsonHandler.jsonToSubtask(final String jsonString)", e);
+                com.api.LogHandler.logDebug(new String[]{"52 JsonObject json"},
+                        new String[]{json.toString()});
+                com.api.LogHandler.logInfo("53 JsonObject coursePart: is this null?");
+            }
+
             for (String taskJson: tasks) {
                 JsonObject object = gson.fromJson(taskJson, JsonObject.class);
                 for (String currentKey : object.keySet()) {
@@ -62,9 +73,20 @@ public class JsonHandler {
                     List<String> files = getValuesInObject(task, "file_name");
                     sub.setFileName(files);
 
-                    List<String> taskDir = getValuesInObject(task, "task_directory");
-                    if (!taskDir.isEmpty()) {
-                        sub.setTaskDirectory(taskDir.get(0));
+                    // Get task_directory field from Json.
+                    // If task_directory is defined within task_files,
+                    // it overrides the one defined in the task object.
+                    // This implementation relies on the assumption that task_files
+                    // always comes before task_directory, as the first non-null element
+                    // in taskDirs is chosen.
+                    List<String> taskDirs = getValuesInObject(task, "task_directory");
+                    if (!taskDirs.isEmpty()) {
+                        for (String dir: taskDirs) {
+                            if (!dir.equals("null")) {
+                                sub.setTaskDirectory(removeQuotes(dir));
+                                break;
+                            }
+                        }
                     }
 
                     subTaskList.add(sub);
@@ -80,6 +102,7 @@ public class JsonHandler {
         return subTaskList;
     }
 
+
     /**
      * Gets the values from a specified key from a json object.
      *
@@ -92,7 +115,7 @@ public class JsonHandler {
         for (String currentKey : jsonObject.keySet()) {
             Object value = jsonObject.get(currentKey);
             if (currentKey.equals(key)) {
-                accumulatedValues.add(value.toString());
+                accumulatedValues.add(removeQuotes(value.toString()));
             }
             if (value instanceof JsonObject) {
                 accumulatedValues.addAll(getValuesInObject((JsonObject) value, key));
@@ -102,6 +125,7 @@ public class JsonHandler {
         }
         return accumulatedValues;
     }
+
 
     /**
      * Gets the values from a specified key from a json array.
@@ -121,6 +145,7 @@ public class JsonHandler {
 
         return accumulatedValues;
     }
+
 
     /**
      * Custom deserializer to ensure course names are valid for file paths.
@@ -153,6 +178,19 @@ public class JsonHandler {
 
             return course;
         }
+
+
+    /**
+     * Remove quotes from a string if it starts and ends with one.
+     * @param str String to process
+     * @return Resulting string
+     */
+    private String removeQuotes(String str) {
+        String result = str;
+        if (result.startsWith("\"") && result.endsWith("\"")) {
+            result = result.substring(1, result.length() - 1);
+        }
+        return result;
     }
 }
 
