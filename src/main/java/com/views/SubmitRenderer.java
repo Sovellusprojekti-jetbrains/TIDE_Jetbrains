@@ -55,10 +55,10 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
     private Icon isSubmitted(Object value) {
         List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-        String regex = node.getParent().getParent().toString() + "/" + node.getParent().toString() + "/" + node.toString();
+        //String regex = node.getParent().toString() + "/" + node.toString();
         if (submits != null) {
             for (String s : submits) {
-                if (s.contains(regex)) {
+                if (s.contains(node.toString())) {
                     if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == 0 && node.getChildCount() == 0) {
                         return AllIcons.Debugger.Db_set_breakpoint;
                     }
