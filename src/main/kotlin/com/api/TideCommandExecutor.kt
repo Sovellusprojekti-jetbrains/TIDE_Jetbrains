@@ -1,5 +1,7 @@
 package com.api
 
+import com.actions.ActiveState
+import com.intellij.openapi.components.service
 import kotlinx.coroutines.*
 import java.io.*
 
@@ -11,16 +13,18 @@ object TideCommandExecutor {
     /**
      * Logs in to TIDE-CLI asynchronously.
      */
-    fun login(callback: (Boolean) -> Unit) {
+    fun login() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val result = handleCommandLine(loginCommand.split(" "))
                 withContext(Dispatchers.Main) {
-                    callback(true) // Login success
+                    val activeState = ActiveState.getInstance()
+                    activeState.login()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    callback(false) // Login failed
+                    val activeState = ActiveState.getInstance()
+                    activeState.logout()
                 }
             }
         }
@@ -29,16 +33,18 @@ object TideCommandExecutor {
     /**
      * Logs out of TIDE-CLI asynchronously.
      */
-    fun logout(callback: (Boolean) -> Unit) {
+    fun logout() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val result = handleCommandLine(logoutCommand.split(" "))
+                val result = handleCommandLine(loginCommand.split(" "))
                 withContext(Dispatchers.Main) {
-                    callback(true) // Login success
+                    val activeState = ActiveState.getInstance()
+                    activeState.logout()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    callback(false) // Login failed
+                    val activeState = ActiveState.getInstance()
+                    activeState.login()
                 }
             }
         }
