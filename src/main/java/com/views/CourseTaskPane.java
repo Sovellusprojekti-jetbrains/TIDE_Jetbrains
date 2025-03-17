@@ -2,15 +2,19 @@
 //26.1.2025
 
 package com.views;
-
+import java.util.regex.*;
 import com.actions.ActiveState;
+import com.actions.StateManager;
 import com.api.ApiHandler;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -173,9 +177,30 @@ public class CourseTaskPane {
             // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
             // String path = submitAll ? file.getParent().getPath() : file.getPath();
 
+
             String response = new ApiHandler().submitExercise(file);
+            Pattern pattern = Pattern.compile("run: \\d+");
+            Matcher matcher = pattern.matcher(response);
+            List<Integer> n = new ArrayList<>();
+            if (!response.contains("error")) {
+                while (matcher.find()) {
+                    n.add(Integer.parseInt(String.valueOf(matcher.group().charAt(matcher.group().length() - 1))));
+                }
+                }
+            if (n.isEmpty()) {
+                n.add(0);
+            }
+            List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
+            if (submits == null) {
+                submits = new ArrayList<>();
+            }
+            if (!submits.contains(path)
+                    | ApplicationManager.getApplication().getService(StateManager.class).getPoints(path) != n.get(0)) {
+                ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
+            }
             printOutput(response);
             System.out.println(path);
+
         });
 
 

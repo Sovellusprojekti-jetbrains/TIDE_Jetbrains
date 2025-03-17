@@ -1,9 +1,9 @@
 package com.views;
-
 import com.actions.ActiveState;
 import com.actions.Settings;
 import com.api.ApiHandler;
 import com.api.JsonHandler;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
@@ -20,7 +20,6 @@ import java.nio.file.*;
 
 import com.course.*;
 import com.intellij.ui.treeStructure.Tree;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +88,12 @@ public class CustomScreen {
     /**
      * A color definition.
      */
-    private final Color bgColor = new Color(red, green, blue);
+    private final Color bgColor = JBColor.background();
+
+    /**
+     * the scrollspeed for the jscrollpanels.
+     */
+    private final int scrollSpeed = 16;
 
     /**
      * Creator for the CustomScreen class, that holds the courses and tasks.
@@ -98,6 +102,10 @@ public class CustomScreen {
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
         ApiHandler apiHandler = new ApiHandler();
+
+        coursesPane.getVerticalScrollBar().setUnitIncrement(scrollSpeed);
+        coursesPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
         // Fetching data from TIM and creating a list of course objects,
         // for more information see package com.course and class ApiHandler.
 
@@ -227,6 +235,7 @@ public class CustomScreen {
             List<CourseTask> tasks = course.getTasks();
             final int[] j = {0};
             for (CourseTask courseTask: tasks) {
+                courseTask.setParent(course);
                 JPanel subPanel = createExercise(courseTask, course.getName());
                 subPanel.setBackground(bgColor);
                 gbc.gridy = j[0];
@@ -338,7 +347,6 @@ public class CustomScreen {
             Tree tree = createTree(subtasks, courseTask);
             JBScrollPane container = new JBScrollPane();
             container.add(tree);
-            container.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             container.setViewportView(tree);
             subPanel.add(container);
         }
@@ -353,20 +361,26 @@ public class CustomScreen {
     private Tree createTree(List<SubTask> subtasks, CourseTask courseTask) {
         ApiHandler api = new ApiHandler();
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(courseTask.getName());
+        int rowCount = 0;
         for (SubTask task: subtasks) {
             List<SubTask> listForCourse = new ArrayList<>();
             if (task.getPath().equals(courseTask.getPath())) {
                 listForCourse.add(task);
                 DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task.getIdeTaskId());
                 for (String file : task.getFileName()) {
-                    leaf.add(new DefaultMutableTreeNode(file.replaceAll("\"", "")));
+                            DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file.replaceAll("\"", ""));
+                            leaf.add(submitNode);
+                            rowCount = rowCount + 1;
                 }
                 root.add(leaf);
             }
+            rowCount = rowCount + listForCourse.size();
             courseTask.setTasks(listForCourse);
         }
         Tree tree = new Tree(root);
         tree.setRootVisible(false);
+        tree.setVisibleRowCount(rowCount);
+        //TODO: korjaa avaaminen tuplaklikillä lisäämällä  kurssifolderi.
         tree.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
@@ -387,6 +401,7 @@ public class CustomScreen {
                 }
             }
         });
+        tree.setCellRenderer(new SubmitRenderer());
         return tree;
     }
 
