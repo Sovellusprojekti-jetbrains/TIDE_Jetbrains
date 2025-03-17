@@ -132,19 +132,7 @@ public class CustomScreen {
             public void actionPerformed(ActionEvent e) {
                 setLoginProgress(true,"Logging in...");
                 ApiHandler api = new ApiHandler();
-                try {
-                    api.login(success -> SwingUtilities.invokeLater(() -> {
-                        if (success) {
-                            ActiveState stateManager = ActiveState.getInstance();
-                            stateManager.login();
-                        } else {
-                            //TODO: error message that the login failed
-                            return;
-                        }
-                    }));
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
+                api.login();
             }
         });
 
@@ -167,7 +155,9 @@ public class CustomScreen {
             public void actionPerformed(ActionEvent e) {
                 setLoginProgress(true,"Logging out...");
                 ApiHandler api = new ApiHandler();
+                api.logout();
                 //switchToLogin(); // Poistaa kurssinäkymän näkyvistä
+                /*
                 try {
                     api.logout(success -> SwingUtilities.invokeLater(() -> {
                         if (success) {
@@ -180,7 +170,7 @@ public class CustomScreen {
                     }));
                 } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
-                }
+                }*/
             }
         });
         if (apiHandler.isLoggedIn()) {
@@ -461,21 +451,7 @@ public class CustomScreen {
             public void actionPerformed(ActionEvent e) {
                 setLoginProgress(true,"Logging in...");
                 ApiHandler api = new ApiHandler();
-                try {
-                    api.login(success -> SwingUtilities.invokeLater(() -> {
-                        if (success) {
-                            switchToLogout();
-                            ActiveState stateManager = ActiveState.getInstance();
-                            stateManager.login();
-                        } else {
-                            //TODO: error message that the login failed
-                            return;
-                        }
-                    }));
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
-
+                api.login();
             }
         });
         panel1.revalidate();

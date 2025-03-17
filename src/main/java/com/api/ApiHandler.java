@@ -36,18 +36,9 @@ public class ApiHandler {
 
     /**
      * Logs in to TIDE-CLI.
-     * @throws IOException Method calls pb.start() and pb.readLine() may throw IOException
-     * @throws InterruptedException Method call process.waitFor() may throw InterruptedException
      */
-    public void login(Consumer<Boolean> callback) {
-        TideCommandExecutor.INSTANCE.login(success -> {
-            if (success) {
-                ActiveState stateManager = ActiveState.getInstance();
-                stateManager.login();
-            }
-            callback.accept(success);
-            return null;
-        });
+    public void login() {
+        TideCommandExecutor.INSTANCE.login();
         //String exitCode = handleCommandLine(loginCommand);
         //System.out.println("Process exited with code: " + exitCode);
     }
@@ -55,18 +46,9 @@ public class ApiHandler {
 
     /**
      * Logs out from TIDE-CLI.
-     * @throws IOException Method calls pb.start() and pb.readLine() may throw IOException
-     * @throws InterruptedException Method call process.waitFor() may throw InterruptedException
      */
-    public void logout(Consumer<Boolean> callback) throws IOException, InterruptedException {
-        TideCommandExecutor.INSTANCE.logout(success -> {
-            if (success) {
-                ActiveState stateManager = ActiveState.getInstance();
-                stateManager.logout();
-            }
-            callback.accept(success);
-            return null;
-        });
+    public void logout() {
+        TideCommandExecutor.INSTANCE.logout();
         //String exitCode = handleCommandLine(logoutCommand);
         //System.out.println("Process exited with code: " + exitCode);
     }
