@@ -113,11 +113,6 @@ public class CustomScreen {
         // for more information see package com.course and class ApiHandler.
 
 
-        // Piirretään uudelleen
-        //panel1.revalidate();
-        //panel1.repaint();
-        //switchToLogin();
-
         // needs tests in the future.
         refreshButton.addActionListener(new ActionListener() {
             @Override
@@ -150,10 +145,6 @@ public class CustomScreen {
             public void actionPerformed(ActionEvent e) {
                 Project project = ProjectManager.getInstance().getDefaultProject();
                 ShowSettingsUtil.getInstance().showSettingsDialog(project, "TIDE settings");
-
-
-                //Settings temp = new Settings();
-                //temp.displaySettings();
             }
         });
 
@@ -164,22 +155,6 @@ public class CustomScreen {
                 setLoginProgress(true,"Logging out...");
                 ApiHandler api = new ApiHandler();
                 api.logout();
-                //switchToLogin(); // Poistaa kurssinäkymän näkyvistä
-                /*
-                try {
-                    api.logout();
-                    if (!api.isLoggedIn()) {
-                        switchToLogin(); // Poistaa kurssinäkymän näkyvistä
-                        ActiveState stateManager = ActiveState.getInstance();
-                        stateManager.logout();
-                    } else {
-                        //TODO: error for failed logout
-                        return;
-                    }
-                } catch (IOException | InterruptedException ex) {
-                    com.api.LogHandler.logError("CustomScreen, line 169: api.logout()", ex);
-                    ex.printStackTrace();
-                }*/
             }
         });
         if (apiHandler.isLoggedIn()) {
