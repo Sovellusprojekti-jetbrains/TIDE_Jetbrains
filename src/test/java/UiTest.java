@@ -87,10 +87,13 @@ public class UiTest {
             TimeUnit.SECONDS.sleep(sleeptime);
         }
         final Locator tideButtonLocator = byXpath("//div[@tooltiptext='TIDE Tool Window']");
-        final Locator courseButtonLocator = byXpath("//div[@tooltiptext='Course Task']");
         final ComponentFixture tideButton = remoteRobot.find(ComponentFixture.class, tideButtonLocator);
-        final ComponentFixture courseButton = remoteRobot.find(ComponentFixture.class, courseButtonLocator);
         tideButton.click();
+        final Locator courseButtonLocator = byXpath("//div[@tooltiptext='Course Task']");
+        final ComponentFixture courseButton = remoteRobot.find(ComponentFixture.class, courseButtonLocator);
+        while (idea.isDumbMode()) {
+            TimeUnit.SECONDS.sleep(sleeptime);
+        }
         courseButton.click();
         while (idea.isDumbMode()) {
             TimeUnit.SECONDS.sleep(sleeptime);
