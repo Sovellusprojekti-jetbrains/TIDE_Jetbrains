@@ -20,10 +20,15 @@ object TideCommandExecutor {
     fun login() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val result = handleCommandLine(loginCommand.split(" "))
+                val output = handleCommandLine(loginCommand.split(" ")) // Run command
                 withContext(Dispatchers.Main) {
                     val activeState = ActiveState.getInstance()
-                    activeState.login()
+                    // TODO: This can't be the right way to do this.
+                    if (output.contains("Login successful!") || output.contains("Logged in")) {
+                        activeState.login()
+                    } else {
+                        activeState.logout()
+                    }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -59,13 +64,13 @@ object TideCommandExecutor {
                 val output = Gson().fromJson(jsonOutput, LoginOutput::class.java) // Parse JSON
 
                 if (output.loggedIn != null) {
-                    activeState.login()  // ✅ Call login() if logged in
+                    activeState.login()
                 } else {
-                    activeState.logout() // ❌ Call logout() if not logged in
+                    activeState.logout()
                 }
             }.onFailure { ex ->
                 ex.printStackTrace()
-                activeState.logout() // 🚨 Ensure logout on failure
+                activeState.logout()
             }
         }
     }
@@ -80,6 +85,7 @@ object TideCommandExecutor {
     fun logout() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                // Doesn't really care if you're logged in or not.
                 val result = handleCommandLine(logoutCommand.split(" "))
                 withContext(Dispatchers.Main) {
                     val activeState = ActiveState.getInstance()
@@ -100,7 +106,7 @@ object TideCommandExecutor {
      * @param workingDirectory optional working directory.
      * @return the results of the execution.
      */
-    suspend fun handleCommandLine(command: List<String>, workingDirectory: File? = null): String =
+    private suspend fun handleCommandLine(command: List<String>, workingDirectory: File? = null): String =
         withContext(Dispatchers.IO) {
             val pb = ProcessBuilder(command)
             if (workingDirectory != null) {

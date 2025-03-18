@@ -3,6 +3,7 @@ import com.actions.ActiveState;
 import com.actions.Settings;
 import com.api.ApiHandler;
 import com.api.JsonHandler;
+import com.api.LogHandler;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -119,9 +120,8 @@ public class CustomScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ActiveState.getInstance().updateCourses();
+                setProgress(true, "Updating courses...");
             }
-
-
         });
         //currently assumes that the user has the TIM CLI installed.
         //need some checks and tests in the future.
@@ -159,12 +159,15 @@ public class CustomScreen {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("logout".equals(evt.getPropertyName())) {
+                    LogHandler.logInfo("CustomScreen received event logout");
                     switchToLoggedOut(); // Poistaa kurssinäkymän näkyvistä
                 }
                 if ("login".equals(evt.getPropertyName())) {
+                    LogHandler.logInfo("CustomScreen received event login");
                     switchToLoggedIn();
                 }
                 if ("courseList".equals(evt.getPropertyName())) {
+                    LogHandler.logInfo("CustomScreen received event courseList");
                     // Do some extra processing to ensure the courseList shows up as a list instead of object.
                     Object newValue = evt.getNewValue();
 
@@ -490,7 +493,10 @@ public class CustomScreen {
         setProgress(false, "");
     }
 
-
+    /**
+     * Updates the UI with the course list.
+     * @param courselist Courselist to update with.
+     */
     private void updateCourseContent(List<Course> courselist) {
         SwingUtilities.invokeLater(() -> {
             createCourseListPane(courselist);
@@ -501,6 +507,11 @@ public class CustomScreen {
         });
     }
 
+    /**
+     * Sets the progress bars on both tabs of the course panel to the desired visibility and text.
+     * @param state Visible, true or false.
+     * @param text Text to display on progress bar.
+     */
     private void setProgress(boolean state, String text) {
         SwingUtilities.invokeLater(() -> {
             progressBar1.setString(text);

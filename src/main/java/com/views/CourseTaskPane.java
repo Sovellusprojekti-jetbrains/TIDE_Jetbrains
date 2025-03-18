@@ -259,22 +259,26 @@ public class CourseTaskPane {
      * Makes the toolwindow unavailable.
      */
     private void hideWindow() {
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        ToolWindow window = toolWindowManager.getToolWindow("Course Task");
-        if (window != null) {
-            window.setAvailable(false);
-        }
+        SwingUtilities.invokeLater(() -> {
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            ToolWindow window = toolWindowManager.getToolWindow("Course Task");
+            if (window != null) {
+                window.setAvailable(false);
+            }
+        });
     }
 
     /**
      * Makes the toolwindow available.
      */
     private void showWindow() {
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        ToolWindow window = toolWindowManager.getToolWindow("Course Task");
-        if (window != null) {
-            window.setAvailable(true);
-        }
+        SwingUtilities.invokeLater(() -> {
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            ToolWindow window = toolWindowManager.getToolWindow("Course Task");
+            if (window != null) {
+                window.setAvailable(true);
+            }
+        });
     }
 }
 

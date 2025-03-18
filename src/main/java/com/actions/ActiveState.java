@@ -1,6 +1,7 @@
 package com.actions;
 
 import com.api.ApiHandler;
+import com.api.LogHandler;
 import com.course.Course;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -89,7 +90,7 @@ public class ActiveState {
     }
 
     /**
-     * Fetches the courses, changes the courseList property and fires an event for it.
+     * Fetches the courses asynchronously.
      */
     public void updateCourses() {
         ApiHandler apiHandler = new ApiHandler();
@@ -104,6 +105,7 @@ public class ActiveState {
         List<Course> oldCourseList = courseList;
         courseList = courses;
         pcs.firePropertyChange("courseList", oldCourseList, courseList);
+        LogHandler.logInfo("ActiveState fired event courseList");
     }
 
 
@@ -139,6 +141,7 @@ public class ActiveState {
             isLoggedIn = true;
         }
         pcs.firePropertyChange("login", false, isLoggedIn);
+        LogHandler.logInfo("ActiveState fired event login");
         showWindow("Course Task");
         showWindow("Output Window");
     }
@@ -151,6 +154,7 @@ public class ActiveState {
             isLoggedIn = false;
         }
         pcs.firePropertyChange("logout", true, isLoggedIn);
+        LogHandler.logInfo("ActiveState fired event logout");
         hideWindow("Course Task");
         hideWindow("Output Window");
     }
