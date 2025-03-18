@@ -27,14 +27,22 @@ public class Course {
 
     /**
      * Getter for course name.
+     * Should you encounter character encoding issues
+     * while running this plugin in Windows, go to:
+     * region settings -> check the beta option to use
+     * UTF-8. TODO: add to user documentation.
      * @return Course name
      */
     public String getName() {
-        // Quick, dirty and temporary fix to problem caused by some components
-        // (this plugin, tim-server, something else...) inability to interpret char ä correctly.
-        // Another characters other than ä may result to replacement
-        // character also so the real problem must be found and fixed.
-        return this.name.replace("�", "ä");
+        return this.name;
+    }
+
+    /**
+     * Setter for name attribute.
+     * @param newName New name
+     */
+    public void setName(String newName) {
+        this.name = newName;
     }
 
     /**

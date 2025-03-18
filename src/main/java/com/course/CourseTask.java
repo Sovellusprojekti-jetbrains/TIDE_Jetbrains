@@ -23,6 +23,7 @@ public class CourseTask {
      */
     private String path;
 
+    private Course parent;
     /**
      *  List of exercises in the task.
      */
@@ -48,7 +49,7 @@ public class CourseTask {
      * Getter for the exercises in the task.
      * @return List of exercises
      */
-    public List<SubTask> getExercises() {
+    public List<SubTask> getSubtasks() {
         return this.tasks;
     }
 
@@ -58,5 +59,21 @@ public class CourseTask {
      */
     public void setTasks(List<SubTask> subTasks) {
         this.tasks = subTasks;
+    }
+
+    /**
+     * setter the course that the task belongs to.
+     * @param course the course that the task is part of
+     */
+    public void setParent(Course course) {
+        this.parent = course;
+    }
+
+    /**
+     * Returns the course that the task belongs to.
+     * @return the course that the task belongs to
+     */
+    public Course getParent() {
+        return this.parent;
     }
 }

@@ -4,6 +4,7 @@ import com.course.Course;
 import com.course.SubTask;
 import com.google.gson.*;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,13 +22,15 @@ public class JsonHandler {
      * @return A list of courses
      */
     public List<Course> jsonToCourses(final String jsonString) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Course.class, new CourseDeserializer()).create();
         List<Course> courseList = new ArrayList<Course>();
 
         try {
             Course[] courseArray = gson.fromJson(jsonString, Course[].class);
             courseList = new ArrayList<Course>(Arrays.asList(courseArray));
         } catch (JsonParseException | IllegalStateException e) {
+            com.api.LogHandler.logError("23 JsonHandler.jsonToCourses(final String jsonString)", e);
+            com.api.LogHandler.logDebug(new String[]{"23 String jsonString"}, new String[]{jsonString});
             System.err.println(e.getMessage());
         }
 
@@ -58,10 +61,18 @@ public class JsonHandler {
                     SubTask sub = gson.fromJson(task, SubTask.class);
                     List<String> files = getValuesInObject(task, "file_name");
                     sub.setFileName(files);
+
+                    List<String> taskDir = getValuesInObject(task, "task_directory");
+                    if (!taskDir.isEmpty()) {
+                        sub.setTaskDirectory(taskDir.get(0));
+                    }
+
                     subTaskList.add(sub);
                 }
             }
         } catch (JsonParseException | IllegalStateException e) {
+            com.api.LogHandler.logError("49 JsonHandler.jsonToSubtask(final String jsonString)", e);
+            com.api.LogHandler.logDebug(new String[]{"49 String jsonString"}, new String[]{jsonString});
             System.err.println(e.getMessage());
         }
         // remove invalid json data
@@ -83,11 +94,11 @@ public class JsonHandler {
             if (currentKey.equals(key)) {
                 accumulatedValues.add(value.toString());
             }
-                if (value instanceof JsonObject) {
-                    accumulatedValues.addAll(getValuesInObject((JsonObject) value, key));
-                } else if (value instanceof JsonArray) {
-            accumulatedValues.addAll(getValuesInArray((JsonArray) value, key));
-        }
+            if (value instanceof JsonObject) {
+                accumulatedValues.addAll(getValuesInObject((JsonObject) value, key));
+            } else if (value instanceof JsonArray) {
+                accumulatedValues.addAll(getValuesInArray((JsonArray) value, key));
+            }
         }
         return accumulatedValues;
     }
@@ -111,5 +122,37 @@ public class JsonHandler {
         return accumulatedValues;
     }
 
+    /**
+     * Custom deserializer to ensure course names are valid for file paths.
+     */
+    public class CourseDeserializer implements JsonDeserializer<Course> {
+        /**
+         * Custom deserializer to replace invalid characters so that course names are valid for file paths.
+         * @param courseJsonElement Course element to deserialize
+         * @param courseType Course type to deserialize to
+         * @param context Deserialization context
+         * @return A Course type object
+         * @throws JsonParseException if Json is not in the expected format
+         */
+        @Override
+        public Course deserialize(
+                JsonElement courseJsonElement, Type courseType, JsonDeserializationContext context)
+                throws JsonParseException {
+            Course course = new Gson().fromJson(courseJsonElement.getAsJsonObject(), Course.class);
+
+            String courseName = course.getName();
+            if (courseName != null) {
+                                       // replace colon preceded by non-whitespace and followed by whitespace
+                                       // rationale: "course 1: topic" -> "course 1 - topic"
+                courseName = courseName.replaceAll("\\S[:]\\s+", " - ")
+                                       // replace \, /, ", ?, *, |, <, > and remaining colons
+                                       .replaceAll("[\\\\/\"?*|<>:]", "-")
+                                       .trim();
+                course.setName(courseName);
+            }
+
+            return course;
+        }
     }
+}
 
