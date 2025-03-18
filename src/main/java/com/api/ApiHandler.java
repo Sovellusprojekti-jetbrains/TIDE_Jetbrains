@@ -1,8 +1,6 @@
 package com.api;
 
-import com.actions.ActiveState;
 import com.actions.Settings;
-import com.course.Course;
 import com.course.SubTask;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -11,7 +9,6 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Consumer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -52,7 +49,6 @@ public class ApiHandler {
 
     /**
      * Fetches IDE courses from TIM via TIDE-CLI.
-     * @return A list of Course objects
      */
     public void courses() {
         TideCommandExecutor.INSTANCE.fetchCoursesAsync();
@@ -172,7 +168,7 @@ public class ApiHandler {
 
 
     /**
-     * asks tide-cli if there is a login and returns a boolean.
+     * asks tide-cli if there is a login and returns a boolean. Deprecated.
      * @return login status in boolean
      */
     public boolean isLoggedIn() {
@@ -194,6 +190,9 @@ public class ApiHandler {
         return false;
     }
 
+    /**
+     * Asks tide to check for login info asynchronously.
+     */
     public void checkLogin() {
         TideCommandExecutor.INSTANCE.checkLogin();
     }
@@ -222,7 +221,9 @@ public class ApiHandler {
         }
     }
 
-
+    /**
+     * Serialized login data.
+     */
     class LoginOutput {
         @SerializedName(value = "logged_in")
         private String loggedIn;

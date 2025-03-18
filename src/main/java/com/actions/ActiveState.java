@@ -96,6 +96,10 @@ public class ActiveState {
         apiHandler.courses();
     }
 
+    /**
+     * Use this to change the list of courses inside ActiveState. Fires a "courseList" event.
+     * @param courses List of courses to change to.
+     */
     public void setCourses(List<Course> courses) {
         List<Course> oldCourseList = courseList;
         courseList = courses;
@@ -133,14 +137,10 @@ public class ActiveState {
     public void login() {
         if (!isLoggedIn) {
             isLoggedIn = true;
-            pcs.firePropertyChange("login", false, isLoggedIn);
-            showWindow("Course Task");
-            showWindow("Output Window");
-        } else {
-            pcs.firePropertyChange("login", false, isLoggedIn);
-            showWindow("Course Task");
-            showWindow("Output Window");
         }
+        pcs.firePropertyChange("login", false, isLoggedIn);
+        showWindow("Course Task");
+        showWindow("Output Window");
     }
 
     /**
@@ -149,14 +149,10 @@ public class ActiveState {
     public void logout() {
         if (isLoggedIn) {
             isLoggedIn = false;
-            pcs.firePropertyChange("logout", true, isLoggedIn);
-            hideWindow("Course Task");
-            hideWindow("Output Window");
-        } else {
-            pcs.firePropertyChange("logout", true, isLoggedIn);
-            hideWindow("Course Task");
-            hideWindow("Output Window");
         }
+        pcs.firePropertyChange("logout", true, isLoggedIn);
+        hideWindow("Course Task");
+        hideWindow("Output Window");
     }
 
 }

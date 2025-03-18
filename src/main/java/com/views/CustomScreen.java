@@ -128,7 +128,7 @@ public class CustomScreen {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setProgress(true,"Logging in...");
+                setProgress(true, "Logging in...");
                 ApiHandler api = new ApiHandler();
                 api.login();
             }
@@ -147,7 +147,7 @@ public class CustomScreen {
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setProgress(true,"Logging out...");
+                setProgress(true, "Logging out...");
                 ApiHandler api = new ApiHandler();
                 api.logout();
             }
@@ -253,10 +253,11 @@ public class CustomScreen {
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
                 singleCourse.add(labelPanel, gbc);
+                final int padding = 10;
 
                 // Ensure scrollPane doesn't stretch too much
                 Dimension preferredSize = panel.getPreferredSize();
-                scrollPane.setPreferredSize(new Dimension(preferredSize.width, preferredSize.height + 10)); // Small padding
+                scrollPane.setPreferredSize(new Dimension(preferredSize.width, preferredSize.height + padding)); // Small padding
 
                 // Add scrollPane below label, but restrict expansion
                 gbc.gridy = 1;
@@ -478,7 +479,7 @@ public class CustomScreen {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setProgress(true,"Logging in...");
+                setProgress(true, "Logging in...");
                 ApiHandler api = new ApiHandler();
                 api.login();
             }
@@ -486,7 +487,7 @@ public class CustomScreen {
         panel1.revalidate();
         panel1.repaint();
         tabbedPane.setSelectedComponent(loginPane);
-        setProgress(false,"");
+        setProgress(false, "");
     }
 
 
@@ -496,7 +497,7 @@ public class CustomScreen {
             panel1.revalidate();
             panel1.repaint();
             //loginButton.setText("Logout");
-            setProgress(false,"");
+            setProgress(false, "");
         });
     }
 
