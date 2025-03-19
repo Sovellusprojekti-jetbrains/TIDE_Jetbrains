@@ -31,7 +31,7 @@ jobs:
             url: http://127.0.0.1:8082
             reportName: ui-test-fails-report-mac
           - os: windows-latest
-            runIde: start gradlew.bat runIdeForUiTests
+            runIde: ./gradlew runIdeForUiTests
             runTests: ./gradlew test
             url: http://localhost:8082
             reportName: ui-test-fails-report-windows  
