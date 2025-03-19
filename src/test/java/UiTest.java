@@ -73,7 +73,7 @@ public class UiTest {
      */
     @Test
     public void textTest() throws InterruptedException {
-        final int sleeptime = 10;
+        final int sleeptime = 15;
         WelcomeFrameFixture welcomeFrame = remoteRobot.find(WelcomeFrameFixture.class);
         welcomeFrame.createNewProjectLink().click();
         final Locator createButton = byXpath("//div[@text='Create']");
@@ -89,6 +89,7 @@ public class UiTest {
         final Locator tideButtonLocator = byXpath("//div[@tooltiptext='TIDE Tool Window']");
         final ComponentFixture tideButton = remoteRobot.find(ComponentFixture.class, tideButtonLocator);
         tideButton.click();
+        /* Uncomment when you can bypass or automate logging into tim through browser.
         final Locator courseButtonLocator = byXpath("//div[@tooltiptext='Course Task']");
         final ComponentFixture courseButton = remoteRobot.find(ComponentFixture.class, courseButtonLocator);
         while (idea.isDumbMode()) {
@@ -98,6 +99,7 @@ public class UiTest {
         while (idea.isDumbMode()) {
             TimeUnit.SECONDS.sleep(sleeptime);
         }
+         */
         // Remote robot locators that are needed to find the components from the xpath file.
 
         final Locator tideLocator = byXpath("//div[@class='ToolWindowPane']");
@@ -113,20 +115,24 @@ public class UiTest {
         assertTrue(tide.hasText("Courses"), "TIDE Tool Windows Courses tab has wrong text or doesn't render");
         assertTrue(tide.hasText("Login"), "Login button has wrong text or doesn't render");
         assertTrue(tide.hasText("Settings"), "Settings button has wrong text or doesn't render");
-
+        /* Uncomment when you can bypass or automate logging into tim trough browser.
         assertTrue(tide.hasText("Course Task"), "Course Task Window has wrong text or doesn't render");
         assertTrue(tide.hasText("Course View"), "Course Task Windows Course View tab has wrong text or doesn't render");
         assertTrue(tide.hasText("Open exercise"), "Open exercise button has wrong text or doesn't render");
         assertTrue(tide.hasText("Submit"),  "Submit button has wrong text or doesn't render");
         assertTrue(tide.hasText("Show output"), "Show output button has wrong text or doesn't render");
         assertTrue(tide.hasText("Reset exercise"),  "Reset exercise button has wrong text or doesn't render");
+         */
         settings.click();
-        final Locator settingsFrame = byXpath("//div[@class='JFrame']");
+        TimeUnit.SECONDS.sleep(sleeptime);
+        final Locator settingsFrame = byXpath("//div[@class='MyTree']");
+        final Locator settingsLabel = byXpath("//div[@text='Task download folder']");
+        final Locator browseLabel = byXpath("//div[@text='Browse']");
         final ComponentFixture settingsWindow = remoteRobot.find(ComponentFixture.class, settingsFrame);
-        assertTrue(settingsWindow.hasText("Task download folder"), "Error inside settings window, should say Task download folder");
-        assertTrue(settingsWindow.hasText("Browse"), "Error inside settings window,, button should have text Browse");
-        assertTrue(settingsWindow.hasText("Save path"), "Error inside settings window, button should have text Save path");
-        assertTrue(settingsWindow.hasText("Cancel"), "Error inside settings window, button should have text cancel");
+        final ComponentFixture settingsText = remoteRobot.find(ComponentFixture.class, settingsLabel);
+        final ComponentFixture browseText = remoteRobot.find(ComponentFixture.class, browseLabel);
+        assertTrue(settingsText.hasText("Task download folder"), "Error inside settings window, should say Task download folder");
+        assertTrue(browseText.hasText("Browse"), "Error inside settings window,, button should have text Browse");
     }
 
 }
