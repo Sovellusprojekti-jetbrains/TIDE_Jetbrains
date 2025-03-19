@@ -93,21 +93,25 @@ public class OutputWindow {
      * Makes the toolwindow unavailable.
      */
     private void hideWindow() {
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        ToolWindow window = toolWindowManager.getToolWindow("Output Window");
-        assert window != null;
-        window.setAvailable(false);
-        System.out.println("Hide Window");
+        SwingUtilities.invokeLater(() -> {
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            ToolWindow window = toolWindowManager.getToolWindow("Output Window");
+            assert window != null;
+            window.setAvailable(false);
+            System.out.println("Hide Window");
+        });
     }
 
     /**
      * Makes the toolwindow available.
      */
     private void showWindow() {
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        ToolWindow window = toolWindowManager.getToolWindow("Output Window");
-        assert window != null;
-        window.setAvailable(true);
-        System.out.println("Show Window");
+        SwingUtilities.invokeLater(() -> {
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            ToolWindow window = toolWindowManager.getToolWindow("Output Window");
+            assert window != null;
+            window.setAvailable(true);
+            System.out.println("Show Window");
+        });
     }
 }

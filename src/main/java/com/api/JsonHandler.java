@@ -144,7 +144,7 @@ public class JsonHandler {
             if (courseName != null) {
                                        // replace colon preceded by non-whitespace and followed by whitespace
                                        // rationale: "course 1: topic" -> "course 1 - topic"
-                courseName = courseName.replaceAll("\\S[:]\\s+", " - ")
+                courseName = courseName.replaceAll("[:](?<=\\S)\\s+", " - ")
                                        // replace \, /, ", ?, *, |, <, > and remaining colons
                                        .replaceAll("[\\\\/\"?*|<>:]", "-")
                                        .trim();
