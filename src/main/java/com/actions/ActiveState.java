@@ -1,6 +1,7 @@
 package com.actions;
 
 import com.api.ApiHandler;
+import com.api.LogHandler;
 import com.course.Course;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -48,11 +49,13 @@ public class ActiveState {
      * @param id String of the toolwindow.
      */
     private void hideWindow(String id) {
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        ToolWindow window = toolWindowManager.getToolWindow(id);
-        window.setIcon(IconLoader.getIcon("/icons/timgray.svg"));
-        assert window != null;
-        window.setAvailable(false);
+        ApplicationManager.getApplication().invokeLater(() -> {
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            ToolWindow window = toolWindowManager.getToolWindow(id);
+            window.setIcon(IconLoader.getIcon("/icons/timgray.svg"));
+            //assert window != null;
+            window.setAvailable(false);
+        });
     }
 
     /**
@@ -60,11 +63,13 @@ public class ActiveState {
      * @param id String of the toolwindow.
      */
     private void showWindow(String id) {
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        ToolWindow window = toolWindowManager.getToolWindow(id);
-        window.setIcon(IconLoader.getIcon("/icons/tim.svg"));
-        assert window != null;
-        window.setAvailable(true);
+        ApplicationManager.getApplication().invokeLater(() -> {
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            ToolWindow window = toolWindowManager.getToolWindow(id);
+            window.setIcon(IconLoader.getIcon("/icons/tim.svg"));
+            //assert window != null;
+            window.setAvailable(true);
+        });
     }
 
 
@@ -85,13 +90,22 @@ public class ActiveState {
     }
 
     /**
-     * Fetches the courses, changes the courseList property and fires an event for it.
+     * Fetches the courses asynchronously.
      */
     public void updateCourses() {
-        List<Course> oldCourseList = courseList;
         ApiHandler apiHandler = new ApiHandler();
-        courseList = apiHandler.courses();
+        apiHandler.courses();
+    }
+
+    /**
+     * Use this to change the list of courses inside ActiveState. Fires a "courseList" event.
+     * @param courses List of courses to change to.
+     */
+    public void setCourses(List<Course> courses) {
+        List<Course> oldCourseList = courseList;
+        courseList = courses;
         pcs.firePropertyChange("courseList", oldCourseList, courseList);
+        LogHandler.logInfo("ActiveState fired event courseList");
     }
 
 
@@ -125,14 +139,11 @@ public class ActiveState {
     public void login() {
         if (!isLoggedIn) {
             isLoggedIn = true;
-            pcs.firePropertyChange("login", false, isLoggedIn);
-            showWindow("Course Task");
-            showWindow("Output Window");
-        } else {
-            pcs.firePropertyChange("login", false, isLoggedIn);
-            showWindow("Course Task");
-            showWindow("Output Window");
         }
+        pcs.firePropertyChange("login", false, isLoggedIn);
+        LogHandler.logInfo("ActiveState fired event login");
+        showWindow("Course Task");
+        showWindow("Output Window");
     }
 
     /**
@@ -141,10 +152,11 @@ public class ActiveState {
     public void logout() {
         if (isLoggedIn) {
             isLoggedIn = false;
-            pcs.firePropertyChange("logout", true, isLoggedIn);
-            hideWindow("Course Task");
-            hideWindow("Output Window");
         }
+        pcs.firePropertyChange("logout", true, isLoggedIn);
+        LogHandler.logInfo("ActiveState fired event logout");
+        hideWindow("Course Task");
+        hideWindow("Output Window");
     }
 
 }

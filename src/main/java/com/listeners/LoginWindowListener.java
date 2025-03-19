@@ -24,7 +24,7 @@ public final class LoginWindowListener implements ToolWindowManagerListener  {
         var contentManager = toolWindow.getContentManager();
         if ("TIDE Tool Window".equals(toolWindow.getId())) { // the toolWindow here is the tool window that was opened
             System.out.println("login window was opened");
-            boolean isLoggedIn = api.isLoggedIn();
+            api.checkLogin();
 
             for (Content content : contentManager.getContents()) {
                 if ("Courses".equals(content.getTabName())) {

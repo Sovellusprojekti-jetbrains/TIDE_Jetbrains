@@ -3,6 +3,7 @@ import com.actions.ActiveState;
 import com.actions.Settings;
 import com.api.ApiHandler;
 import com.api.JsonHandler;
+import com.api.LogHandler;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -15,6 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.nio.file.*;
 
@@ -72,6 +75,8 @@ public class CustomScreen {
      */
     private JButton refreshButton;
     private JLabel timLabel;
+    private JProgressBar progressBar1;
+    private JProgressBar coursesProgress;
 
     /**
      * An integer for the red band of a color.
@@ -110,47 +115,22 @@ public class CustomScreen {
         // for more information see package com.course and class ApiHandler.
 
 
-        // Piirretään uudelleen
-        //panel1.revalidate();
-        //panel1.repaint();
-        //switchToLogin();
-
         // needs tests in the future.
         refreshButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ActiveState.getInstance().updateCourses();
-                List<Course> refreshed = ActiveState.getInstance().getCourses();
-                createCourseListPane(refreshed);
-
-                // Piirretään uudelleen
-                panel1.revalidate();
-                panel1.repaint();
+                setProgress(true, "Updating courses...");
             }
-
-
         });
         //currently assumes that the user has the TIM CLI installed.
         //need some checks and tests in the future.
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setProgress(true, "Logging in...");
                 ApiHandler api = new ApiHandler();
-                try {
-                    api.login();
-                    if (api.isLoggedIn()) {
-                        switchToLogout();
-                        ActiveState stateManager = ActiveState.getInstance();
-                        stateManager.login();
-                    } else {
-                        //TODO: error message that the login failed
-                        return;
-                    }
-                } catch (IOException | InterruptedException ex) {
-                    com.api.LogHandler.logError("CustomScreen, line: 132: api.login()", ex);
-                    throw new RuntimeException(ex);
-                }
-
+                api.login();
             }
         });
 
@@ -160,10 +140,6 @@ public class CustomScreen {
             public void actionPerformed(ActionEvent e) {
                 Project project = ProjectManager.getInstance().getDefaultProject();
                 ShowSettingsUtil.getInstance().showSettingsDialog(project, "TIDE settings");
-
-
-                //Settings temp = new Settings();
-                //temp.displaySettings();
             }
         });
 
@@ -171,33 +147,50 @@ public class CustomScreen {
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setProgress(true, "Logging out...");
                 ApiHandler api = new ApiHandler();
-                //switchToLogin(); // Poistaa kurssinäkymän näkyvistä
-                try {
-                    api.logout();
-                    if (!api.isLoggedIn()) {
-                        switchToLogin(); // Poistaa kurssinäkymän näkyvistä
-                        ActiveState stateManager = ActiveState.getInstance();
-                        stateManager.logout();
+                api.logout();
+            }
+        });
+
+
+        ActiveState stateManager = ActiveState.getInstance();
+        stateManager.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("logout".equals(evt.getPropertyName())) {
+                    LogHandler.logInfo("CustomScreen received event logout");
+                    switchToLoggedOut(); // Poistaa kurssinäkymän näkyvistä
+                }
+                if ("login".equals(evt.getPropertyName())) {
+                    LogHandler.logInfo("CustomScreen received event login");
+                    switchToLoggedIn();
+                }
+                if ("courseList".equals(evt.getPropertyName())) {
+                    LogHandler.logInfo("CustomScreen received event courseList");
+                    // Do some extra processing to ensure the courseList shows up as a list instead of object.
+                    Object newValue = evt.getNewValue();
+
+                    if (newValue instanceof List<?> rawList) {
+                        // Ensure it's a List<Course>
+                        if (!rawList.isEmpty() && rawList.get(0) instanceof Course) {
+                            List<Course> courses = (List<Course>) rawList;
+                            updateCourseContent(courses);
+                        } else {
+                            System.err.println("Received list, but not of type Course!");
+                        }
                     } else {
-                        //TODO: error for failed logout
-                        return;
+                        System.err.println("Unexpected event value type: " + newValue);
                     }
-                } catch (IOException | InterruptedException ex) {
-                    com.api.LogHandler.logError("CustomScreen, line 169: api.logout()", ex);
-                    ex.printStackTrace();
                 }
             }
         });
-        if (apiHandler.isLoggedIn()) {
-            switchToLogout();
-            ActiveState stateManager = ActiveState.getInstance();
-            stateManager.login();
-        } else {
-            switchToLogin();
-            ActiveState stateManager = ActiveState.getInstance();
-            stateManager.logout();
-        }
+
+        switchToLoggedOut();
+        SwingUtilities.invokeLater(() -> {
+            setProgress(true, "Checking login info...");
+        });
+        apiHandler.checkLogin();
     }
 
     /**
@@ -206,56 +199,80 @@ public class CustomScreen {
      * @param courselist list of courses with tidecli demos.
      */
     private void createCourseListPane(List<Course> courselist) {
-        //Removes all previous courses added, to make refreshing possible. TODO:better solution?
-        coursePanel.removeAll();
-        for (Course course: courselist) {
-            JPanel panel = new JPanel(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx = 0;
-            gbc.weightx = 1.0;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
+        SwingUtilities.invokeLater(() -> {
+            //Removes all previous courses added, to make refreshing possible. TODO:better solution?
+            coursePanel.removeAll();
+            for (Course course: courselist) {
+                JPanel panel = new JPanel(new GridBagLayout());
+                GridBagConstraints gbc = new GridBagConstraints();
+                gbc.gridx = 0;
+                gbc.weightx = 1.0;
+                gbc.fill = GridBagConstraints.HORIZONTAL;
 
-            // Kurssin nimelle vähän tilaa yläpuolelle
-            JPanel labelPanel = new JPanel(new BorderLayout());
-            final int top = 20;
-            final int left = 5;
-            final int bottom = 5;
-            final int right = 0;
-            final int fontSize = 26;
-            labelPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
+                // Kurssin nimelle vähän tilaa yläpuolelle
+                JPanel labelPanel = new JPanel(new BorderLayout());
+                final int top = 20;
+                final int left = 5;
+                final int bottom = 5;
+                final int right = 0;
+                final int fontSize = 26;
+                labelPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
 
-            JLabel label = new JLabel();
-            label.setText(course.getName());
-            label.setFont(new Font("Arial", Font.BOLD, fontSize));
-            labelPanel.add(label);
-            coursePanel.add(labelPanel);
+                JPanel singleCourse = new JPanel(new GridBagLayout());
 
-            // Makes own subpanel for every task
-            // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
-            List<CourseTask> tasks = course.getTasks();
-            final int[] j = {0};
-            for (CourseTask courseTask: tasks) {
-                courseTask.setParent(course);
-                JPanel subPanel = createExercise(courseTask, course.getName());
-                subPanel.setBackground(bgColor);
-                gbc.gridy = j[0];
-                panel.add(subPanel, gbc);
-                panel.setBackground(bgColor);
-                panel.setOpaque(true);
-                j[0]++;
-            }
+                JLabel label = new JLabel();
+                label.setText(course.getName());
+                label.setFont(new Font("Arial", Font.BOLD, fontSize));
+                labelPanel.add(label);
 
-            final int thickness = 4;
+                // Makes own subpanel for every task
+                // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
+                List<CourseTask> tasks = course.getTasks();
+                final int[] j = {0};
+                for (CourseTask courseTask: tasks) {
+                    courseTask.setParent(course);
+                    JPanel subPanel = createExercise(courseTask, course.getName());
+                    subPanel.setBackground(bgColor);
+                    gbc.gridy = j[0];
+                    panel.add(subPanel, gbc);
+                    panel.setBackground(bgColor);
+                    panel.setOpaque(true);
+                    j[0]++;
+                }
 
-            // Tehdään scrollpane johon lätkäistään kaikki tähän mennessä tehty.
-            JScrollPane scrollPane = new JBScrollPane(panel);
-            scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, thickness));
-            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                final int thickness = 4;
 
-            coursePanel.add(scrollPane);
+                // Tehdään scrollpane johon lätkäistään kaikki tähän mennessä tehty.
+                //panel.setPreferredSize(panel.getPreferredSize()); // Ensure the inner panel sizes itself
+                JScrollPane scrollPane = new JBScrollPane(panel);
+                scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, thickness));
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // Disable internal scrolling
+                //scrollPane.setPreferredSize(new Dimension(panel.getPreferredSize().width, panel.getPreferredSize().height + 10));
+
+                gbc = new GridBagConstraints();
+                gbc.gridx = 0;
+                gbc.gridy = 0;
+                gbc.anchor = GridBagConstraints.NORTHWEST;
+                gbc.weightx = 1.0;
+                gbc.fill = GridBagConstraints.HORIZONTAL;
+                singleCourse.add(labelPanel, gbc);
+                final int padding = 10;
+
+                // Ensure scrollPane doesn't stretch too much
+                Dimension preferredSize = panel.getPreferredSize();
+                scrollPane.setPreferredSize(new Dimension(preferredSize.width, preferredSize.height + padding)); // Small padding
+
+                // Add scrollPane below label, but restrict expansion
+                gbc.gridy = 1;
+                gbc.weighty = 0; // Prevent vertical stretching
+                gbc.fill = GridBagConstraints.HORIZONTAL; // Allow width expansion but not height
+                singleCourse.add(scrollPane, gbc);
+
+
+                coursePanel.add(singleCourse);
+                //coursePanel.add(new JSeparator(SwingConstants.VERTICAL));
         }
-
+        });
     }
 
     /**
@@ -433,13 +450,13 @@ public class CustomScreen {
     /**
      * Switches to a state where logging out is possible.
      */
-    private void switchToLogout() {
+    private void switchToLoggedIn() {
         //tabbedPane.remove(loginPane); // Hide Login tab
         ActiveState stateManager = ActiveState.getInstance();
         stateManager.updateCourses();
-        List<Course> courselist = stateManager.getCourses();
+        setProgress(true, "Loading courses...");
         // A panel that contains the courses and tasks is created in its own sub-program.
-        createCourseListPane(courselist);
+        // createCourseListPane(courselist);
         tabbedPane.addTab("Courses", coursesPane); // Show Logout tab
         loginButton.setText("Logout");
         ActionListener[] tempLogin = loginButton.getActionListeners(); //Need to change LoginButton into LogoutButton
@@ -452,10 +469,11 @@ public class CustomScreen {
         //loginButton.setText("Logout");
     }
 
+
     /**
      * Switches to a state where logging in is possible.
      */
-    private void switchToLogin() {
+    private void switchToLoggedOut() {
         tabbedPane.remove(coursesPane); // Hide Courses tab
         tabbedPane.addTab("Menu", loginPane); // Show Login tab
         loginButton.setText("Login");
@@ -464,27 +482,45 @@ public class CustomScreen {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setProgress(true, "Logging in...");
                 ApiHandler api = new ApiHandler();
-                try {
-                    api.login();
-                    if (api.isLoggedIn()) {
-                        switchToLogout();
-                        ActiveState stateManager = ActiveState.getInstance();
-                        stateManager.login();
-                    } else {
-                        //TODO: error message that the login failed
-                        return;
-                    }
-                } catch (IOException | InterruptedException ex) {
-                    com.api.LogHandler.logError("CustomScreen.switchToLogin(), line 458: api.login()", ex);
-                    throw new RuntimeException(ex);
-                }
-
+                api.login();
             }
         });
         panel1.revalidate();
         panel1.repaint();
         tabbedPane.setSelectedComponent(loginPane);
+        setProgress(false, "");
+    }
+
+    /**
+     * Updates the UI with the course list.
+     * @param courselist Courselist to update with.
+     */
+    private void updateCourseContent(List<Course> courselist) {
+        SwingUtilities.invokeLater(() -> {
+            createCourseListPane(courselist);
+            panel1.revalidate();
+            panel1.repaint();
+            //loginButton.setText("Logout");
+            setProgress(false, "");
+        });
+    }
+
+    /**
+     * Sets the progress bars on both tabs of the course panel to the desired visibility and text.
+     * @param state Visible, true or false.
+     * @param text Text to display on progress bar.
+     */
+    private void setProgress(boolean state, String text) {
+        SwingUtilities.invokeLater(() -> {
+            progressBar1.setString(text);
+            progressBar1.setVisible(state);
+            coursesProgress.setString(text);
+            coursesProgress.setVisible(state);
+            panel1.revalidate();
+            panel1.repaint();
+        });
     }
 
 

@@ -1,7 +1,6 @@
 package com.api;
 
 import com.actions.Settings;
-import com.course.Course;
 import com.course.SubTask;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -34,42 +33,25 @@ public class ApiHandler {
 
     /**
      * Logs in to TIDE-CLI.
-     * @throws IOException Method calls pb.start() and pb.readLine() may throw IOException
-     * @throws InterruptedException Method call process.waitFor() may throw InterruptedException
      */
-    public void login() throws IOException, InterruptedException {
-        String exitCode =  handleCommandLine(List.of(loginCommand.split(" ")));
-        System.out.println("Process exited with code: " + exitCode);
+    public void login() {
+        TideCommandExecutor.INSTANCE.login();
     }
 
 
     /**
      * Logs out from TIDE-CLI.
-     * @throws IOException Method calls pb.start() and pb.readLine() may throw IOException
-     * @throws InterruptedException Method call process.waitFor() may throw InterruptedException
      */
-    public void logout() throws IOException, InterruptedException {
-        String exitCode = handleCommandLine(List.of(logoutCommand.split(" ")));
-        System.out.println("Process exited with code: " + exitCode);
+    public void logout() {
+        TideCommandExecutor.INSTANCE.logout();
     }
 
 
     /**
      * Fetches IDE courses from TIM via TIDE-CLI.
-     * @return A list of Course objects
      */
-    public List<Course> courses() {
-
-        String jsonString = null;
-        try {
-            jsonString = handleCommandLine(List.of(coursesCommand.split(" ")));
-        } catch (IOException | InterruptedException e) {
-            com.api.LogHandler.logError("61: ApiHandler.courses()", e);
-            throw new RuntimeException(e);
-        }
-        JsonHandler handler = new JsonHandler();
-
-        return handler.jsonToCourses(jsonString);
+    public void courses() {
+        TideCommandExecutor.INSTANCE.fetchCoursesAsync();
     }
 
 
@@ -186,7 +168,7 @@ public class ApiHandler {
 
 
     /**
-     * asks tide-cli if there is a login and returns a boolean.
+     * asks tide-cli if there is a login and returns a boolean. Deprecated.
      * @return login status in boolean
      */
     public boolean isLoggedIn() {
@@ -206,6 +188,13 @@ public class ApiHandler {
 
 
         return false;
+    }
+
+    /**
+     * Asks tide to check for login info asynchronously.
+     */
+    public void checkLogin() {
+        TideCommandExecutor.INSTANCE.checkLogin();
     }
 
 
@@ -232,7 +221,9 @@ public class ApiHandler {
         }
     }
 
-
+    /**
+     * Serialized login data.
+     */
     class LoginOutput {
         @SerializedName(value = "logged_in")
         private String loggedIn;
