@@ -1,19 +1,21 @@
 package com.views;
 
+import com.intellij.notification.NotificationGroupManager;
+import com.intellij.notification.NotificationType;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.Messages;
 
 public final class InfoView {
     /**
-     * Displays error message on screen.
+     * Displays error bubble on screen down right corner.
      * @param message Error message as String
-     * @param title Title for error message
      */
-    public static void displayError(String message, String title) {
-        Messages.showMessageDialog(
-                message,
-                title,
-                Messages.getInformationIcon()
-        );
+    public static void displayError(String message) {
+        NotificationGroupManager.getInstance()
+                .getNotificationGroup("Custom Notification Group")
+                .createNotification(message, NotificationType.ERROR)
+                .notify(ProjectManager.getInstance().getOpenProjects()[0]);
     }
 
     /**

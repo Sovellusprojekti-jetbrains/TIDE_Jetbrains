@@ -8,6 +8,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.*;
@@ -140,7 +141,7 @@ public class ApiHandler {
                 }
             });
         } else {
-            com.views.InfoView.displayError("File open in editor is not a tide task!", "task reset error");
+            com.views.InfoView.displayError("File open in editor is not a tide task!");
         }
     }
 
@@ -269,7 +270,7 @@ public class ApiHandler {
 
         if (exitCode != 0) {
             // Maybe there could be more advanced error reporting
-            com.views.InfoView.displayError("An error occurred during TIDE call", "TIDE error");
+            com.views.InfoView.displayError("An error occurred during TIDE call");
         }
 
         return tideOutput;

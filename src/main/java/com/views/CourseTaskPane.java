@@ -127,7 +127,7 @@ public class CourseTaskPane {
         //Resets subtask back to the state of last submit.
         resetButton.addActionListener(event -> {
             if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
-                com.views.InfoView.displayError("No files open in editor!", "task reset error");
+                com.views.InfoView.displayError("No files open in editor!");
                 return;
             }
 
@@ -149,11 +149,11 @@ public class CourseTaskPane {
                 com.api.LogHandler.logError("124 CourseTaskPane resetButton ActionListener", e);
                 com.api.LogHandler.logDebug(new String[]{"130 VirtualFile file", "141 String coursePath"},
                         new String[]{file.toString(), coursePath});
-                InfoView.displayError(".timdata file not found!", "Task reset error");
+                InfoView.displayError(".timdata file not found!");
                 throw new RuntimeException(e);
             } catch (InterruptedException e) {
                 com.api.LogHandler.logError("CourseTaskPane resetButton ActionListener", e);
-                InfoView.displayError("An error occurred during task reset! Check Tide CLI", "Task reset error");
+                InfoView.displayError("An error occurred during task reset! Check Tide CLI");
                 throw new RuntimeException(e);
             }
         });
