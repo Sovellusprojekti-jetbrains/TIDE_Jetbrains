@@ -1,7 +1,5 @@
 package com.api;
 
-import com.intellij.openapi.project.ProjectManager;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.logging.*;
