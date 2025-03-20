@@ -101,7 +101,9 @@ public class UiTest {
         }
          */
         // Remote robot locators that are needed to find the components from the xpath file.
-
+        while (idea.isDumbMode()) {
+            TimeUnit.SECONDS.sleep(sleeptime);
+        }
         final Locator tideLocator = byXpath("//div[@class='ToolWindowPane']");
         final Locator settingsLocator = byXpath("//div[@text='Settings']");
 
