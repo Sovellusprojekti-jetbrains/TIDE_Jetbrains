@@ -7,15 +7,24 @@ import com.intellij.openapi.ui.Messages;
 
 public final class InfoView {
     /**
-     * Displays error bubble on screen down right corner.
+     * Displays user notification bubble of a certain type.
      * TODO: How to customize bubble's fill color etc?
+     * @param message Bubble's text content.
+     * @param type Notification's type.
+     */
+    private static void displayBubble(String message, NotificationType type) {
+        NotificationGroupManager.getInstance()
+                .getNotificationGroup("Custom Notification Group")
+                .createNotification(message, type)
+                .notify(ProjectManager.getInstance().getOpenProjects()[0]); //This should return the open project
+    }
+
+    /**
+     * Displays error bubble on screen down right corner.
      * @param message Error message as String
      */
     public static void displayError(String message) {
-        NotificationGroupManager.getInstance()
-                .getNotificationGroup("Custom Notification Group")
-                .createNotification(message, NotificationType.ERROR)
-                .notify(ProjectManager.getInstance().getOpenProjects()[0]); //This should return the open project
+        displayBubble(message, NotificationType.ERROR);
     }
 
     /**
@@ -23,10 +32,15 @@ public final class InfoView {
      * @param message Warning message as String.
      */
     public static void displayWarning(String message) {
-        NotificationGroupManager.getInstance()
-                .getNotificationGroup("Custom Notification Group")
-                .createNotification(message, NotificationType.WARNING)
-                .notify(ProjectManager.getInstance().getOpenProjects()[0]);
+        displayBubble(message, NotificationType.WARNING);
+    }
+
+    /**
+     * Displays information bubble on screen down right corner.
+     * @param message Information message as String.
+     */
+    public static void displayInfo(String message) {
+        displayBubble(message, NotificationType.INFORMATION);
     }
 
     /**
