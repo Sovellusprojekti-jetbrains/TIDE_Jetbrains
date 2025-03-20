@@ -1,4 +1,4 @@
-name: Build and Test jsonhandler
+name: Test jsonhandler
 
 on:
   workflow_dispatch:
@@ -30,4 +30,5 @@ jobs:
       run: ./gradlew build
 
     - name: Run Verification
-      run: ./gradlew test -test JsonHandlerTest
+      run: ./gradlew test --tests *JsonHandlerTest
+
