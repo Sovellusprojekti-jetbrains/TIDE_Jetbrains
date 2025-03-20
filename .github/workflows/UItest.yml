@@ -1,4 +1,4 @@
-name: Build and Test
+name: UI Test
 
 on:
   workflow_dispatch:
@@ -22,19 +22,9 @@ jobs:
               ./gradlew runIdeForUiTests > build/reports/idea.log &
             runTests: |
               export DISPLAY=:99.0
-              ./gradlew test
+              ./gradlew test -test *UITest
             url: http://127.0.0.1:8082
             reportName: ui-test-fails-report-linux
-          - os: macOS-latest
-            runIde: ./gradlew runIdeForUiTests &
-            runTests: ./gradlew test
-            url: http://127.0.0.1:8082
-            reportName: ui-test-fails-report-mac
-          - os: windows-latest
-            runIde: ./gradlew runIdeForUiTests &
-            runTests: ./gradlew test
-            url: http://localhost:8082
-            reportName: ui-test-fails-report-windows  
     
     runs-on: ubuntu-latest
     permissions:
@@ -73,8 +63,5 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
-    - name: Build with Gradle Wrapper
-      run: ./gradlew build
-
-    - name: Run Verification
-      run: ./gradlew test -test UITest
+    - name: Run UITest
+      run: ./gradlew test -test *UITest
