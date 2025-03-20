@@ -127,7 +127,7 @@ public class CourseTaskPane {
         //Resets subtask back to the state of last submit.
         resetButton.addActionListener(event -> {
             if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
-                com.views.InfoView.displayError("No files open in editor!");
+                com.views.InfoView.displayWarning("No files open in editor!");
                 return;
             }
 

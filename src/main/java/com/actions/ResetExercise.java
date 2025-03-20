@@ -20,7 +20,7 @@ public class ResetExercise extends AnAction {
     public void actionPerformed(@NotNull final AnActionEvent e) {
         Project project = e.getProject();
         if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
-            com.views.InfoView.displayError("No files open in editor!");
+            com.views.InfoView.displayWarning("No files open in editor!");
             return;
         }
         VirtualFile file = FileEditorManager

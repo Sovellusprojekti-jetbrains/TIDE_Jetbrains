@@ -2,19 +2,30 @@ package com.views;
 
 import com.intellij.notification.NotificationGroupManager;
 import com.intellij.notification.NotificationType;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.Messages;
 
 public final class InfoView {
     /**
      * Displays error bubble on screen down right corner.
+     * TODO: How to customize bubble's fill color etc?
      * @param message Error message as String
      */
     public static void displayError(String message) {
         NotificationGroupManager.getInstance()
                 .getNotificationGroup("Custom Notification Group")
                 .createNotification(message, NotificationType.ERROR)
+                .notify(ProjectManager.getInstance().getOpenProjects()[0]); //This should return the open project
+    }
+
+    /**
+     * Displays warning bubble on screen down right corner.
+     * @param message Warning message as String.
+     */
+    public static void displayWarning(String message) {
+        NotificationGroupManager.getInstance()
+                .getNotificationGroup("Custom Notification Group")
+                .createNotification(message, NotificationType.WARNING)
                 .notify(ProjectManager.getInstance().getOpenProjects()[0]);
     }
 
