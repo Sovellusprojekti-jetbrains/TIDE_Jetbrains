@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="8bbbba4f-5a67-4bb1-8f91-255d97c05634" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/UiTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/UiTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/course/SubTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/course/SubTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/SubmitRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/SubmitRenderer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,15 +98,16 @@
   "keyToString": {
     "Gradle.Jetbrains [UnitTest].executor": "Run",
     "Gradle.Jetbrains [runIdeForUiTests].executor": "Run",
+    "Gradle.Run Plugin.executor": "Run",
     "Gradle.UiTest.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "misc-RobotFrameWork__pidemmälle",
+    "git-widget-placeholder": "20250319-5__maksimipisteet-__nakyviin",
     "kotlin-language-version-configured": "true",
     "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Gradle.Run Plugin">
     <configuration name="Jetbrains [UnitTest]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />

@@ -99,4 +99,7 @@ public class SubTask {
     public float getMaxPoints() {
         return this.maxPoints;
     }
+    public String toString(){
+        return this.ideTaskId;
+    }
 }

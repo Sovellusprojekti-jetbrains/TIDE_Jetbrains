@@ -383,7 +383,7 @@ public class CustomScreen {
             List<SubTask> listForCourse = new ArrayList<>();
             if (task.getPath().equals(courseTask.getPath())) {
                 listForCourse.add(task);
-                DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task.getIdeTaskId());
+                DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task);
                 for (String file : task.getFileName()) {
                             DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file);
                             leaf.add(submitNode);

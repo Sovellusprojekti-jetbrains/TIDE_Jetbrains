@@ -1,6 +1,8 @@
 package com.views;
 
+import com.actions.ActiveState;
 import com.actions.StateManager;
+import com.api.JsonHandler;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.JBColor;
@@ -54,18 +56,20 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
      */
     private Icon isSubmitted(Object value) {
         List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+        JsonHandler hand = new JsonHandler();
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;;
         //String regex = node.getParent().toString() + "/" + node.toString();
         if (submits != null) {
             for (String s : submits) {
                 if (s.contains(node.toString())) {
+                    float max = hand.getMaxPoints(node.getParent());
                     if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == 0 && node.getChildCount() == 0) {
                         return AllIcons.Debugger.Db_set_breakpoint;
                     }
                     if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) > 0 && node.getChildCount() == 0) {
                         return AllIcons.Debugger.Db_no_suspend_breakpoint;
                     }
-                    if ApplicationManager.getApplication().getService()
+                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == && node.getChildCount() == 0);
                 }
 
             }
