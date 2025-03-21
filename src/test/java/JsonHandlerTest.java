@@ -122,6 +122,7 @@ public class JsonHandlerTest {
     /**
      * Json data that correctly maps to Course objects.
      * The format is an array of Json objects.
+     * TODO: Apparently JSON field order not guaranteed. Make test data reflect this.
      */
     private final String validJsonData = "[\n"
             + "  {\n"
