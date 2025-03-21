@@ -40,7 +40,9 @@
                 parentId="tools"
                 instance="com.actions.AppSettingsConfigurable"
                 id="com.actions.AppSettingsConfigurable"
-                displayName="TIDE settings"/>
+                displayName="TIDE Settings"/>
+        <notificationGroup id="Custom Notification Group"
+                           displayType="BALLOON"/>
     </extensions>
     <actions>
         <action id="MyPlugin.OpenCustomView"
