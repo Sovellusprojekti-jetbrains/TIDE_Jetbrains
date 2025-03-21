@@ -176,7 +176,7 @@ public class CourseTaskPane {
             // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
             // String path = submitAll ? file.getParent().getPath() : file.getPath();
 
-
+            showOutputWindow();
             new ApiHandler().submitExercise(file);
         });
 
