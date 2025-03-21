@@ -1,18 +1,29 @@
 package com.api
 
 import com.actions.ActiveState
-import com.google.gson.annotations.SerializedName
-import com.intellij.openapi.components.service
-import kotlinx.coroutines.*
-import java.io.*
 import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
+import com.intellij.openapi.application.EDT
+import com.intellij.openapi.components.service
+import com.intellij.openapi.editor.Document
+import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.findDocument
+import com.intellij.util.io.awaitExit
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.IOException
 
 object TideCommandExecutor {
 
     private const val loginCommand = "tide login"
     private const val logoutCommand = "tide logout"
-    private const val coursesCommand = "tide courses --json";
+    private const val coursesCommand = "tide courses --json"
     private const val checkLoginCommand = "tide check-login --json"
+    private const val submitCommand = "tide submit"
 
     /**
      * Logs in to TIDE-CLI asynchronously.
@@ -100,6 +111,47 @@ object TideCommandExecutor {
         }
     }
 
+
+    /**
+     * Syncs changes and submits the file to TIM.
+     * @param file The file to submit
+     */
+    fun submitExercise(file: VirtualFile) {
+        CoroutineScope(Dispatchers.IO).launch {
+            syncChanges(file)
+            val activeState = ActiveState.getInstance()
+            try {
+                val commandLineArgs: ArrayList<String> = ArrayList(submitCommand.split(" "))
+                commandLineArgs.add(file.path)
+                val response = handleCommandLine(commandLineArgs)
+                activeState.setTideResponse(response)
+            } catch (ex: Exception) {
+                LogHandler.logError("129: TideCommandExecutor.submitExercise(VirtualFile file)", ex)
+                LogHandler.logDebug(arrayOf("130 VirtualFile file"), arrayOf(file.toString()))
+                ex.printStackTrace()
+                // Response processing in CourseTaskPane checks if response contains "error", is this enough
+                // or should some other activeState property be used to print the exception for the user?
+                activeState.setTideResponse("Exception:" + System.lineSeparator() + ex)
+            }
+        }
+    }
+
+
+    /**
+     * This method is used to save changes in virtual file to physical file on disk.
+     * @param file Virtual file
+     */
+    private fun syncChanges(file: VirtualFile) {
+        val fileDocumentManager: FileDocumentManager = FileDocumentManager.getInstance()
+        CoroutineScope(Dispatchers.EDT).launch {
+            val document: Document? = file.findDocument()
+            if (document != null) {
+                fileDocumentManager.saveDocument(document)
+            }
+        }
+    }
+
+
     /**
      * Executes a command asynchronously.
      * @param command the command to execute.
@@ -118,7 +170,7 @@ object TideCommandExecutor {
 
             val output = process.inputStream.bufferedReader().use { it.readText() }
 
-            val exitCode = process.waitFor()
+            val exitCode = process.awaitExit()
             println("Process exited with code: $exitCode")
 
             if (exitCode != 0) {

@@ -318,11 +318,11 @@ public class CustomScreen {
                     com.api.LogHandler.logError("268 CustomScreen.createExercise(CourseTask courseTask, String courseName)", ex);
                     com.api.LogHandler.logDebug(new String[]{"268 CourseTask courseTask", "268 String courseName"},
                             new String[]{courseTask.toString(), courseName});
-                    InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
+                    InfoView.displayError("Couldn't load exercise. Check Tide CLI");
                     throw new RuntimeException(ex);
                 } catch (InterruptedException ex) {
                     com.api.LogHandler.logError("268 CustomScreen.createExercise(CourseTask courseTask, String courseName)", ex);
-                    InfoView.displayError("Couldn't load exercise. Check Tide CLI", "Download error");
+                    InfoView.displayError("Couldn't load exercise. Check Tide CLI");
                     throw new RuntimeException(ex);
                 }
             }
@@ -385,7 +385,7 @@ public class CustomScreen {
                 listForCourse.add(task);
                 DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task.getIdeTaskId());
                 for (String file : task.getFileName()) {
-                            DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file.replaceAll("\"", ""));
+                            DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file);
                             leaf.add(submitNode);
                             rowCount = rowCount + 1;
                 }

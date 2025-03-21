@@ -127,7 +127,7 @@ public class CourseTaskPane {
         //Resets subtask back to the state of last submit.
         resetButton.addActionListener(event -> {
             if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
-                com.views.InfoView.displayError("No files open in editor!", "task reset error");
+                com.views.InfoView.displayWarning("No files open in editor!");
                 return;
             }
 
@@ -149,11 +149,11 @@ public class CourseTaskPane {
                 com.api.LogHandler.logError("124 CourseTaskPane resetButton ActionListener", e);
                 com.api.LogHandler.logDebug(new String[]{"130 VirtualFile file", "141 String coursePath"},
                         new String[]{file.toString(), coursePath});
-                InfoView.displayError(".timdata file not found!", "Task reset error");
+                InfoView.displayError(".timdata file not found!");
                 throw new RuntimeException(e);
             } catch (InterruptedException e) {
                 com.api.LogHandler.logError("CourseTaskPane resetButton ActionListener", e);
-                InfoView.displayError("An error occurred during task reset! Check Tide CLI", "Task reset error");
+                InfoView.displayError("An error occurred during task reset! Check Tide CLI");
                 throw new RuntimeException(e);
             }
         });
@@ -170,37 +170,14 @@ public class CourseTaskPane {
                     .getSelectedEditor()
                     .getFile();
 
-            String path = file.getPath();
             // TODO: do something like the following to use the TIDE-CLI
             // function to submit all task files in a directory by checking
             // a checkbox, or find a more sensible way to implement it
             // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
             // String path = submitAll ? file.getParent().getPath() : file.getPath();
 
-
-            String response = new ApiHandler().submitExercise(file);
-            Pattern pattern = Pattern.compile("run: \\d+");
-            Matcher matcher = pattern.matcher(response);
-            List<Integer> n = new ArrayList<>();
-            if (!response.contains("error")) {
-                while (matcher.find()) {
-                    n.add(Integer.parseInt(String.valueOf(matcher.group().charAt(matcher.group().length() - 1))));
-                }
-                }
-            if (n.isEmpty()) {
-                n.add(0);
-            }
-            List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
-            if (submits == null) {
-                submits = new ArrayList<>();
-            }
-            if (!submits.contains(path)
-                    | ApplicationManager.getApplication().getService(StateManager.class).getPoints(path) != n.get(0)) {
-                ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
-            }
-            printOutput(response);
-            System.out.println(path);
-
+            showOutputWindow();
+            new ApiHandler().submitExercise(file);
         });
 
 
@@ -219,6 +196,10 @@ public class CourseTaskPane {
                 if ("login".equals(evt.getPropertyName())) {
                     showWindow();
                 }
+                if ("tideResponse".equals(evt.getPropertyName())) {
+                    String response = (String) evt.getNewValue();
+                    handleSubmitResponse(response);
+                }
             }
         });
 
@@ -235,7 +216,9 @@ public class CourseTaskPane {
         ToolWindow window = toolWindowManager.getToolWindow("Output Window");
 
         if (window != null) {
-            window.show(null);
+            ApplicationManager.getApplication().invokeLater(() -> {
+                window.show(null);
+            });
         }
 
         return window;
@@ -279,6 +262,47 @@ public class CourseTaskPane {
                 window.setAvailable(true);
             }
         });
+    }
+
+
+    /**
+     * Deals with a response String received from TIDE-CLI
+     * when the user has submitted a file to TIM.
+     * @param response from TIDE-CLI
+     */
+    private void handleSubmitResponse(String response) {
+        if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
+            printOutput("Please open a file to submit in the editor.");
+            return;
+        }
+
+        VirtualFile file = FileEditorManager
+                .getInstance(project)
+                .getSelectedEditor()
+                .getFile();
+
+        String path = file.getPath();
+        printOutput(response);
+        Pattern pattern = Pattern.compile("run: \\d+");
+        Matcher matcher = pattern.matcher(response);
+        List<Integer> n = new ArrayList<>();
+        if (!response.contains("error")) {
+            while (matcher.find()) {
+                n.add(Integer.parseInt(String.valueOf(matcher.group().charAt(matcher.group().length() - 1))));
+            }
+        }
+        if (n.isEmpty()) {
+            n.add(0);
+        }
+        List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
+        if (submits == null) {
+            submits = new ArrayList<>();
+        }
+        if (!submits.contains(path)
+                | ApplicationManager.getApplication().getService(StateManager.class).getPoints(path) != n.get(0)) {
+            ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
+        }
+        System.out.println(path);
     }
 }
 
