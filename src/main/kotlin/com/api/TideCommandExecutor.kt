@@ -21,9 +21,9 @@ object TideCommandExecutor {
 
     private const val loginCommand = "tide login"
     private const val logoutCommand = "tide logout"
-    private const val coursesCommand = "tide courses --json";
+    private const val coursesCommand = "tide courses --json"
     private const val checkLoginCommand = "tide check-login --json"
-    private const val submitCommand = "tide submit";
+    private const val submitCommand = "tide submit"
 
     /**
      * Logs in to TIDE-CLI asynchronously.
