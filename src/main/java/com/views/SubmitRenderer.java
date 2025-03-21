@@ -65,6 +65,7 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
                     if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) > 0 && node.getChildCount() == 0) {
                         return AllIcons.Debugger.Db_no_suspend_breakpoint;
                     }
+                    if ApplicationManager.getApplication().getService()
                 }
 
             }

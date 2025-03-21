@@ -29,6 +29,9 @@ public class SubTask {
     @SerializedName(value = "task_directory")
     private String taskDirectory;
 
+    @SerializedName(value = "max_points")
+    private float maxPoints;
+
     /**
      * set the task name for the task.
      * @param id the name of the task
@@ -91,5 +94,9 @@ public class SubTask {
      */
     public void setTaskDirectory(String taskDir) {
         this.taskDirectory = taskDir;
+    }
+
+    public float getMaxPoints() {
+        return this.maxPoints;
     }
 }
