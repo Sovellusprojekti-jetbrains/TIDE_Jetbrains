@@ -93,7 +93,7 @@ public class JsonHandlerTest {
         assertEquals("t1", subTask.getIdeTaskId());
         assertNull(subTask.getTaskDirectory());
         // test last subtask in the test data
-        subTask = subtaskList.get(subtaskList.size()-1);
+        subTask = subtaskList.get(subtaskList.size() - 1);
         assertEquals("testidemo4.java", subTask.getFileName().get(0));
         assertEquals("view/demo1/anotherpath", subTask.getPath());
         assertEquals("t4", subTask.getIdeTaskId());
