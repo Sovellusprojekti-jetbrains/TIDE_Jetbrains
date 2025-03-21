@@ -21,6 +21,7 @@ import java.util.List;
 public class ActiveState {
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private List<Course> courseList;
+    private String tideResponse;
     private boolean isLoggedIn = false;
     private Project project;
 
@@ -130,6 +131,18 @@ public class ActiveState {
             }
         }
         return "";
+    }
+
+
+    /**
+     * Sets a new value for the tideResponse property.
+     * @param response from TIDE-CLI
+     */
+    public void setTideResponse(String response) {
+        String oldTideResponse = tideResponse;
+        tideResponse = response;
+        pcs.firePropertyChange("tideResponse", oldTideResponse, tideResponse);
+        LogHandler.logInfo("ActiveState fired event tideResponse");
     }
 
 

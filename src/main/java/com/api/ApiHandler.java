@@ -24,12 +24,8 @@ import java.util.stream.Collectors;
  * Tänne tide cli -kutsut.
  */
 public class ApiHandler {
-    private final String coursesCommand = "tide courses --json";
-    private final String loginCommand   = "tide login";
-    private final String logoutCommand  = "tide logout";
     private final String checkLoginCommand = "tide check-login --json";
     private final String taskCreateCommand = "tide task create";
-    private final String submitCommand = "tide submit";
 
     /**
      * Logs in to TIDE-CLI.
@@ -148,22 +144,9 @@ public class ApiHandler {
     /**
      * Submit an exercise.
      * @param file Virtual file containing subtask to be submitted
-     * @return Response from TIM as a string or an error message
      */
-    public String submitExercise(VirtualFile file) {
-        this.syncChanges(file); //sync changes before submit
-        String response = "";
-        try {
-            List<String> commandlineArgs = new ArrayList<>(Arrays.asList(submitCommand.split(" ")));
-            commandlineArgs.add(file.getPath());
-            response = handleCommandLine(commandlineArgs);
-        } catch (IOException | InterruptedException ex) {
-            com.api.LogHandler.logError("171: ApiHandler.submitExercise(VirtualFile file)", ex);
-            com.api.LogHandler.logDebug(new String[]{"171 VirtualFile file"}, new String[]{file.toString()});
-            ex.printStackTrace();
-            response = "IOException:" + System.lineSeparator() + ex;
-        }
-        return response;
+    public void submitExercise(VirtualFile file) {
+        TideCommandExecutor.INSTANCE.submitExercise(file);
     }
 
 

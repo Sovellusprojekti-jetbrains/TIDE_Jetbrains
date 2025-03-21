@@ -1,6 +1,7 @@
 package com.views;
 
 import com.actions.ActiveState;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -75,7 +76,9 @@ public class OutputWindow {
      */
     public void printText(String text) {
         if (textArea != null) {
-            textArea.append(text + "\n");
+            ApplicationManager.getApplication().invokeLater(() -> {
+                textArea.append(text + "\n");
+            });
         }
     }
 
@@ -84,9 +87,10 @@ public class OutputWindow {
      */
     public void clearText() {
         if (textArea != null) {
-            textArea.setText("");
+            ApplicationManager.getApplication().invokeLater(() -> {
+                textArea.setText("");
+            });
         }
-
     }
 
     /**
