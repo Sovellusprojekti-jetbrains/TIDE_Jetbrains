@@ -31,6 +31,10 @@ public class ResetExercise extends AnAction {
         if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
             return;
         }
+        if (!ActiveState.getInstance().isSubmittable()) {
+            InfoView.displayWarning("File in editor is not a tim task!");
+            return;
+        }
         ApiHandler handler = new ApiHandler();
         ActiveState stateManager = ActiveState.getInstance();
         String coursePath = stateManager.getCourseName(file.getPath());
