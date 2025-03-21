@@ -153,9 +153,10 @@ public class JsonHandler {
     public class CourseDeserializer implements JsonDeserializer<Course> {
         /**
          * Custom deserializer to replace invalid characters so that course names are valid for file paths.
+         *
          * @param courseJsonElement Course element to deserialize
-         * @param courseType Course type to deserialize to
-         * @param context Deserialization context
+         * @param courseType        Course type to deserialize to
+         * @param context           Deserialization context
          * @return A Course type object
          * @throws JsonParseException if Json is not in the expected format
          */
@@ -167,17 +168,18 @@ public class JsonHandler {
 
             String courseName = course.getName();
             if (courseName != null) {
-                                       // replace colon preceded by non-whitespace and followed by whitespace
-                                       // rationale: "course 1: topic" -> "course 1 - topic"
+                // replace colon preceded by non-whitespace and followed by whitespace
+                // rationale: "course 1: topic" -> "course 1 - topic"
                 courseName = courseName.replaceAll("[:](?<=\\S)\\s+", " - ")
-                                       // replace \, /, ", ?, *, |, <, > and remaining colons
-                                       .replaceAll("[\\\\/\"?*|<>:]", "-")
-                                       .trim();
+                        // replace \, /, ", ?, *, |, <, > and remaining colons
+                        .replaceAll("[\\\\/\"?*|<>:]", "-")
+                        .trim();
                 course.setName(courseName);
             }
 
             return course;
         }
+    }
 
 
     /**
