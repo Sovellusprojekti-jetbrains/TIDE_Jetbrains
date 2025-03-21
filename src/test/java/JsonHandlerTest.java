@@ -122,7 +122,6 @@ public class JsonHandlerTest {
     /**
      * Json data that correctly maps to Course objects.
      * The format is an array of Json objects.
-     * TODO: Apparently JSON field order not guaranteed. Make test data reflect this.
      */
     private final String validJsonData = "[\n"
             + "  {\n"
@@ -184,6 +183,7 @@ public class JsonHandlerTest {
     /**
      * A timdata file. Four tasks, one of them missing ide_task_id and thus
      * should not be included in the list returned by JsonHandler.
+     * TODO: Apparently JSON field order not guaranteed. Make test data reflect this.
      */
     private final String timdata = "{\n"
         + "    \"course_parts\": {\n"
