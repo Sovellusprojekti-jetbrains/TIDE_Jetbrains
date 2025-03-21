@@ -105,7 +105,7 @@ public final class LogHandler extends Formatter {
                     LOGGER.warning("Unknown logging level. Debug LogHandler.java's internal method calls\r\n");
             }
         } catch (IOException e) {
-            com.views.InfoView.displayError("Couldn't create or write to log file!", "Logging error");
+            com.views.InfoView.displayError("Couldn't create or write to log file!");
             throw new RuntimeException(e);
         }
     }

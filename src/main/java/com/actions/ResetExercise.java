@@ -20,7 +20,7 @@ public class ResetExercise extends AnAction {
     public void actionPerformed(@NotNull final AnActionEvent e) {
         Project project = e.getProject();
         if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
-            com.views.InfoView.displayError("No files open in editor!", "task reset error");
+            com.views.InfoView.displayWarning("No files open in editor!");
             return;
         }
         VirtualFile file = FileEditorManager
@@ -40,11 +40,11 @@ public class ResetExercise extends AnAction {
             com.api.LogHandler.logError("ResetExercise action performer", ex);
             com.api.LogHandler.logDebug(new String[]{"26 VirtualFile file", "36 String coursePath"},
                     new String[]{file.toString(), coursePath});
-            InfoView.displayError(".timdata file not found!", "Task reset error");
+            InfoView.displayError(".timdata file not found!");
             throw new RuntimeException(ex);
         } catch (InterruptedException ex) {
             com.api.LogHandler.logError("ResetExercise action performer", ex);
-            InfoView.displayError("An error occurred during task reset! Check Tide CLI", "Task reset error");
+            InfoView.displayError("An error occurred during task reset! Check Tide CLI");
             throw new RuntimeException(ex);
         }
     }
