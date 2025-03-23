@@ -21,7 +21,8 @@ import java.util.List;
 public class ActiveState {
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private List<Course> courseList;
-    private String tideResponse;
+    private String tideSubmitResponse;
+    private String tideBaseResponse;
     private boolean isLoggedIn = false;
     private Project project;
 
@@ -135,14 +136,29 @@ public class ActiveState {
 
 
     /**
-     * Sets a new value for the tideResponse property.
+     * Sets a new value for the tideSubmitResponse property.
+     * Needed because response to tide submit gets parsed for
+     * information and thus needs to be differentiated from
+     * the generic response represented by tideBaseResponse.
      * @param response from TIDE-CLI
      */
-    public void setTideResponse(String response) {
-        String oldTideResponse = tideResponse;
-        tideResponse = response;
-        pcs.firePropertyChange("tideResponse", oldTideResponse, tideResponse);
-        LogHandler.logInfo("ActiveState fired event tideResponse");
+    public void setTideSubmitResponse(String response) {
+        String oldTideSubmitResponse = tideSubmitResponse;
+        tideSubmitResponse = response;
+        pcs.firePropertyChange("tideSubmitResponse", oldTideSubmitResponse, tideSubmitResponse);
+        LogHandler.logInfo("ActiveState fired event tideSubmitResponse");
+    }
+
+
+    /**
+     * Sets TIDE-CLI response for cases that do not need special handling.
+     * @param response from TIDE-CLI
+     */
+    public void setTideBaseResponse(String response) {
+        String oldTideBaseResponse = tideBaseResponse;
+        tideBaseResponse = response;
+        pcs.firePropertyChange("tideBaseResponse", oldTideBaseResponse, tideBaseResponse);
+        LogHandler.logInfo("ActiveState fired event tideBaseResponse");
     }
 
 

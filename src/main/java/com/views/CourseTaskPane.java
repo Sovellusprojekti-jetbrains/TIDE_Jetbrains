@@ -176,13 +176,13 @@ public class CourseTaskPane {
             // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
             // String path = submitAll ? file.getParent().getPath() : file.getPath();
 
-            showOutputWindow();
+            OutputWindow.getInstance().showWindow();
             new ApiHandler().submitExercise(file);
         });
 
 
         showOutputButton.addActionListener(event -> {
-            showOutputWindow();
+            OutputWindow.getInstance().showWindow();
         });
 
 
@@ -196,9 +196,12 @@ public class CourseTaskPane {
                 if ("login".equals(evt.getPropertyName())) {
                     showWindow();
                 }
-                if ("tideResponse".equals(evt.getPropertyName())) {
+                if ("tideSubmitResponse".equals(evt.getPropertyName())) {
                     String response = (String) evt.getNewValue();
                     handleSubmitResponse(response);
+                }
+                if ("tideBaseResponse".equals(evt.getPropertyName())) {
+                    printOutput((String) evt.getNewValue());
                 }
             }
         });
@@ -208,33 +211,12 @@ public class CourseTaskPane {
 
 
     /**
-     * Show and return output window.
-     * @return Output window
-     */
-    public ToolWindow showOutputWindow() {
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        ToolWindow window = toolWindowManager.getToolWindow("Output Window");
-
-        if (window != null) {
-            ApplicationManager.getApplication().invokeLater(() -> {
-                window.show(null);
-            });
-        }
-
-        return window;
-    }
-
-
-    /**
      * Prints a string to the output toolWindow.
      * @param output String to print
      */
     public void printOutput(String output) {
-        ToolWindow window = showOutputWindow();
-
-        if (window != null) {
-            OutputWindow.getInstance().printText(output);
-        }
+        OutputWindow.getInstance().showWindow();
+        OutputWindow.getInstance().printText(output);
     }
 
 
@@ -250,6 +232,7 @@ public class CourseTaskPane {
             }
         });
     }
+
 
     /**
      * Makes the toolwindow available.

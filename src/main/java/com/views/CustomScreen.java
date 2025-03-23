@@ -313,6 +313,7 @@ public class CustomScreen {
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
                 try {
+                    OutputWindow.getInstance().showWindow();
                     api.loadExercise(courseName, courseTask.getPath(), "--all");
                 } catch (IOException ex) {
                     com.api.LogHandler.logError("268 CustomScreen.createExercise(CourseTask courseTask, String courseName)", ex);

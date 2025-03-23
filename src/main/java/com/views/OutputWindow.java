@@ -47,7 +47,7 @@ public class OutputWindow {
                     hideWindow();
                 }
                 if ("login".equals(evt.getPropertyName())) {
-                    showWindow();
+                    setWindowAvailable();
                 }
             }
         });
@@ -109,13 +109,26 @@ public class OutputWindow {
     /**
      * Makes the toolwindow available.
      */
-    private void showWindow() {
+    private void setWindowAvailable() {
         SwingUtilities.invokeLater(() -> {
             ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
             ToolWindow window = toolWindowManager.getToolWindow("Output Window");
             assert window != null;
             window.setAvailable(true);
             System.out.println("Show Window");
+        });
+    }
+
+
+    /**
+     * Displays the toolwindow.
+     */
+    public void showWindow() {
+        SwingUtilities.invokeLater(() -> {
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            ToolWindow window = toolWindowManager.getToolWindow("Output Window");
+            assert window != null;
+            window.show(null);
         });
     }
 }

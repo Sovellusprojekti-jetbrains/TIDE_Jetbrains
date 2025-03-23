@@ -1,6 +1,5 @@
 package com.api;
 
-import com.actions.Settings;
 import com.course.SubTask;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -14,8 +13,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -25,7 +22,6 @@ import java.util.stream.Collectors;
  */
 public class ApiHandler {
     private final String checkLoginCommand = "tide check-login --json";
-    private final String taskCreateCommand = "tide task create";
 
     /**
      * Logs in to TIDE-CLI.
@@ -57,22 +53,7 @@ public class ApiHandler {
      * @param cmdArgs Arguments for the tide create command, e.g. Tim path and flags
      */
     public void loadExercise(String courseDirectory, String... cmdArgs) throws IOException, InterruptedException {
-        if (cmdArgs.length < 1) {
-            System.err.println("No arguments for tide create");
-        }
-        File courseDirFile = new File(Settings.getPath(), courseDirectory);
-        if (!courseDirFile.exists()) {
-            courseDirFile.mkdir();
-        }
-
-        // Destination path is surrounded by quotes only if it contains spaces.
-        // destination = destination.contains(" ") ? "\"" + destination + "\"" : destination;
-
-        List<String> pbArgs = new ArrayList<>(Arrays.asList(taskCreateCommand.split(" ")));
-        for (String arg: cmdArgs) {
-            pbArgs.add(arg);
-        }
-        handleCommandLine(pbArgs, courseDirFile);
+        TideCommandExecutor.INSTANCE.loadExercise(courseDirectory, cmdArgs);
     }
 
 

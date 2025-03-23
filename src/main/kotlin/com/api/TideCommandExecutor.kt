@@ -1,6 +1,7 @@
 package com.api
 
 import com.actions.ActiveState
+import com.actions.Settings
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.application.EDT
@@ -24,6 +25,7 @@ object TideCommandExecutor {
     private const val coursesCommand = "tide courses --json"
     private const val checkLoginCommand = "tide check-login --json"
     private const val submitCommand = "tide submit"
+    private const val taskCreateCommand = "tide task create"
 
     /**
      * Logs in to TIDE-CLI asynchronously.
@@ -124,14 +126,14 @@ object TideCommandExecutor {
                 val commandLineArgs: ArrayList<String> = ArrayList(submitCommand.split(" "))
                 commandLineArgs.add(file.path)
                 val response = handleCommandLine(commandLineArgs)
-                activeState.setTideResponse(response)
+                activeState.setTideSubmitResponse(response)
             } catch (ex: Exception) {
-                LogHandler.logError("129: TideCommandExecutor.submitExercise(VirtualFile file)", ex)
-                LogHandler.logDebug(arrayOf("130 VirtualFile file"), arrayOf(file.toString()))
+                LogHandler.logError("121: TideCommandExecutor.submitExercise(VirtualFile file)", ex)
+                LogHandler.logDebug(arrayOf("121 VirtualFile file"), arrayOf(file.toString()))
                 ex.printStackTrace()
                 // Response processing in CourseTaskPane checks if response contains "error", is this enough
                 // or should some other activeState property be used to print the exception for the user?
-                activeState.setTideResponse("Exception:" + System.lineSeparator() + ex)
+                activeState.setTideSubmitResponse("Exception:" + System.lineSeparator() + ex)
             }
         }
     }
@@ -148,6 +150,32 @@ object TideCommandExecutor {
             if (document != null) {
                 fileDocumentManager.saveDocument(document)
             }
+        }
+    }
+
+
+    /**
+     * Downloads an exercise from TIM into the location specified in plugin settings.
+     * @param courseDir Course subdirectory to run TIDE-CLI in
+     * @param cmdArgs Arguments for tide task create
+     */
+    fun loadExercise(courseDir: String, vararg cmdArgs: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val activeState = ActiveState.getInstance()
+            if (cmdArgs.isEmpty()) {
+                System.err.println("No arguments for tide create")
+                LogHandler.logDebug(arrayOf("courseDir", "cmdArgs"), arrayOf(courseDir, ""))
+                LogHandler.logInfo("loadExercise called without arguments")
+            }
+            val courseDirFile: File = File(Settings.getPath(), courseDir)
+            if (!courseDirFile.exists()) {
+                courseDirFile.mkdir()
+            }
+
+            val commandLineArgs: ArrayList<String> = ArrayList(taskCreateCommand.split(" "))
+            commandLineArgs.addAll(cmdArgs)
+            val response = handleCommandLine(commandLineArgs, courseDirFile)
+            activeState.setTideBaseResponse(response)
         }
     }
 
