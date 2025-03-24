@@ -223,6 +223,7 @@ public class CustomScreen {
                 JLabel label = new JLabel();
                 label.setText(course.getName());
                 label.setFont(new Font("Arial", Font.BOLD, fontSize));
+                label.setHorizontalAlignment(SwingConstants.CENTER);
                 labelPanel.add(label);
 
                 // Makes own subpanel for every task
@@ -298,11 +299,12 @@ public class CustomScreen {
         JLabel labelWeek = new JLabel();
         labelWeek.setText(courseTask.getName());
         labelWeek.setFont(new Font("Arial", Font.BOLD, fontsize));
-        subPanel.add(labelWeek, BorderLayout.WEST);
+        //subPanel.add(labelWeek, BorderLayout.WEST);
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.setBackground(bgColor);
         subPanel.setBackground(bgColor);
+
 
         JButton dButton = new JButton();
         dButton.setText("Download");
@@ -339,7 +341,12 @@ public class CustomScreen {
         });
         buttonPanel.add(oButton);
 
-        subPanel.add(buttonPanel, BorderLayout.EAST);
+        JPanel nameAndButtonPanel = new JPanel(new BorderLayout());
+        nameAndButtonPanel.add(labelWeek, BorderLayout.WEST);
+        nameAndButtonPanel.add(buttonPanel, BorderLayout.EAST);
+        subPanel.add(nameAndButtonPanel);
+
+        //subPanel.add(buttonPanel, BorderLayout.EAST);
         try {
             createSubTaskpanel(subPanel, courseTask, courseName);
         } catch (Exception e) {
@@ -365,7 +372,7 @@ public class CustomScreen {
             JBScrollPane container = new JBScrollPane();
             container.add(tree);
             container.setViewportView(tree);
-            subPanel.add(container);
+            subPanel.add(container, BorderLayout.SOUTH);
         }
     }
 
