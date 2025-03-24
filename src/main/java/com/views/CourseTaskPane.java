@@ -115,6 +115,22 @@ public class CourseTaskPane {
         avaaTehtava.addActionListener(event -> {
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
+                //TODO: The following lines of code up to line 131 repeats in many action listeners.
+                // Is there a way to refactor this?
+                VirtualFile file = FileEditorManager
+                        .getInstance(project)
+                        .getSelectedEditor()
+                        .getFile();
+                try {
+                    ActiveState.getInstance().setSubmittable(file);
+                } catch (IOException ex) {
+                    InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
+                    throw new RuntimeException(ex);
+                }
+                if (!ActiveState.getInstance().isSubmittable()) {
+                    InfoView.displayWarning("File in editor is not a tim task!");
+                    return;
+                }
                 try {
                     desktop.browse(new URI("https://timbeta01.tim.education"));
                 } catch (IOException | URISyntaxException e) {
@@ -140,14 +156,24 @@ public class CourseTaskPane {
             if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
                 return;
             }
+            try {
+                ActiveState.getInstance().setSubmittable(file);
+            } catch (IOException ex) {
+                InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
+                throw new RuntimeException(ex);
+            }
+            if (!ActiveState.getInstance().isSubmittable()) {
+                InfoView.displayWarning("File in editor is not a tim task!");
+                return;
+            }
             ApiHandler handler = new ApiHandler();
             ActiveState stateManager = ActiveState.getInstance();
             String coursePath = stateManager.getCourseName(file.getPath());
             try {
                 handler.resetSubTask(file, coursePath);
             } catch (IOException e) {
-                com.api.LogHandler.logError("124 CourseTaskPane resetButton ActionListener", e);
-                com.api.LogHandler.logDebug(new String[]{"130 VirtualFile file", "141 String coursePath"},
+                com.api.LogHandler.logError("142 CourseTaskPane resetButton ActionListener", e);
+                com.api.LogHandler.logDebug(new String[]{"148 VirtualFile file", "169 String coursePath"},
                         new String[]{file.toString(), coursePath});
                 InfoView.displayError(".timdata file not found!");
                 throw new RuntimeException(e);
@@ -175,7 +201,16 @@ public class CourseTaskPane {
             // a checkbox, or find a more sensible way to implement it
             // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
             // String path = submitAll ? file.getParent().getPath() : file.getPath();
-
+            try {
+                ActiveState.getInstance().setSubmittable(file);
+            } catch (IOException ex) {
+                InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
+                throw new RuntimeException(ex);
+            }
+            if (!ActiveState.getInstance().isSubmittable()) {
+                InfoView.displayWarning("File in editor is not a tim task!");
+                return;
+            }
             showOutputWindow();
             new ApiHandler().submitExercise(file);
         });
