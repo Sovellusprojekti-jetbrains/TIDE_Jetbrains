@@ -327,12 +327,18 @@ public class CourseTaskPane {
         System.out.println(path);
     }
 
+    /**
+     * Private method for disabling buttons.
+     */
     private void disableButtons() {
         this.avaaTehtava.setEnabled(false);
         this.resetButton.setEnabled(false);
         this.submitButton.setEnabled(false);
     }
 
+    /**
+     * Private method for enabling buttons.
+     */
     private void enableButtons() {
         this.avaaTehtava.setEnabled(true);
         this.resetButton.setEnabled(true);

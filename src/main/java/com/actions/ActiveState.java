@@ -55,12 +55,12 @@ public class ActiveState {
                 try {
                     VirtualFile temp = event.getNewFile();
                     if (temp != null) {
-                        setSubmittable(event.getNewFile());
+                        setSubmittable(temp);
                     } else {
                         isSubmittable = false;
                     }
                     if (!isSubmittable) {
-                        //TODO: disabloi painikkeet
+                        //TODO: Muunna aliohjelmaksi jota voi kutsua myös muualta
                         pcs.firePropertyChange("disableButtons", null, null); //TODO: pitäisikö lähettää isSubmittable arvot?
                     } else {
                         pcs.firePropertyChange("enableButtons", null, null);
