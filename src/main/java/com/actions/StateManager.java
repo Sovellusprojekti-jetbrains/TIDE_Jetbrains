@@ -84,7 +84,7 @@ public final class StateManager implements PersistentStateComponent<StateManager
      * @param taskPath path to the task that has been submitted.
      * @param points points given for the submitted subtask
      */
-    public void setSubmit(String taskPath, Integer points) {
+    public void setSubmit(String taskPath, Float points) {
         PropertiesComponent properties = PropertiesComponent.getInstance();
         List<String> submits = getSubmits();
         if (submits == null)  {
@@ -94,7 +94,7 @@ public final class StateManager implements PersistentStateComponent<StateManager
             submits.add(taskPath);
             properties.setList("myPlugin.submits", submits);
         }
-        properties.setValue(taskPath, points, 0);
+        properties.setValue(taskPath, points, 0.0F);
         //String value = properties.getValue("myPlugin.path", System.getProperty("user.dir"));
         //getState().path = path;
 
@@ -120,8 +120,8 @@ public final class StateManager implements PersistentStateComponent<StateManager
      * @param path the path of the submitted exercise
      * @return points given for the submission
      */
-    public Integer getPoints(String path) {
+    public Float getPoints(String path) {
         PropertiesComponent properties = PropertiesComponent.getInstance();
-        return properties.getInt(path, 0);
+        return properties.getFloat(path, 0.0F);
     }
 }
