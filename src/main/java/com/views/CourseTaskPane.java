@@ -200,9 +200,6 @@ public class CourseTaskPane {
                     String response = (String) evt.getNewValue();
                     handleSubmitResponse(response);
                 }
-                if ("tideBaseResponse".equals(evt.getPropertyName())) {
-                    printOutput((String) evt.getNewValue());
-                }
             }
         });
 

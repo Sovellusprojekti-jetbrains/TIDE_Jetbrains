@@ -49,6 +49,9 @@ public class OutputWindow {
                 if ("login".equals(evt.getPropertyName())) {
                     setWindowAvailable();
                 }
+                if ("tideBaseResponse".equals(evt.getPropertyName())) {
+                    printText((String) evt.getNewValue());
+                }
             }
         });
     }
