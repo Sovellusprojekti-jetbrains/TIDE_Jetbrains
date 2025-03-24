@@ -115,14 +115,14 @@ public class CourseTaskPane {
         avaaTehtava.addActionListener(event -> {
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
-                VirtualFile file = FileEditorManager
+                VirtualFile file = FileEditorManager // TODO: The following lines of code until line 131 repeats in many action listeners. Is there a way to refactor this?
                         .getInstance(project)
                         .getSelectedEditor()
                         .getFile();
                 try {
                     ActiveState.getInstance().setSubmittable(file);
                 } catch (IOException ex) {
-                    InfoView.displayError("An error occurred during reset action!");
+                    InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
                     throw new RuntimeException(ex);
                 }
                 if (!ActiveState.getInstance().isSubmittable()) {
@@ -157,7 +157,7 @@ public class CourseTaskPane {
             try {
                 ActiveState.getInstance().setSubmittable(file);
             } catch (IOException ex) {
-                InfoView.displayError("An error occurred during reset action!");
+                InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
                 throw new RuntimeException(ex);
             }
             if (!ActiveState.getInstance().isSubmittable()) {
@@ -170,8 +170,8 @@ public class CourseTaskPane {
             try {
                 handler.resetSubTask(file, coursePath);
             } catch (IOException e) {
-                com.api.LogHandler.logError("124 CourseTaskPane resetButton ActionListener", e);
-                com.api.LogHandler.logDebug(new String[]{"130 VirtualFile file", "141 String coursePath"},
+                com.api.LogHandler.logError("142 CourseTaskPane resetButton ActionListener", e);
+                com.api.LogHandler.logDebug(new String[]{"148 VirtualFile file", "169 String coursePath"},
                         new String[]{file.toString(), coursePath});
                 InfoView.displayError(".timdata file not found!");
                 throw new RuntimeException(e);
@@ -202,7 +202,7 @@ public class CourseTaskPane {
             try {
                 ActiveState.getInstance().setSubmittable(file);
             } catch (IOException ex) {
-                InfoView.displayError("An error occurred during reset action!");
+                InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
                 throw new RuntimeException(ex);
             }
             if (!ActiveState.getInstance().isSubmittable()) {

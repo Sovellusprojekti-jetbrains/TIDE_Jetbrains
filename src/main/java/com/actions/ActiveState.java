@@ -41,11 +41,10 @@ public class ActiveState {
         ApplicationManager.getApplication().invokeLater(() -> {
             hideWindow("Course Task");
             hideWindow("Output Window");
-        });
-        project.getMessageBus().connect(Disposer.newDisposable()).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+        }); // The following will be used later
+        /*project.getMessageBus().connect(Disposer.newDisposable()).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
             @Override
             public void selectionChanged(@NotNull FileEditorManagerEvent event) {
-                System.out.println(event.getNewFile());
                 FileEditorManagerListener.super.selectionChanged(event);
                 try {
                     setSubmittable(event.getNewFile());
@@ -53,7 +52,7 @@ public class ActiveState {
                     throw new RuntimeException(e);
                 }
             }
-        });
+        });*/
     }
 
     /**
