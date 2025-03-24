@@ -115,7 +115,7 @@ public class CourseTaskPane {
         avaaTehtava.addActionListener(event -> {
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
-                VirtualFile file = FileEditorManager // TODO: The following lines of code until line 131 repeats in many action listeners. Is there a way to refactor this?
+                VirtualFile file = FileEditorManager // TODO: The following lines of code up to line 131 repeats in many action listeners. Is there a way to refactor this?
                         .getInstance(project)
                         .getSelectedEditor()
                         .getFile();

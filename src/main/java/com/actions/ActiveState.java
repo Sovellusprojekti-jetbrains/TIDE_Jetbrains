@@ -190,10 +190,19 @@ public class ActiveState {
         hideWindow("Output Window");
     }
 
+    /**
+     * Getter for isSubmittable.
+     * @return True, if file opened in the editor is in sub-path of task download path, False otherwise.
+     */
     public boolean isSubmittable() {
         return isSubmittable;
     }
 
+    /**
+     * This method evaluates if the file opened in the editor is in sub-path of task download path.
+     * @param child File under evaluation should be child of task download folder.
+     * @throws IOException If making File object fails.
+     */
     public void setSubmittable(VirtualFile child) throws IOException {
         File parent = new File(Settings.getPath());
         if (child.getCanonicalPath() != null) {
