@@ -115,7 +115,7 @@ public class CourseTaskPane {
         avaaTehtava.addActionListener(event -> {
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
-                //TODO: The following lines of code up to line 131 repeats in many action listeners.
+                //TODO: The following lines of code up to line 133 repeats in many action listeners.
                 // Is there a way to refactor this?
                 VirtualFile file = FileEditorManager
                         .getInstance(project)
@@ -237,6 +237,12 @@ public class CourseTaskPane {
                     String response = (String) evt.getNewValue();
                     handleSubmitResponse(response);
                 }
+                if ("disableButtons".equals(evt.getPropertyName())) {
+                    disableButtons();
+                }
+                if ("enableButtons".equals(evt.getPropertyName())) {
+                    enableButtons();
+                }
             }
         });
 
@@ -319,6 +325,18 @@ public class CourseTaskPane {
             ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
         }
         System.out.println(path);
+    }
+
+    private void disableButtons() {
+        this.avaaTehtava.setEnabled(false);
+        this.resetButton.setEnabled(false);
+        this.submitButton.setEnabled(false);
+    }
+
+    private void enableButtons() {
+        this.avaaTehtava.setEnabled(true);
+        this.resetButton.setEnabled(true);
+        this.submitButton.setEnabled(true);
     }
 }
 

@@ -13,6 +13,7 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+
 import com.views.OutputWindow;
 import com.intellij.util.ReflectionUtil;
 import org.jetbrains.annotations.NotNull;
@@ -52,9 +53,17 @@ public class ActiveState {
             public void selectionChanged(@NotNull FileEditorManagerEvent event) {
                 FileEditorManagerListener.super.selectionChanged(event);
                 try {
-                    setSubmittable(event.getNewFile());
+                    VirtualFile temp = event.getNewFile();
+                    if (temp != null) {
+                        setSubmittable(event.getNewFile());
+                    } else {
+                        isSubmittable = false;
+                    }
                     if (!isSubmittable) {
                         //TODO: disabloi painikkeet
+                        pcs.firePropertyChange("disableButtons", null, null); //TODO: pitäisikö lähettää isSubmittable arvot?
+                    } else {
+                        pcs.firePropertyChange("enableButtons", null, null);
                     }
                 } catch (IOException e) { //Should never happen.
                     throw new RuntimeException(e);
