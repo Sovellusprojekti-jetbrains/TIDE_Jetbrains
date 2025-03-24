@@ -4,14 +4,19 @@ import com.api.ApiHandler;
 import com.api.LogHandler;
 import com.course.Course;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.views.OutputWindow;
 import com.intellij.util.ReflectionUtil;
+import org.jetbrains.annotations.NotNull;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
@@ -40,19 +45,22 @@ public class ActiveState {
         ApplicationManager.getApplication().invokeLater(() -> {
             hideWindow("Course Task");
             hideWindow("Output Window");
-        }); // The following will be used later
-        /*project.getMessageBus().connect(Disposer.newDisposable())
+        });
+        project.getMessageBus().connect(Disposer.newDisposable())
                 .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
             @Override
             public void selectionChanged(@NotNull FileEditorManagerEvent event) {
                 FileEditorManagerListener.super.selectionChanged(event);
                 try {
                     setSubmittable(event.getNewFile());
+                    if (!isSubmittable) {
+                        //TODO: disabloi painikkeet
+                    }
                 } catch (IOException e) { //Should never happen.
                     throw new RuntimeException(e);
                 }
             }
-        });*/
+        });
     }
 
     /**
