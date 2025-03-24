@@ -9,6 +9,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.views.OutputWindow;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -156,6 +157,7 @@ public class ActiveState {
      * @param response from TIDE-CLI
      */
     public void setTideBaseResponse(String response) {
+        OutputWindow.getInstance().showWindow();
         String oldTideBaseResponse = tideBaseResponse;
         tideBaseResponse = response;
         pcs.firePropertyChange("tideBaseResponse", oldTideBaseResponse, tideBaseResponse);

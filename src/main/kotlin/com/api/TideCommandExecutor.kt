@@ -2,6 +2,7 @@ package com.api
 
 import com.actions.ActiveState
 import com.actions.Settings
+import com.course.SubTask
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.application.EDT
@@ -17,6 +18,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Path
 
 object TideCommandExecutor {
 
@@ -175,6 +179,48 @@ object TideCommandExecutor {
             commandLineArgs.addAll(cmdArgs)
             val response = handleCommandLine(commandLineArgs, courseDirFile)
             activeState.setTideBaseResponse(response)
+        }
+    }
+
+
+    /**
+     * Resets subtask back to the state of latest submit.
+     * @param file Virtual file to get files local path and to communicate changes to idea's UI.
+     * @param courseDir Course directory
+     */
+    fun resetSubTask(file: VirtualFile, courseDir: String) {
+        val timData: String = Settings.getPath() + File.separatorChar + courseDir + File.separatorChar + ".timdata"
+        val taskData: String = Files.readString(Path.of(timData), StandardCharsets.UTF_8)
+        val handler: JsonHandler = JsonHandler();
+        val subtasks: List<SubTask> = handler.jsonToSubtask(taskData)
+        var taskId: String = ""
+        var taskPath: String = ""
+        var filePath = file.getPath()
+        for (subtask: SubTask in subtasks) {
+            for (name: String in subtask.fileName) {
+                if (filePath.contains(name.replace("\"", ""))) {
+                    taskId = subtask.ideTaskId
+                    taskPath = subtask.path
+                    break
+                }
+            }
+            if (taskId == "") {
+                break
+            }
+        }
+
+        if (taskId != "") {
+            syncChanges(file)
+            loadExercise(courseDir, taskPath, taskId, "-f")
+            // Virtual file must be refreshed and Intellij Idea's UI notified
+            file.refresh(true, true)
+            CoroutineScope(Dispatchers.IO).launch {
+                if (file.isValid) {
+                    file.parent.refresh(false, false)
+                }
+            }
+        } else {
+            com.views.InfoView.displayError("File open in editor is not a tide task!")
         }
     }
 
