@@ -139,7 +139,7 @@ public class CustomScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Project project = ProjectManager.getInstance().getDefaultProject();
-                ShowSettingsUtil.getInstance().showSettingsDialog(project, "TIDE settings");
+                ShowSettingsUtil.getInstance().showSettingsDialog(project, "TIDE Settings");
             }
         });
 
