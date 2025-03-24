@@ -131,9 +131,8 @@ object TideCommandExecutor {
                 LogHandler.logError("121: TideCommandExecutor.submitExercise(VirtualFile file)", ex)
                 LogHandler.logDebug(arrayOf("121 VirtualFile file"), arrayOf(file.toString()))
                 ex.printStackTrace()
-                // Response processing in CourseTaskPane checks if response contains "error", is this enough
-                // or should some other activeState property be used to print the exception for the user?
-                activeState.setTideSubmitResponse("Exception:" + System.lineSeparator() + ex)
+                // use tideBaseResponse to print the exception for the user
+                activeState.setTideBaseResponse("Exception:" + System.lineSeparator() + ex)
             }
         }
     }
