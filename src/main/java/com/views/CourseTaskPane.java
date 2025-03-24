@@ -285,14 +285,14 @@ public class CourseTaskPane {
         printOutput(response);
         Pattern pattern = Pattern.compile("run: \\d+");
         Matcher matcher = pattern.matcher(response);
-        List<Integer> n = new ArrayList<>();
+        List<Float> n = new ArrayList<>();
         if (!response.contains("error")) {
             while (matcher.find()) {
-                n.add(Integer.parseInt(String.valueOf(matcher.group().charAt(matcher.group().length() - 1))));
+                n.add(Float.parseFloat(String.valueOf(matcher.group().charAt(matcher.group().length() - 1))));
             }
         }
         if (n.isEmpty()) {
-            n.add(0);
+            n.add(0.0F);
         }
         List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
         if (submits == null) {
