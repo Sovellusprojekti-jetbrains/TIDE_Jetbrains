@@ -39,7 +39,8 @@ public class ActiveState {
             hideWindow("Course Task");
             hideWindow("Output Window");
         }); // The following will be used later
-        /*project.getMessageBus().connect(Disposer.newDisposable()).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+        /*project.getMessageBus().connect(Disposer.newDisposable())
+                .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
             @Override
             public void selectionChanged(@NotNull FileEditorManagerEvent event) {
                 FileEditorManagerListener.super.selectionChanged(event);
