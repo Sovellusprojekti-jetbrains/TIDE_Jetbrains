@@ -142,7 +142,7 @@ public class CourseTaskPane {
             }
             try {
                 ActiveState.getInstance().setSubmittable(file);
-            } catch (IOException ex) { //If actions are disabled prior login, this shouldn't be issue.
+            } catch (IOException ex) {
                 InfoView.displayError("An error occurred during reset action!");
                 throw new RuntimeException(ex);
             }
@@ -185,7 +185,16 @@ public class CourseTaskPane {
             // a checkbox, or find a more sensible way to implement it
             // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
             // String path = submitAll ? file.getParent().getPath() : file.getPath();
-
+            try {
+                ActiveState.getInstance().setSubmittable(file);
+            } catch (IOException ex) {
+                InfoView.displayError("An error occurred during reset action!");
+                throw new RuntimeException(ex);
+            }
+            if (!ActiveState.getInstance().isSubmittable()) {
+                InfoView.displayWarning("File in editor is not a tim task!");
+                return;
+            }
             showOutputWindow();
             new ApiHandler().submitExercise(file);
         });
