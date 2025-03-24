@@ -115,6 +115,20 @@ public class CourseTaskPane {
         avaaTehtava.addActionListener(event -> {
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
+                VirtualFile file = FileEditorManager
+                        .getInstance(project)
+                        .getSelectedEditor()
+                        .getFile();
+                try {
+                    ActiveState.getInstance().setSubmittable(file);
+                } catch (IOException ex) {
+                    InfoView.displayError("An error occurred during reset action!");
+                    throw new RuntimeException(ex);
+                }
+                if (!ActiveState.getInstance().isSubmittable()) {
+                    InfoView.displayWarning("File in editor is not a tim task!");
+                    return;
+                }
                 try {
                     desktop.browse(new URI("https://timbeta01.tim.education"));
                 } catch (IOException | URISyntaxException e) {
