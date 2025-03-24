@@ -3,6 +3,7 @@ package com.views;
 import com.actions.ActiveState;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.components.JBScrollPane;
@@ -70,6 +71,11 @@ public class OutputWindow {
      * @return The toolwindow itself.
      */
     public static OutputWindow getInstance() {
+        if (instance == null) {
+            Project project = ProjectManager.getInstance().getOpenProjects()[0];
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            instance = (OutputWindow) toolWindowManager.getToolWindow("Output Window");
+        }
         return instance;
     }
 
