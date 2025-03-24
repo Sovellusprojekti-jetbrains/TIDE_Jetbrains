@@ -9,6 +9,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.util.ReflectionUtil;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -53,7 +54,10 @@ public class ActiveState {
         ApplicationManager.getApplication().invokeLater(() -> {
             ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
             ToolWindow window = toolWindowManager.getToolWindow(id);
-            window.setIcon(IconLoader.getIcon("/icons/timgray.svg"));
+            var callerClass = ReflectionUtil.getGrandCallerClass();
+            if (callerClass != null) {
+                window.setIcon(IconLoader.getIcon("/icons/timgray.svg", callerClass));
+            }
             //assert window != null;
             window.setAvailable(false);
         });
@@ -67,7 +71,10 @@ public class ActiveState {
         ApplicationManager.getApplication().invokeLater(() -> {
             ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
             ToolWindow window = toolWindowManager.getToolWindow(id);
-            window.setIcon(IconLoader.getIcon("/icons/tim.svg"));
+            var callerClass = ReflectionUtil.getGrandCallerClass();
+            if (callerClass != null) {
+                window.setIcon(IconLoader.getIcon("/icons/tim.svg", callerClass));
+            }
             //assert window != null;
             window.setAvailable(true);
         });
