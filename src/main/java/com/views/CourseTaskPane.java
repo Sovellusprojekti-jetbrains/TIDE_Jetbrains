@@ -262,7 +262,6 @@ public class CourseTaskPane {
                 .getFile();
 
         String path = file.getPath();
-        printOutput(response);
         Pattern pattern = Pattern.compile("run: \\d+");
         Matcher matcher = pattern.matcher(response);
         List<Integer> n = new ArrayList<>();

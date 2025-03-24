@@ -127,7 +127,7 @@ public class OutputWindow {
      * Displays the toolwindow.
      */
     public void showWindow() {
-        SwingUtilities.invokeLater(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
             ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
             ToolWindow window = toolWindowManager.getToolWindow("Output Window");
             assert window != null;

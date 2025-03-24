@@ -147,6 +147,7 @@ public class ActiveState {
         tideSubmitResponse = response;
         pcs.firePropertyChange("tideSubmitResponse", oldTideSubmitResponse, tideSubmitResponse);
         LogHandler.logInfo("ActiveState fired event tideSubmitResponse");
+        setTideBaseResponse(response);
     }
 
 
