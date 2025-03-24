@@ -4,7 +4,6 @@ import com.api.ApiHandler;
 import com.api.LogHandler;
 import com.course.Course;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
@@ -15,13 +14,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import org.jetbrains.annotations.NotNull;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
+
 
 
 /**
@@ -43,20 +41,14 @@ public class ActiveState {
         ApplicationManager.getApplication().invokeLater(() -> {
             hideWindow("Course Task");
             hideWindow("Output Window");
-        });/*
-        try {
-            this.setSubmittable(new File(Settings.getPath()), FileEditorManager.getInstance(project).getSelectedEditor().getFile());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }*/
+        });
         project.getMessageBus().connect(Disposer.newDisposable()).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
             @Override
             public void selectionChanged(@NotNull FileEditorManagerEvent event) {
                 System.out.println(event.getNewFile());
                 FileEditorManagerListener.super.selectionChanged(event);
-                //System.out.println(event.getNewFile());
                 try {
-                    setSubmittable(new File(Settings.getPath()), event.getNewFile());
+                    setSubmittable(event.getNewFile());
                 } catch (IOException e) { //Should never happen.
                     throw new RuntimeException(e);
                 }
@@ -203,8 +195,9 @@ public class ActiveState {
         return isSubmittable;
     }
 
-    public void setSubmittable(File parent, VirtualFile child) throws IOException {
-        if (parent != null && child.getCanonicalPath() != null) {
+    public void setSubmittable(VirtualFile child) throws IOException {
+        File parent = new File(Settings.getPath());
+        if (child.getCanonicalPath() != null) {
             this.isSubmittable = child.getCanonicalPath().contains(parent.getCanonicalPath());
         } else {
             this.isSubmittable = false;
