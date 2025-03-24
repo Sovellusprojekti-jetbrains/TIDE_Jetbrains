@@ -24,12 +24,11 @@ plugins {
     idea
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.0.20"
-    //id("org.jetbrains.intellij") version "1.17.4"
     id("org.jetbrains.intellij.platform") version "2.2.1"
 }
 
-group = "com.example"
-version = "1.0-SNAPSHOT"
+group = "org.jyu"
+version = "1.0.2"
 
 intellijPlatform {
     pluginConfiguration {
@@ -73,11 +72,11 @@ dependencies {
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
-        sourceCompatibility = "19"
-        targetCompatibility = "19"
+        sourceCompatibility = "21"
+        targetCompatibility = "21"
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "19"
+        kotlinOptions.jvmTarget = "21"
     }
 
     patchPluginXml {
@@ -102,26 +101,6 @@ tasks {
 tasks.test {
     useJUnitPlatform()
 }
-
-
-fun File.isPluginJar(): Boolean {
-    if (!isFile) return false
-    if (extension != "jar") return false
-    return zipTree(this).files.any { it.isManifestFile() }
-}
-
-fun File.isManifestFile(): Boolean {
-    if (extension != "xml") return false
-    val rootNode = try {
-        val parser = groovy.xml.XmlParser()
-        parser.parse(this)
-    } catch (e: Exception) {
-        logger.error("Failed to parse $path", e)
-        return false
-    }
-    return rootNode.name() == "idea-plugin"
-}
-
 
 fun prop(key: String) = extra.properties[key] as? String
     ?: error("Property `$key` is not defined in gradle.properties")
