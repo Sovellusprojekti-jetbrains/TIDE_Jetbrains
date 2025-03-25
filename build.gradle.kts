@@ -21,7 +21,7 @@ val runIdeForUiTests by intellijPlatformTesting.runIde.registering {
 }
 
 plugins {
-    idea
+    //idea
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.0.20"
     id("org.jetbrains.intellij.platform") version "2.2.1"
@@ -52,12 +52,14 @@ repositories {
 
 dependencies {
     intellijPlatform {
+        /*
         if (projectType == "RD") {
             create("RD", riderPlatformVersionProp, useInstaller = false)
         } else {
             create("IC", ideaPlatformVersionProp, useInstaller = false)
-            bundledPlugins("com.intellij.java", "JUnit")
-        }
+            //bundledPlugins("com.intellij.java", "JUnit")
+        }*/
+        create("IC", ideaPlatformVersionProp, useInstaller = false)
 
     }
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
