@@ -33,7 +33,7 @@ public class ResetExercise extends AnAction {
         }
         try {
             ActiveState.getInstance().setSubmittable(file);
-            ActiveState.getInstance().messageToTaskPane(); //Might be unnecessary but just in case
+            ActiveState.getInstance().messageChanges(); //Might be unnecessary but just in case
         } catch (IOException ex) { //If actions are disabled prior login, this shouldn't be issue.
             InfoView.displayError("An error occurred during reset action!");
             throw new RuntimeException(ex);
@@ -58,5 +58,14 @@ public class ResetExercise extends AnAction {
             InfoView.displayError("An error occurred during task reset! Check Tide CLI");
             throw new RuntimeException(ex);
         }
+    }
+
+    /**
+     * This function is called by ActiveState to update the actions state (able/disabled).
+     * @param e AnActionEvent originating from idea's internal messaging system.
+     */
+    @Override
+    public void update(@NotNull AnActionEvent e) {
+        e.getPresentation().setEnabled(ActiveState.getInstance().isSubmittable());
     }
 }

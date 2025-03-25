@@ -16,6 +16,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 
 import com.views.OutputWindow;
 import com.intellij.util.ReflectionUtil;
+import org.jdesktop.swingx.action.ActionManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.PropertyChangeListener;
@@ -59,7 +60,7 @@ public class ActiveState {
                     } else { //Is it possible to construct new Virtual file with null canonical path?
                         //It would be better if it was possible to call setSubmittable with null as the argument
                         isSubmittable = false;
-                        messageToTaskPane();
+                        messageChanges();
                     }
                 } catch (IOException e) { //Should never happen.
                     throw new RuntimeException(e);
@@ -246,13 +247,14 @@ public class ActiveState {
         } else {
             this.isSubmittable = false;
         }
-        this.messageToTaskPane();
+        this.messageChanges();
     }
 
     /**
      * This method is used to send messages to CourseTaskPane to change state of the buttons.
      */
-    public void messageToTaskPane() {
+    public void messageChanges() {
+        ActionManager.getInstance().getAction("Reset Exercise"); //Actions must be able/disabled also
         if (!isSubmittable) {
             //Is null ok or should one send isSubmittable values?
             pcs.firePropertyChange("disableButtons", null, null);
