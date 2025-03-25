@@ -4,6 +4,7 @@ import com.actions.Settings;
 import com.api.ApiHandler;
 import com.api.JsonHandler;
 import com.api.LogHandler;
+import com.api.TimDataHandler;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -313,7 +314,7 @@ public class CustomScreen {
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
                 try {
-                    OutputWindow.getInstance().showWindow();
+                 //   OutputWindow.getInstance().showWindow();
                     api.loadExercise(courseName, courseTask.getPath(), "--all");
                 } catch (IOException ex) {
                     com.api.LogHandler.logError("268 CustomScreen.createExercise(CourseTask courseTask, String courseName)", ex);
@@ -359,7 +360,8 @@ public class CustomScreen {
     private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask, String courseName) {
         String pathToFile = Settings.getPath() + File.separatorChar + courseName;
         JsonHandler jsonHandler = new JsonHandler();
-        String timData = readTimData(pathToFile);
+        TimDataHandler tim = new TimDataHandler();
+        String timData = tim.readTimData(pathToFile);
         if (!timData.isEmpty()) {
             List<SubTask> subtasks = jsonHandler.jsonToSubtask(timData);
             Tree tree = createTree(subtasks, courseTask);
@@ -421,31 +423,6 @@ public class CustomScreen {
         });
         tree.setCellRenderer(new SubmitRenderer());
         return tree;
-    }
-
-    /**
-     * Reads the timdata file that is located in the path.
-     * @param pathToFile Path in the settings where the timdata file is located after downloading a task.
-     * @return timdata in string format, empy if file was not found
-     */
-    private String readTimData(String pathToFile) {
-        StringBuilder sb = new StringBuilder();
-        try {
-            String settingsPath = pathToFile + File.separatorChar + ".timdata";
-            Path path = Paths.get(settingsPath);
-            BufferedReader reader = Files.newBufferedReader(path);
-            String line = reader.readLine();
-            while (line != null) {
-                // read next line
-                sb.append(line).append(System.lineSeparator());
-                line = reader.readLine();
-            }
-        } catch (IOException e) {
-            com.api.LogHandler.logError("CustomScreen.readTimData(String pathToFile), lines: 405-413", e);
-            com.api.LogHandler.logDebug(new String[]{"402 String pathToFile"}, new String[]{pathToFile});
-            System.out.println("File timdata was not found");
-        }
-        return sb.toString();
     }
 
     /**

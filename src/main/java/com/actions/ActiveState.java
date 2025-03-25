@@ -179,7 +179,7 @@ public class ActiveState {
      * @param response from TIDE-CLI
      */
     public void setTideBaseResponse(String response) {
-        OutputWindow.getInstance().showWindow();
+//        OutputWindow.getInstance().showWindow();
         String oldTideBaseResponse = tideBaseResponse;
         tideBaseResponse = response;
         pcs.firePropertyChange("tideBaseResponse", oldTideBaseResponse, tideBaseResponse);
@@ -228,8 +228,10 @@ public class ActiveState {
      */
     public void setSubmittable(VirtualFile child) throws IOException {
         File parent = new File(Settings.getPath());
-        if (child.getCanonicalPath() != null) {
-            this.isSubmittable = child.getCanonicalPath().contains(parent.getCanonicalPath());
+        String parentPath = parent.getCanonicalPath();
+        String childPath =  child.getCanonicalPath();
+        if (childPath != null) {
+            this.isSubmittable = childPath.contains(parentPath.replaceAll("\\\\","/"));
         } else {
             this.isSubmittable = false;
         }

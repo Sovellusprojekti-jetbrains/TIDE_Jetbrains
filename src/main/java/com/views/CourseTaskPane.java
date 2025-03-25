@@ -2,10 +2,14 @@
 //26.1.2025
 
 package com.views;
+import java.io.File;
 import java.util.regex.*;
 import com.actions.ActiveState;
 import com.actions.StateManager;
 import com.api.ApiHandler;
+import com.api.JsonHandler;
+import com.api.TimDataHandler;
+import com.course.SubTask;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
@@ -212,14 +216,14 @@ public class CourseTaskPane {
                 InfoView.displayWarning("File in editor is not a tim task!");
                 return;
             }
-            OutputWindow.getInstance().showWindow();
+            //OutputWindow.getInstance().showWindow();
 
             new ApiHandler().submitExercise(file);
         });
 
 
         showOutputButton.addActionListener(event -> {
-            OutputWindow.getInstance().showWindow();
+           // OutputWindow.getInstance().showWindow();
         });
 
 
@@ -249,8 +253,8 @@ public class CourseTaskPane {
      * @param output String to print
      */
     public void printOutput(String output) {
-        OutputWindow.getInstance().showWindow();
-        OutputWindow.getInstance().printText(output);
+        //OutputWindow.getInstance().showWindow();
+       // OutputWindow.getInstance().printText(output);
     }
 
 
@@ -319,6 +323,25 @@ public class CourseTaskPane {
             ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
         }
         System.out.println(path);
+        setPoints(file,n.get(0));
+    }
+
+    private void setPoints(VirtualFile file, Float points) {
+        TimDataHandler tim = new TimDataHandler();
+        JsonHandler json = new JsonHandler();
+        String data = tim.readTimData(file.getParent().getParent().getParent().getCanonicalPath());
+        List<SubTask> sub = json.jsonToSubtask(data);
+        float max = 0.0F;
+        for (SubTask task : sub){
+            if (task.getIdeTaskId().equals(file.getParent().getName())){
+                for (String name : task.getFileName()){
+                    if (name.equals(file.getName())){
+                        max = task.getMaxPoints();
+                    }
+                }
+            }
+        }
+        pisteLabel.setText("Points : "+points +"/"+max);
     }
 }
 
