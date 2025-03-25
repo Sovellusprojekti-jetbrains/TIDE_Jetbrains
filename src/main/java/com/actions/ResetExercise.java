@@ -33,6 +33,7 @@ public class ResetExercise extends AnAction {
         }
         try {
             ActiveState.getInstance().setSubmittable(file);
+            ActiveState.getInstance().messageToTaskPane(); //Might be unnecessary but just in case
         } catch (IOException ex) { //If actions are disabled prior login, this shouldn't be issue.
             InfoView.displayError("An error occurred during reset action!");
             throw new RuntimeException(ex);

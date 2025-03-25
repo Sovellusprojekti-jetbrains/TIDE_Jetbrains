@@ -56,11 +56,11 @@ public class ActiveState {
                     VirtualFile temp = event.getNewFile();
                     if (temp != null) {
                         setSubmittable(temp);
-                    } else { //TODO: is it possible to construct new Virtual file with null canonical path?
+                    } else { //Is it possible to construct new Virtual file with null canonical path?
                         //It would be better if it was possible to call setSubmittable with null as the argument
                         isSubmittable = false;
+                        messageToTaskPane();
                     }
-                    messageToTaskPane();
                 } catch (IOException e) { //Should never happen.
                     throw new RuntimeException(e);
                 }
@@ -246,6 +246,7 @@ public class ActiveState {
         } else {
             this.isSubmittable = false;
         }
+        this.messageToTaskPane();
     }
 
     /**
