@@ -51,6 +51,7 @@ public class OutputWindow {
                     setWindowAvailable();
                 }
                 if ("tideBaseResponse".equals(evt.getPropertyName())) {
+                    showWindow();
                     printText((String) evt.getNewValue());
                 }
             }
@@ -71,11 +72,6 @@ public class OutputWindow {
      * @return The toolwindow itself.
      */
     public static OutputWindow getInstance() {
-        if (instance == null) {
-            Project project = ProjectManager.getInstance().getOpenProjects()[0];
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            instance = (OutputWindow) toolWindowManager.getToolWindow("Output Window");
-        }
         return instance;
     }
 

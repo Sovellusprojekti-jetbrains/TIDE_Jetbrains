@@ -179,7 +179,6 @@ public class ActiveState {
      * @param response from TIDE-CLI
      */
     public void setTideBaseResponse(String response) {
-        OutputWindow.getInstance().showWindow();
         String oldTideBaseResponse = tideBaseResponse;
         tideBaseResponse = response;
         pcs.firePropertyChange("tideBaseResponse", oldTideBaseResponse, tideBaseResponse);

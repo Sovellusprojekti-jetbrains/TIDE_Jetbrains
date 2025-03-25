@@ -212,14 +212,16 @@ public class CourseTaskPane {
                 InfoView.displayWarning("File in editor is not a tim task!");
                 return;
             }
-            OutputWindow.getInstance().showWindow();
 
             new ApiHandler().submitExercise(file);
         });
 
 
         showOutputButton.addActionListener(event -> {
-            OutputWindow.getInstance().showWindow();
+            OutputWindow outputWindow = OutputWindow.getInstance();
+            if (outputWindow != null) {
+                OutputWindow.getInstance().showWindow();
+            }
         });
 
 
@@ -249,8 +251,11 @@ public class CourseTaskPane {
      * @param output String to print
      */
     public void printOutput(String output) {
-        OutputWindow.getInstance().showWindow();
-        OutputWindow.getInstance().printText(output);
+        OutputWindow outputWindow = OutputWindow.getInstance();
+        if (outputWindow != null) {
+            OutputWindow.getInstance().showWindow();
+            OutputWindow.getInstance().printText(output);
+        }
     }
 
 
