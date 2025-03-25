@@ -11,10 +11,16 @@
     <idea-version since-build="231" until-build="231.*" />
 
     <!-- Dependencies -->
-    <depends>com.intellij.modules.java</depends>
+    <!--
+    <depends>com.intellij.modules.rider</depends>
+    -->
+    <depends>com.intellij.modules.platform</depends>
+
+
 
     <!-- Tool Window -->
     <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="com.listeners.StartUp"/>
         <toolWindow id="TIDE Tool Window"
                     factoryClass="com.factories.LoginWindowFactory"
                     anchor="left"

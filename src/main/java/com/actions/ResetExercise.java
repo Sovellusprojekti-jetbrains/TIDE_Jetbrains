@@ -31,6 +31,16 @@ public class ResetExercise extends AnAction {
         if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
             return;
         }
+        try {
+            ActiveState.getInstance().setSubmittable(file);
+        } catch (IOException ex) { //If actions are disabled prior login, this shouldn't be issue.
+            InfoView.displayError("An error occurred during reset action!");
+            throw new RuntimeException(ex);
+        }
+        if (!ActiveState.getInstance().isSubmittable()) {
+            InfoView.displayWarning("File in editor is not a tim task!");
+            return;
+        }
         ApiHandler handler = new ApiHandler();
         ActiveState stateManager = ActiveState.getInstance();
         String coursePath = stateManager.getCourseName(file.getPath());
