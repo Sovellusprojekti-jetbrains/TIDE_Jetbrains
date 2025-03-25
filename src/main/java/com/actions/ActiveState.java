@@ -56,15 +56,11 @@ public class ActiveState {
                     VirtualFile temp = event.getNewFile();
                     if (temp != null) {
                         setSubmittable(temp);
-                    } else {
+                    } else { //TODO: is it possible to construct new Virtual file with null canonical path?
+                        //It would be better if it was possible to call setSubmittable with null as the argument
                         isSubmittable = false;
                     }
-                    if (!isSubmittable) {
-                        //TODO: Muunna aliohjelmaksi jota voi kutsua myös muualta
-                        pcs.firePropertyChange("disableButtons", null, null); //TODO: pitäisikö lähettää isSubmittable arvot?
-                    } else {
-                        pcs.firePropertyChange("enableButtons", null, null);
-                    }
+                    messageToTaskPane();
                 } catch (IOException e) { //Should never happen.
                     throw new RuntimeException(e);
                 }
@@ -249,6 +245,18 @@ public class ActiveState {
             this.isSubmittable = child.getCanonicalPath().contains(parent.getCanonicalPath());
         } else {
             this.isSubmittable = false;
+        }
+    }
+
+    /**
+     * This method is used to send messages to CourseTaskPane to change state of the buttons.
+     */
+    public void messageToTaskPane() {
+        if (!isSubmittable) {
+            //Is null ok or should one send isSubmittable values?
+            pcs.firePropertyChange("disableButtons", null, null);
+        } else {
+            pcs.firePropertyChange("enableButtons", null, null);
         }
     }
 }
