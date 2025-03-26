@@ -18,7 +18,7 @@ jobs:
       - name: Set up JDK 19
         uses: actions/setup-java@v4
         with:
-          java-version: '19'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Build the plugin using Gradle
@@ -32,7 +32,8 @@ jobs:
         with:
           ide-versions: |
             ideaIC:2024.3
-          #  riderRD:2024.3
+            riderRD:2024.3
+            
 
       - name: Get log file path and print contents
         run: |

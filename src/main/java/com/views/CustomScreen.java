@@ -34,6 +34,10 @@ import java.util.List;
  */
 public class CustomScreen {
     /**
+     * The currently open project.
+     */
+    private Project project;
+    /**
      * The button that does the login action.
      */
     private JButton loginButton;
@@ -93,8 +97,10 @@ public class CustomScreen {
 
     /**
      * Creator for the CustomScreen class, that holds the courses and tasks.
+     * @param toolWindow The Toolwindow this view belongs to
      */
     public CustomScreen(ToolWindow toolWindow) {
+        this.project = toolWindow.getProject();
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
         ApiHandler apiHandler = new ApiHandler();
@@ -129,8 +135,8 @@ public class CustomScreen {
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Project project = ProjectManager.getInstance().getDefaultProject();
-                ShowSettingsUtil.getInstance().showSettingsDialog(project, "TIDE settings");
+                Project defaultProject = ProjectManager.getInstance().getDefaultProject();
+                ShowSettingsUtil.getInstance().showSettingsDialog(defaultProject, "TIDE Settings");
             }
         });
 
@@ -303,6 +309,7 @@ public class CustomScreen {
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
                 try {
+                    OutputWindow.showWindow(project);
                     api.loadExercise(courseName, courseTask.getPath(), "--all");
                 } catch (IOException ex) {
                     com.api.LogHandler.logError("268 CustomScreen.createExercise(CourseTask courseTask, String courseName)", ex);

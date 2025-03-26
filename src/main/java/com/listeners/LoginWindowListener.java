@@ -1,6 +1,7 @@
 package com.listeners;
 
 import com.api.ApiHandler;
+import com.api.LogHandler;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
@@ -35,7 +36,9 @@ public final class LoginWindowListener implements ToolWindowManagerListener  {
                 }
             }
             toolWindow.getContentManager().addContent(
-                    com.intellij.ui.content.ContentFactory.getInstance().createContent(new CustomScreen(toolWindow).getContent(), "Courses", false));
+                    com.intellij.ui.content.ContentFactory.getInstance()
+                            .createContent(new CustomScreen(toolWindow)
+                                    .getContent(), "Courses", false));
         }
         if ("Course Task".equals(toolWindow.getId())) {
             System.out.println("course view was opened");
@@ -50,6 +53,21 @@ public final class LoginWindowListener implements ToolWindowManagerListener  {
             toolWindow.getContentManager().addContent(
                     com.intellij.ui.content.ContentFactory.getInstance().createContent(
                             new CoursePaneWindow(toolWindow).getContent(), "Course View", false));
+        }
+        if ("Output Window".equals(toolWindow.getId())) {
+            System.out.println("output window was opened");
+            LogHandler.logInfo("LoginWindowListener: Output window was opened.");
+            for (Content content : contentManager.getContents()) {
+                if ("Output".equals(content.getTabName())) {
+                    // Select existing tab instead of adding a new one
+                    contentManager.setSelectedContent(content);
+                    System.out.println("Tab '" + "Output Window" + "' already exists. Selecting it.");
+                    return;
+                }
+            }
+            toolWindow.getContentManager().addContent(
+                    com.intellij.ui.content.ContentFactory.getInstance().createContent(
+                            new CoursePaneWindow(toolWindow).getContent(), "Output", false));
         }
 
     }

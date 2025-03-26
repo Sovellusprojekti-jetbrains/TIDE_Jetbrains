@@ -115,6 +115,22 @@ public class CourseTaskPane {
         avaaTehtava.addActionListener(event -> {
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
+                //TODO: The following lines of code up to line 133 repeats in many action listeners.
+                // Is there a way to refactor this?
+                VirtualFile file = FileEditorManager
+                        .getInstance(project)
+                        .getSelectedEditor()
+                        .getFile();
+                try {
+                    ActiveState.getInstance().setSubmittable(file);
+                } catch (IOException ex) {
+                    InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
+                    throw new RuntimeException(ex);
+                }
+                if (!ActiveState.getInstance().isSubmittable()) {
+                    InfoView.displayWarning("File in editor is not a tim task!");
+                    return;
+                }
                 try {
                     desktop.browse(new URI("https://timbeta01.tim.education"));
                 } catch (IOException | URISyntaxException e) {
@@ -130,6 +146,7 @@ public class CourseTaskPane {
                 com.views.InfoView.displayWarning("No files open in editor!");
                 return;
             }
+            OutputWindow.showWindow(project);
 
             VirtualFile file = FileEditorManager
                     .getInstance(project)
@@ -140,14 +157,24 @@ public class CourseTaskPane {
             if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
                 return;
             }
+            try {
+                ActiveState.getInstance().setSubmittable(file);
+            } catch (IOException ex) {
+                InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
+                throw new RuntimeException(ex);
+            }
+            if (!ActiveState.getInstance().isSubmittable()) {
+                InfoView.displayWarning("File in editor is not a tim task!");
+                return;
+            }
             ApiHandler handler = new ApiHandler();
             ActiveState stateManager = ActiveState.getInstance();
             String coursePath = stateManager.getCourseName(file.getPath());
             try {
                 handler.resetSubTask(file, coursePath);
             } catch (IOException e) {
-                com.api.LogHandler.logError("124 CourseTaskPane resetButton ActionListener", e);
-                com.api.LogHandler.logDebug(new String[]{"130 VirtualFile file", "141 String coursePath"},
+                com.api.LogHandler.logError("142 CourseTaskPane resetButton ActionListener", e);
+                com.api.LogHandler.logDebug(new String[]{"148 VirtualFile file", "169 String coursePath"},
                         new String[]{file.toString(), coursePath});
                 InfoView.displayError(".timdata file not found!");
                 throw new RuntimeException(e);
@@ -164,6 +191,7 @@ public class CourseTaskPane {
                 printOutput("Please open a file to submit in the editor.");
                 return;
             }
+            OutputWindow.showWindow(project);
 
             VirtualFile file = FileEditorManager
                     .getInstance(project)
@@ -176,13 +204,23 @@ public class CourseTaskPane {
             // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
             // String path = submitAll ? file.getParent().getPath() : file.getPath();
 
-            showOutputWindow();
+            try {
+                ActiveState.getInstance().setSubmittable(file);
+            } catch (IOException ex) {
+                InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
+                throw new RuntimeException(ex);
+            }
+            if (!ActiveState.getInstance().isSubmittable()) {
+                InfoView.displayWarning("File in editor is not a tim task!");
+                return;
+            }
+
             new ApiHandler().submitExercise(file);
         });
 
 
         showOutputButton.addActionListener(event -> {
-            showOutputWindow();
+            OutputWindow.showWindow(project);
         });
 
 
@@ -196,9 +234,15 @@ public class CourseTaskPane {
                 if ("login".equals(evt.getPropertyName())) {
                     showWindow();
                 }
-                if ("tideResponse".equals(evt.getPropertyName())) {
+                if ("tideSubmitResponse".equals(evt.getPropertyName())) {
                     String response = (String) evt.getNewValue();
                     handleSubmitResponse(response);
+                }
+                if ("disableButtons".equals(evt.getPropertyName())) {
+                    disableButtons();
+                }
+                if ("enableButtons".equals(evt.getPropertyName())) {
+                    enableButtons();
                 }
             }
         });
@@ -208,31 +252,13 @@ public class CourseTaskPane {
 
 
     /**
-     * Show and return output window.
-     * @return Output window
-     */
-    public ToolWindow showOutputWindow() {
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        ToolWindow window = toolWindowManager.getToolWindow("Output Window");
-
-        if (window != null) {
-            ApplicationManager.getApplication().invokeLater(() -> {
-                window.show(null);
-            });
-        }
-
-        return window;
-    }
-
-
-    /**
      * Prints a string to the output toolWindow.
      * @param output String to print
      */
     public void printOutput(String output) {
-        ToolWindow window = showOutputWindow();
-
-        if (window != null) {
+        OutputWindow.showWindow(project);
+        OutputWindow outputWindow = OutputWindow.getInstance();
+        if (outputWindow != null) {
             OutputWindow.getInstance().printText(output);
         }
     }
@@ -250,6 +276,7 @@ public class CourseTaskPane {
             }
         });
     }
+
 
     /**
      * Makes the toolwindow available.
@@ -282,7 +309,6 @@ public class CourseTaskPane {
                 .getFile();
 
         String path = file.getPath();
-        printOutput(response);
         Pattern pattern = Pattern.compile("run: \\d+");
         Matcher matcher = pattern.matcher(response);
         List<Integer> n = new ArrayList<>();
@@ -303,6 +329,24 @@ public class CourseTaskPane {
             ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
         }
         System.out.println(path);
+    }
+
+    /**
+     * Private method for disabling buttons.
+     */
+    private void disableButtons() {
+        this.avaaTehtava.setEnabled(false);
+        this.resetButton.setEnabled(false);
+        this.submitButton.setEnabled(false);
+    }
+
+    /**
+     * Private method for enabling buttons.
+     */
+    private void enableButtons() {
+        this.avaaTehtava.setEnabled(true);
+        this.resetButton.setEnabled(true);
+        this.submitButton.setEnabled(true);
     }
 }
 

@@ -1,20 +1,22 @@
 <idea-plugin>
     <id>com.views.TIDE-JetBrains</id>
     <name>TIDE</name>
-    <vendor email="matti.maikalainen@yritys.com" url="https://www.yritys.com">yritys</vendor>
+    <vendor email="matti.maikalainen@yritys.com" url="https://www.yritys.com">University of Jyväskylä</vendor>
 
     <description><![CDATA[
     My first IntelliJ plugin. lorem ipsum need 40 chars for description.
     ]]></description>
 
     <!-- Compatibility -->
-    <idea-version since-build="231" until-build="231.*" />
+    <idea-version since-build="231" until-build="251.*" />
 
-    <!-- Dependencies -->
-    <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.modules.platform</depends>
+
+
 
     <!-- Tool Window -->
     <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="com.listeners.StartUp"/>
         <toolWindow id="TIDE Tool Window"
                     factoryClass="com.factories.LoginWindowFactory"
                     anchor="left"

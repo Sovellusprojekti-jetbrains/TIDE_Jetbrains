@@ -31,6 +31,17 @@ public class ResetExercise extends AnAction {
         if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
             return;
         }
+        try {
+            ActiveState.getInstance().setSubmittable(file);
+            ActiveState.getInstance().messageChanges(); //Might be unnecessary but just in case
+        } catch (IOException ex) { //If actions are disabled prior login, this shouldn't be issue.
+            InfoView.displayError("An error occurred during reset action!");
+            throw new RuntimeException(ex);
+        }
+        if (!ActiveState.getInstance().isSubmittable()) {
+            InfoView.displayWarning("File in editor is not a tim task!");
+            return;
+        }
         ApiHandler handler = new ApiHandler();
         ActiveState stateManager = ActiveState.getInstance();
         String coursePath = stateManager.getCourseName(file.getPath());
@@ -47,5 +58,18 @@ public class ResetExercise extends AnAction {
             InfoView.displayError("An error occurred during task reset! Check Tide CLI");
             throw new RuntimeException(ex);
         }
+    }
+
+    /**
+     * This function is called by ActiveState to update the actions state (able/disabled).
+     * @param e AnActionEvent originating from idea's internal messaging system.
+     */
+    @Override
+    public void update(@NotNull AnActionEvent e) {
+        if (!ActiveState.getInstance().getLogin()) {
+            e.getPresentation().setEnabled(ActiveState.getInstance().getLogin());
+            return;
+        }
+        e.getPresentation().setEnabled(ActiveState.getInstance().isSubmittable());
     }
 }
