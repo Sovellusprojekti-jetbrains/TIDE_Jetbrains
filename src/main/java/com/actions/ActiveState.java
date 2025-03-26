@@ -24,7 +24,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
+import java.util.regex.Matcher;
 
 
 /**
@@ -248,7 +248,9 @@ public class ActiveState {
     public void setSubmittable(VirtualFile child) throws IOException {
         File parent = new File(Settings.getPath());
         if (child.getCanonicalPath() != null) {
-            this.isSubmittable = child.getCanonicalPath().contains(parent.getCanonicalPath());
+            this.isSubmittable = child.getCanonicalPath()
+                    .replaceAll("/", Matcher.quoteReplacement(File.separator))
+                    .contains(parent.getCanonicalPath());
         } else {
             this.isSubmittable = false;
         }
