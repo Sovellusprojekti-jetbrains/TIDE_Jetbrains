@@ -1,11 +1,3 @@
-include("plugin")
-include("common")
-include(
-    "idea",
-    "rider"
-)
-
-
 pluginManagement {
     repositories {
         mavenCentral()
