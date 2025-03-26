@@ -23,7 +23,7 @@ val runIdeForUiTests by intellijPlatformTesting.runIde.registering {
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.0.20"
-    id("org.jetbrains.intellij.platform") version "2.2.1"
+    id("org.jetbrains.intellij.platform") version "2.4.0"
 }
 
 group = "org.jyu"
