@@ -13,7 +13,6 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.views.OutputWindow;
 import com.intellij.util.ReflectionUtil;
 import org.jdesktop.swingx.action.ActionManager;
 import org.jetbrains.annotations.NotNull;
@@ -72,7 +71,7 @@ public class ActiveState {
      * Simple method to get the login status.
      * @return Login status as boolean value.
      */
-    public boolean GetLogin(){
+    public boolean getLogin() {
         return isLoggedIn;
     }
 

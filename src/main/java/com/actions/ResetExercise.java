@@ -66,8 +66,8 @@ public class ResetExercise extends AnAction {
      */
     @Override
     public void update(@NotNull AnActionEvent e) {
-        if(!ActiveState.getInstance().GetLogin()){
-            e.getPresentation().setEnabled(ActiveState.getInstance().GetLogin());
+        if (!ActiveState.getInstance().getLogin()){
+            e.getPresentation().setEnabled(ActiveState.getInstance().getLogin());
             return;
         }
         e.getPresentation().setEnabled(ActiveState.getInstance().isSubmittable());
