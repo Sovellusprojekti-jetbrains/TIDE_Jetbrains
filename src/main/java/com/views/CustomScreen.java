@@ -4,6 +4,7 @@ import com.actions.Settings;
 import com.api.ApiHandler;
 import com.api.JsonHandler;
 import com.api.LogHandler;
+import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -20,6 +21,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.nio.file.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import com.course.*;
 import com.intellij.ui.treeStructure.Tree;
@@ -79,18 +82,6 @@ public class CustomScreen {
     private JProgressBar coursesProgress;
 
     /**
-     * An integer for the red band of a color.
-     */
-    private final int red = 40;
-    /**
-     * The green band of an RGB color.
-     */
-    private final int green = 40;
-    /**
-     * The blue band of an RGB color.
-     */
-    private final int blue = 40;
-    /**
      * A color definition.
      */
     private final Color bgColor = JBColor.background();
@@ -103,7 +94,7 @@ public class CustomScreen {
     /**
      * Creator for the CustomScreen class, that holds the courses and tasks.
      */
-    public CustomScreen() {
+    public CustomScreen(ToolWindow toolWindow) {
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
         ApiHandler apiHandler = new ApiHandler();
@@ -218,13 +209,14 @@ public class CustomScreen {
                 final int fontSize = 26;
                 labelPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
 
-                JPanel singleCourse = new JPanel(new GridBagLayout());
-
                 JLabel label = new JLabel();
                 label.setText(course.getName());
                 label.setFont(new Font("Arial", Font.BOLD, fontSize));
-                label.setHorizontalAlignment(SwingConstants.CENTER);
+                label.setHorizontalAlignment(SwingConstants.LEFT);
+
                 labelPanel.add(label);
+
+                JPanel singleCourse = new JPanel(new GridBagLayout());
 
                 // Makes own subpanel for every task
                 // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
@@ -243,12 +235,9 @@ public class CustomScreen {
 
                 final int thickness = 4;
 
-                // Tehdään scrollpane johon lätkäistään kaikki tähän mennessä tehty.
-                //panel.setPreferredSize(panel.getPreferredSize()); // Ensure the inner panel sizes itself
                 JScrollPane scrollPane = new JBScrollPane(panel);
-                scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, thickness));
-                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // Disable internal scrolling
-                //scrollPane.setPreferredSize(new Dimension(panel.getPreferredSize().width, panel.getPreferredSize().height + 10));
+                scrollPane.setBorder(BorderFactory.createLineBorder(JBColor.border(), thickness));
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
                 gbc = new GridBagConstraints();
                 gbc.gridx = 0;
@@ -271,7 +260,6 @@ public class CustomScreen {
 
 
                 coursePanel.add(singleCourse);
-                //coursePanel.add(new JSeparator(SwingConstants.VERTICAL));
         }
         });
     }
@@ -370,6 +358,7 @@ public class CustomScreen {
             List<SubTask> subtasks = jsonHandler.jsonToSubtask(timData);
             Tree tree = createTree(subtasks, courseTask);
             JBScrollPane container = new JBScrollPane();
+            container.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
             container.add(tree);
             container.setViewportView(tree);
             subPanel.add(container, BorderLayout.SOUTH);
