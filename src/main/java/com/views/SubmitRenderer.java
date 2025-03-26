@@ -65,13 +65,16 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
                 if (node.getChildCount() == 0 &&  s.contains(node.toString())) {
                     DefaultMutableTreeNode parentNode =  (DefaultMutableTreeNode) node.getParent();
                     SubTask parent = (SubTask) parentNode.getUserObject();
-                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == 0) {
+                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == 0 &&
+                            s.contains(parent.getIdeTaskId())) {
                         return AllIcons.Debugger.Db_set_breakpoint;
                     }
-                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) < parent.getMaxPoints()) {
+                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) < parent.getMaxPoints() &&
+                    s.contains(parent.getIdeTaskId())) {
                         return AllIcons.Debugger.Db_no_suspend_breakpoint;
                     }
-                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == parent.getMaxPoints()) {
+                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == parent.getMaxPoints() &&
+                            s.contains(parent.getIdeTaskId())) {
                         return AllIcons.General.SuccessDialog;
                     }
                 }
