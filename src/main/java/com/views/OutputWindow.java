@@ -50,7 +50,7 @@ public class OutputWindow {
                     setWindowAvailable();
                 }
                 if ("tideBaseResponse".equals(evt.getPropertyName())) {
-                    showWindow();
+                    showWindow(project);
                     printText((String) evt.getNewValue());
                 }
             }
@@ -126,8 +126,9 @@ public class OutputWindow {
 
     /**
      * Displays the toolwindow.
+     * @param project The current project
      */
-    public void showWindow() {
+    public static void showWindow(Project project) {
         ApplicationManager.getApplication().invokeLater(() -> {
             ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
             ToolWindow window = toolWindowManager.getToolWindow("Output Window");

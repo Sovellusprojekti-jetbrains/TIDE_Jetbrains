@@ -36,7 +36,9 @@ public final class LoginWindowListener implements ToolWindowManagerListener  {
                 }
             }
             toolWindow.getContentManager().addContent(
-                    com.intellij.ui.content.ContentFactory.getInstance().createContent(new CustomScreen().getContent(), "Courses", false));
+                    com.intellij.ui.content.ContentFactory.getInstance()
+                            .createContent(new CustomScreen(toolWindow)
+                                    .getContent(), "Courses", false));
         }
         if ("Course Task".equals(toolWindow.getId())) {
             System.out.println("course view was opened");
