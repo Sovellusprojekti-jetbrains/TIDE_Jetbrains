@@ -69,6 +69,11 @@ public class ActiveState {
         });
     }
 
+    public boolean GetLogin(){
+        return isLoggedIn;
+    }
+
+
     /**
      * Calls the state manager for use.
      * @return The state manager.
