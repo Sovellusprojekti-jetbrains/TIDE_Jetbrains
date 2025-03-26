@@ -69,6 +69,10 @@ public class ActiveState {
         });
     }
 
+    /**
+     * Simple method to get the login status.
+     * @return Login status as boolean value.
+     */
     public boolean GetLogin(){
         return isLoggedIn;
     }
@@ -241,13 +245,28 @@ public class ActiveState {
     }
 
     /**
+     * This method checks if the opened file is .timdata or some log file.
+     * @param file Vrtual file in inspection.
+     * @return true if allowed file, false otherwise.
+     */
+    private boolean allowedName(VirtualFile file) {
+        String[] blacklist = {".timdata", "log"};
+        for (String name: blacklist) {
+            if (file.getName().contains(name)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * This method evaluates if the file opened in the editor is in sub-path of task download path.
      * @param child File under evaluation should be child of task download folder.
      * @throws IOException If making File object fails.
      */
     public void setSubmittable(VirtualFile child) throws IOException {
         File parent = new File(Settings.getPath());
-        if (child.getCanonicalPath() != null) {
+        if (child.getCanonicalPath() != null && this.allowedName(child)) {
             this.isSubmittable = child.getCanonicalPath()
                     .replaceAll("/", Matcher.quoteReplacement(File.separator))
                     .contains(parent.getCanonicalPath());
