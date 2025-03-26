@@ -4,6 +4,7 @@ import com.actions.Settings;
 import com.api.ApiHandler;
 import com.api.JsonHandler;
 import com.api.LogHandler;
+import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -30,6 +31,10 @@ import java.util.List;
  * Class for displaying a template course window.
  */
 public class CustomScreen {
+    /**
+     * The currently open project.
+     */
+    private Project project;
     /**
      * The button that does the login action.
      */
@@ -102,8 +107,10 @@ public class CustomScreen {
 
     /**
      * Creator for the CustomScreen class, that holds the courses and tasks.
+     * @param toolWindow The Toolwindow this view belongs to
      */
-    public CustomScreen() {
+    public CustomScreen(ToolWindow toolWindow) {
+        this.project = toolWindow.getProject();
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
         ApiHandler apiHandler = new ApiHandler();
@@ -138,8 +145,8 @@ public class CustomScreen {
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Project project = ProjectManager.getInstance().getDefaultProject();
-                ShowSettingsUtil.getInstance().showSettingsDialog(project, "TIDE Settings");
+                Project defaultProject = ProjectManager.getInstance().getDefaultProject();
+                ShowSettingsUtil.getInstance().showSettingsDialog(defaultProject, "TIDE Settings");
             }
         });
 
@@ -313,7 +320,7 @@ public class CustomScreen {
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
                 try {
-                    OutputWindow.getInstance().showWindow();
+                    OutputWindow.showWindow(project);
                     api.loadExercise(courseName, courseTask.getPath(), "--all");
                 } catch (IOException ex) {
                     com.api.LogHandler.logError("268 CustomScreen.createExercise(CourseTask courseTask, String courseName)", ex);

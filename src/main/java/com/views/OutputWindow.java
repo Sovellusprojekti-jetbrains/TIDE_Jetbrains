@@ -3,7 +3,6 @@ package com.views;
 import com.actions.ActiveState;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.components.JBScrollPane;
@@ -51,6 +50,7 @@ public class OutputWindow {
                     setWindowAvailable();
                 }
                 if ("tideBaseResponse".equals(evt.getPropertyName())) {
+                    showWindow(project);
                     printText((String) evt.getNewValue());
                 }
             }
@@ -71,11 +71,6 @@ public class OutputWindow {
      * @return The toolwindow itself.
      */
     public static OutputWindow getInstance() {
-        if (instance == null) {
-            Project project = ProjectManager.getInstance().getOpenProjects()[0];
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            instance = (OutputWindow) toolWindowManager.getToolWindow("Output Window");
-        }
         return instance;
     }
 
@@ -131,8 +126,9 @@ public class OutputWindow {
 
     /**
      * Displays the toolwindow.
+     * @param project The current project
      */
-    public void showWindow() {
+    public static void showWindow(Project project) {
         ApplicationManager.getApplication().invokeLater(() -> {
             ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
             ToolWindow window = toolWindowManager.getToolWindow("Output Window");
