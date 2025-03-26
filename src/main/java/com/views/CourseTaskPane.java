@@ -244,6 +244,9 @@ public class CourseTaskPane {
                 if ("enableButtons".equals(evt.getPropertyName())) {
                     enableButtons();
                 }
+                if ("setDemoName".equals(evt.getPropertyName())) {
+                    setDemoName((String) evt.getNewValue());
+                }
             }
         });
 
@@ -347,6 +350,10 @@ public class CourseTaskPane {
         this.avaaTehtava.setEnabled(true);
         this.resetButton.setEnabled(true);
         this.submitButton.setEnabled(true);
+    }
+
+    private void setDemoName(String name) {
+        this.tehtavaNimi.setText(name);
     }
 }
 

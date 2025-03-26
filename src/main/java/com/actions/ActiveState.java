@@ -270,6 +270,10 @@ public class ActiveState {
         } else {
             this.isSubmittable = false;
         }
+        if (this.isSubmittable) {
+            String demo = this.getCourseName(child.getPath());
+            System.out.println(demo);
+        }
         this.messageChanges();
     }
 
