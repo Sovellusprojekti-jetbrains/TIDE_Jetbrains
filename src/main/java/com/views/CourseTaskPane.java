@@ -341,8 +341,8 @@ public class CourseTaskPane {
         float max = 0.0F;
         for (SubTask task : sub){
                 for (String name : task.getFileName()){
-                    if (name.contains(file.getName())){
-                        max = task.getMaxPoints();
+                    if (name.contains(file.getName()) && (task.getIdeTaskId().equals(file.getParent().getName()) || name.contains(file.getParent().getName())){
+                        max = task.getMaxPoints());
                     }
                 }
         }
