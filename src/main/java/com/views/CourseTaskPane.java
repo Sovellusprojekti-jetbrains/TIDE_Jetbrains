@@ -146,6 +146,7 @@ public class CourseTaskPane {
                 com.views.InfoView.displayWarning("No files open in editor!");
                 return;
             }
+            OutputWindow.showWindow(project);
 
             VirtualFile file = FileEditorManager
                     .getInstance(project)
@@ -190,6 +191,7 @@ public class CourseTaskPane {
                 printOutput("Please open a file to submit in the editor.");
                 return;
             }
+            OutputWindow.showWindow(project);
 
             VirtualFile file = FileEditorManager
                     .getInstance(project)
@@ -212,14 +214,13 @@ public class CourseTaskPane {
                 InfoView.displayWarning("File in editor is not a tim task!");
                 return;
             }
-            OutputWindow.getInstance().showWindow();
 
             new ApiHandler().submitExercise(file);
         });
 
 
         showOutputButton.addActionListener(event -> {
-            OutputWindow.getInstance().showWindow();
+            OutputWindow.showWindow(project);
         });
 
 
@@ -255,8 +256,11 @@ public class CourseTaskPane {
      * @param output String to print
      */
     public void printOutput(String output) {
-        OutputWindow.getInstance().showWindow();
-        OutputWindow.getInstance().printText(output);
+        OutputWindow.showWindow(project);
+        OutputWindow outputWindow = OutputWindow.getInstance();
+        if (outputWindow != null) {
+            OutputWindow.getInstance().printText(output);
+        }
     }
 
 

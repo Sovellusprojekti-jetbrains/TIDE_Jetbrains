@@ -2,14 +2,12 @@ package com.api;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.*;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -122,22 +120,7 @@ public class ApiHandler {
      * @param taskPath path to the folder that has the clicked subtask.
      */
     public void openTaskProject(String taskPath) {
-        try {
-            String command = "";
-            if (Objects.equals(System.getenv("DEVELOP"), "true")) {
-                command = System.getenv("IDEA_LOCATION");
-                var env = System.getenv();
-                System.out.println(env);
-            } else {
-                command = PathManager.getHomePath();
-            }
-
-            handleCommandLine(List.of(command, taskPath));
-        } catch (IOException | InterruptedException ex) {
-            com.api.LogHandler.logError("216 ApiHandler.openTasProject(String taskPath", ex);
-            com.api.LogHandler.logDebug(new String[]{"216 String taskPath"}, new String[]{taskPath});
-            ex.printStackTrace();
-        }
+        TideCommandExecutor.INSTANCE.openTaskProject(taskPath);
     }
 
     /**
