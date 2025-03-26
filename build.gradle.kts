@@ -2,7 +2,7 @@ val riderPlatformVersionProp = prop("riderPlatformVersion")
 val ideaPlatformVersionProp = prop("ideaPlatformVersion")
 val pluginSinceBuildProp = prop("pluginSinceBuild")
 val pluginUntilBuildProp = prop("pluginUntilBuild")
-val projectType = System.getenv("IDE_TYPE") ?: "IC"
+// val projectType = System.getenv("IDE_TYPE") ?: "IC"
 
 val runIdeForUiTests by intellijPlatformTesting.runIde.registering {
     task {
@@ -21,7 +21,6 @@ val runIdeForUiTests by intellijPlatformTesting.runIde.registering {
 }
 
 plugins {
-    //idea
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.0.20"
     id("org.jetbrains.intellij.platform") version "2.2.1"
@@ -52,12 +51,12 @@ repositories {
 
 dependencies {
     intellijPlatform {
+        // These can be readded if actually needed
         /*
         if (projectType == "RD") {
             create("RD", riderPlatformVersionProp, useInstaller = false)
         } else {
             create("IC", ideaPlatformVersionProp, useInstaller = false)
-            //bundledPlugins("com.intellij.java", "JUnit")
         }*/
         create("IC", ideaPlatformVersionProp, useInstaller = false)
 
@@ -89,6 +88,7 @@ tasks {
             untilBuild.set(pluginUntilBuildProp)
 
     }
+    // Plugin signing might be important later so these are only commented out
     /*
     signPlugin {
         certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
@@ -106,5 +106,7 @@ tasks.test {
     useJUnitPlatform()
 }
 
+
+// From https://gitlab.jyu.fi/tie/tools/comtest.intellij/-/blob/master/build.gradle.kts
 fun prop(key: String) = extra.properties[key] as? String
     ?: error("Property `$key` is not defined in gradle.properties")
