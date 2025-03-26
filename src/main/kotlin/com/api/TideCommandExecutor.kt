@@ -5,7 +5,9 @@ import com.actions.Settings
 import com.course.SubTask
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.EDT
+import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.fileEditor.FileDocumentManager
@@ -221,6 +223,30 @@ object TideCommandExecutor {
             }
         } else {
             com.views.InfoView.displayError("File open in editor is not a tide task!")
+        }
+    }
+
+
+    /**
+     * Opens a directory as a project in a new IDE instance.
+     * @param taskPath Path to the directory to be opened as a project.
+     */
+    fun openTaskProject(taskPath: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            var command: String = ""
+            if (System.getenv("DEVELOP").equals("true")) {
+                command = System.getenv("IDEA_LOCATION")
+                LogHandler.logDebug(arrayOf("System.getenv(\"IDEA_LOCATION\")"),
+                    arrayOf(System.getenv("IDEA_LOCATION")))
+            } else {
+                // TODO: This gets the directory where the IDE is installed.
+                // Implement actual handling of supported IDEs and operating systems.
+                command = PathManager.getHomePath()
+            }
+
+            // how does this behave in production?
+            // do we need to catch and handle or print the string returned by handleCommandLine?
+            handleCommandLine(listOf(command, taskPath))
         }
     }
 
