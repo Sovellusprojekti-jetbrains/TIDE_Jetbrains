@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8bbbba4f-5a67-4bb1-8f91-255d97c05634" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/actions/ActiveState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/actions/ActiveState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/views/CourseTaskPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CourseTaskPane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/views/CustomScreen.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +34,17 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="TIDE-JetBrains" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="TIDE-JetBrains" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="TIDE-JetBrains" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="verification" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -137,8 +146,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.Jetbrains [runIdeForUiTests]" />
         <item itemvalue="Gradle.Jetbrains [UnitTest]" />
+        <item itemvalue="Gradle.Jetbrains [runIdeForUiTests]" />
       </list>
     </recent_temporary>
   </component>

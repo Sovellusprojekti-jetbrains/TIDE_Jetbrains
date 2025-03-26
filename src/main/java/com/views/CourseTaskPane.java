@@ -3,8 +3,10 @@
 
 package com.views;
 import java.io.File;
+import java.util.Objects;
 import java.util.regex.*;
 import com.actions.ActiveState;
+import com.actions.Settings;
 import com.actions.StateManager;
 import com.api.ApiHandler;
 import com.api.JsonHandler;
@@ -329,17 +331,20 @@ public class CourseTaskPane {
     private void setPoints(VirtualFile file, Float points) {
         TimDataHandler tim = new TimDataHandler();
         JsonHandler json = new JsonHandler();
-        String data = tim.readTimData(file.getParent().getParent().getParent().getCanonicalPath());
+        VirtualFile parentFile = file.getParent();
+        String data = "";
+        while (data.isEmpty() && !Objects.equals(parentFile.getCanonicalPath(), Settings.getPath())) {
+            data = tim.readTimData(parentFile.getCanonicalPath());
+            parentFile = parentFile.getParent();
+        }
         List<SubTask> sub = json.jsonToSubtask(data);
         float max = 0.0F;
         for (SubTask task : sub){
-            if (task.getIdeTaskId().equals(file.getParent().getName())){
                 for (String name : task.getFileName()){
-                    if (name.equals(file.getName())){
+                    if (name.contains(file.getName())){
                         max = task.getMaxPoints();
                     }
                 }
-            }
         }
         pisteLabel.setText("Points : "+points +"/"+max);
     }
