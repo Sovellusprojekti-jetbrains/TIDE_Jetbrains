@@ -10,7 +10,6 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.views.OutputWindow;
 import com.intellij.util.ReflectionUtil;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
