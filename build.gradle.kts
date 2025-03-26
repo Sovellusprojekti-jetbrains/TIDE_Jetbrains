@@ -2,7 +2,7 @@ val riderPlatformVersionProp = prop("riderPlatformVersion")
 val ideaPlatformVersionProp = prop("ideaPlatformVersion")
 val pluginSinceBuildProp = prop("pluginSinceBuild")
 val pluginUntilBuildProp = prop("pluginUntilBuild")
-// val projectType = System.getenv("IDE_TYPE") ?: "IC"
+val projectType = System.getenv("IDE_TYPE") ?: "IC"
 
 val runIdeForUiTests by intellijPlatformTesting.runIde.registering {
     task {
@@ -51,14 +51,12 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        // These can be readded if actually needed
-        /*
         if (projectType == "RD") {
             create("RD", riderPlatformVersionProp, useInstaller = false)
         } else {
             create("IC", ideaPlatformVersionProp, useInstaller = false)
-        }*/
-        create("IC", ideaPlatformVersionProp, useInstaller = false)
+            bundledPlugins("com.intellij.java", "JUnit")
+        }
 
     }
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
