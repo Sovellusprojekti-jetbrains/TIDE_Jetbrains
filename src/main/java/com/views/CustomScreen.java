@@ -21,8 +21,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.nio.file.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
 import com.course.*;
 import com.intellij.ui.treeStructure.Tree;
