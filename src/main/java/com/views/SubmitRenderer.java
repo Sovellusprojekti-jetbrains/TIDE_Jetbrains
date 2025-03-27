@@ -1,8 +1,6 @@
 package com.views;
 
-import com.actions.ActiveState;
 import com.actions.StateManager;
-import com.api.JsonHandler;
 import com.course.SubTask;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
@@ -11,7 +9,6 @@ import com.intellij.ui.JBColor;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.util.List;
 
@@ -58,23 +55,23 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
      */
     private Icon isSubmitted(Object value) {
         List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;;
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
         //String regex = node.getParent().toString() + "/" + node.toString();
         if (submits != null) {
             for (String s : submits) {
                 if (node.getChildCount() == 0 &&  s.contains(node.toString())) {
                     DefaultMutableTreeNode parentNode =  (DefaultMutableTreeNode) node.getParent();
                     SubTask parent = (SubTask) parentNode.getUserObject();
-                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == 0 &&
-                            s.contains(parent.getIdeTaskId())) {
+                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == 0
+                            && s.contains(parent.getIdeTaskId())) {
                         return AllIcons.Debugger.Db_set_breakpoint;
                     }
-                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) < parent.getMaxPoints() &&
-                    s.contains(parent.getIdeTaskId())) {
+                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) < parent.getMaxPoints()
+                            && s.contains(parent.getIdeTaskId())) {
                         return AllIcons.Debugger.Db_no_suspend_breakpoint;
                     }
-                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == parent.getMaxPoints() &&
-                            s.contains(parent.getIdeTaskId())) {
+                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == parent.getMaxPoints()
+                            && s.contains(parent.getIdeTaskId())) {
                         return AllIcons.General.SuccessDialog;
                     }
                 }

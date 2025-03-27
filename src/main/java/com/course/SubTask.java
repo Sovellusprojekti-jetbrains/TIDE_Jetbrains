@@ -96,10 +96,19 @@ public class SubTask {
         this.taskDirectory = taskDir;
     }
 
+    /**
+     * getter for the maximum amount of points you can get from a subtask.
+     * @return maximum amount of points
+     */
     public float getMaxPoints() {
         return this.maxPoints;
     }
-    public String toString(){
+
+    /**
+     * Makes the object into a string that only contains the ideTaskid, so that the object can be used in the treeview.
+     * @return string represantation of the object
+     */
+    public String toString() {
         return this.ideTaskId;
     }
 }
