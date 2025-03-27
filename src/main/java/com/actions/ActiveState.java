@@ -3,6 +3,8 @@ package com.actions;
 import com.api.ApiHandler;
 import com.api.LogHandler;
 import com.course.Course;
+import com.course.CourseTask;
+import com.course.SubTask;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
@@ -36,6 +38,7 @@ public class ActiveState {
     private boolean isLoggedIn = false;
     private Project project;
     private boolean isSubmittable = false;
+    private List<SubTask> subTaskList;
 
     /**
      * Constructor for active state attempts to hide the right and bottom toolwindows.
@@ -255,6 +258,33 @@ public class ActiveState {
         }
         return true;
     }
+    //Not ideal but is a start
+    private String findTaskName(String course, VirtualFile file) {
+        Course courseTemp = null;
+        for (Course temp: this.courseList) {
+            if (temp.getName().equals(course)) {
+                courseTemp = temp;
+                break;
+            }
+        }
+        if (courseTemp != null) {
+            SubTask subTaskTemp = null;
+                for (SubTask temp2 : this.subTaskList) {
+                    if (file.getPath().contains(temp2.getFileName().getFirst())) {
+                        subTaskTemp = temp2;
+                        break;
+                    }
+                }
+            if (subTaskTemp != null) {
+                for (CourseTask temp3 : courseTemp.getTasks()) {
+                    if (temp3.getPath().equals(subTaskTemp.getPath())) {
+                        return temp3.getName();
+                    }
+                }
+            }
+        }
+        return "";
+    }
 
     /**
      * This method evaluates if the file opened in the editor is in sub-path of task download path.
@@ -271,8 +301,8 @@ public class ActiveState {
             this.isSubmittable = false;
         }
         if (this.isSubmittable) {
-            String demo = this.getCourseName(child.getPath());
-            System.out.println(demo);
+            String course = this.getCourseName(child.getPath());
+            String demo = this.findTaskName(course, child);
         }
         this.messageChanges();
     }
@@ -288,6 +318,10 @@ public class ActiveState {
         } else {
             pcs.firePropertyChange("enableButtons", null, null);
         }
+    }
+
+    public void setSubTasks(List<SubTask> subTasks) {
+        this.subTaskList = subTasks;
     }
 }
 
