@@ -5,6 +5,7 @@ import com.api.ApiHandler;
 import com.api.JsonHandler;
 import com.api.LogHandler;
 import com.api.TimDataHandler;
+import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -31,6 +32,10 @@ import java.util.List;
  * Class for displaying a template course window.
  */
 public class CustomScreen {
+    /**
+     * The currently open project.
+     */
+    private Project project;
     /**
      * The button that does the login action.
      */
@@ -80,18 +85,6 @@ public class CustomScreen {
     private JProgressBar coursesProgress;
 
     /**
-     * An integer for the red band of a color.
-     */
-    private final int red = 40;
-    /**
-     * The green band of an RGB color.
-     */
-    private final int green = 40;
-    /**
-     * The blue band of an RGB color.
-     */
-    private final int blue = 40;
-    /**
      * A color definition.
      */
     private final Color bgColor = JBColor.background();
@@ -103,8 +96,10 @@ public class CustomScreen {
 
     /**
      * Creator for the CustomScreen class, that holds the courses and tasks.
+     * @param toolWindow The Toolwindow this view belongs to
      */
-    public CustomScreen() {
+    public CustomScreen(ToolWindow toolWindow) {
+        this.project = toolWindow.getProject();
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
         ApiHandler apiHandler = new ApiHandler();
@@ -139,8 +134,8 @@ public class CustomScreen {
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Project project = ProjectManager.getInstance().getDefaultProject();
-                ShowSettingsUtil.getInstance().showSettingsDialog(project, "TIDE Settings");
+                Project defaultProject = ProjectManager.getInstance().getDefaultProject();
+                ShowSettingsUtil.getInstance().showSettingsDialog(defaultProject, "TIDE Settings");
             }
         });
 
@@ -219,12 +214,14 @@ public class CustomScreen {
                 final int fontSize = 26;
                 labelPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
 
-                JPanel singleCourse = new JPanel(new GridBagLayout());
-
                 JLabel label = new JLabel();
                 label.setText(course.getName());
                 label.setFont(new Font("Arial", Font.BOLD, fontSize));
+                label.setHorizontalAlignment(SwingConstants.LEFT);
+
                 labelPanel.add(label);
+
+                JPanel singleCourse = new JPanel(new GridBagLayout());
 
                 // Makes own subpanel for every task
                 // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
@@ -243,12 +240,9 @@ public class CustomScreen {
 
                 final int thickness = 4;
 
-                // Tehdään scrollpane johon lätkäistään kaikki tähän mennessä tehty.
-                //panel.setPreferredSize(panel.getPreferredSize()); // Ensure the inner panel sizes itself
                 JScrollPane scrollPane = new JBScrollPane(panel);
-                scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, thickness));
-                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER); // Disable internal scrolling
-                //scrollPane.setPreferredSize(new Dimension(panel.getPreferredSize().width, panel.getPreferredSize().height + 10));
+                scrollPane.setBorder(BorderFactory.createLineBorder(JBColor.border(), thickness));
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
                 gbc = new GridBagConstraints();
                 gbc.gridx = 0;
@@ -271,7 +265,6 @@ public class CustomScreen {
 
 
                 coursePanel.add(singleCourse);
-                //coursePanel.add(new JSeparator(SwingConstants.VERTICAL));
         }
         });
     }
@@ -299,11 +292,12 @@ public class CustomScreen {
         JLabel labelWeek = new JLabel();
         labelWeek.setText(courseTask.getName());
         labelWeek.setFont(new Font("Arial", Font.BOLD, fontsize));
-        subPanel.add(labelWeek, BorderLayout.WEST);
+        //subPanel.add(labelWeek, BorderLayout.WEST);
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.setBackground(bgColor);
         subPanel.setBackground(bgColor);
+
 
         JButton dButton = new JButton();
         dButton.setText("Download");
@@ -314,7 +308,7 @@ public class CustomScreen {
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
                 try {
-                 //   OutputWindow.getInstance().showWindow();
+                    OutputWindow.showWindow(project);
                     api.loadExercise(courseName, courseTask.getPath(), "--all");
                 } catch (IOException ex) {
                     com.api.LogHandler.logError("268 CustomScreen.createExercise(CourseTask courseTask, String courseName)", ex);
@@ -341,7 +335,12 @@ public class CustomScreen {
         });
         buttonPanel.add(oButton);
 
-        subPanel.add(buttonPanel, BorderLayout.EAST);
+        JPanel nameAndButtonPanel = new JPanel(new BorderLayout());
+        nameAndButtonPanel.add(labelWeek, BorderLayout.WEST);
+        nameAndButtonPanel.add(buttonPanel, BorderLayout.EAST);
+        subPanel.add(nameAndButtonPanel);
+
+        //subPanel.add(buttonPanel, BorderLayout.EAST);
         try {
             createSubTaskpanel(subPanel, courseTask, courseName);
         } catch (Exception e) {
@@ -366,9 +365,10 @@ public class CustomScreen {
             List<SubTask> subtasks = jsonHandler.jsonToSubtask(timData);
             Tree tree = createTree(subtasks, courseTask);
             JBScrollPane container = new JBScrollPane();
+            container.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
             container.add(tree);
             container.setViewportView(tree);
-            subPanel.add(container);
+            subPanel.add(container, BorderLayout.SOUTH);
         }
     }
 

@@ -121,7 +121,7 @@ public class CourseTaskPane {
         avaaTehtava.addActionListener(event -> {
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
-                //TODO: The following lines of code up to line 131 repeats in many action listeners.
+                //TODO: The following lines of code up to line 133 repeats in many action listeners.
                 // Is there a way to refactor this?
                 VirtualFile file = FileEditorManager
                         .getInstance(project)
@@ -152,6 +152,7 @@ public class CourseTaskPane {
                 com.views.InfoView.displayWarning("No files open in editor!");
                 return;
             }
+            OutputWindow.showWindow(project);
 
             VirtualFile file = FileEditorManager
                     .getInstance(project)
@@ -196,6 +197,7 @@ public class CourseTaskPane {
                 printOutput("Please open a file to submit in the editor.");
                 return;
             }
+            OutputWindow.showWindow(project);
 
             VirtualFile file = FileEditorManager
                     .getInstance(project)
@@ -218,14 +220,13 @@ public class CourseTaskPane {
                 InfoView.displayWarning("File in editor is not a tim task!");
                 return;
             }
-            //OutputWindow.getInstance().showWindow();
 
             new ApiHandler().submitExercise(file);
         });
 
 
         showOutputButton.addActionListener(event -> {
-           // OutputWindow.getInstance().showWindow();
+            OutputWindow.showWindow(project);
         });
 
 
@@ -243,6 +244,12 @@ public class CourseTaskPane {
                     String response = (String) evt.getNewValue();
                     handleSubmitResponse(response);
                 }
+                if ("disableButtons".equals(evt.getPropertyName())) {
+                    disableButtons();
+                }
+                if ("enableButtons".equals(evt.getPropertyName())) {
+                    enableButtons();
+                }
             }
         });
 
@@ -255,8 +262,11 @@ public class CourseTaskPane {
      * @param output String to print
      */
     public void printOutput(String output) {
-        //OutputWindow.getInstance().showWindow();
-       // OutputWindow.getInstance().printText(output);
+        OutputWindow.showWindow(project);
+        OutputWindow outputWindow = OutputWindow.getInstance();
+        if (outputWindow != null) {
+            OutputWindow.getInstance().printText(output);
+        }
     }
 
 
@@ -347,6 +357,24 @@ public class CourseTaskPane {
                 }
         }
         pisteLabel.setText("Points : "+points +"/"+max);
+    }
+
+    /**
+     * Private method for disabling buttons.
+     */
+    private void disableButtons() {
+        this.avaaTehtava.setEnabled(false);
+        this.resetButton.setEnabled(false);
+        this.submitButton.setEnabled(false);
+    }
+
+    /**
+     * Private method for enabling buttons.
+     */
+    private void enableButtons() {
+        this.avaaTehtava.setEnabled(true);
+        this.resetButton.setEnabled(true);
+        this.submitButton.setEnabled(true);
     }
 }
 

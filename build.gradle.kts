@@ -21,15 +21,13 @@ val runIdeForUiTests by intellijPlatformTesting.runIde.registering {
 }
 
 plugins {
-    idea
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.0.20"
-    //id("org.jetbrains.intellij") version "1.17.4"
-    id("org.jetbrains.intellij.platform") version "2.2.1"
+    id("org.jetbrains.intellij.platform") version "2.4.0"
 }
 
-group = "com.example"
-version = "1.0-SNAPSHOT"
+group = "org.jyu"
+version = "1.0.2"
 
 intellijPlatform {
     pluginConfiguration {
@@ -77,8 +75,11 @@ tasks {
         targetCompatibility = "21"
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "21"
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+        }
     }
+
 
     patchPluginXml {
         sinceBuild.set(pluginSinceBuildProp)
@@ -86,7 +87,8 @@ tasks {
             untilBuild.set(pluginUntilBuildProp)
 
     }
-
+    // Plugin signing might be important later so these are only commented out
+    /*
     signPlugin {
         certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
         privateKey.set(System.getenv("PRIVATE_KEY"))
@@ -95,7 +97,7 @@ tasks {
 
     publishPlugin {
         token.set(System.getenv("PUBLISH_TOKEN"))
-    }
+    }*/
 }
 
 
@@ -104,24 +106,6 @@ tasks.test {
 }
 
 
-fun File.isPluginJar(): Boolean {
-    if (!isFile) return false
-    if (extension != "jar") return false
-    return zipTree(this).files.any { it.isManifestFile() }
-}
-
-fun File.isManifestFile(): Boolean {
-    if (extension != "xml") return false
-    val rootNode = try {
-        val parser = groovy.xml.XmlParser()
-        parser.parse(this)
-    } catch (e: Exception) {
-        logger.error("Failed to parse $path", e)
-        return false
-    }
-    return rootNode.name() == "idea-plugin"
-}
-
-
+// From https://gitlab.jyu.fi/tie/tools/comtest.intellij/-/blob/master/build.gradle.kts
 fun prop(key: String) = extra.properties[key] as? String
     ?: error("Property `$key` is not defined in gradle.properties")

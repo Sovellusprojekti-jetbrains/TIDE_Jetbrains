@@ -4,20 +4,25 @@ import com.api.ApiHandler;
 import com.api.LogHandler;
 import com.course.Course;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.views.OutputWindow;
 import com.intellij.util.ReflectionUtil;
+import org.jdesktop.swingx.action.ActionManager;
+import org.jetbrains.annotations.NotNull;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
+import java.util.regex.Matcher;
 
 
 /**
@@ -40,20 +45,36 @@ public class ActiveState {
         ApplicationManager.getApplication().invokeLater(() -> {
             hideWindow("Course Task");
             hideWindow("Output Window");
-        }); // The following will be used later
-        /*project.getMessageBus().connect(Disposer.newDisposable())
+        });
+        project.getMessageBus().connect(Disposer.newDisposable())
                 .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
             @Override
             public void selectionChanged(@NotNull FileEditorManagerEvent event) {
                 FileEditorManagerListener.super.selectionChanged(event);
                 try {
-                    setSubmittable(event.getNewFile());
+                    VirtualFile temp = event.getNewFile();
+                    if (temp != null) {
+                        setSubmittable(temp);
+                    } else { //Is it possible to construct new Virtual file with null canonical path?
+                        //It would be better if it was possible to call setSubmittable with null as the argument
+                        isSubmittable = false;
+                        messageChanges();
+                    }
                 } catch (IOException e) { //Should never happen.
                     throw new RuntimeException(e);
                 }
             }
-        });*/
+        });
     }
+
+    /**
+     * Simple method to get the login status.
+     * @return Login status as boolean value.
+     */
+    public boolean getLogin() {
+        return isLoggedIn;
+    }
+
 
     /**
      * Calls the state manager for use.
@@ -179,7 +200,6 @@ public class ActiveState {
      * @param response from TIDE-CLI
      */
     public void setTideBaseResponse(String response) {
-//        OutputWindow.getInstance().showWindow();
         String oldTideBaseResponse = tideBaseResponse;
         tideBaseResponse = response;
         pcs.firePropertyChange("tideBaseResponse", oldTideBaseResponse, tideBaseResponse);
@@ -222,18 +242,47 @@ public class ActiveState {
     }
 
     /**
+     * This method checks if the opened file is .timdata or some log file.
+     * @param file Vrtual file in inspection.
+     * @return true if allowed file, false otherwise.
+     */
+    private boolean allowedName(VirtualFile file) {
+        String[] blacklist = {".timdata", "log"};
+        for (String name: blacklist) {
+            if (file.getName().contains(name)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * This method evaluates if the file opened in the editor is in sub-path of task download path.
      * @param child File under evaluation should be child of task download folder.
      * @throws IOException If making File object fails.
      */
     public void setSubmittable(VirtualFile child) throws IOException {
         File parent = new File(Settings.getPath());
-        String parentPath = parent.getCanonicalPath();
-        String childPath =  child.getCanonicalPath();
-        if (childPath != null) {
-            this.isSubmittable = childPath.contains(parentPath.replaceAll("\\\\","/"));
+        if (child.getCanonicalPath() != null && this.allowedName(child)) {
+            this.isSubmittable = child.getCanonicalPath()
+                    .replaceAll("/", Matcher.quoteReplacement(File.separator))
+                    .contains(parent.getCanonicalPath());
         } else {
             this.isSubmittable = false;
+        }
+        this.messageChanges();
+    }
+
+    /**
+     * This method is used to send messages to CourseTaskPane to change state of the buttons.
+     */
+    public void messageChanges() {
+        ActionManager.getInstance().getAction("Reset Exercise"); //Actions must be able/disabled also
+        if (!isSubmittable) {
+            //Is null ok or should one send isSubmittable values?
+            pcs.firePropertyChange("disableButtons", null, null);
+        } else {
+            pcs.firePropertyChange("enableButtons", null, null);
         }
     }
 }
