@@ -267,6 +267,7 @@ public class ActiveState {
             this.isSubmittable = child.getCanonicalPath()
                     .replaceAll("/", Matcher.quoteReplacement(File.separator))
                     .contains(parent.getCanonicalPath());
+            StateManager state = new StateManager();
         } else {
             this.isSubmittable = false;
         }
@@ -283,6 +284,7 @@ public class ActiveState {
             pcs.firePropertyChange("disableButtons", null, null);
         } else {
             pcs.firePropertyChange("enableButtons", null, null);
+            pcs.firePropertyChange("setPoints", null, null);
         }
     }
 }

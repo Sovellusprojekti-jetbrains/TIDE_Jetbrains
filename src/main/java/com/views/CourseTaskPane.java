@@ -2,7 +2,6 @@
 //26.1.2025
 
 package com.views;
-import java.io.File;
 import java.util.Objects;
 import java.util.regex.*;
 import com.actions.ActiveState;
@@ -250,6 +249,11 @@ public class CourseTaskPane {
                 if ("enableButtons".equals(evt.getPropertyName())) {
                     enableButtons();
                 }
+                if ("setPoints".equals(evt.getPropertyName())) {
+                    setPoints();
+
+                }
+
             }
         });
 
@@ -335,10 +339,20 @@ public class CourseTaskPane {
             ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
         }
         System.out.println(path);
-        setPoints(file,n.get(0));
+        setPoints();
     }
 
-    private void setPoints(VirtualFile file, Float points) {
+    /**
+     * Setter to show the points above the submit button.
+     */
+    public void setPoints() {
+        StateManager state = new StateManager();
+        VirtualFile file = FileEditorManager
+                .getInstance(project)
+                .getSelectedEditor()
+                .getFile();
+
+        float points = state.getPoints(file.getCanonicalPath());
         TimDataHandler tim = new TimDataHandler();
         JsonHandler json = new JsonHandler();
         VirtualFile parentFile = file.getParent();
@@ -349,14 +363,15 @@ public class CourseTaskPane {
         }
         List<SubTask> sub = json.jsonToSubtask(data);
         float max = 0.0F;
-        for (SubTask task : sub){
-                for (String name : task.getFileName()){
-                    if (name.contains(file.getName()) && (task.getIdeTaskId().equals(file.getParent().getName()) || name.contains(file.getParent().getName())){
-                        max = task.getMaxPoints());
+        for (SubTask task : sub) {
+                for (String name : task.getFileName()) {
+                    if (name.contains(file.getName())
+                            && (task.getIdeTaskId().equals(file.getParent().getName()) || name.contains(file.getParent().getName()))) {
+                        max = task.getMaxPoints();
                     }
                 }
         }
-        pisteLabel.setText("Points : "+points +"/"+max);
+        pisteLabel.setText("Points : " + points + "/" + max);
     }
 
     /**
