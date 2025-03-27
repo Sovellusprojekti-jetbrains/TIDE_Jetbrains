@@ -93,6 +93,10 @@ public class CourseTaskPane {
      */
     private JPanel resetPane;
     /**
+     * label for the possible deadline of the subtask
+     */
+    private JLabel deadLineLabel;
+    /**
      * Holds the current project.
      */
     private Project project;
@@ -353,15 +357,7 @@ public class CourseTaskPane {
                 .getFile();
 
         float points = state.getPoints(file.getCanonicalPath());
-        TimDataHandler tim = new TimDataHandler();
-        JsonHandler json = new JsonHandler();
-        VirtualFile parentFile = file.getParent();
-        String data = "";
-        while (data.isEmpty() && !Objects.equals(parentFile.getCanonicalPath(), Settings.getPath())) {
-            data = tim.readTimData(parentFile.getCanonicalPath());
-            parentFile = parentFile.getParent();
-        }
-        List<SubTask> sub = json.jsonToSubtask(data);
+        List<SubTask> sub = getTimDataSubTasks(file);
         float max = 0.0F;
         for (SubTask task : sub) {
                 for (String name : task.getFileName()) {
@@ -372,7 +368,44 @@ public class CourseTaskPane {
                 }
         }
         pisteLabel.setText("Points : " + points + "/" + max);
+        setDeadLine(file, sub);
     }
+
+    /**
+     * setter for the subtask deadline.
+     * @param file the file currently open in the editor
+     * @param sub list of subtasks for the coursetask;
+     */
+    private void setDeadLine(VirtualFile file, List<SubTask> sub) {
+        String deadline = "";
+        for (SubTask task : sub) {
+            for (String name : task.getFileName()) {
+                if (name.contains(file.getName())
+                        && (task.getIdeTaskId().equals(file.getParent().getName()) || name.contains(file.getParent().getName()))) {
+                     deadline = task.getDeadLine();
+                }
+            }
+        }
+        deadLineLabel.setText(deadline);
+    }
+    /**
+     * method to read subtask data from a timdatafile from under the timdatafile.
+     * @param file the file used to find the right timdata file.
+     * @return list of the subtasks that can be found in the timdata file.
+     */
+    private List<SubTask> getTimDataSubTasks(VirtualFile file) {
+        TimDataHandler tim = new TimDataHandler();
+        JsonHandler json = new JsonHandler();
+        VirtualFile parentFile = file.getParent();
+        String data = "";
+        while (data.isEmpty() && !Objects.equals(parentFile.getCanonicalPath(), Settings.getPath())) {
+            data = tim.readTimData(parentFile.getCanonicalPath());
+            parentFile = parentFile.getParent();
+        }
+        return json.jsonToSubtask(data);
+    }
+
+
 
     /**
      * Private method for disabling buttons.
