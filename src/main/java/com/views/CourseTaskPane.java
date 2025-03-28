@@ -2,10 +2,15 @@
 //26.1.2025
 
 package com.views;
+import java.util.Objects;
 import java.util.regex.*;
 import com.actions.ActiveState;
+import com.actions.Settings;
 import com.actions.StateManager;
 import com.api.ApiHandler;
+import com.api.JsonHandler;
+import com.api.TimDataHandler;
+import com.course.SubTask;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
@@ -244,6 +249,10 @@ public class CourseTaskPane {
                 if ("enableButtons".equals(evt.getPropertyName())) {
                     enableButtons();
                 }
+                if ("setPoints".equals(evt.getPropertyName())) {
+                    setPoints();
+
+                }
                 if ("setDemoName".equals(evt.getPropertyName())) {
                     setDemoName((String[]) evt.getNewValue());
                 }
@@ -314,14 +323,14 @@ public class CourseTaskPane {
         String path = file.getPath();
         Pattern pattern = Pattern.compile("run: \\d+");
         Matcher matcher = pattern.matcher(response);
-        List<Integer> n = new ArrayList<>();
+        List<Float> n = new ArrayList<>();
         if (!response.contains("error")) {
             while (matcher.find()) {
-                n.add(Integer.parseInt(String.valueOf(matcher.group().charAt(matcher.group().length() - 1))));
+                n.add(Float.parseFloat(String.valueOf(matcher.group().charAt(matcher.group().length() - 1))));
             }
         }
         if (n.isEmpty()) {
-            n.add(0);
+            n.add(0.0F);
         }
         List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
         if (submits == null) {
@@ -332,6 +341,39 @@ public class CourseTaskPane {
             ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
         }
         System.out.println(path);
+        setPoints();
+    }
+
+    /**
+     * Setter to show the points above the submit button.
+     */
+    public void setPoints() {
+        StateManager state = new StateManager();
+        VirtualFile file = FileEditorManager
+                .getInstance(project)
+                .getSelectedEditor()
+                .getFile();
+
+        float points = state.getPoints(file.getCanonicalPath());
+        TimDataHandler tim = new TimDataHandler();
+        JsonHandler json = new JsonHandler();
+        VirtualFile parentFile = file.getParent();
+        String data = "";
+        while (data.isEmpty() && !Objects.equals(parentFile.getCanonicalPath(), Settings.getPath())) {
+            data = tim.readTimData(parentFile.getCanonicalPath());
+            parentFile = parentFile.getParent();
+        }
+        List<SubTask> sub = json.jsonToSubtask(data);
+        float max = 0.0F;
+        for (SubTask task : sub) {
+                for (String name : task.getFileName()) {
+                    if (name.contains(file.getName())
+                            && (task.getIdeTaskId().equals(file.getParent().getName()) || name.contains(file.getParent().getName()))) {
+                        max = task.getMaxPoints();
+                    }
+                }
+        }
+        pisteLabel.setText("Points : " + points + "/" + max);
     }
 
     /**

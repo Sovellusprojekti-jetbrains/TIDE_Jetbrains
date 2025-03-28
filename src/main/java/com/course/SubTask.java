@@ -29,6 +29,9 @@ public class SubTask {
     @SerializedName(value = "task_directory")
     private String taskDirectory;
 
+    @SerializedName(value = "max_points")
+    private float maxPoints;
+
     /**
      * set the task name for the task.
      * @param id the name of the task
@@ -91,5 +94,21 @@ public class SubTask {
      */
     public void setTaskDirectory(String taskDir) {
         this.taskDirectory = taskDir;
+    }
+
+    /**
+     * getter for the maximum amount of points you can get from a subtask.
+     * @return maximum amount of points
+     */
+    public float getMaxPoints() {
+        return this.maxPoints;
+    }
+
+    /**
+     * Makes the object into a string that only contains the ideTaskid, so that the object can be used in the treeview.
+     * @return string represantation of the object
+     */
+    public String toString() {
+        return this.ideTaskId;
     }
 }

@@ -1,6 +1,7 @@
 package com.views;
 
 import com.actions.StateManager;
+import com.course.SubTask;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.JBColor;
@@ -58,15 +59,22 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
         //String regex = node.getParent().toString() + "/" + node.toString();
         if (submits != null) {
             for (String s : submits) {
-                if (s.contains(node.toString())) {
-                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == 0 && node.getChildCount() == 0) {
+                if (node.getChildCount() == 0 &&  s.contains(node.toString())) {
+                    DefaultMutableTreeNode parentNode =  (DefaultMutableTreeNode) node.getParent();
+                    SubTask parent = (SubTask) parentNode.getUserObject();
+                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == 0
+                            && s.contains(parent.getIdeTaskId())) {
                         return AllIcons.Debugger.Db_set_breakpoint;
                     }
-                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) > 0 && node.getChildCount() == 0) {
+                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) < parent.getMaxPoints()
+                            && s.contains(parent.getIdeTaskId())) {
                         return AllIcons.Debugger.Db_no_suspend_breakpoint;
                     }
+                    if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == parent.getMaxPoints()
+                            && s.contains(parent.getIdeTaskId())) {
+                        return AllIcons.General.SuccessDialog;
+                    }
                 }
-
             }
         }
         return AllIcons.Empty;
