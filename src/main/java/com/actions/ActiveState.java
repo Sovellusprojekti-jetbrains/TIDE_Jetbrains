@@ -16,11 +16,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ReflectionUtil;
-import com.views.InfoView;
 import org.jdesktop.swingx.action.ActionManager;
 import org.jetbrains.annotations.NotNull;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
@@ -68,15 +66,6 @@ public class ActiveState {
                     }
                 } catch (IOException e) { //Should never happen.
                     throw new RuntimeException(e);
-                }
-            }
-        });
-        this.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if ("tideBaseResponse".equals(evt.getPropertyName())) {
-                    String response = (String) evt.getNewValue();
-                    InfoView.displayInfo(response);
                 }
             }
         });
@@ -206,6 +195,7 @@ public class ActiveState {
         tideSubmitResponse = response;
         pcs.firePropertyChange("tideSubmitResponse", oldTideSubmitResponse, tideSubmitResponse);
         LogHandler.logInfo("ActiveState fired event tideSubmitResponse");
+        setTideBaseResponse(response);
     }
 
 
@@ -328,7 +318,6 @@ public class ActiveState {
             this.isSubmittable = child.getCanonicalPath()
                     .replaceAll("/", Matcher.quoteReplacement(File.separator))
                     .contains(parent.getCanonicalPath());
-            StateManager state = new StateManager();
         } else {
             this.isSubmittable = false;
         }
@@ -351,7 +340,6 @@ public class ActiveState {
             pcs.firePropertyChange("disableButtons", null, null);
         } else {
             pcs.firePropertyChange("enableButtons", null, null);
-            pcs.firePropertyChange("setPoints", null, null);
         }
     }
 
@@ -374,8 +362,9 @@ public class ActiveState {
     public void setSubTasks(List<SubTask> subTasks) {
         if (this.subTaskList == null) {
             this.subTaskList = subTasks;
-        } else if (this.subTaskList.size() < subTasks.size()) {
-            this.subTaskList = subTasks;
+        } else {
+            //TODO: fix the bloating of the subtasklist. JSON should only be read again if new tasks are donwloaded.
+            this.subTaskList.addAll(subTasks);
         }
     }
 }
