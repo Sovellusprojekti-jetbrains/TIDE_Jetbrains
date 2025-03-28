@@ -5,6 +5,7 @@ import com.actions.Settings
 import com.course.SubTask
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.EDT
 import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.components.service
