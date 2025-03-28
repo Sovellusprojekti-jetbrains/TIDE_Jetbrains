@@ -286,6 +286,15 @@ public class ActiveState {
         return "";
     }
 
+    private String findSubTaskName(VirtualFile file) {
+        for (SubTask task : this.subTaskList) {
+            if(file.getPath().contains(task.getFileName().getFirst())) {
+                return task.getIdeTaskId();
+            }
+        }
+        return "";
+    }
+
     /**
      * This method evaluates if the file opened in the editor is in sub-path of task download path.
      * @param child File under evaluation should be child of task download folder.
@@ -303,6 +312,8 @@ public class ActiveState {
         if (this.isSubmittable) {
             String course = this.getCourseName(child.getPath());
             String demo = this.findTaskName(course, child);
+            String sub = this.findSubTaskName(child);
+            System.out.println(sub);
         }
         this.messageChanges();
     }
@@ -320,8 +331,16 @@ public class ActiveState {
         }
     }
 
+    private void messageTaskName(String Task, String Subtask) {
+
+    }
+
     public void setSubTasks(List<SubTask> subTasks) {
-        this.subTaskList = subTasks;
+        if (this.subTaskList == null) {
+            this.subTaskList = subTasks;
+        } else if (this.subTaskList.size() < subTasks.size()) {
+            this.subTaskList = subTasks;
+        }
     }
 }
 
