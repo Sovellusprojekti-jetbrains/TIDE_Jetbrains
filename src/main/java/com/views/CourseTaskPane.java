@@ -245,7 +245,7 @@ public class CourseTaskPane {
                     enableButtons();
                 }
                 if ("setDemoName".equals(evt.getPropertyName())) {
-                    setDemoName((String) evt.getNewValue());
+                    setDemoName((String[]) evt.getNewValue());
                 }
             }
         });
@@ -352,8 +352,10 @@ public class CourseTaskPane {
         this.submitButton.setEnabled(true);
     }
 
-    private void setDemoName(String name) {
-        this.tehtavaNimi.setText(name);
+    private void setDemoName(String[] values) {
+        String info = values[0] + " - " + values[1];
+        this.demoTiedot.setText(info);
+        this.tehtavaNimi.setText(values[2]);
     }
 }
 

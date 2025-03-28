@@ -313,7 +313,7 @@ public class ActiveState {
             String course = this.getCourseName(child.getPath());
             String demo = this.findTaskName(course, child);
             String sub = this.findSubTaskName(child);
-            System.out.println(sub);
+            this.messageTaskName(course, demo, sub);
         }
         this.messageChanges();
     }
@@ -331,8 +331,9 @@ public class ActiveState {
         }
     }
 
-    private void messageTaskName(String Task, String Subtask) {
-
+    private void messageTaskName(String course, String Task, String Subtask) {
+        String[] values = {course, Task, Subtask};
+        pcs.firePropertyChange("setDemoName", null, values);
     }
 
     public void setSubTasks(List<SubTask> subTasks) {
