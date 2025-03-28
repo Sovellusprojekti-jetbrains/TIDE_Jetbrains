@@ -2,6 +2,11 @@
 //26.1.2025
 
 package com.views;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.regex.*;
 import com.actions.ActiveState;
@@ -386,7 +391,17 @@ public class CourseTaskPane {
                 }
             }
         }
-        deadLineLabel.setText(deadline);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("+yyyy-MM-dd'T'HH:mm:ss'Z'")
+                .withZone(ZoneId.of("UTC"));
+        ZonedDateTime date = ZonedDateTime.parse("+2017-02-26T01:02:03Z", formatter);
+
+
+        ZoneId zoneLocal = ZoneId.systemDefault();
+        ZonedDateTime nowHelsinki = date.withZoneSameInstant( zoneLocal );
+
+
+        System.out.println(date + " " + nowHelsinki);
+        deadLineLabel.setText(date.toString());
     }
     /**
      * method to read subtask data from a timdatafile from under the timdatafile.
