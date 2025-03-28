@@ -3,6 +3,8 @@ package com.actions;
 import com.api.ApiHandler;
 import com.api.LogHandler;
 import com.course.Course;
+import com.course.CourseTask;
+import com.course.SubTask;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
@@ -36,6 +38,7 @@ public class ActiveState {
     private boolean isLoggedIn = false;
     private Project project;
     private boolean isSubmittable = false;
+    private List<SubTask> subTaskList;
 
     /**
      * Constructor for active state attempts to hide the right and bottom toolwindows.
@@ -59,6 +62,7 @@ public class ActiveState {
                         //It would be better if it was possible to call setSubmittable with null as the argument
                         isSubmittable = false;
                         messageChanges();
+                        messageTaskName(" ", " ", " ");
                     }
                 } catch (IOException e) { //Should never happen.
                     throw new RuntimeException(e);
@@ -257,6 +261,53 @@ public class ActiveState {
     }
 
     /**
+     * This method is used to find CourseTask's name using course name and file name.
+     * @param course Courses name to which the opened file is related to.
+     * @param file Virtual file of the file opened in the editor.
+     * @return CourseTask name as String.
+     */
+    private String findTaskName(String course, VirtualFile file) {
+        Course courseTemp = null;
+        for (Course temp: this.courseList) {
+            if (temp.getName().equals(course)) {
+                courseTemp = temp;
+                break;
+            }
+        }
+        if (courseTemp != null) {
+            SubTask subTaskTemp = null;
+                for (SubTask temp2 : this.subTaskList) {
+                    if (file.getPath().contains(temp2.getFileName().getFirst())) {
+                        subTaskTemp = temp2;
+                        break;
+                    }
+                }
+            if (subTaskTemp != null) {
+                for (CourseTask temp3 : courseTemp.getTasks()) {
+                    if (temp3.getPath().equals(subTaskTemp.getPath())) {
+                        return temp3.getName();
+                    }
+                }
+            }
+        }
+        return "";
+    }
+
+    /**
+     * This method is used to find SubTask's name (ideTaskId).
+     * @param file Virtual file of the file open in the editor.
+     * @return Subtask's name as String.
+     */
+    private String findSubTaskName(VirtualFile file) {
+        for (SubTask task : this.subTaskList) {
+            if(file.getPath().contains(task.getFileName().getFirst())) {
+                return task.getIdeTaskId();
+            }
+        }
+        return "";
+    }
+
+    /**
      * This method evaluates if the file opened in the editor is in sub-path of task download path.
      * @param child File under evaluation should be child of task download folder.
      * @throws IOException If making File object fails.
@@ -269,6 +320,12 @@ public class ActiveState {
                     .contains(parent.getCanonicalPath());
         } else {
             this.isSubmittable = false;
+        }
+        if (this.isSubmittable) { // Updates the info displayed on CourseTaskPane.
+            String course = this.getCourseName(child.getPath());
+            String demo = this.findTaskName(course, child);
+            String sub = this.findSubTaskName(child);
+            this.messageTaskName(course, demo, sub);
         }
         this.messageChanges();
     }
@@ -283,6 +340,30 @@ public class ActiveState {
             pcs.firePropertyChange("disableButtons", null, null);
         } else {
             pcs.firePropertyChange("enableButtons", null, null);
+        }
+    }
+
+    /**
+     * Messages new values to the CourseTaskPane.
+     * @param course Name of the course.
+     * @param Task CourseTask.
+     * @param Subtask Subtask.
+     */
+    private void messageTaskName(String course, String Task, String Subtask) {
+        String[] values = {course, Task, Subtask};
+        pcs.firePropertyChange("setDemoName", null, values);
+    }
+
+    /**
+     * Sets the subTask list. The implementation is weird because CustomScreen might call this with smaller list than
+     * was set a moment ago. During tree view update JsonData is read and objects created multiple times.
+     * @param subTasks List of subtasks.
+     */
+    public void setSubTasks(List<SubTask> subTasks) {
+        if (this.subTaskList == null) {
+            this.subTaskList = subTasks;
+        } else if (this.subTaskList.size() < subTasks.size()) {
+            this.subTaskList = subTasks;
         }
     }
 }
