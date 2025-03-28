@@ -151,7 +151,6 @@ public class CourseTaskPane {
                 com.views.InfoView.displayWarning("No files open in editor!");
                 return;
             }
-            OutputWindow.showWindow(project);
 
             VirtualFile file = FileEditorManager
                     .getInstance(project)
