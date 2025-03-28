@@ -62,6 +62,7 @@ public class ActiveState {
                         //It would be better if it was possible to call setSubmittable with null as the argument
                         isSubmittable = false;
                         messageChanges();
+                        messageTaskName(" ", " ", " ");
                     }
                 } catch (IOException e) { //Should never happen.
                     throw new RuntimeException(e);
