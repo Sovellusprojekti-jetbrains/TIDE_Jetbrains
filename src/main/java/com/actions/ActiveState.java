@@ -258,7 +258,13 @@ public class ActiveState {
         }
         return true;
     }
-    //Not ideal but is a start
+
+    /**
+     * This method is used to find CourseTask's name using course name and file name.
+     * @param course Courses name to which the opened file is related to.
+     * @param file Virtual file of the file opened in the editor.
+     * @return CourseTask name as String.
+     */
     private String findTaskName(String course, VirtualFile file) {
         Course courseTemp = null;
         for (Course temp: this.courseList) {
@@ -286,6 +292,11 @@ public class ActiveState {
         return "";
     }
 
+    /**
+     * This method is used to find SubTask's name (ideTaskId).
+     * @param file Virtual file of the file open in the editor.
+     * @return Subtask's name as String.
+     */
     private String findSubTaskName(VirtualFile file) {
         for (SubTask task : this.subTaskList) {
             if(file.getPath().contains(task.getFileName().getFirst())) {
@@ -309,7 +320,7 @@ public class ActiveState {
         } else {
             this.isSubmittable = false;
         }
-        if (this.isSubmittable) {
+        if (this.isSubmittable) { // Updates the info displayed on CourseTaskPane.
             String course = this.getCourseName(child.getPath());
             String demo = this.findTaskName(course, child);
             String sub = this.findSubTaskName(child);
@@ -331,11 +342,22 @@ public class ActiveState {
         }
     }
 
+    /**
+     * Messages new values to the CourseTaskPane.
+     * @param course Name of the course.
+     * @param Task CourseTask.
+     * @param Subtask Subtask.
+     */
     private void messageTaskName(String course, String Task, String Subtask) {
         String[] values = {course, Task, Subtask};
         pcs.firePropertyChange("setDemoName", null, values);
     }
 
+    /**
+     * Sets the subTask list. The implementation is weird because CustomScreen might call this with smaller list than
+     * was set a moment ago. During tree view update JsonData is read and objects created multiple times.
+     * @param subTasks List of subtasks.
+     */
     public void setSubTasks(List<SubTask> subTasks) {
         if (this.subTaskList == null) {
             this.subTaskList = subTasks;
