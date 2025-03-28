@@ -205,7 +205,7 @@ object TideCommandExecutor {
                     break
                 }
             }
-            if (taskId == "") {
+            if (taskId != "") {
                 break
             }
         }
