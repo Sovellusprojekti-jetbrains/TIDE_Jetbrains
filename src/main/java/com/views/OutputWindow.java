@@ -49,7 +49,7 @@ public class OutputWindow {
                 if ("login".equals(evt.getPropertyName())) {
                     setWindowAvailable();
                 }
-                if ("tideBaseResponse".equals(evt.getPropertyName())) {
+                if ("tideSubmitResponse".equals(evt.getPropertyName())) {
                     showWindow(project);
                     printText((String) evt.getNewValue());
                 }
