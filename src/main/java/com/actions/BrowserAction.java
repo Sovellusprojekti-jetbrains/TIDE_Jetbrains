@@ -26,7 +26,6 @@ public class BrowserAction extends AnAction {
                 .getSelectedEditor()
                 .getFile();
         String[] path = taskFile.getPath().split("/");
-        String filename = taskFile.getName();
         String task = path[path.length-2];
         String demoname = path[path.length-3];
         String courseName = path[path.length-4];
