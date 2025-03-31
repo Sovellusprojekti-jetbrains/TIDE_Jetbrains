@@ -33,6 +33,11 @@ public class SubTask {
     private float maxPoints;
 
     /**
+     * deadline for the subtask.
+     */
+    @SerializedName(value = "deadline")
+    private String deadLine;
+    /**
      * set the task name for the task.
      * @param id the name of the task
      */
@@ -104,6 +109,14 @@ public class SubTask {
         return this.maxPoints;
     }
 
+    /**
+     * getter for the subtask deadline.
+     * @return the last date the subtask can be submitted by in ISO8601 format.
+     */
+    public String getDeadLine() {
+        return this.deadLine;
+    }
+    
     /**
      * Makes the object into a string that only contains the ideTaskid, so that the object can be used in the treeview.
      * @return string represantation of the object
