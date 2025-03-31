@@ -375,7 +375,7 @@ public class CourseTaskPane {
     }
 
     /**
-     * setter for the subtask deadline.
+     * setter for the subtask deadline .
      * @param file the file currently open in the editor
      * @param sub list of subtasks for the coursetask;
      */
