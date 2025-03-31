@@ -305,10 +305,10 @@ public class CustomScreen {
         dButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setProgress(true, "Downloading...");
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
                 try {
-                    OutputWindow.showWindow(project);
                     api.loadExercise(courseName, courseTask.getPath(), "--all");
                 } catch (IOException ex) {
                     com.api.LogHandler.logError("268 CustomScreen.createExercise(CourseTask courseTask, String courseName)", ex);
@@ -363,6 +363,7 @@ public class CustomScreen {
         String timData = tim.readTimData(pathToFile);
         if (!timData.isEmpty()) {
             List<SubTask> subtasks = jsonHandler.jsonToSubtask(timData);
+            ActiveState.getInstance().setSubTasks(subtasks); //Subtasks are needed to add task name to CourseTaskPane
             Tree tree = createTree(subtasks, courseTask);
             JBScrollPane container = new JBScrollPane();
             container.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);

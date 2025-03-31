@@ -181,6 +181,7 @@ object TideCommandExecutor {
             commandLineArgs.addAll(cmdArgs)
             val response = handleCommandLine(commandLineArgs, courseDirFile)
             activeState.setTideBaseResponse(response)
+            activeState.updateCourses()
         }
     }
 
@@ -206,7 +207,7 @@ object TideCommandExecutor {
                     break
                 }
             }
-            if (taskId == "") {
+            if (taskId != "") {
                 break
             }
         }
@@ -234,14 +235,42 @@ object TideCommandExecutor {
     fun openTaskProject(taskPath: String) {
         CoroutineScope(Dispatchers.IO).launch {
             var command: String = ""
-            if (System.getenv("DEVELOP").equals("true")) {
+            if (System.getenv("DEVELOP") != null && System.getenv("DEVELOP").equals("true")) {
                 command = System.getenv("IDEA_LOCATION")
                 LogHandler.logDebug(arrayOf("System.getenv(\"IDEA_LOCATION\")"),
                     arrayOf(System.getenv("IDEA_LOCATION")))
             } else {
                 // TODO: This gets the directory where the IDE is installed.
                 // Implement actual handling of supported IDEs and operating systems.
-                command = PathManager.getHomePath()
+                command = PathManager.getHomePath() + "/bin/"
+                val appInfo = ApplicationInfo.getInstance()
+                val productName = appInfo.fullApplicationName
+                if (System.getProperty("os.name").contains("Windows")) {
+                    if (productName.contains("Idea")){
+                        command += "idea64.exe"
+                    } else if (productName.contains("PyCharm")) {
+                        command += "pycharm64.exe"
+                    } else if (productName.contains("Rider")) {
+                        command += "rider64.exe"
+                    }
+                } else if (System.getProperty("os.name").contains("Linux")) {
+                    if (productName.contains("Idea")){
+                        command += "idea"
+                    } else if (productName.contains("PyCharm")) {
+                        command += "pycharm"
+                    } else if (productName.contains("Rider")) {
+                        command += "rider"
+                    }
+                //TODO: This is the Mac section. It is not possible to test functionality without a Mac
+                } else {
+                    if (productName.contains("Idea")) {
+
+                    } else if (productName.contains("PyCharm")) {
+
+                    } else if (productName.contains("Rider")) {
+
+                    }
+                }
             }
 
             // how does this behave in production?

@@ -160,7 +160,6 @@ public class CourseTaskPane {
                 com.views.InfoView.displayWarning("No files open in editor!");
                 return;
             }
-            OutputWindow.showWindow(project);
 
             VirtualFile file = FileEditorManager
                     .getInstance(project)
@@ -262,7 +261,9 @@ public class CourseTaskPane {
                     setPoints();
 
                 }
-
+                if ("setDemoName".equals(evt.getPropertyName())) {
+                    setDemoName((String[]) evt.getNewValue());
+                }
             }
         });
 
@@ -372,8 +373,10 @@ public class CourseTaskPane {
                     }
                 }
         }
-        pisteLabel.setText("Points : " + points + "/" + max);
-        setDeadLine(file, sub);
+        float finalMax = max;
+        SwingUtilities.invokeLater(() -> {
+            pisteLabel.setText("Points : " + points + "/" + finalMax);
+            setDeadLine(file, sub);
     }
 
     /**
@@ -438,6 +441,18 @@ public class CourseTaskPane {
         this.avaaTehtava.setEnabled(true);
         this.resetButton.setEnabled(true);
         this.submitButton.setEnabled(true);
+    }
+
+    /**
+     * Changes the text values of the demoTiedot abel and tehtavaNimi label.
+     * @param values Values to be set.
+     */
+    private void setDemoName(String[] values) {
+        SwingUtilities.invokeLater(() -> {
+            String info = values[0] + " - " + values[1];
+            this.demoTiedot.setText(info);
+            this.tehtavaNimi.setText(values[2]);
+        });
     }
 }
 
