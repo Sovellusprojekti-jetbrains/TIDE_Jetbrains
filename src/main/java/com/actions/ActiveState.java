@@ -367,19 +367,19 @@ public class ActiveState {
             this.subTaskList.addAll(subTasks);
         }
     }
-}
 
-/*
-    ActiveState stateManager = ActiveState.getInstance();
-        stateManager.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if ("logout".equals(evt.getPropertyName())) {
-                    hideWindow();
-                }
-                if ("login".equals(evt.getPropertyName())) {
-                    showWindow();
-                }
+    /**
+     * This method returns the subtask object instance of the open task file.
+     * from the file path on the local disk drive.
+     * @param filePath File's path on disk.
+     * @return SubTask object
+     */
+    public SubTask getOpenTask(String filePath) {
+        for (SubTask task : this.subTaskList) {
+            if (filePath.contains(task.getFileName().getFirst())) {
+                return task;
             }
-        });
- */
+        }
+        return null;
+    }
+}
