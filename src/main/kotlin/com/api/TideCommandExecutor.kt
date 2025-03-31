@@ -234,7 +234,7 @@ object TideCommandExecutor {
     fun openTaskProject(taskPath: String) {
         CoroutineScope(Dispatchers.IO).launch {
             var command: String = ""
-            if (System.getenv("DEVELOP").equals("true")) {
+            if (System.getenv("DEVELOP") != null && System.getenv("DEVELOP").equals("true")) {
                 command = System.getenv("IDEA_LOCATION")
                 LogHandler.logDebug(arrayOf("System.getenv(\"IDEA_LOCATION\")"),
                     arrayOf(System.getenv("IDEA_LOCATION")))
