@@ -20,7 +20,7 @@ public class BrowserAction extends AnAction {
         Project project = event.getProject();
         if (project == null) return;
         //get demo and task with path from open file
-        String url = "https://timbeta01.tim.education/view/";
+        String url = "https://tim.jyu.fi/view/";
         VirtualFile taskFile = FileEditorManager
                 .getInstance(project)
                 .getSelectedEditor()
@@ -28,20 +28,14 @@ public class BrowserAction extends AnAction {
         String[] path = taskFile.getPath().split("/");
         String task = path[path.length-2];
         String demoname = path[path.length-3];
-        String courseName = path[path.length-4];
-        List<Course> courses = ActiveState.getInstance().getCourses();
-        for (Course course : courses){
-            if(Objects.equals(course.getName(), courseName)) {
-                for (CourseTask demo: course.getTasks()) {
-                    if(Objects.equals(demo.getName(),demoname)){
-                        url += demo.getPath();
-                        url += "#" + task;
-                        break;
-                    }
-                }
-                break;
-            }
-        }
+        //String courseName = path[path.length-4];
+        ActiveState instance = ActiveState.getInstance();
+        List<Course> courses = instance.getCourses();
+        String courseName = instance.getCourseName(taskFile.getPath());
+        String[] temp = instance.getTimWebPathAndId(taskFile.getPath());
+        url += temp[0];
+        url += "#" + temp[1];
+
         // Set the website URL
         HtmlEditorProvider.setUrl(url);
 

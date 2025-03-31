@@ -367,6 +367,22 @@ public class ActiveState {
             this.subTaskList.addAll(subTasks);
         }
     }
+
+    /**
+     * This method returns the subtasks web path on the Tim website and the ideTaskId
+     * from the file path on the local disk drive.
+     * @param filePath File's path on disk.
+     * @return Array that contains the web path and the id or returns null if there is no task associated with the
+     * file.
+     */
+    public String[] getTimWebPathAndId(String filePath) {
+        for (SubTask task : this.subTaskList) {
+            if (filePath.contains(task.getFileName().getFirst())) {
+                return new String[]{task.getPath(), task.getIdeTaskId()};
+            }
+        }
+        return null;
+    }
 }
 
 /*
