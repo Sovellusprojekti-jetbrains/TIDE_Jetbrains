@@ -2,10 +2,7 @@
 //26.1.2025
 
 package com.views;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.regex.*;
@@ -366,16 +363,14 @@ public class CourseTaskPane {
         List<SubTask> sub = getTimDataSubTasks(file);
         float max = 0.0F;
         for (SubTask task : sub) {
-                for (String name : task.getFileName()) {
-                    if (name.contains(file.getName())
-                            && (task.getIdeTaskId().equals(file.getParent().getName()) || name.contains(file.getParent().getName()))) {
-                        max = task.getMaxPoints();
-                    }
+            for (String name : task.getFileName()) {
+                if (name.contains(file.getName())
+                        && (task.getIdeTaskId().equals(file.getParent().getName()) || name.contains(file.getParent().getName()))) {
+                    max = task.getMaxPoints();
                 }
+            }
         }
-        float finalMax = max;
-        SwingUtilities.invokeLater(() -> {
-            pisteLabel.setText("Points : " + points + "/" + finalMax);
+            pisteLabel.setText("Points : " + points + "/" + max);
             setDeadLine(file, sub);
     }
 
@@ -394,17 +389,20 @@ public class CourseTaskPane {
                 }
             }
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("+yyyy-MM-dd'T'HH:mm:ss'Z'")
-                .withZone(ZoneId.of("UTC"));
-        ZonedDateTime date = ZonedDateTime.parse("+2017-02-26T01:02:03Z", formatter);
+        if (deadline != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx")
+                    .withZone(ZoneId.of("UTC"));
+            ZonedDateTime date = ZonedDateTime.parse(deadline, formatter);
+            ZoneId localZone = ZoneId.systemDefault();
+            ZonedDateTime localDeadline = date.withZoneSameInstant(localZone);
 
 
-        ZoneId zoneLocal = ZoneId.systemDefault();
-        ZonedDateTime nowHelsinki = date.withZoneSameInstant( zoneLocal );
-
-
-        System.out.println(date + " " + nowHelsinki);
-        deadLineLabel.setText(date.toString());
+            DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z");
+            deadLineLabel.setText(localDeadline.format(deadlineFormat));
+        }
+        else {
+            deadLineLabel.setText("no deadline");
+        }
     }
     /**
      * method to read subtask data from a timdatafile from under the timdatafile.
