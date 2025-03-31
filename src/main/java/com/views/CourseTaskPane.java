@@ -92,6 +92,7 @@ public class CourseTaskPane {
      * Reset panel.
      */
     private JPanel resetPane;
+    private JProgressBar taskProgressBar;
     /**
      * Holds the current project.
      */
@@ -219,6 +220,7 @@ public class CourseTaskPane {
                 return;
             }
 
+            setProgress(true, "Submitting...");
             new ApiHandler().submitExercise(file);
         });
 
@@ -255,10 +257,14 @@ public class CourseTaskPane {
                 if ("setDemoName".equals(evt.getPropertyName())) {
                     setDemoName((String[]) evt.getNewValue());
                 }
+                if ("tideSubmitResponse".equals(evt.getPropertyName())) {
+                    setProgress(false, "");
+                }
             }
         });
 
         stateManager.updateCourses();
+        setProgress(false, "");
     }
 
 
@@ -405,6 +411,20 @@ public class CourseTaskPane {
             String info = values[0] + " - " + values[1];
             this.demoTiedot.setText(info);
             this.tehtavaNimi.setText(values[2]);
+        });
+    }
+
+    /**
+     * Sets the progress bars on both tabs of the course panel to the desired visibility and text.
+     * @param state Visible, true or false.
+     * @param text Text to display on progress bar.
+     */
+    private void setProgress(boolean state, String text) {
+        SwingUtilities.invokeLater(() -> {
+            taskProgressBar.setString(text);
+            taskProgressBar.setVisible(state);
+            taskPane.revalidate();
+            taskPane.repaint();
         });
     }
 }
