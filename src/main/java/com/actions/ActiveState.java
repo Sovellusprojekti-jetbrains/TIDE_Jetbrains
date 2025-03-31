@@ -340,6 +340,7 @@ public class ActiveState {
             pcs.firePropertyChange("disableButtons", null, null);
         } else {
             pcs.firePropertyChange("enableButtons", null, null);
+            pcs.firePropertyChange("setPoints", null, null);
         }
     }
 
