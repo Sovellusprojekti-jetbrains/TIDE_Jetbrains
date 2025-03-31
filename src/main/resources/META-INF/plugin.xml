@@ -4,7 +4,9 @@
     <vendor email="matti.maikalainen@yritys.com" url="https://www.yritys.com">University of Jyväskylä</vendor>
 
     <description><![CDATA[
-    My first IntelliJ plugin. lorem ipsum need 40 chars for description.
+    <p>A JetBrains frontend for TIDE-CLI.</p>
+    <a href="https://tim.jyu.fi/view/kurssit/tie/proj/2024/tide/dokumentit/kayttoohjeet/tide-komentorivityokalun-asennusohjeet">CLI Instructions (Finnish)</a> |
+    <a href="https://github.com/Sovellusprojekti-jetbrains/TIDE_Jetbrains">GitHub Repository</a>
     ]]></description>
 
     <!-- Compatibility -->
