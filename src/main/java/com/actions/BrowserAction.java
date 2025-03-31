@@ -1,7 +1,6 @@
 package com.actions;
 
-import com.course.Course;
-import com.course.CourseTask;
+import com.course.SubTask;
 import com.customfile.HtmlEditorProvider;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -11,30 +10,30 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Objects;
-
 public class BrowserAction extends AnAction {
+
+    private final String baseURL = "https://tim.jyu.fi/view/";
+
+
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         Project project = event.getProject();
         if (project == null) return;
         //get demo and task with path from open file
-        String url = "https://tim.jyu.fi/view/";
+        String url = baseURL;
         VirtualFile taskFile = FileEditorManager
                 .getInstance(project)
                 .getSelectedEditor()
                 .getFile();
-        String[] path = taskFile.getPath().split("/");
-        String task = path[path.length-2];
-        String demoname = path[path.length-3];
-        //String courseName = path[path.length-4];
+
+        if (taskFile == null) {
+            return;
+        }
         ActiveState instance = ActiveState.getInstance();
-        List<Course> courses = instance.getCourses();
-        String courseName = instance.getCourseName(taskFile.getPath());
-        String[] temp = instance.getTimWebPathAndId(taskFile.getPath());
-        url += temp[0];
-        url += "#" + temp[1];
+        SubTask openTask = instance.getOpenTask(taskFile.getPath());
+        //TODO: handle null case.
+        url += openTask.getPath();
+        url += "#" + openTask.getIdeTaskId();
 
         // Set the website URL
         HtmlEditorProvider.setUrl(url);
@@ -44,5 +43,19 @@ public class BrowserAction extends AnAction {
 
         // Open the file in the editor
         FileEditorManager.getInstance(project).openFile(file, true);
+    }
+
+    /**
+     * This function is called by ActiveState to update the actions state (able/disabled).
+     * @param e AnActionEvent originating from idea's internal messaging system.
+     */
+    @Override
+    public void update(@NotNull AnActionEvent e) {
+        //TODO: more generalized TIDE class that inherits anAction and handles checks for disable and enable
+        if (!ActiveState.getInstance().getLogin()) {
+            e.getPresentation().setEnabled(ActiveState.getInstance().getLogin());
+            return;
+        }
+        e.getPresentation().setEnabled(ActiveState.getInstance().isSubmittable());
     }
 }

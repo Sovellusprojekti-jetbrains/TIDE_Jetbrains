@@ -369,33 +369,17 @@ public class ActiveState {
     }
 
     /**
-     * This method returns the subtasks web path on the Tim website and the ideTaskId
+     * This method returns the subtask object instance of the open task file.
      * from the file path on the local disk drive.
      * @param filePath File's path on disk.
-     * @return Array that contains the web path and the id or returns null if there is no task associated with the
-     * file.
+     * @return SubTask object
      */
-    public String[] getTimWebPathAndId(String filePath) {
+    public SubTask getOpenTask(String filePath) {
         for (SubTask task : this.subTaskList) {
             if (filePath.contains(task.getFileName().getFirst())) {
-                return new String[]{task.getPath(), task.getIdeTaskId()};
+                return task;
             }
         }
         return null;
     }
 }
-
-/*
-    ActiveState stateManager = ActiveState.getInstance();
-        stateManager.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if ("logout".equals(evt.getPropertyName())) {
-                    hideWindow();
-                }
-                if ("login".equals(evt.getPropertyName())) {
-                    showWindow();
-                }
-            }
-        });
- */

@@ -69,10 +69,10 @@
             </action>
             <action id="com.actions.ResetExercise" class="com.actions.ResetExercise" text="Reset Exercise" description="Reset current exercise">
             </action>
+            <action id="com.actions.BrowserAction" class="com.actions.BrowserAction" text="Open Task In Browser">
+            </action>
         </group>
-        <action id="com.example.OpenWebsite" class="com.actions.BrowserAction" text="Open Website">
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
-        </action>
+
     </actions>
     <applicationListeners>
         <listener class="com.listeners.LoginWindowListener"
