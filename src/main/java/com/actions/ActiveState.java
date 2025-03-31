@@ -206,7 +206,7 @@ public class ActiveState {
     public void setTideBaseResponse(String response) {
         String oldTideBaseResponse = tideBaseResponse;
         tideBaseResponse = response;
-        pcs.firePropertyChange("tideBaseResponse", oldTideBaseResponse, tideBaseResponse);
+        pcs.firePropertyChange("tideBaseResponse", null, tideBaseResponse);
         LogHandler.logInfo("ActiveState fired event tideBaseResponse");
     }
 
@@ -346,11 +346,11 @@ public class ActiveState {
     /**
      * Messages new values to the CourseTaskPane.
      * @param course Name of the course.
-     * @param Task CourseTask.
-     * @param Subtask Subtask.
+     * @param task CourseTask.
+     * @param subtask subtask.
      */
-    private void messageTaskName(String course, String Task, String Subtask) {
-        String[] values = {course, Task, Subtask};
+    private void messageTaskName(String course, String task, String subtask) {
+        String[] values = {course, task, subtask};
         pcs.firePropertyChange("setDemoName", null, values);
     }
 
