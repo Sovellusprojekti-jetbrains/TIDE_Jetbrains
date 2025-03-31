@@ -11,6 +11,8 @@ import com.api.ApiHandler;
 import com.api.JsonHandler;
 import com.api.TimDataHandler;
 import com.course.SubTask;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
@@ -118,6 +120,10 @@ public class CourseTaskPane {
 
         // placeholder for opening the current exercise in browser
         avaaTehtava.addActionListener(event -> {
+            ActionManager manager = ActionManager.getInstance();
+            AnAction action = manager.getAction("com.actions.BrowserAction");
+            manager.tryToExecute(action, null, null, null, true);
+            /*
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
                 //TODO: The following lines of code up to line 133 repeats in many action listeners.
@@ -142,7 +148,7 @@ public class CourseTaskPane {
                     com.api.LogHandler.logError("111 CourseTaskPane avaaTehtava ActionListener", e);
                     throw new RuntimeException(e);
                 }
-            }
+            } */
         });
 
         //Resets subtask back to the state of last submit.
