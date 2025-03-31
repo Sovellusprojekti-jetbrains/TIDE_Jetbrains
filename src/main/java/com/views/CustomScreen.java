@@ -305,6 +305,7 @@ public class CustomScreen {
         dButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setProgress(true, "Downloading...");
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
                 try {

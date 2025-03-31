@@ -181,6 +181,7 @@ object TideCommandExecutor {
             commandLineArgs.addAll(cmdArgs)
             val response = handleCommandLine(commandLineArgs, courseDirFile)
             activeState.setTideBaseResponse(response)
+            activeState.updateCourses()
         }
     }
 
