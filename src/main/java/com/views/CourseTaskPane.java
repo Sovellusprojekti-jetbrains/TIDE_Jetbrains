@@ -372,7 +372,10 @@ public class CourseTaskPane {
                     }
                 }
         }
-        pisteLabel.setText("Points : " + points + "/" + max);
+        float finalMax = max;
+        SwingUtilities.invokeLater(() -> {
+            pisteLabel.setText("Points : " + points + "/" + finalMax);
+        });
     }
 
     /**
@@ -398,9 +401,11 @@ public class CourseTaskPane {
      * @param values Values to be set.
      */
     private void setDemoName(String[] values) {
-        String info = values[0] + " - " + values[1];
-        this.demoTiedot.setText(info);
-        this.tehtavaNimi.setText(values[2]);
+        SwingUtilities.invokeLater(() -> {
+            String info = values[0] + " - " + values[1];
+            this.demoTiedot.setText(info);
+            this.tehtavaNimi.setText(values[2]);
+        });
     }
 }
 
