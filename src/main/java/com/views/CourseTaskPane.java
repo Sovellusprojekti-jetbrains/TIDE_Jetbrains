@@ -25,12 +25,9 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
-import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
 * Hoidetaan kaikki ruudun oikealla puolella olevan tehtävän palautuksen suorittavan ikkunan toiminnalliset sekä graaffiset toiminnot
@@ -98,7 +95,7 @@ public class CourseTaskPane {
     private JPanel resetPane;
     private JProgressBar taskProgressBar;
     /**
-     * label for the possible deadline of the subtask
+     * label for the possible deadline of the subtask.
      */
     private JLabel deadLineLabel;
     /**
@@ -160,7 +157,10 @@ public class CourseTaskPane {
 
         //Resets subtask back to the state of last submit.
         resetButton.addActionListener(event -> {
-            if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
+            ActionManager manager = ActionManager.getInstance();
+            AnAction action = manager.getAction("com.actions.ResetExercise");
+            manager.tryToExecute(action, null, null, null, true);
+            /*if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
                 com.views.InfoView.displayWarning("No files open in editor!");
                 return;
             }
@@ -199,7 +199,7 @@ public class CourseTaskPane {
                 com.api.LogHandler.logError("CourseTaskPane resetButton ActionListener", e);
                 InfoView.displayError("An error occurred during task reset! Check Tide CLI");
                 throw new RuntimeException(e);
-            }
+            }*/
         });
 
         // submit exercise
@@ -411,8 +411,7 @@ public class CourseTaskPane {
 
             DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z");
             deadLineLabel.setText(localDeadline.format(deadlineFormat));
-        }
-        else {
+        } else {
             deadLineLabel.setText("no deadline");
         }
     }
