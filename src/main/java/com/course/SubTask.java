@@ -119,7 +119,6 @@ public class SubTask {
     public String getDeadLine() {
         return this.deadLine;
     }
-    
     /**
      * Makes the object into a string that only contains the ideTaskid, so that the object can be used in the treeview.
      * @return string represantation of the object

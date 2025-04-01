@@ -300,7 +300,7 @@ public class ActiveState {
      */
     private String findSubTaskName(VirtualFile file) {
         for (SubTask task : this.subTaskList) {
-            if(file.getPath().contains(task.getFileName().getFirst())) {
+            if (file.getPath().contains(task.getFileName().getFirst())) {
                 return task.getIdeTaskId();
             }
         }

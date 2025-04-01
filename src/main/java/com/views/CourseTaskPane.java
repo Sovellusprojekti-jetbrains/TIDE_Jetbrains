@@ -93,9 +93,12 @@ public class CourseTaskPane {
      * Reset panel.
      */
     private JPanel resetPane;
+    /**
+     * progressbar for ongoing tasks.
+     */
     private JProgressBar taskProgressBar;
     /**
-     * label for the possible deadline of the subtask
+     * label for the possible deadline of the subtask.
      */
     private JLabel deadLineLabel;
     private JLabel maxSubmitsLabel;
@@ -128,32 +131,6 @@ public class CourseTaskPane {
             ActionManager manager = ActionManager.getInstance();
             AnAction action = manager.getAction("com.actions.BrowserAction");
             manager.tryToExecute(action, null, null, null, true);
-            /*
-            if (Desktop.isDesktopSupported()) {
-                Desktop desktop = Desktop.getDesktop();
-                //TODO: The following lines of code up to line 133 repeats in many action listeners.
-                // Is there a way to refactor this?
-                VirtualFile file = FileEditorManager
-                        .getInstance(project)
-                        .getSelectedEditor()
-                        .getFile();
-                try {
-                    ActiveState.getInstance().setSubmittable(file);
-                } catch (IOException ex) {
-                    InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
-                    throw new RuntimeException(ex);
-                }
-                if (!ActiveState.getInstance().isSubmittable()) {
-                    InfoView.displayWarning("File in editor is not a tim task!");
-                    return;
-                }
-                try {
-                    desktop.browse(new URI("https://timbeta01.tim.education"));
-                } catch (IOException | URISyntaxException e) {
-                    com.api.LogHandler.logError("111 CourseTaskPane avaaTehtava ActionListener", e);
-                    throw new RuntimeException(e);
-                }
-            } */
         });
 
         //Resets subtask back to the state of last submit.

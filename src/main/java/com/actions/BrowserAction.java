@@ -10,7 +10,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
 import org.jetbrains.annotations.NotNull;
 
-public class BrowserAction extends AnAction {
+public final class BrowserAction extends AnAction {
 
     private final String baseURL = "https://tim.jyu.fi/view/";
 
@@ -18,7 +18,9 @@ public class BrowserAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         Project project = event.getProject();
-        if (project == null) return;
+        if (project == null) {
+            return;
+        }
         //get demo and task with path from open file
         String url = baseURL;
         VirtualFile taskFile = FileEditorManager
