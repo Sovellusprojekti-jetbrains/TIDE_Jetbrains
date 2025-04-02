@@ -199,7 +199,7 @@ public class ActiveState {
         String oldTideSubmitResponse = tideSubmitResponse;
         tideSubmitResponse = response;
         pcs.firePropertyChange("tideSubmitResponse", null, tideSubmitResponse);
-        pcs.firePropertyChange("setPoints", null, getSubmitData());
+        pcs.firePropertyChange("setSubmitData", null, getSubmitData());
         LogHandler.logInfo("ActiveState fired event tideSubmitResponse");
         setTideBaseResponse(response);
     }
@@ -346,7 +346,7 @@ public class ActiveState {
             pcs.firePropertyChange("disableButtons", null, null);
         } else {
             pcs.firePropertyChange("enableButtons", null, null);
-            pcs.firePropertyChange("setPoints", null, getSubmitData());
+            pcs.firePropertyChange("setSubmitData", null, getSubmitData());
         }
     }
 
