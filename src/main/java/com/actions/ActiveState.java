@@ -294,7 +294,7 @@ public class ActiveState {
         if (courseTemp != null) {
             SubTask subTaskTemp = null;
                 for (SubTask temp2 : this.subTaskList) {
-                    if (file.getPath().contains(temp2.getFileName().getFirst())) {
+                    if (file.getPath().contains(temp2.getFileName().get(0))) {
                         subTaskTemp = temp2;
                         break;
                     }
@@ -317,7 +317,7 @@ public class ActiveState {
      */
     private String findSubTaskName(VirtualFile file) {
         for (SubTask task : this.subTaskList) {
-            if (file.getPath().contains(task.getFileName().getFirst())) {
+            if (file.getPath().contains(task.getFileName().get(0))) {
                 return task.getIdeTaskId();
             }
         }
@@ -394,7 +394,7 @@ public class ActiveState {
      */
     public SubTask getOpenTask(String filePath) {
         for (SubTask task : this.subTaskList) {
-            if (filePath.contains(task.getFileName().getFirst())) {
+            if (filePath.contains(task.getFileName().get(0))) {
                 return task;
             }
         }
