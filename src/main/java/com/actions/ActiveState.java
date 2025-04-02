@@ -17,9 +17,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ReflectionUtil;
+import com.views.InfoView;
 import org.jdesktop.swingx.action.ActionManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
@@ -71,6 +73,15 @@ public class ActiveState {
                     }
                 } catch (IOException e) { //Should never happen.
                     throw new RuntimeException(e);
+                }
+            }
+        });
+        this.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("tideBaseResponse".equals(evt.getPropertyName())) {
+                    String response = (String) evt.getNewValue();
+                    InfoView.displayInfo(response);
                 }
             }
         });
