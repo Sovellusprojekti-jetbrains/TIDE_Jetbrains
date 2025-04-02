@@ -234,7 +234,7 @@ public class CourseTaskPane {
                 if ("enableButtons".equals(evt.getPropertyName())) {
                     enableButtons();
                 }
-                if ("setPoints".equals(evt.getPropertyName())) {
+                if ("setSubmitData".equals(evt.getPropertyName())) {
                     String[] messages = (String[]) evt.getNewValue();
                     setPoints(messages[0]);
                     setDeadLine(messages[1]);
