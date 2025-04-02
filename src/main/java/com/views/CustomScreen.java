@@ -365,11 +365,13 @@ public class CustomScreen {
             List<SubTask> subtasks = jsonHandler.jsonToSubtask(timData);
             ActiveState.getInstance().setSubTasks(subtasks); //Subtasks are needed to add task name to CourseTaskPane
             Tree tree = createTree(subtasks, courseTask);
-            JBScrollPane container = new JBScrollPane();
-            container.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-            container.add(tree);
-            container.setViewportView(tree);
-            subPanel.add(container, BorderLayout.SOUTH);
+            if (tree.getRowCount() != 0) {
+                JBScrollPane container = new JBScrollPane();
+                container.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+                container.add(tree);
+                container.setViewportView(tree);
+                subPanel.add(container, BorderLayout.SOUTH);
+            }
         }
     }
 
