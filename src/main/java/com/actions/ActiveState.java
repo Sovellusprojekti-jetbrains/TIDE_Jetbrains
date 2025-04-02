@@ -377,7 +377,7 @@ public class ActiveState {
      */
     public SubTask getOpenTask(String filePath) {
         for (SubTask task : this.subTaskList) {
-            if (filePath.contains(task.getFileName().getFirst())) {
+            if (filePath.contains(task.getFileName().get(0))) {
                 return task;
             }
         }
