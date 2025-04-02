@@ -37,6 +37,9 @@ public class SubTask {
      */
     @SerializedName(value = "deadline")
     private String deadLine;
+    @SerializedName(value = "answer_limit")
+    private int answerLimit;
+
     /**
      * set the task name for the task.
      * @param id the name of the task
@@ -116,12 +119,19 @@ public class SubTask {
     public String getDeadLine() {
         return this.deadLine;
     }
-    
     /**
      * Makes the object into a string that only contains the ideTaskid, so that the object can be used in the treeview.
      * @return string represantation of the object
      */
     public String toString() {
         return this.ideTaskId;
+    }
+
+    /**
+     * getter for the maximum amount of submits allowed for a course task.
+     * @return the maximum amount of submits.
+     */
+    public int getAnswerLimit() {
+        return this.answerLimit;
     }
 }

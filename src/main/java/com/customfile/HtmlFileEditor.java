@@ -13,9 +13,13 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 
-public class HtmlFileEditor implements FileEditor {
+public final class HtmlFileEditor implements FileEditor {
     private final JBCefBrowser browser;
 
+    /**
+     * a method that loads a html file into the middle file editor window.
+     * @param url the url that gets loaded into the middle editor window.
+     */
     public HtmlFileEditor(String url) {
         browser = new JBCefBrowser();
         browser.loadURL(url); // Load the website
@@ -45,10 +49,10 @@ public class HtmlFileEditor implements FileEditor {
     }
 
     @Override
-    public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) {}
+    public void addPropertyChangeListener(@NotNull PropertyChangeListener listener) { }
 
     @Override
-    public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) {}
+    public void removePropertyChangeListener(@NotNull PropertyChangeListener listener) { }
 
     @Nullable
     @Override
@@ -57,7 +61,7 @@ public class HtmlFileEditor implements FileEditor {
     }
 
     @Override
-    public void setState(@NotNull FileEditorState state) {}
+    public void setState(@NotNull FileEditorState state) { }
 
     @Nullable
     @Override
@@ -81,5 +85,5 @@ public class HtmlFileEditor implements FileEditor {
     }
 
     @Override
-    public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {}
+    public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) { }
 }
