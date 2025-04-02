@@ -8,10 +8,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
-public class HtmlEditorProvider implements FileEditorProvider {
+public final class HtmlEditorProvider implements FileEditorProvider {
     private static final Logger LOG = Logger.getInstance(HtmlEditorProvider.class);
     private static String urlToLoad = "https://www.google.com"; // Default website
 
+    /**
+     * setter for the url that is loaded into the middle view.
+     * @param url the url that is being loaded
+     */
     public static void setUrl(String url) {
         urlToLoad = url;
     }

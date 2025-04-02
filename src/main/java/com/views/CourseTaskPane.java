@@ -2,17 +2,11 @@
 //26.1.2025
 
 package com.views;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
+
 import java.util.regex.*;
 import com.actions.ActiveState;
-import com.actions.Settings;
 import com.actions.StateManager;
 import com.api.ApiHandler;
-import com.api.JsonHandler;
-import com.api.TimDataHandler;
-import com.course.SubTask;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
@@ -93,11 +87,18 @@ public class CourseTaskPane {
      * Reset panel.
      */
     private JPanel resetPane;
+    /**
+     * progressbar for ongoing tasks.
+     */
     private JProgressBar taskProgressBar;
     /**
      * label for the possible deadline of the subtask.
      */
     private JLabel deadLineLabel;
+    /**
+     * label for the maximum amount of submissions allowed.
+     */
+    private JLabel maxSubmitsLabel;
     /**
      * Holds the current project.
      */
@@ -127,32 +128,6 @@ public class CourseTaskPane {
             ActionManager manager = ActionManager.getInstance();
             AnAction action = manager.getAction("com.actions.BrowserAction");
             manager.tryToExecute(action, null, null, null, true);
-            /*
-            if (Desktop.isDesktopSupported()) {
-                Desktop desktop = Desktop.getDesktop();
-                //TODO: The following lines of code up to line 133 repeats in many action listeners.
-                // Is there a way to refactor this?
-                VirtualFile file = FileEditorManager
-                        .getInstance(project)
-                        .getSelectedEditor()
-                        .getFile();
-                try {
-                    ActiveState.getInstance().setSubmittable(file);
-                } catch (IOException ex) {
-                    InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
-                    throw new RuntimeException(ex);
-                }
-                if (!ActiveState.getInstance().isSubmittable()) {
-                    InfoView.displayWarning("File in editor is not a tim task!");
-                    return;
-                }
-                try {
-                    desktop.browse(new URI("https://timbeta01.tim.education"));
-                } catch (IOException | URISyntaxException e) {
-                    com.api.LogHandler.logError("111 CourseTaskPane avaaTehtava ActionListener", e);
-                    throw new RuntimeException(e);
-                }
-            } */
         });
 
         //Resets subtask back to the state of last submit.
@@ -222,8 +197,11 @@ public class CourseTaskPane {
                 if ("enableButtons".equals(evt.getPropertyName())) {
                     enableButtons();
                 }
-                if ("setPoints".equals(evt.getPropertyName())) {
-                    setPoints();
+                if ("setSubmitData".equals(evt.getPropertyName())) {
+                    String[] messages = (String[]) evt.getNewValue();
+                    setPoints(messages[0]);
+                    setDeadLine(messages[1]);
+                    setMaxSubmits(messages[2]);
 
                 }
                 if ("setDemoName".equals(evt.getPropertyName())) {
@@ -318,81 +296,30 @@ public class CourseTaskPane {
             ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
         }
         System.out.println(path);
-        setPoints();
     }
 
     /**
      * Setter to show the points above the submit button.
+     * @param message message containing the points for the submission
      */
-    public void setPoints() {
-        StateManager state = new StateManager();
-        VirtualFile file = FileEditorManager
-                .getInstance(project)
-                .getSelectedEditor()
-                .getFile();
-
-        float points = state.getPoints(file.getCanonicalPath());
-        List<SubTask> sub = getTimDataSubTasks(file);
-        float max = 0.0F;
-        for (SubTask task : sub) {
-            for (String name : task.getFileName()) {
-                if (name.contains(file.getName())
-                        && (task.getIdeTaskId().equals(file.getParent().getName()) || name.contains(file.getParent().getName()))) {
-                    max = task.getMaxPoints();
-                }
-            }
-        }
-            pisteLabel.setText("Points : " + points + "/" + max);
-            setDeadLine(file, sub);
+    public void setPoints(String message) {
+            pisteLabel.setText(message);
     }
 
     /**
      * setter for the subtask deadline .
-     * @param file the file currently open in the editor
-     * @param sub list of subtasks for the coursetask;
+     * @param message message containing the deadline.
      */
-    private void setDeadLine(VirtualFile file, List<SubTask> sub) {
-        String deadline = "";
-        for (SubTask task : sub) {
-            for (String name : task.getFileName()) {
-                if (name.contains(file.getName())
-                        && (task.getIdeTaskId().equals(file.getParent().getName()) || name.contains(file.getParent().getName()))) {
-                     deadline = task.getDeadLine();
-                }
-            }
-        }
-        if (deadline != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx")
-                    .withZone(ZoneId.of("UTC"));
-            ZonedDateTime date = ZonedDateTime.parse(deadline, formatter);
-            ZoneId localZone = ZoneId.systemDefault();
-            ZonedDateTime localDeadline = date.withZoneSameInstant(localZone);
-
-
-            DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z");
-            deadLineLabel.setText(localDeadline.format(deadlineFormat));
-        } else {
-            deadLineLabel.setText("no deadline");
-        }
+    private void setDeadLine(String message) {
+        deadLineLabel.setText(message);
     }
     /**
-     * method to read subtask data from a timdatafile from under the timdatafile.
-     * @param file the file used to find the right timdata file.
-     * @return list of the subtasks that can be found in the timdata file.
+     * sets visible number for maximum amount of submissions that is allowed for the subtask.
+     * @param message  a message containing the maximum amount of submits allowed.
      */
-    private List<SubTask> getTimDataSubTasks(VirtualFile file) {
-        TimDataHandler tim = new TimDataHandler();
-        JsonHandler json = new JsonHandler();
-        VirtualFile parentFile = file.getParent();
-        String data = "";
-        while (data.isEmpty() && !Objects.equals(parentFile.getCanonicalPath(), Settings.getPath())) {
-            data = tim.readTimData(parentFile.getCanonicalPath());
-            parentFile = parentFile.getParent();
-        }
-        return json.jsonToSubtask(data);
+    private void setMaxSubmits(String message) {
+           maxSubmitsLabel.setText(message);
     }
-
-
 
     /**
      * Private method for disabling buttons.
