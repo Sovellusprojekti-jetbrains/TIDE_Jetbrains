@@ -132,46 +132,9 @@ public class CourseTaskPane {
 
         //Resets subtask back to the state of last submit.
         resetButton.addActionListener(event -> {
-            if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
-                com.views.InfoView.displayWarning("No files open in editor!");
-                return;
-            }
-
-            VirtualFile file = FileEditorManager
-                    .getInstance(project)
-                    .getSelectedEditor()
-                    .getFile();
-
-            // show confirmation dialog and return if the user decides to cancel
-            if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
-                return;
-            }
-            try {
-                ActiveState.getInstance().setSubmittable(file);
-            } catch (IOException ex) {
-                InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
-                throw new RuntimeException(ex);
-            }
-            if (!ActiveState.getInstance().isSubmittable()) {
-                InfoView.displayWarning("File in editor is not a tim task!");
-                return;
-            }
-            ApiHandler handler = new ApiHandler();
-            ActiveState stateManager = ActiveState.getInstance();
-            String coursePath = stateManager.getCourseName(file.getPath());
-            try {
-                handler.resetSubTask(file, coursePath);
-            } catch (IOException e) {
-                com.api.LogHandler.logError("142 CourseTaskPane resetButton ActionListener", e);
-                com.api.LogHandler.logDebug(new String[]{"148 VirtualFile file", "169 String coursePath"},
-                        new String[]{file.toString(), coursePath});
-                InfoView.displayError(".timdata file not found!");
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
-                com.api.LogHandler.logError("CourseTaskPane resetButton ActionListener", e);
-                InfoView.displayError("An error occurred during task reset! Check Tide CLI");
-                throw new RuntimeException(e);
-            }
+            ActionManager manager = ActionManager.getInstance();
+            AnAction action = manager.getAction("com.actions.ResetExercise");
+            manager.tryToExecute(action, null, null, null, true);
         });
 
         // submit exercise
@@ -348,7 +311,6 @@ public class CourseTaskPane {
      * @param message message containing the deadline.
      */
     private void setDeadLine(String message) {
-
         deadLineLabel.setText(message);
     }
     /**
