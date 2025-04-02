@@ -365,13 +365,13 @@ public class CustomScreen {
             List<SubTask> subtasks = jsonHandler.jsonToSubtask(timData);
             ActiveState.getInstance().setSubTasks(subtasks); //Subtasks are needed to add task name to CourseTaskPane
             Tree tree = createTree(subtasks, courseTask);
-            if (tree.getRowCount() != 0) {
-                JBScrollPane container = new JBScrollPane();
-                container.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-                container.add(tree);
-                container.setViewportView(tree);
-                subPanel.add(container, BorderLayout.SOUTH);
-            }
+             if (tree.getRowCount() != 0) {
+                 JBScrollPane container = new JBScrollPane();
+                 container.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+                 container.add(tree);
+                 container.setViewportView(tree);
+                 subPanel.add(container, BorderLayout.SOUTH);
+             }
         }
     }
 
@@ -403,6 +403,7 @@ public class CustomScreen {
         Tree tree = new Tree(root);
         tree.setRootVisible(false);
         tree.setVisibleRowCount(rowCount);
+
         //TODO: korjaa avaaminen tuplaklikillä lisäämällä  kurssifolderi.
         tree.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {

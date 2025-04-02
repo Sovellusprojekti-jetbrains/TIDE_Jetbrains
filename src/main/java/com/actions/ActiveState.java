@@ -6,6 +6,7 @@ import com.course.Course;
 import com.course.CourseTask;
 import com.course.SubTask;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
@@ -16,13 +17,19 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ReflectionUtil;
+import com.views.InfoView;
 import org.jdesktop.swingx.action.ActionManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -66,6 +73,15 @@ public class ActiveState {
                     }
                 } catch (IOException e) { //Should never happen.
                     throw new RuntimeException(e);
+                }
+            }
+        });
+        this.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("tideBaseResponse".equals(evt.getPropertyName())) {
+                    String response = (String) evt.getNewValue();
+                    InfoView.displayInfo(response);
                 }
             }
         });
@@ -194,6 +210,7 @@ public class ActiveState {
         String oldTideSubmitResponse = tideSubmitResponse;
         tideSubmitResponse = response;
         pcs.firePropertyChange("tideSubmitResponse", null, tideSubmitResponse);
+        pcs.firePropertyChange("setSubmitData", null, getSubmitData());
         LogHandler.logInfo("ActiveState fired event tideSubmitResponse");
         setTideBaseResponse(response);
     }
@@ -340,7 +357,7 @@ public class ActiveState {
             pcs.firePropertyChange("disableButtons", null, null);
         } else {
             pcs.firePropertyChange("enableButtons", null, null);
-            pcs.firePropertyChange("setPoints", null, null);
+            pcs.firePropertyChange("setSubmitData", null, getSubmitData());
         }
     }
 
@@ -382,5 +399,42 @@ public class ActiveState {
             }
         }
         return null;
+    }
+
+    /**
+     * a method that makes messages for the points, deadline and maximum number of submits.
+     * @return string array of messages
+     */
+    public String[] getSubmitData() {
+        StateManager state = new StateManager();
+        VirtualFile file = FileEditorManager
+                .getInstance(project)
+                .getSelectedEditor()
+                .getFile();
+        SubTask current = getOpenTask(file.getCanonicalPath());
+        float points = state.getPoints(file.getCanonicalPath());
+        String pointsMessage = "Points : " + points + "/" + current.getMaxPoints();
+        String deadLineMessage = checkDeadline(current);
+        String submitMessage = "Maximum number of submissions allowed: " + current.getAnswerLimit();
+        return new String[] {pointsMessage, deadLineMessage, submitMessage};
+    }
+
+    /**
+     * Checks if the deadline exists, and changes it into the systems current timezone if it does.
+     * @param current the currently open subtask which deadline is being checked.
+     * @return a string containing the deadline.
+     */
+    private String checkDeadline(SubTask current) {
+        String deadLineMessage = "no deadline";
+        if (current.getDeadLine() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx")
+                    .withZone(ZoneId.of("UTC"));
+            ZonedDateTime date = ZonedDateTime.parse(current.getDeadLine(), formatter);
+            ZoneId localZone = ZoneId.systemDefault();
+            ZonedDateTime localDeadline = date.withZoneSameInstant(localZone);
+            DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z");
+            deadLineMessage = localDeadline.format(deadlineFormat);
+        }
+        return deadLineMessage;
     }
 }

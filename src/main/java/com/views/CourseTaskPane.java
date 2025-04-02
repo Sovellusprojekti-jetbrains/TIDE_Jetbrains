@@ -2,17 +2,11 @@
 //26.1.2025
 
 package com.views;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
+
 import java.util.regex.*;
 import com.actions.ActiveState;
-import com.actions.Settings;
 import com.actions.StateManager;
 import com.api.ApiHandler;
-import com.api.JsonHandler;
-import com.api.TimDataHandler;
-import com.course.SubTask;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
@@ -101,6 +95,9 @@ public class CourseTaskPane {
      * label for the possible deadline of the subtask.
      */
     private JLabel deadLineLabel;
+    /**
+     * label for the maximum amount of submissions allowed.
+     */
     private JLabel maxSubmitsLabel;
     /**
      * Holds the current project.
@@ -237,8 +234,11 @@ public class CourseTaskPane {
                 if ("enableButtons".equals(evt.getPropertyName())) {
                     enableButtons();
                 }
-                if ("setPoints".equals(evt.getPropertyName())) {
-                    setPoints();
+                if ("setSubmitData".equals(evt.getPropertyName())) {
+                    String[] messages = (String[]) evt.getNewValue();
+                    setPoints(messages[0]);
+                    setDeadLine(messages[1]);
+                    setMaxSubmits(messages[2]);
 
                 }
                 if ("setDemoName".equals(evt.getPropertyName())) {
@@ -333,79 +333,31 @@ public class CourseTaskPane {
             ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
         }
         System.out.println(path);
-        setPoints();
     }
 
     /**
      * Setter to show the points above the submit button.
+     * @param message message containing the points for the submission
      */
-    public void setPoints() {
-        StateManager state = new StateManager();
-        VirtualFile file = FileEditorManager
-                .getInstance(project)
-                .getSelectedEditor()
-                .getFile();
-
-        float points = state.getPoints(file.getCanonicalPath());
-        List<SubTask> sub = getTimDataSubTasks(file);
-        SubTask kasiteltava = new SubTask();
-        float max = 0.0F;
-        for (SubTask task : sub) {
-            for (String name : task.getFileName()) {
-                if (name.contains(file.getName())
-                        && (task.getIdeTaskId().equals(file.getParent().getName()) || name.contains(file.getParent().getName()))) {
-                    kasiteltava = task;
-                }
-            }
-        }
-            pisteLabel.setText("Points : " + points + "/" + kasiteltava.getMaxPoints());
-            setDeadLine(kasiteltava);
+    public void setPoints(String message) {
+            pisteLabel.setText(message);
     }
 
     /**
      * setter for the subtask deadline .
-     * @param sub a subtask which deadline is to be shown in the UI;
+     * @param message message containing the deadline.
      */
-    private void setDeadLine(SubTask sub) {
-        if (sub.getDeadLine() != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx")
-                    .withZone(ZoneId.of("UTC"));
-            ZonedDateTime date = ZonedDateTime.parse(sub.getDeadLine(), formatter);
-            ZoneId localZone = ZoneId.systemDefault();
-            ZonedDateTime localDeadline = date.withZoneSameInstant(localZone);
-            DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z");
-            deadLineLabel.setText(localDeadline.format(deadlineFormat));
-        } else {
-            deadLineLabel.setText("no deadline");
-        }
-        setMaxSubmits(sub);
+    private void setDeadLine(String message) {
+
+        deadLineLabel.setText(message);
     }
     /**
      * sets visible number for maximum amount of submissions that is allowed for the subtask.
-     * @param sub the subtask which maximum submits are to be shown.
+     * @param message  a message containing the maximum amount of submits allowed.
      */
-    private void setMaxSubmits(SubTask sub) {
-           maxSubmitsLabel.setText("Maximum number of submissions allowed: " + sub.getAnswerLimit());
+    private void setMaxSubmits(String message) {
+           maxSubmitsLabel.setText(message);
     }
-
-    /**
-     * method to read subtask data from a timdatafile from under the timdatafile.
-     * @param file the file used to find the right timdata file.
-     * @return list of the subtasks that can be found in the timdata file.
-     */
-    private List<SubTask> getTimDataSubTasks(VirtualFile file) {
-        TimDataHandler tim = new TimDataHandler();
-        JsonHandler json = new JsonHandler();
-        VirtualFile parentFile = file.getParent();
-        String data = "";
-        while (data.isEmpty() && !Objects.equals(parentFile.getCanonicalPath(), Settings.getPath())) {
-            data = tim.readTimData(parentFile.getCanonicalPath());
-            parentFile = parentFile.getParent();
-        }
-        return json.jsonToSubtask(data);
-    }
-
-
 
     /**
      * Private method for disabling buttons.
