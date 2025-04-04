@@ -16,7 +16,7 @@ public class LoginWindow {
      * @param toolWindow some toolwindow?
      */
     public LoginWindow(@NotNull final ToolWindow toolWindow) {
-        content = new CustomScreen(toolWindow).getContent();
+        content = new CourseMainPane(toolWindow).getContent();
 
     }
 

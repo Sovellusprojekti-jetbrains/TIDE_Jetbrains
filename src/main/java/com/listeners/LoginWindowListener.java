@@ -6,8 +6,8 @@ import com.intellij.openapi.components.Service;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.ui.content.Content;
+import com.views.CourseMainPane;
 import com.views.CoursePaneWindow;
-import com.views.CustomScreen;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -37,7 +37,7 @@ public final class LoginWindowListener implements ToolWindowManagerListener  {
             }
             toolWindow.getContentManager().addContent(
                     com.intellij.ui.content.ContentFactory.getInstance()
-                            .createContent(new CustomScreen(toolWindow)
+                            .createContent(new CourseMainPane(toolWindow)
                                     .getContent(), "Courses", false));
         }
         if ("Course Task".equals(toolWindow.getId())) {
