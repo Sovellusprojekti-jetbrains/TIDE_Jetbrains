@@ -24,6 +24,8 @@ import java.io.*;
 
 import com.course.*;
 import com.intellij.ui.treeStructure.Tree;
+import com.intellij.util.ui.AsyncProcessIcon;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -297,13 +299,16 @@ public class CourseMainPane {
         buttonPanel.setBackground(bgColor);
         subPanel.setBackground(bgColor);
 
-
+        AsyncProcessIcon spinner = new AsyncProcessIcon("Loading");
+        spinner.setVisible(false);  // Initially hidden
+        buttonPanel.add(spinner);
         JButton dButton = new JButton();
         dButton.setText("Download");
         dButton.setBackground(bgColor);
         dButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                spinner.setVisible(true);
                 setProgress(true, "Downloading...");
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
@@ -328,6 +333,7 @@ public class CourseMainPane {
         oButton.setText("Open as Project");
         oButton.setBackground(bgColor);
         oButton.addActionListener(event -> {
+            spinner.setVisible(true);
             int lastPartStart = courseTask.getPath().lastIndexOf('/');
             String demoDirectory = File.separatorChar + courseTask.getPath().substring(lastPartStart + 1);
             new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName + demoDirectory);
