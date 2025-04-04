@@ -1,10 +1,11 @@
 package com.listeners
 
+import com.actions.ActiveState
 import com.api.TideCommandExecutor
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.startup.StartupActivity
+import com.intellij.openapi.ui.Messages
 
 class StartUp : StartupActivity {
 
@@ -39,7 +40,11 @@ class StartUp : StartupActivity {
             }
 
 
+            //tabbedPane.remove(loginPane); // Hide Login tab
             TideCommandExecutor.checkLogin()
+            val stateManager = ActiveState.getInstance()
+            stateManager.updateCourses()
+
         }
 
     }
