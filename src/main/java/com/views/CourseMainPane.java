@@ -21,7 +21,6 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
-import java.nio.file.*;
 
 import com.course.*;
 import com.intellij.ui.treeStructure.Tree;
@@ -31,7 +30,7 @@ import java.util.List;
 /**
  * Class for displaying a template course window.
  */
-public class CustomScreen {
+public class CourseMainPane {
     /**
      * The currently open project.
      */
@@ -95,10 +94,10 @@ public class CustomScreen {
     private final int scrollSpeed = 16;
 
     /**
-     * Creator for the CustomScreen class, that holds the courses and tasks.
+     * Creator for the CourseMainPane class, that holds the courses and tasks.
      * @param toolWindow The Toolwindow this view belongs to
      */
-    public CustomScreen(ToolWindow toolWindow) {
+    public CourseMainPane(ToolWindow toolWindow) {
         this.project = toolWindow.getProject();
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
@@ -155,15 +154,15 @@ public class CustomScreen {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("logout".equals(evt.getPropertyName())) {
-                    LogHandler.logInfo("CustomScreen received event logout");
+                    LogHandler.logInfo("CourseMainPane received event logout");
                     switchToLoggedOut(); // Poistaa kurssinäkymän näkyvistä
                 }
                 if ("login".equals(evt.getPropertyName())) {
-                    LogHandler.logInfo("CustomScreen received event login");
+                    LogHandler.logInfo("CourseMainPane received event login");
                     switchToLoggedIn();
                 }
                 if ("courseList".equals(evt.getPropertyName())) {
-                    LogHandler.logInfo("CustomScreen received event courseList");
+                    LogHandler.logInfo("CourseMainPane received event courseList");
                     // Do some extra processing to ensure the courseList shows up as a list instead of object.
                     Object newValue = evt.getNewValue();
 
@@ -311,13 +310,13 @@ public class CustomScreen {
                 try {
                     api.loadExercise(courseName, courseTask.getPath(), "--all");
                 } catch (IOException ex) {
-                    com.api.LogHandler.logError("268 CustomScreen.createExercise(CourseTask courseTask, String courseName)", ex);
+                    com.api.LogHandler.logError("268 CourseMainPane.createExercise(CourseTask courseTask, String courseName)", ex);
                     com.api.LogHandler.logDebug(new String[]{"268 CourseTask courseTask", "268 String courseName"},
                             new String[]{courseTask.toString(), courseName});
                     InfoView.displayError("Couldn't load exercise. Check Tide CLI");
                     throw new RuntimeException(ex);
                 } catch (InterruptedException ex) {
-                    com.api.LogHandler.logError("268 CustomScreen.createExercise(CourseTask courseTask, String courseName)", ex);
+                    com.api.LogHandler.logError("268 CourseMainPane.createExercise(CourseTask courseTask, String courseName)", ex);
                     InfoView.displayError("Couldn't load exercise. Check Tide CLI");
                     throw new RuntimeException(ex);
                 }
@@ -344,7 +343,7 @@ public class CustomScreen {
         try {
             createSubTaskpanel(subPanel, courseTask, courseName);
         } catch (Exception e) {
-            com.api.LogHandler.logError("318 CustomScreen.createExercise createSubTaskpanel", e);
+            com.api.LogHandler.logError("318 CourseMainPane.createExercise createSubTaskpanel", e);
             throw new RuntimeException(e);
         }
         return subPanel;

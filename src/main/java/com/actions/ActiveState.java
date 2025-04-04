@@ -372,7 +372,7 @@ public class ActiveState {
     }
 
     /**
-     * Sets the subTask list. The implementation is weird because CustomScreen might call this with smaller list than
+     * Sets the subTask list. The implementation is weird because CourseMainPane might call this with smaller list than
      * was set a moment ago. During tree view update JsonData is read and objects created multiple times.
      * @param subTasks List of subtasks.
      */

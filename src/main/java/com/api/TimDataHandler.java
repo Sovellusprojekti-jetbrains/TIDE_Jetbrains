@@ -32,7 +32,7 @@ public class TimDataHandler {
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            com.api.LogHandler.logError("CustomScreen.readTimData(String pathToFile), lines: 405-413", e);
+            com.api.LogHandler.logError("CourseMainPane.readTimData(String pathToFile), lines: 405-413", e);
             com.api.LogHandler.logDebug(new String[]{"402 String pathToFile"}, new String[]{pathToFile});
             System.out.println("File timdata was not found");
         }
