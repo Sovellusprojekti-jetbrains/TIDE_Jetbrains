@@ -15,6 +15,7 @@ class StartUp : StartupActivity {
             val programName = "TIDE"
             if (System.getProperty("os.name").contains("Windows")) {
 
+
                 val process = ProcessBuilder("where", programName).start()
                 val exitcode = process.waitFor()
                 if(exitcode != 0){
