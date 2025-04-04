@@ -5,6 +5,7 @@ import com.api.ApiHandler;
 import com.api.TideCommandExecutor;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.verification.VerificationMode;
 
@@ -97,8 +98,10 @@ public class ApiHandlerTest {
 
     /**
      * Test the handleCommandLine function and if the tide-cli works or not.
+     * TODO: Remove disabled annotation during local testing.
      */
     @Test
+    @Disabled
     public void testHandleCommandLine() throws IOException, InterruptedException {
         List<String> command = new ArrayList<>();
         command.add("tide");
