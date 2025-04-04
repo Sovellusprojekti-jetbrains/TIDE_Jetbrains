@@ -23,7 +23,8 @@ val runIdeForUiTests by intellijPlatformTesting.runIde.registering {
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.0.20"
-    id("org.jetbrains.intellij.platform") version "2.4.0"
+    // TODO: This platform version is getting old but tests fail with newer versions as of April 2025.
+    id("org.jetbrains.intellij.platform") version "2.2.1"
 }
 
 group = "org.jyu"
@@ -49,6 +50,7 @@ repositories {
     }
 }
 
+val mockitoAgent = configurations.create("mockitoAgent")
 dependencies {
     intellijPlatform {
         if (projectType == "RD") {
@@ -65,6 +67,7 @@ dependencies {
     testImplementation("com.intellij.remoterobot:remote-robot:0.11.23")
     testImplementation ("com.intellij.remoterobot:remote-fixtures:0.11.23")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("org.mockito:mockito-core:5.16.1")
 }
 
 
@@ -98,11 +101,13 @@ tasks {
     publishPlugin {
         token.set(System.getenv("PUBLISH_TOKEN"))
     }*/
-}
 
+}
 
 tasks.test {
     useJUnitPlatform()
+
+    jvmArgs("--add-javaagent=${configurations.testRuntimeClasspath.get().find { it.name.contains("mockito") }?.absolutePath}")
 }
 
 
