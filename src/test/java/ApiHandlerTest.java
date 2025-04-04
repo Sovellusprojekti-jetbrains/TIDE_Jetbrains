@@ -7,7 +7,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.verification.VerificationMode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -107,20 +106,20 @@ public class ApiHandlerTest {
         command.add("tide");
 
         String result = apiHandler.handleCommandLine(command);
-        String expect = "Usage: tide [OPTIONS] COMMAND [ARGS]...\n" +
-                "\n" +
-                "  CLI tool for downloading and submitting TIM tasks.\n" +
-                "\n" +
-                "Options:\n" +
-                "  --help  Show this message and exit.\n" +
-                "\n" +
-                "Commands:\n" +
-                "  check-login  Check login status, prints the username when logged in.\n" +
-                "  courses      List all courses.\n" +
-                "  login        Log in the user and saves the token to the keyring.\n" +
-                "  logout       Log out the user and deletes the token from the keyring.\n" +
-                "  submit       Enter the path of a task folder or a file to submit the...\n" +
-                "  task         Task related commands.";
+        String expect = "Usage: tide [OPTIONS] COMMAND [ARGS]...\n"
+                + "\n"
+                + "  CLI tool for downloading and submitting TIM tasks.\n"
+                + "\n"
+                + "Options:\n"
+                + "  --help  Show this message and exit.\n"
+                + "\n"
+                + "Commands:\n"
+                + "  check-login  Check login status, prints the username when logged in.\n"
+                + "  courses      List all courses.\n"
+                + "  login        Log in the user and saves the token to the keyring.\n"
+                + "  logout       Log out the user and deletes the token from the keyring.\n"
+                + "  submit       Enter the path of a task folder or a file to submit the...\n"
+                + "  task         Task related commands.";
         assertEquals(expect, result, "Should return tide help message");
     }
 
