@@ -246,7 +246,7 @@ object TideCommandExecutor {
                 val appInfo = ApplicationInfo.getInstance()
                 val productName = appInfo.fullApplicationName
                 if (System.getProperty("os.name").contains("Windows")) {
-                    if (productName.contains("Idea")){
+                    if (productName.contains("IDEA")){
                         command += "idea64.exe"
                     } else if (productName.contains("PyCharm")) {
                         command += "pycharm64.exe"
@@ -254,7 +254,7 @@ object TideCommandExecutor {
                         command += "rider64.exe"
                     }
                 } else if (System.getProperty("os.name").contains("Linux")) {
-                    if (productName.contains("Idea")){
+                    if (productName.contains("IDEA")){
                         command += "idea"
                     } else if (productName.contains("PyCharm")) {
                         command += "pycharm"
@@ -263,7 +263,7 @@ object TideCommandExecutor {
                     }
                 //TODO: This is the Mac section. It is not possible to test functionality without a Mac
                 } else {
-                    if (productName.contains("Idea")) {
+                    if (productName.contains("IDEA")) {
 
                     } else if (productName.contains("PyCharm")) {
 
