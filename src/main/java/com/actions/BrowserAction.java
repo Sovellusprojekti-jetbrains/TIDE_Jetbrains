@@ -8,6 +8,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
+import com.state.ActiveState;
 import org.jetbrains.annotations.NotNull;
 
 public final class BrowserAction extends AnAction {

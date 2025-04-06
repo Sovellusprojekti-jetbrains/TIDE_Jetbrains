@@ -1,5 +1,6 @@
-package com.actions;
+package com.state;
 
+import com.actions.Settings;
 import com.api.ApiHandler;
 import com.api.LogHandler;
 import com.course.Course;

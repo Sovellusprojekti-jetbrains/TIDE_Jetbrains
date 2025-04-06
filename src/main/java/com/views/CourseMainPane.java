@@ -1,5 +1,5 @@
 package com.views;
-import com.actions.ActiveState;
+import com.state.ActiveState;
 import com.actions.Settings;
 import com.api.ApiHandler;
 import com.api.JsonHandler;

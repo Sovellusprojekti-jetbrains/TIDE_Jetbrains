@@ -1,4 +1,4 @@
-package com.actions;
+package com.state;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.components.*;

@@ -3,6 +3,7 @@ package com.actions;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
+import com.state.StateManager;
 import com.views.SettingsScreen;
 import org.jetbrains.annotations.NotNull;
 

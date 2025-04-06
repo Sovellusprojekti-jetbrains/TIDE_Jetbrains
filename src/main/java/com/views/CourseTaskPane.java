@@ -4,8 +4,8 @@
 package com.views;
 
 import java.util.regex.*;
-import com.actions.ActiveState;
-import com.actions.StateManager;
+import com.state.ActiveState;
+import com.state.StateManager;
 import com.api.ApiHandler;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
