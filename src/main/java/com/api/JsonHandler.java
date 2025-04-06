@@ -57,14 +57,13 @@ public class JsonHandler {
                 Set<Map.Entry<String, JsonElement>> demos = coursePart.entrySet();
                 for (Map.Entry entry: demos) {
                     JsonElement subtasks = (JsonElement) entry.getValue();
-                    Gson gsonSubtask = new GsonBuilder().registerTypeAdapter(SubTask.class, new SubtaskDeserializer()).create();
                     Set<Map.Entry<String, JsonElement>> subtaskMap = subtasks.getAsJsonObject().entrySet();
                     for (Map.Entry subEntry: subtaskMap) {
                         JsonObject subtasksObject = ((JsonElement) subEntry.getValue()).getAsJsonObject();
                         Set<Map.Entry<String, JsonElement>> subs = subtasksObject.entrySet();
                         for (Map.Entry subElement: subs) {
                             String jsonstr = subElement.getValue().toString();
-                            SubTask sub = gsonSubtask.fromJson(jsonstr, SubTask.class);
+                            SubTask sub = new Gson().fromJson(jsonstr, SubTask.class);
                             subTaskList.add(sub);
                         }
                     }
@@ -118,44 +117,6 @@ public class JsonHandler {
 
             return course;
         }
-    }
-
-
-    /**
-     * Custom deserializer for the SubTask class.
-     */
-    public class SubtaskDeserializer implements JsonDeserializer<SubTask> {
-        /**
-         * Overrides the default deserialize method.
-         * @param courseTaskJsonElement The Json data being deserialized
-         * @param courseTaskType The type of the Object to deserialize to
-         * @param context Deserialization context
-         * @return A deserialized CourseTask object
-         * @throws JsonParseException if something goes wrong
-         */
-        @Override
-        public SubTask deserialize(JsonElement courseTaskJsonElement,
-                                      Type courseTaskType,
-                                      JsonDeserializationContext context)
-                throws JsonParseException {
-            SubTask subTask = new Gson().fromJson(courseTaskJsonElement.getAsJsonObject(), SubTask.class);
-
-            return subTask;
-        }
-    }
-
-
-    /**
-     * Remove quotes from a string if it starts and ends with one.
-     * @param str String to process
-     * @return Resulting string
-     */
-    private String removeQuotes(String str) {
-        String result = str;
-        if (result.startsWith("\"") && result.endsWith("\"")) {
-            result = result.substring(1, result.length() - 1);
-        }
-        return result;
     }
 }
 

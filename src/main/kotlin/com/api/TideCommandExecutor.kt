@@ -205,8 +205,7 @@ object TideCommandExecutor {
         var filePath = file.getPath()
         for (subtask: SubTask in subtasks) {
             for (taskFile: SubTask.TaskFile in subtask.taskFiles) {
-                // TODO: tarvitaanko korvausta enää
-                if (filePath.contains(taskFile.fileName.replace("\"", ""))) {
+                if (filePath.contains(taskFile.fileName)) {
                     taskId = subtask.ideTaskId
                     taskPath = subtask.path
                     break
