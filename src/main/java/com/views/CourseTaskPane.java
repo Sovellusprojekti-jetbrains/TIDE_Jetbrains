@@ -15,6 +15,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,7 +144,7 @@ public class CourseTaskPane {
                 printOutput("Please open a file to submit in the editor.");
                 return;
             }
-            OutputWindow.showWindow(project);
+            Util.showWindow(project, "Output Window", true);
 
             VirtualFile file = FileEditorManager
                     .getInstance(project)
@@ -173,7 +174,7 @@ public class CourseTaskPane {
 
 
         showOutputButton.addActionListener(event -> {
-            OutputWindow.showWindow(project);
+            Util.showWindow(project, "Output Window", true);
         });
 
 
@@ -223,7 +224,7 @@ public class CourseTaskPane {
      * @param output String to print
      */
     public void printOutput(String output) {
-        OutputWindow.showWindow(project);
+        Util.showWindow(project, "Output Window", true);
         OutputWindow outputWindow = OutputWindow.getInstance();
         if (outputWindow != null) {
             OutputWindow.getInstance().printText(output);
