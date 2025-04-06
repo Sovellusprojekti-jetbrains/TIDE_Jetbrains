@@ -2,8 +2,12 @@ package com.util;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.util.ReflectionUtil;
+
+import javax.swing.*;
 
 public final class Util {
 
@@ -27,6 +31,40 @@ public final class Util {
             } else {
                 window.hide(null);
             }
+        });
+    }
+
+    /**
+     * Changes the availability status of the toolwindow.
+     * @param project Project the window is in.
+     * @param id Name of the window as specified in plugin.xml.
+     * @param available Whether the window is set available or not.
+     */
+    public static void setWindowAvailable(Project project, String id, boolean available) {
+        SwingUtilities.invokeLater(() -> {
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            ToolWindow window = toolWindowManager.getToolWindow(id);
+            assert window != null;
+            window.setAvailable(available);
+        });
+    }
+
+    /**
+     * Changes the availability status of the toolwindow, and changes the icon.
+     * @param project Project the window is in.
+     * @param id Name of the window as specified in plugin.xml.
+     * @param available Whether the window is set available or not.
+     * @param iconPath Path to the icon svg.
+     */
+    public static void setWindowAvailable(Project project, String id, boolean available, String iconPath) {
+        ApplicationManager.getApplication().invokeLater(() -> {
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            ToolWindow window = toolWindowManager.getToolWindow(id);
+            var callerClass = ReflectionUtil.getGrandCallerClass();
+            if (callerClass != null) {
+                window.setIcon(IconLoader.getIcon(iconPath, callerClass));
+            }
+            window.setAvailable(available);
         });
     }
 }

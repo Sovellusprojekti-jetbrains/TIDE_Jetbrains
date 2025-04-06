@@ -44,12 +44,6 @@ public class OutputWindow {
         stateManager.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                if ("logout".equals(evt.getPropertyName())) {
-                    Util.showWindow(project, "Output Window", false);
-                }
-                if ("login".equals(evt.getPropertyName())) {
-                    setWindowAvailable();
-                }
                 if ("tideSubmitResponse".equals(evt.getPropertyName())) {
                     Util.showWindow(project, "Output Window", true);
                     printText((String) evt.getNewValue());
@@ -96,31 +90,5 @@ public class OutputWindow {
                 textArea.setText("");
             });
         }
-    }
-
-    /**
-     * Makes the toolwindow unavailable.
-     */
-    private void hideWindow() {
-        SwingUtilities.invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow("Output Window");
-            assert window != null;
-            window.setAvailable(false);
-            System.out.println("Hide Window");
-        });
-    }
-
-    /**
-     * Makes the toolwindow available.
-     */
-    private void setWindowAvailable() {
-        SwingUtilities.invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow("Output Window");
-            assert window != null;
-            window.setAvailable(true);
-            System.out.println("Show Window");
-        });
     }
 }

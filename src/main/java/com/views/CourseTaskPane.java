@@ -182,12 +182,6 @@ public class CourseTaskPane {
         stateManager.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                if ("logout".equals(evt.getPropertyName())) {
-                    hideWindow();
-                }
-                if ("login".equals(evt.getPropertyName())) {
-                    showWindow();
-                }
                 if ("tideSubmitResponse".equals(evt.getPropertyName())) {
                     String response = (String) evt.getNewValue();
                     handleSubmitResponse(response);
@@ -229,34 +223,6 @@ public class CourseTaskPane {
         if (outputWindow != null) {
             OutputWindow.getInstance().printText(output);
         }
-    }
-
-
-    /**
-     * Makes the toolwindow unavailable.
-     */
-    private void hideWindow() {
-        SwingUtilities.invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow("Course Task");
-            if (window != null) {
-                window.setAvailable(false);
-            }
-        });
-    }
-
-
-    /**
-     * Makes the toolwindow available.
-     */
-    private void showWindow() {
-        SwingUtilities.invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow("Course Task");
-            if (window != null) {
-                window.setAvailable(true);
-            }
-        });
     }
 
 
