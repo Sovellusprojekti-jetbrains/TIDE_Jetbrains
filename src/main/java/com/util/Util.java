@@ -34,20 +34,6 @@ public final class Util {
         });
     }
 
-    /**
-     * Changes the availability status of the toolwindow.
-     * @param project Project the window is in.
-     * @param id Name of the window as specified in plugin.xml.
-     * @param available Whether the window is set available or not.
-     */
-    public static void setWindowAvailable(Project project, String id, boolean available) {
-        SwingUtilities.invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow(id);
-            assert window != null;
-            window.setAvailable(available);
-        });
-    }
 
     /**
      * Changes the availability status of the toolwindow, and changes the icon.
