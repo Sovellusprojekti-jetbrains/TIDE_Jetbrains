@@ -2,9 +2,7 @@ package com.views;
 import com.actions.ActiveState;
 import com.actions.Settings;
 import com.api.ApiHandler;
-import com.api.JsonHandler;
 import com.api.LogHandler;
-import com.api.TimDataHandler;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
@@ -26,7 +24,6 @@ import com.course.*;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.AsyncProcessIcon;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -345,9 +342,9 @@ public class CourseMainPane {
         nameAndButtonPanel.add(buttonPanel, BorderLayout.EAST);
         subPanel.add(nameAndButtonPanel);
 
-        //subPanel.add(buttonPanel, BorderLayout.EAST);
+        // subPanel.add(buttonPanel, BorderLayout.EAST);
         try {
-            createSubTaskpanel(subPanel, courseTask, courseName);
+            createSubTaskpanel(subPanel, courseTask);
         } catch (Exception e) {
             com.api.LogHandler.logError("318 CourseMainPane.createExercise createSubTaskpanel", e);
             throw new RuntimeException(e);
@@ -359,51 +356,39 @@ public class CourseMainPane {
      * Creates and adds a panel of clickable subtasks to the panel containing the course that the subtasks belong to.
      * @param subPanel the panel that the panel of subtasks is appended to.
      * @param courseTask The Course task that the subtasks belong to.
-     * @param courseName Course name for subdirectory
      */
-    private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask, String courseName) {
-        String pathToFile = Settings.getPath() + File.separatorChar + courseName;
-        JsonHandler jsonHandler = new JsonHandler();
-        TimDataHandler tim = new TimDataHandler();
-        String timData = tim.readTimData(pathToFile);
-        if (!timData.isEmpty()) {
-            List<SubTask> subtasks = jsonHandler.jsonToSubtask(timData);
-            ActiveState.getInstance().setSubTasks(subtasks); //Subtasks are needed to add task name to CourseTaskPane
-            Tree tree = createTree(subtasks, courseTask);
-             if (tree.getRowCount() != 0) {
-                 JBScrollPane container = new JBScrollPane();
-                 container.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-                 container.add(tree);
-                 container.setViewportView(tree);
-                 subPanel.add(container, BorderLayout.SOUTH);
-             }
+    private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask) {
+        Tree tree = createTree(courseTask);
+        if (tree.getRowCount() != 0) {
+            JBScrollPane container = new JBScrollPane();
+            container.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+            container.add(tree);
+            container.setViewportView(tree);
+            subPanel.add(container, BorderLayout.SOUTH);
         }
     }
 
     /**
      * Creates a clickable Tree view used to show subtasks and their files.
-     * @param subtasks Subtask for a course that also contain the files for the subtask.
      * @param courseTask The coursetask that the subtasks belong to
      * @return The created tree view.
      */
-    private Tree createTree(List<SubTask> subtasks, CourseTask courseTask) {
+    private Tree createTree(CourseTask courseTask) {
         ApiHandler api = new ApiHandler();
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(courseTask.getName());
         int rowCount = 0;
-        for (SubTask task: subtasks) {
-            List<SubTask> listForCourse = new ArrayList<>();
-            if (task.getPath().equals(courseTask.getPath())) {
-                listForCourse.add(task);
+        var subtasks = courseTask.getSubtasks();
+        if (subtasks != null) {
+            for (SubTask task : subtasks) {
                 DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task);
-                for (String file : task.getFileName()) {
-                            DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file);
-                            leaf.add(submitNode);
-                            rowCount = rowCount + 1;
+                for (SubTask.TaskFile file: task.getTaskFiles()) {
+                    DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file.getFileName());
+                    leaf.add(submitNode);
+                    rowCount += 1;
                 }
                 root.add(leaf);
+                rowCount += 1;
             }
-            rowCount = rowCount + listForCourse.size();
-            courseTask.setTasks(listForCourse);
         }
         Tree tree = new Tree(root);
         tree.setRootVisible(false);
@@ -509,6 +494,4 @@ public class CourseMainPane {
             panel1.repaint();
         });
     }
-
-
 }

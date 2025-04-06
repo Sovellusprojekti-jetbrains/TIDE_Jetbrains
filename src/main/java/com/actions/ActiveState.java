@@ -1,7 +1,9 @@
 package com.actions;
 
 import com.api.ApiHandler;
+import com.api.JsonHandler;
 import com.api.LogHandler;
+import com.api.TimDataHandler;
 import com.course.Course;
 import com.course.CourseTask;
 import com.course.SubTask;
@@ -44,7 +46,6 @@ public class ActiveState {
     private boolean isLoggedIn = false;
     private Project project;
     private boolean isSubmittable = false;
-    private List<SubTask> subTaskList;
 
     /**
      * Constructor for active state attempts to hide the right and bottom toolwindows.
@@ -199,6 +200,30 @@ public class ActiveState {
 
 
     /**
+     * Reads downloaded .timdata files and creates Subtasks accordingly.
+     * @param course to get subtasks for
+     */
+    public void addDownloadedSubtasksToCourse(Course course) {
+        String pathToFile = Settings.getPath() + File.separatorChar + course.getName();
+        JsonHandler jsonHandler = new JsonHandler();
+        TimDataHandler tim = new TimDataHandler();
+        String timData = tim.readTimData(pathToFile);
+        if (timData.isEmpty()) {
+            return;
+        }
+        List<SubTask> subtasks = jsonHandler.jsonToSubtask(timData);
+        var demos = course.getTasks();
+        for (CourseTask ct: demos) {
+            for (SubTask st: subtasks) {
+                if (ct.getPath().equals(st.getPath())) {
+                    ct.addSubtask(st);
+                }
+            }
+        }
+    }
+
+
+    /**
      * Sets a new value for the tideSubmitResponse property.
      * Needed because response to tide submit gets parsed for
      * information and thus needs to be differentiated from
@@ -283,25 +308,15 @@ public class ActiveState {
      * @return CourseTask name as String.
      */
     private String findTaskName(String course, VirtualFile file) {
-        Course courseTemp = null;
-        for (Course temp: this.courseList) {
-            if (temp.getName().equals(course)) {
-                courseTemp = temp;
-                break;
-            }
-        }
-        if (courseTemp != null) {
-            SubTask subTaskTemp = null;
-                for (SubTask temp2 : this.subTaskList) {
-                    if (file.getPath().contains(temp2.getFileName().get(0))) {
-                        subTaskTemp = temp2;
-                        break;
-                    }
-                }
-            if (subTaskTemp != null) {
-                for (CourseTask temp3 : courseTemp.getTasks()) {
-                    if (temp3.getPath().equals(subTaskTemp.getPath())) {
-                        return temp3.getName();
+        for (Course courseToCheck: this.getCourses()) {
+            if (courseToCheck.getName().equals(course)) {
+                for (CourseTask courseTask: courseToCheck.getTasks()) {
+                    for (SubTask subtask: courseTask.getSubtasks()) {
+                        for (SubTask.TaskFile taskFile: subtask.getTaskFiles()) {
+                            if (file.getPath().contains(taskFile.getFileName())) {
+                                return courseTask.getName();
+                            }
+                        }
                     }
                 }
             }
@@ -314,13 +329,19 @@ public class ActiveState {
      * @param file Virtual file of the file open in the editor.
      * @return Subtask's name as String.
      */
-    private String findSubTaskName(VirtualFile file) {
-        for (SubTask task : this.subTaskList) {
-            if (file.getPath().contains(task.getFileName().get(0))) {
-                return task.getIdeTaskId();
+    public SubTask findSubTask(VirtualFile file) {
+        for (Course course: this.getCourses()) {
+            for (CourseTask task: course.getTasks()) {
+                for (SubTask subTask: task.getSubtasks()) {
+                    for (SubTask.TaskFile tf: subTask.getTaskFiles()) {
+                        if (file.getPath().contains(tf.getFileName())) {
+                            return subTask;
+                        }
+                    }
+                }
             }
         }
-        return "";
+        return null;
     }
 
     /**
@@ -329,6 +350,9 @@ public class ActiveState {
      * @throws IOException If making File object fails.
      */
     public void setSubmittable(VirtualFile child) throws IOException {
+        if (this.courseList == null) {
+            this.updateCourses();
+        }
         File parent = new File(Settings.getPath());
         if (child.getCanonicalPath() != null && this.allowedName(child)) {
             this.isSubmittable = child.getCanonicalPath()
@@ -340,7 +364,7 @@ public class ActiveState {
         if (this.isSubmittable) { // Updates the info displayed on CourseTaskPane.
             String course = this.getCourseName(child.getPath());
             String demo = this.findTaskName(course, child);
-            String sub = this.findSubTaskName(child);
+            String sub = this.findSubTask(child).getIdeTaskId();
             this.messageTaskName(course, demo, sub);
         }
         this.messageChanges();
@@ -371,34 +395,6 @@ public class ActiveState {
         pcs.firePropertyChange("setDemoName", null, values);
     }
 
-    /**
-     * Sets the subTask list. The implementation is weird because CourseMainPane might call this with smaller list than
-     * was set a moment ago. During tree view update JsonData is read and objects created multiple times.
-     * @param subTasks List of subtasks.
-     */
-    public void setSubTasks(List<SubTask> subTasks) {
-        if (this.subTaskList == null) {
-            this.subTaskList = subTasks;
-        } else {
-            //TODO: fix the bloating of the subtasklist. JSON should only be read again if new tasks are donwloaded.
-            this.subTaskList.addAll(subTasks);
-        }
-    }
-
-    /**
-     * This method returns the subtask object instance of the open task file.
-     * from the file path on the local disk drive.
-     * @param filePath File's path on disk.
-     * @return SubTask object
-     */
-    public SubTask getOpenTask(String filePath) {
-        for (SubTask task : this.subTaskList) {
-            if (filePath.contains(task.getFileName().get(0))) {
-                return task;
-            }
-        }
-        return null;
-    }
 
     /**
      * a method that makes messages for the points, deadline and maximum number of submits.
@@ -410,7 +406,7 @@ public class ActiveState {
                 .getInstance(project)
                 .getSelectedEditor()
                 .getFile();
-        SubTask current = getOpenTask(file.getCanonicalPath());
+        SubTask current = findSubTask(file);
         float points = state.getPoints(file.getCanonicalPath());
         String pointsMessage = "Points : " + points + "/" + current.getMaxPoints();
         String deadLineMessage = checkDeadline(current);

@@ -2,6 +2,7 @@ package com.course;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,6 +60,17 @@ public class CourseTask {
      */
     public void setTasks(List<SubTask> subTasks) {
         this.tasks = subTasks;
+    }
+
+    /**
+     * Add a subtask for a coursetask.
+     * @param subTask The subtask to add
+     */
+    public void addSubtask(SubTask subTask) {
+        if (this.tasks == null) {
+            this.tasks = new ArrayList<SubTask>();
+        }
+        this.tasks.add(subTask);
     }
 
     /**

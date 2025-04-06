@@ -32,7 +32,7 @@ public final class BrowserAction extends AnAction {
             return;
         }
         ActiveState instance = ActiveState.getInstance();
-        SubTask openTask = instance.getOpenTask(taskFile.getPath());
+        SubTask openTask = instance.findSubTask(taskFile);
         //TODO: handle null case.
         url += openTask.getPath();
         url += "#" + openTask.getIdeTaskId();

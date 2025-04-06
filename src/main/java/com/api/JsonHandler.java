@@ -5,9 +5,7 @@ import com.course.SubTask;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Creates Course objects from a String of Json data.
@@ -54,43 +52,28 @@ public class JsonHandler {
         try {
             JsonObject json = gson.fromJson(jsonString, JsonObject.class);
             JsonObject coursePart = gson.fromJson((json.getAsJsonObject("course_parts")), JsonObject.class);
-            List<String> tasks = new ArrayList<>();
 
             try {
-                tasks = getValuesInObject(coursePart, "tasks");
+                Set<Map.Entry<String, JsonElement>> demos = coursePart.entrySet();
+                for (Map.Entry entry: demos) {
+                    JsonElement subtasks = (JsonElement) entry.getValue();
+                    Gson gsonSubtask = new GsonBuilder().registerTypeAdapter(SubTask.class, new SubtaskDeserializer()).create();
+                    Set<Map.Entry<String, JsonElement>> subtaskMap = subtasks.getAsJsonObject().entrySet();
+                    for (Map.Entry subEntry: subtaskMap) {
+                        JsonObject subtasksObject = ((JsonElement) subEntry.getValue()).getAsJsonObject();
+                        Set<Map.Entry<String, JsonElement>> subs = subtasksObject.entrySet();
+                        for (Map.Entry subElement: subs) {
+                            String jsonstr = subElement.getValue().toString();
+                            SubTask sub = gsonSubtask.fromJson(jsonstr, SubTask.class);
+                            subTaskList.add(sub);
+                        }
+                    }
+                }
             } catch (NullPointerException e) {
                 com.api.LogHandler.logError("48: JsonHandler.jsonToSubtask(final String jsonString)", e);
                 com.api.LogHandler.logDebug(new String[]{"52 JsonObject json"},
                         new String[]{json.toString()});
                 com.api.LogHandler.logInfo("53 JsonObject coursePart: is this null?");
-            }
-
-            for (String taskJson: tasks) {
-                JsonObject object = gson.fromJson(taskJson, JsonObject.class);
-                for (String currentKey : object.keySet()) {
-                    JsonObject task = object.getAsJsonObject(currentKey);
-                    SubTask sub = gson.fromJson(task, SubTask.class);
-                    List<String> files = getValuesInObject(task, "file_name");
-                    sub.setFileName(files);
-
-                    // Get task_directory field from Json.
-                    // If task_directory is defined within task_files,
-                    // it overrides the one defined in the task object.
-                    // This implementation relies on the assumption that task_files
-                    // always comes before task_directory, as the first non-null element
-                    // in taskDirs is chosen.
-                    List<String> taskDirs = getValuesInObject(task, "task_directory");
-                    if (!taskDirs.isEmpty()) {
-                        for (String dir: taskDirs) {
-                            if (!dir.equals("null")) {
-                                sub.setTaskDirectory(removeQuotes(dir));
-                                break;
-                            }
-                        }
-                    }
-
-                    subTaskList.add(sub);
-                }
             }
         } catch (JsonParseException | IllegalStateException e) {
             com.api.LogHandler.logError("49 JsonHandler.jsonToSubtask(final String jsonString)", e);
@@ -100,50 +83,6 @@ public class JsonHandler {
         // remove invalid json data
         subTaskList.removeIf(subTask -> subTask.getIdeTaskId() == null);
         return subTaskList;
-    }
-
-
-    /**
-     * Gets the values from a specified key from a json object.
-     *
-     * @param jsonObject the object that is searched with the key
-     * @param key the key that contains the searched values
-     * @return list of values
-     */
-    public List<String> getValuesInObject(JsonObject jsonObject, String key) {
-        List<String> accumulatedValues = new ArrayList<>();
-        for (String currentKey : jsonObject.keySet()) {
-            Object value = jsonObject.get(currentKey);
-            if (currentKey.equals(key)) {
-                accumulatedValues.add(removeQuotes(value.toString()));
-            }
-            if (value instanceof JsonObject) {
-                accumulatedValues.addAll(getValuesInObject((JsonObject) value, key));
-            } else if (value instanceof JsonArray) {
-                accumulatedValues.addAll(getValuesInArray((JsonArray) value, key));
-            }
-        }
-        return accumulatedValues;
-    }
-
-
-    /**
-     * Gets the values from a specified key from a json array.
-     * @param jsonArray the array that is searched with the key
-     * @param key the key that contains the searched values
-     * @return list of values.
-     */
-    public List<String> getValuesInArray(JsonArray jsonArray, String key) {
-        List<String> accumulatedValues = new ArrayList<>();
-        for (Object obj : jsonArray) {
-            if (obj instanceof JsonArray) {
-                accumulatedValues.addAll(getValuesInArray((JsonArray) obj, key));
-            } else if (obj instanceof JsonObject) {
-                accumulatedValues.addAll(getValuesInObject((JsonObject) obj, key));
-            }
-        }
-
-        return accumulatedValues;
     }
 
 
@@ -178,6 +117,30 @@ public class JsonHandler {
             }
 
             return course;
+        }
+    }
+
+
+    /**
+     * Custom deserializer for the SubTask class.
+     */
+    public class SubtaskDeserializer implements JsonDeserializer<SubTask> {
+        /**
+         * Overrides the default deserialize method.
+         * @param courseTaskJsonElement The Json data being deserialized
+         * @param courseTaskType The type of the Object to deserialize to
+         * @param context Deserialization context
+         * @return A deserialized CourseTask object
+         * @throws JsonParseException if something goes wrong
+         */
+        @Override
+        public SubTask deserialize(JsonElement courseTaskJsonElement,
+                                      Type courseTaskType,
+                                      JsonDeserializationContext context)
+                throws JsonParseException {
+            SubTask subTask = new Gson().fromJson(courseTaskJsonElement.getAsJsonObject(), SubTask.class);
+
+            return subTask;
         }
     }
 

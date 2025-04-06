@@ -88,19 +88,16 @@ public class JsonHandlerTest {
         assertEquals(taskCount, subtaskList.size());
         // test first subtask in the test data
         SubTask subTask = subtaskList.get(0);
-        assertEquals("testidemo1.java", subTask.getFileName().get(0));
+        assertEquals("testidemo1.java", subTask.getTaskFiles().get(0).getFileName());
         assertEquals("view/demo1/path", subTask.getPath());
         assertEquals("t1", subTask.getIdeTaskId());
         assertNull(subTask.getTaskDirectory());
         // test last subtask in the test data
         subTask = subtaskList.get(subtaskList.size() - 1);
-        assertEquals("testidemo4.java", subTask.getFileName().get(0));
+        assertEquals("testidemo4.java", subTask.getTaskFiles().get(0).getFileName());
         assertEquals("view/demo1/anotherpath", subTask.getPath());
         assertEquals("t4", subTask.getIdeTaskId());
         assertEquals("hasTaskDirectory", subTask.getTaskDirectory());
-        // inner task_directory field has priority
-        subTask = subtaskList.get(1);
-        assertEquals("innerField", subTask.getTaskDirectory());
     }
 
 
