@@ -1,5 +1,6 @@
 package com.util;
 
+import com.api.LogHandler;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
@@ -51,6 +52,26 @@ public final class Util {
                 window.setIcon(IconLoader.getIcon(iconPath, callerClass));
             }
             window.setAvailable(available);
+            LogHandler.logInfo("Set Window Available: " + available + ", icon = " + iconPath);
+        });
+    }
+
+
+    /**
+     * Changes the icons of Course Task Pane and Output Window.
+     * @param project Project they're in.
+     * @param iconPath Path to the icon.
+     */
+    public static void setIcons(Project project, String iconPath) {
+        ApplicationManager.getApplication().invokeLater(() -> {
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+            ToolWindow window = toolWindowManager.getToolWindow("Output Window");
+            ToolWindow window2 = toolWindowManager.getToolWindow("Course Task");
+            var callerClass = ReflectionUtil.getGrandCallerClass();
+            if (callerClass != null) {
+                window.setIcon(IconLoader.getIcon(iconPath, callerClass));
+                window2.setIcon(IconLoader.getIcon(iconPath, callerClass));
+            }
         });
     }
 }
