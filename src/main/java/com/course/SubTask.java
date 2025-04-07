@@ -123,5 +123,8 @@ public class SubTask {
         public String getFileName() {
             return this.fileName;
         }
+        public String getTaskIdExt() {
+            return this.taskIdExt;
+        }
     }
 }

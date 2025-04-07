@@ -350,9 +350,6 @@ public class ActiveState {
      * @throws IOException If making File object fails.
      */
     public void setSubmittable(VirtualFile child) throws IOException {
-        if (this.courseList == null) {
-            this.updateCourses();
-        }
         File parent = new File(Settings.getPath());
         if (child.getCanonicalPath() != null && this.allowedName(child)) {
             this.isSubmittable = child.getCanonicalPath()

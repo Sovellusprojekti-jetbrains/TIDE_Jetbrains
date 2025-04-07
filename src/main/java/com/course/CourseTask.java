@@ -51,6 +51,10 @@ public class CourseTask {
      * @return List of exercises
      */
     public List<SubTask> getSubtasks() {
+        if (this.tasks == null)
+        {
+            this.tasks = new ArrayList<SubTask>();
+        }
         return this.tasks;
     }
 
