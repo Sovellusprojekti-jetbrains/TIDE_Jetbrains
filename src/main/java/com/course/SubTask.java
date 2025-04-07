@@ -109,6 +109,9 @@ public class SubTask {
         return this.taskFiles;
     }
 
+    /**
+     * TaskFile read from .timdata task_file field
+     */
     public class TaskFile {
         @SerializedName(value = "task_id_ext")
         private String taskIdExt;
@@ -123,6 +126,10 @@ public class SubTask {
         public String getFileName() {
             return this.fileName;
         }
+
+        /**
+         * @return taskIdExt
+         */
         public String getTaskIdExt() {
             return this.taskIdExt;
         }
