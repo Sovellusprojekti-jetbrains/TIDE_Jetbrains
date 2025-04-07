@@ -316,9 +316,11 @@ public class ActiveState {
     public void messageChanges() {
         ActionManager.getInstance().getAction("Reset Exercise"); //Actions must be able/disabled also
         if (!isSubmittable) {
+            Util.setIcons(project, "/icons/timgray.svg");
             //Is null ok or should one send isSubmittable values?
             pcs.firePropertyChange("disableButtons", null, null);
         } else {
+            Util.setIcons(project, "/icons/tim.svg");
             pcs.firePropertyChange("enableButtons", null, null);
             pcs.firePropertyChange("setSubmitData", null, getSubmitData());
         }
