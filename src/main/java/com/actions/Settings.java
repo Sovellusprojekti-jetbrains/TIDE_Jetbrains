@@ -3,27 +3,18 @@ package com.actions;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.options.ShowSettingsUtil;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.state.StateManager;
-import com.views.SettingsScreen;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 /**
  * This class is used to display settings window to configure tide-settings.
  */
 public class Settings extends AnAction {
-    /**
-     * Width of the settings screen.
-     */
-    private final int width = 600;
-    /**
-     * Height of the settings screen.
-     */
-    private final int height = 400;
-    private SettingsScreen window = null; //Object reference to window content.
     private static boolean visible = false; //To ensure that only one settings window can be open at a time.
     private static JFrame frame = null; //Object reference to JFrame containing window content.
 
@@ -33,38 +24,10 @@ public class Settings extends AnAction {
      */
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        this.window = new SettingsScreen();
-        showSettings();
+        Project defaultProject = ProjectManager.getInstance().getDefaultProject();
+        ShowSettingsUtil.getInstance().showSettingsDialog(defaultProject, "TIDE Settings");
     }
 
-    /**
-     * Displays settings window if one is not already open.
-     */
-    private void showSettings() {
-        if (!visible) {
-            visible = true;
-            SwingUtilities.invokeLater(() -> {
-                frame = new JFrame("Settings");
-                frame.add(window.getContent());
-                frame.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosing(WindowEvent e) {
-                        visible = false;
-                    }
-                });
-                frame.setSize(width, height);
-                frame.setVisible(true);
-            });
-        }
-    }
-
-    /**
-     * This method can be called from action listeners to open settings window.
-     */
-    public void displaySettings() {
-        this.window = new SettingsScreen();
-        showSettings();
-    }
 
     /**
      * Closes settings window.
