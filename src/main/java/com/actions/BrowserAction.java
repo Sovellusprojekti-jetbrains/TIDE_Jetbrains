@@ -36,7 +36,11 @@ public final class BrowserAction extends AnAction {
         SubTask openTask = instance.findSubTask(taskFile);
         //TODO: handle null case.
         url += openTask.getPath();
-        url += "#" + openTask.getIdeTaskId();
+        //the task name needed for the url is not part of the subtask but part of the task file
+        //we need to get the first file of the task to get the right id.
+        //id is in form number.name.idstring
+        //thus we split the id to get the relevant part in the middle.
+        url += "#" + openTask.getTaskFiles().get(0).getTaskIdExt().split("\\.")[1];
 
         // Set the website URL
         HtmlEditorProvider.setUrl(url);
