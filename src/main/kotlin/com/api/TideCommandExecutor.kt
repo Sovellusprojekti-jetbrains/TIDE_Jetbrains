@@ -1,6 +1,6 @@
 package com.api
 
-import com.actions.ActiveState
+import com.state.ActiveState
 import com.actions.Settings
 import com.course.SubTask
 import com.google.gson.Gson

@@ -1,5 +1,7 @@
 package com.views;
-import com.actions.ActiveState;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.state.ActiveState;
 import com.actions.Settings;
 import com.api.ApiHandler;
 import com.api.JsonHandler;
@@ -8,9 +10,7 @@ import com.api.TimDataHandler;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -135,8 +135,9 @@ public class CourseMainPane {
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Project defaultProject = ProjectManager.getInstance().getDefaultProject();
-                ShowSettingsUtil.getInstance().showSettingsDialog(defaultProject, "TIDE Settings");
+                ActionManager manager = ActionManager.getInstance();
+                AnAction action = manager.getAction("com.actions.Settings");
+                manager.tryToExecute(action, null, null, null, true);
             }
         });
 

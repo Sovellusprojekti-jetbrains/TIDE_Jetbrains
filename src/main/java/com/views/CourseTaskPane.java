@@ -4,8 +4,8 @@
 package com.views;
 
 import java.util.regex.*;
-import com.actions.ActiveState;
-import com.actions.StateManager;
+import com.state.ActiveState;
+import com.state.StateManager;
 import com.api.ApiHandler;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -14,7 +14,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
+import com.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,7 +143,7 @@ public class CourseTaskPane {
                 printOutput("Please open a file to submit in the editor.");
                 return;
             }
-            OutputWindow.showWindow(project);
+            Util.showWindow(project, "Output Window", true);
 
             VirtualFile file = FileEditorManager
                     .getInstance(project)
@@ -173,7 +173,7 @@ public class CourseTaskPane {
 
 
         showOutputButton.addActionListener(event -> {
-            OutputWindow.showWindow(project);
+            Util.showWindow(project, "Output Window", true);
         });
 
 
@@ -181,12 +181,6 @@ public class CourseTaskPane {
         stateManager.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                if ("logout".equals(evt.getPropertyName())) {
-                    hideWindow();
-                }
-                if ("login".equals(evt.getPropertyName())) {
-                    showWindow();
-                }
                 if ("tideSubmitResponse".equals(evt.getPropertyName())) {
                     String response = (String) evt.getNewValue();
                     handleSubmitResponse(response);
@@ -223,39 +217,11 @@ public class CourseTaskPane {
      * @param output String to print
      */
     public void printOutput(String output) {
-        OutputWindow.showWindow(project);
+        Util.showWindow(project, "Output Window", true);
         OutputWindow outputWindow = OutputWindow.getInstance();
         if (outputWindow != null) {
             OutputWindow.getInstance().printText(output);
         }
-    }
-
-
-    /**
-     * Makes the toolwindow unavailable.
-     */
-    private void hideWindow() {
-        SwingUtilities.invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow("Course Task");
-            if (window != null) {
-                window.setAvailable(false);
-            }
-        });
-    }
-
-
-    /**
-     * Makes the toolwindow available.
-     */
-    private void showWindow() {
-        SwingUtilities.invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow("Course Task");
-            if (window != null) {
-                window.setAvailable(true);
-            }
-        });
     }
 
 

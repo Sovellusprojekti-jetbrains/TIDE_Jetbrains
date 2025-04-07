@@ -4,6 +4,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.NlsContexts;
+import com.state.StateManager;
 import com.views.SettingsScreen;
 import org.jetbrains.annotations.Nullable;
 

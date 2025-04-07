@@ -39,8 +39,8 @@
                     icon="/icons/timgray.svg"
         />
         <fileEditorProvider implementation="com.factories.MyCustomFileEditorProvider"/>
-        <applicationService serviceImplementation="com.actions.StateManager"/>
-        <applicationService serviceImplementation="com.actions.ActiveState"/>
+        <applicationService serviceImplementation="com.state.StateManager"/>
+        <applicationService serviceImplementation="com.state.ActiveState"/>
         <applicationConfigurable
                 parentId="tools"
                 instance="com.actions.AppSettingsConfigurable"
