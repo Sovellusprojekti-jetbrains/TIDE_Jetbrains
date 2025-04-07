@@ -2,6 +2,7 @@ package com.api
 
 import com.state.ActiveState
 import com.actions.Settings
+import com.course.Course
 import com.course.SubTask
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
@@ -67,6 +68,9 @@ object TideCommandExecutor {
 
                 val activeState = ActiveState.getInstance()
                 activeState.setCourses(courses)  // No need to switch dispatcher unless UI update is needed
+                for (crs: Course in courses) {
+                    activeState.addDownloadedSubtasksToCourse(crs)
+                }
 
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -200,8 +204,8 @@ object TideCommandExecutor {
         var taskPath: String = ""
         var filePath = file.getPath()
         for (subtask: SubTask in subtasks) {
-            for (name: String in subtask.fileName) {
-                if (filePath.contains(name.replace("\"", ""))) {
+            for (taskFile: SubTask.TaskFile in subtask.taskFiles) {
+                if (filePath.contains(taskFile.fileName)) {
                     taskId = subtask.ideTaskId
                     taskPath = subtask.path
                     break

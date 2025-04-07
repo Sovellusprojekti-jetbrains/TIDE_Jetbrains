@@ -39,22 +39,9 @@ public class SubTask {
     private String deadLine;
     @SerializedName(value = "answer_limit")
     private int answerLimit;
+    @SerializedName(value = "task_files")
+    private List<TaskFile> taskFiles;
 
-    /**
-     * set the task name for the task.
-     * @param id the name of the task
-     */
-    public void setIdeTaskId(String id) {
-        this.ideTaskId = id;
-    }
-
-    /**
-     * sets the path of the course that the task belongs to.
-     * @param coursePath path to the Course
-     */
-    public void setPath(String coursePath) {
-        this.path = coursePath;
-    }
 
     /**
      * getter for the name of the subtask.
@@ -72,21 +59,6 @@ public class SubTask {
         return this.path;
     }
 
-    /**
-     * setter for the file names of a subtask.
-     * @param name file name as String
-     */
-    public void setFileName(List<String> name) {
-        this.fileNames = name;
-    }
-
-    /**
-     * getter for the file names of a subtask.
-     * @return file name as String
-     */
-    public List<String> getFileName() {
-        return this.fileNames;
-    }
 
     /**
      * Get task directory.
@@ -96,13 +68,6 @@ public class SubTask {
         return this.taskDirectory;
     }
 
-    /**
-     * Sets task directory.
-     * @param taskDir new task directory
-     */
-    public void setTaskDirectory(String taskDir) {
-        this.taskDirectory = taskDir;
-    }
 
     /**
      * getter for the maximum amount of points you can get from a subtask.
@@ -133,5 +98,40 @@ public class SubTask {
      */
     public int getAnswerLimit() {
         return this.answerLimit;
+    }
+
+    /**
+     * Getter for TaskFile list.
+     * @return a list of task files
+     * TODO: rethink naming of task, subtask, taskfile
+     */
+    public List<TaskFile> getTaskFiles() {
+        return this.taskFiles;
+    }
+
+    /**
+     * TaskFile read from .timdata task_file field.
+     */
+    public class TaskFile {
+        @SerializedName(value = "task_id_ext")
+        private String taskIdExt;
+        @SerializedName(value = "file_name")
+        private String fileName;
+        @SerializedName(value = "task_directory")
+        private String taskDirectory;
+
+        /**
+         * @return fileName
+         */
+        public String getFileName() {
+            return this.fileName;
+        }
+
+        /**
+         * @return taskIdExt
+         */
+        public String getTaskIdExt() {
+            return this.taskIdExt;
+        }
     }
 }
