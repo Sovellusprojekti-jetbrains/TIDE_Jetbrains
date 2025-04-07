@@ -110,7 +110,7 @@ public class SubTask {
     }
 
     /**
-     * TaskFile read from .timdata task_file field
+     * TaskFile read from .timdata task_file field.
      */
     public class TaskFile {
         @SerializedName(value = "task_id_ext")
