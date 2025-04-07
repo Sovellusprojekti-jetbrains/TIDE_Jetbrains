@@ -1,6 +1,7 @@
 package com.views;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.util.ui.JBFont;
 import com.state.ActiveState;
 import com.actions.Settings;
 import com.api.ApiHandler;
@@ -25,6 +26,8 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.AsyncProcessIcon;
 
 import java.util.List;
+
+import static javax.swing.BorderFactory.createEmptyBorder;
 
 /**
  * Class for displaying a template course window.
@@ -107,6 +110,9 @@ public class CourseMainPane {
 
         // Fetching data from TIM and creating a list of course objects,
         // for more information see package com.course and class ApiHandler.
+
+        // This overrides the form's own font to use a default JetBrains font.
+        courseLabel.setFont(JBFont.h0().asBold());
 
 
         // needs tests in the future.
@@ -210,12 +216,11 @@ public class CourseMainPane {
                 final int left = 5;
                 final int bottom = 5;
                 final int right = 0;
-                final int fontSize = 26;
-                labelPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
+                labelPanel.setBorder(createEmptyBorder(top, left, bottom, right));
 
                 JLabel label = new JLabel();
                 label.setText(course.getName());
-                label.setFont(new Font("Arial", Font.BOLD, fontSize));
+                label.setFont(JBFont.h1().asBold());
                 label.setHorizontalAlignment(SwingConstants.LEFT);
 
                 labelPanel.add(label);
@@ -237,7 +242,7 @@ public class CourseMainPane {
                     j[0]++;
                 }
 
-                final int thickness = 4;
+                final int thickness = 2;
 
                 JScrollPane scrollPane = new JBScrollPane(panel);
                 scrollPane.setBorder(BorderFactory.createLineBorder(JBColor.border(), thickness));
@@ -290,8 +295,7 @@ public class CourseMainPane {
         subPanel.setLayout(new BorderLayout());
         JLabel labelWeek = new JLabel();
         labelWeek.setText(courseTask.getName());
-        labelWeek.setFont(new Font("Arial", Font.BOLD, fontsize));
-        //subPanel.add(labelWeek, BorderLayout.WEST);
+        labelWeek.setFont(JBFont.h3().asBold());
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.setBackground(bgColor);
@@ -341,6 +345,8 @@ public class CourseMainPane {
         JPanel nameAndButtonPanel = new JPanel(new BorderLayout());
         nameAndButtonPanel.add(labelWeek, BorderLayout.WEST);
         nameAndButtonPanel.add(buttonPanel, BorderLayout.EAST);
+        final int borderpad = 10;
+        nameAndButtonPanel.setBorder(createEmptyBorder(0, borderpad, 0, 0));
         subPanel.add(nameAndButtonPanel);
 
         // subPanel.add(buttonPanel, BorderLayout.EAST);
@@ -366,6 +372,7 @@ public class CourseMainPane {
             container.add(tree);
             container.setViewportView(tree);
             subPanel.add(container, BorderLayout.SOUTH);
+            container.setBorder(createEmptyBorder());
         }
     }
 
