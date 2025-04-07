@@ -1,6 +1,6 @@
 package com.views;
 
-import com.actions.StateManager;
+import com.state.StateManager;
 import com.course.SubTask;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;

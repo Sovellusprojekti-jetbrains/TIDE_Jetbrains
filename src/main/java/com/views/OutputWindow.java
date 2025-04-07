@@ -1,12 +1,12 @@
 package com.views;
 
-import com.actions.ActiveState;
+import com.state.ActiveState;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTextArea;
+import com.util.Util;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -43,14 +43,8 @@ public class OutputWindow {
         stateManager.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                if ("logout".equals(evt.getPropertyName())) {
-                    hideWindow();
-                }
-                if ("login".equals(evt.getPropertyName())) {
-                    setWindowAvailable();
-                }
                 if ("tideSubmitResponse".equals(evt.getPropertyName())) {
-                    showWindow(project);
+                    Util.showWindow(project, "Output Window", true);
                     printText((String) evt.getNewValue());
                 }
             }
@@ -95,45 +89,5 @@ public class OutputWindow {
                 textArea.setText("");
             });
         }
-    }
-
-    /**
-     * Makes the toolwindow unavailable.
-     */
-    private void hideWindow() {
-        SwingUtilities.invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow("Output Window");
-            assert window != null;
-            window.setAvailable(false);
-            System.out.println("Hide Window");
-        });
-    }
-
-    /**
-     * Makes the toolwindow available.
-     */
-    private void setWindowAvailable() {
-        SwingUtilities.invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow("Output Window");
-            assert window != null;
-            window.setAvailable(true);
-            System.out.println("Show Window");
-        });
-    }
-
-
-    /**
-     * Displays the toolwindow.
-     * @param project The current project
-     */
-    public static void showWindow(Project project) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow("Output Window");
-            assert window != null;
-            window.show(null);
-        });
     }
 }

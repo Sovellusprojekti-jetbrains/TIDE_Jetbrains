@@ -1,5 +1,6 @@
-package com.actions;
+package com.state;
 
+import com.actions.Settings;
 import com.api.ApiHandler;
 import com.api.JsonHandler;
 import com.api.LogHandler;
@@ -14,11 +15,8 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.util.ReflectionUtil;
+import com.util.Util;
 import com.views.InfoView;
 import org.jdesktop.swingx.action.ActionManager;
 import org.jetbrains.annotations.NotNull;
@@ -53,8 +51,8 @@ public class ActiveState {
     public ActiveState() {
         project = ProjectManager.getInstance().getOpenProjects()[0];
         ApplicationManager.getApplication().invokeLater(() -> {
-            hideWindow("Course Task");
-            hideWindow("Output Window");
+            Util.setWindowAvailable(project, "Course Task", false, "/icons/timgray.svg");
+            Util.setWindowAvailable(project, "Output Window", false, "/icons/timgray.svg");
         });
         project.getMessageBus().connect(Disposer.newDisposable())
                 .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
@@ -103,42 +101,6 @@ public class ActiveState {
     public static ActiveState getInstance() {
         return ApplicationManager.getApplication().getService(ActiveState.class);
     }
-
-    /**
-     * Makes the toolwindow unavailable.
-     * @param id String of the toolwindow.
-     */
-    private void hideWindow(String id) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow(id);
-            var callerClass = ReflectionUtil.getGrandCallerClass();
-            if (callerClass != null) {
-                window.setIcon(IconLoader.getIcon("/icons/timgray.svg", callerClass));
-            }
-            //assert window != null;
-            window.setAvailable(false);
-        });
-    }
-
-    /**
-     * Makes the toolwindow available.
-     * @param id String of the toolwindow.
-     */
-    private void showWindow(String id) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow(id);
-            var callerClass = ReflectionUtil.getGrandCallerClass();
-            if (callerClass != null) {
-                window.setIcon(IconLoader.getIcon("/icons/tim.svg", callerClass));
-            }
-            //assert window != null;
-            window.setAvailable(true);
-        });
-    }
-
-
     /**
      * Add listener for property change.
      * @param listener Listener to be added.
@@ -261,8 +223,10 @@ public class ActiveState {
         }
         pcs.firePropertyChange("login", false, isLoggedIn);
         LogHandler.logInfo("ActiveState fired event login");
-        showWindow("Course Task");
-        showWindow("Output Window");
+
+        // These are here because calling them from inside the toolwindow would not work.
+        Util.setWindowAvailable(project, "Course Task", true, "/icons/tim.svg");
+        Util.setWindowAvailable(project, "Output Window", true, "/icons/tim.svg");
     }
 
     /**
@@ -274,8 +238,8 @@ public class ActiveState {
         }
         pcs.firePropertyChange("logout", true, isLoggedIn);
         LogHandler.logInfo("ActiveState fired event logout");
-        hideWindow("Course Task");
-        hideWindow("Output Window");
+        Util.setWindowAvailable(project, "Course Task", false, "/icons/timgray.svg");
+        Util.setWindowAvailable(project, "Output Window", false, "/icons/timgray.svg");
     }
 
     /**
