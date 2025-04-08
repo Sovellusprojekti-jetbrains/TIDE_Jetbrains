@@ -15,6 +15,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findDocument
 import com.intellij.util.io.awaitExit
+import com.views.InfoView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,16 +45,23 @@ object TideCommandExecutor {
                 withContext(Dispatchers.Main) {
                     val activeState = ActiveState.getInstance()
                     // TODO: This can't be the right way to do this.
-                    if (output.contains("Login successful!") || output.contains("Logged in")) {
+                    if (output.contains("Login successful!")) {
                         activeState.login()
+                        // If no prior login details, don't show the "please finish logging in"-message.
+                        InfoView.displayInfo("Login successful!")
+                    } else if (output.contains("Logged in")) {
+                        activeState.login()
+                        InfoView.displayInfo(output)
                     } else {
                         activeState.logout()
+                        InfoView.displayError(output)
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     val activeState = ActiveState.getInstance()
                     activeState.logout()
+                    InfoView.displayError(e.message)
                 }
             }
         }
@@ -88,6 +96,7 @@ object TideCommandExecutor {
 
                 if (output.loggedIn != null) {
                     activeState.login()
+                    InfoView.displayInfo(jsonOutput)
                 } else {
                     activeState.logout()
                 }
@@ -113,6 +122,7 @@ object TideCommandExecutor {
                 withContext(Dispatchers.Main) {
                     val activeState = ActiveState.getInstance()
                     activeState.logout()
+                    InfoView.displayInfo(result)
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
