@@ -25,6 +25,7 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.AsyncProcessIcon;
 
 import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  * Class for displaying a template course window.
@@ -407,11 +408,18 @@ public class CourseMainPane {
                     DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
                     DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
                     if (selectedNode.getChildCount() == 0) {
-                        api.openTaskProject(Settings.getPath() + File.separatorChar + selectedNode.getRoot()
-                                + File.separatorChar + parent.toString() + File.separatorChar + selectedNode);
-                    } else {
-                        api.openTaskProject(Settings.getPath() + File.separatorChar + parent.toString()
-                                + File.separatorChar + selectedNode);
+                        SubTask taskToOpen = (SubTask) parent.getUserObject();
+                        String taskPath;
+                        if (taskToOpen.getTaskDirectory() == null) {
+                            taskPath = Settings.getPath() + File.separatorChar + courseTask.getParent().getName()
+                                    + File.separatorChar + selectedNode.getRoot()
+                                    + File.separatorChar + parent.toString() + File.separatorChar + selectedNode.toString();
+                        } else {
+                            taskPath = Settings.getPath() + File.separatorChar + courseTask.getParent().getName() + File.separatorChar
+                                    + taskToOpen.getTaskDirectory()
+                                    + File.separatorChar + selectedNode.toString().replace('/', File.separatorChar);
+                        }
+                        api.openTaskProject(taskPath);
                     }
                 }
             }
