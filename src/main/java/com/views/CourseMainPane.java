@@ -290,12 +290,11 @@ public class CourseMainPane {
      * @return the subpanel that contains the tasks name and the two buttons
      */
     private JPanel createExercise(CourseTask courseTask, String courseName) {
-        final int fontsize = 16;
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
         JLabel labelWeek = new JLabel();
         labelWeek.setText(courseTask.getName());
-        labelWeek.setFont(JBFont.h3().asBold());
+        labelWeek.setFont(JBFont.medium().asBold());
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.setBackground(bgColor);
@@ -306,7 +305,6 @@ public class CourseMainPane {
         buttonPanel.add(spinner);
         JButton dButton = new JButton();
         dButton.setText("Download");
-        dButton.setBackground(bgColor);
         dButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -333,7 +331,6 @@ public class CourseMainPane {
 
         JButton oButton = new JButton();
         oButton.setText("Open as Project");
-        oButton.setBackground(bgColor);
         oButton.addActionListener(event -> {
             spinner.setVisible(true);
             int lastPartStart = courseTask.getPath().lastIndexOf('/');
@@ -349,7 +346,6 @@ public class CourseMainPane {
         nameAndButtonPanel.setBorder(createEmptyBorder(0, borderpad, 0, 0));
         subPanel.add(nameAndButtonPanel);
 
-        // subPanel.add(buttonPanel, BorderLayout.EAST);
         try {
             createSubTaskpanel(subPanel, courseTask);
         } catch (Exception e) {
@@ -431,12 +427,10 @@ public class CourseMainPane {
      * Switches to a state where logging out is possible.
      */
     private void switchToLoggedIn() {
-        //tabbedPane.remove(loginPane); // Hide Login tab
         ActiveState stateManager = ActiveState.getInstance();
         stateManager.updateCourses();
         setProgress(true, "Loading courses...");
         // A panel that contains the courses and tasks is created in its own sub-program.
-        // createCourseListPane(courselist);
         tabbedPane.addTab("Courses", coursesPane); // Show Logout tab
         loginButton.setText("Logout");
         ActionListener[] tempLogin = loginButton.getActionListeners(); //Need to change LoginButton into LogoutButton
@@ -446,7 +440,6 @@ public class CourseMainPane {
         panel1.revalidate();
         panel1.repaint();
         tabbedPane.setSelectedComponent(coursesPane);
-        //loginButton.setText("Logout");
     }
 
 
@@ -482,7 +475,6 @@ public class CourseMainPane {
             createCourseListPane(courselist);
             panel1.revalidate();
             panel1.repaint();
-            //loginButton.setText("Logout");
             setProgress(false, "");
         });
     }

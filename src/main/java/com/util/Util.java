@@ -1,5 +1,6 @@
 package com.util;
 
+import com.api.ApiHandler;
 import com.api.LogHandler;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -7,8 +8,12 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ReflectionUtil;
+import com.views.InfoView;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public final class Util {
 
