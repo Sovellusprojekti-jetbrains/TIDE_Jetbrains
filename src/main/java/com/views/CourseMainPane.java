@@ -25,7 +25,6 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.AsyncProcessIcon;
 
 import java.util.List;
-import java.util.regex.Matcher;
 
 /**
  * Class for displaying a template course window.
