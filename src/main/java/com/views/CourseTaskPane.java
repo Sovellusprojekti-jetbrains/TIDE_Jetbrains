@@ -184,26 +184,13 @@ public class CourseTaskPane {
 
 
     /**
-     * Prints a string to the output toolWindow.
-     * @param output String to print
-     */
-    public void printOutput(String output) {
-        Util.showWindow(project, "Output Window", true);
-        OutputWindow outputWindow = OutputWindow.getInstance();
-        if (outputWindow != null) {
-            OutputWindow.getInstance().printText(output);
-        }
-    }
-
-
-    /**
      * Deals with a response String received from TIDE-CLI
      * when the user has submitted a file to TIM.
      * @param response from TIDE-CLI
      */
     private void handleSubmitResponse(String response) {
         if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
-            printOutput("Please open a file to submit in the editor.");
+            InfoView.displayError("Please open a file to submit in the editor.");
             return;
         }
 
