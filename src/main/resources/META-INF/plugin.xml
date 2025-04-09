@@ -73,6 +73,8 @@
             </action>
             <action id="com.actions.BrowserAction" class="com.actions.BrowserAction" text="Open Task In Browser">
             </action>
+            <action id="com.actions.Submit" class="com.actions.Submit" text="Submit">
+            </action>
         </group>
 
     </actions>
