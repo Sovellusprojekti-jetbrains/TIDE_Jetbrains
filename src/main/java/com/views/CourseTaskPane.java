@@ -139,36 +139,9 @@ public class CourseTaskPane {
 
         // submit exercise
         submitButton.addActionListener(event -> {
-            if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
-                printOutput("Please open a file to submit in the editor.");
-                return;
-            }
-            Util.showWindow(project, "Output Window", true);
-
-            VirtualFile file = FileEditorManager
-                    .getInstance(project)
-                    .getSelectedEditor()
-                    .getFile();
-
-            // TODO: do something like the following to use the TIDE-CLI
-            // function to submit all task files in a directory by checking
-            // a checkbox, or find a more sensible way to implement it
-            // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
-            // String path = submitAll ? file.getParent().getPath() : file.getPath();
-
-            try {
-                ActiveState.getInstance().setSubmittable(file);
-            } catch (IOException ex) {
-                InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
-                throw new RuntimeException(ex);
-            }
-            if (!ActiveState.getInstance().isSubmittable()) {
-                InfoView.displayWarning("File in editor is not a tim task!");
-                return;
-            }
-
-            setProgress(true, "Submitting...");
-            new ApiHandler().submitExercise(file);
+            ActionManager manager = ActionManager.getInstance();
+            AnAction action = manager.getAction("com.actions.Submit");
+            manager.tryToExecute(action, null, null, null, true);
         });
 
 
@@ -322,7 +295,7 @@ public class CourseTaskPane {
      * @param state Visible, true or false.
      * @param text Text to display on progress bar.
      */
-    private void setProgress(boolean state, String text) {
+    public void setProgress(boolean state, String text) {
         SwingUtilities.invokeLater(() -> {
             taskProgressBar.setString(text);
             taskProgressBar.setVisible(state);
