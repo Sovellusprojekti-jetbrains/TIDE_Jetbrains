@@ -75,10 +75,10 @@ object TideCommandExecutor {
                 val courses = handler.jsonToCourses(jsonString)
 
                 val activeState = ActiveState.getInstance()
-                activeState.setCourses(courses)  // No need to switch dispatcher unless UI update is needed
                 for (crs: Course in courses) {
                     activeState.addDownloadedSubtasksToCourse(crs)
                 }
+                activeState.setCourses(courses)  // No need to switch dispatcher unless UI update is needed
 
             } catch (e: Exception) {
                 e.printStackTrace()
