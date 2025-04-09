@@ -75,6 +75,13 @@ public final class Util {
     }
 
 
+    /**
+     * Print a message to the OutputWindow instance.
+     * For now not used for anything; this is intentional.
+     * Use for any of your printing needs.
+     * @param project Current project
+     * @param message The message to print
+     */
     public static void printToOutput(Project project, String message) {
         showWindow(project, "Output Window", true);
         OutputWindow outputWindow = OutputWindow.getInstance();
