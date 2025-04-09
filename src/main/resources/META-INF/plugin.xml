@@ -73,7 +73,9 @@
             </action>
             <action id="com.actions.BrowserAction" class="com.actions.BrowserAction" text="Open Task In Browser">
             </action>
-            <action id="com.actions.Submit" class="com.actions.Submit" text="Submit">
+            <action id="com.actions.Submit" class="com.actions.Submit" text="Submit" icon="/icons/upload.svg" description="Submit" popup="true">
+                <add-to-group group-id="ToolbarRunGroup" anchor="last">
+                </add-to-group>
             </action>
         </group>
 
