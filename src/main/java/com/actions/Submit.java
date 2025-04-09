@@ -54,4 +54,17 @@ public class Submit extends AnAction {
         com.views.CoursePaneWindow.getPane().setProgress(true, "Submitting...");
         new ApiHandler().submitExercise(file);
     }
+
+    /**
+     * This function is called by ActiveState to update the actions state (able/disabled).
+     * @param e AnActionEvent originating from idea's internal messaging system.
+     */
+    @Override
+    public void update(@NotNull AnActionEvent e) {
+        if (!ActiveState.getInstance().getLogin()) {
+            e.getPresentation().setEnabled(ActiveState.getInstance().getLogin());
+            return;
+        }
+        e.getPresentation().setEnabled(ActiveState.getInstance().isSubmittable());
+    }
 }
