@@ -8,8 +8,6 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ReflectionUtil;
 
-import javax.swing.*;
-
 public final class Util {
 
     private Util() {
