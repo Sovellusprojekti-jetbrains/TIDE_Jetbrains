@@ -1,6 +1,7 @@
 package com.actions;
 
 import com.api.ApiHandler;
+import com.api.LogHandler;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -42,6 +43,7 @@ public class Submit extends AnAction {
             ActiveState.getInstance().setSubmittable(file);
         } catch (IOException ex) {
             InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
+            LogHandler.logError("Submit action", ex);
             throw new RuntimeException(ex);
         }
         if (!ActiveState.getInstance().isSubmittable()) {
