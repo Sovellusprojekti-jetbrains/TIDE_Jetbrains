@@ -7,6 +7,7 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ReflectionUtil;
+import com.views.OutputWindow;
 
 public final class Util {
 
@@ -71,5 +72,14 @@ public final class Util {
                 window2.setIcon(IconLoader.getIcon(iconPath, callerClass));
             }
         });
+    }
+
+
+    public static void printToOutput(Project project, String message) {
+        showWindow(project, "Output Window", true);
+        OutputWindow outputWindow = OutputWindow.getInstance();
+        if (outputWindow != null) {
+            OutputWindow.getInstance().printText(message);
+        }
     }
 }

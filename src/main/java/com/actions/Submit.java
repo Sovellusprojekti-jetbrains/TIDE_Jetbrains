@@ -23,7 +23,7 @@ public class Submit extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();
         if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
-            com.views.CoursePaneWindow.getPane().printOutput("Please open a file to submit in the editor.");
+            InfoView.displayError("Please open a file to submit in the editor.");
             return;
         }
         Util.showWindow(project, "Output Window", true);
