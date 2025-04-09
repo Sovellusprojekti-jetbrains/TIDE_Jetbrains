@@ -32,7 +32,7 @@ public class CoursePaneWindow {
     }
 
     /**
-     * Gettet for the instance of CourseTaskPane.
+     * Getter for the instance of CourseTaskPane.
      * @return CourseTaskPane.
      */
     public static CourseTaskPane getPane() {
