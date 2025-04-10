@@ -73,8 +73,8 @@
             </action>
             <action id="com.actions.BrowserAction" class="com.actions.BrowserAction" text="Open Task In Browser">
             </action>
-            <action id="com.actions.Submit" class="com.actions.Submit" text="Submit" icon="/icons/upload.svg" description="Submit" popup="true">
-                <add-to-group group-id="MainToolbarRight" anchor="last">
+            <action id="com.actions.Submit" class="com.actions.Submit" text="Submit" icon="/icons/sparkRun.svg" description="Submit" popup="true">
+                <add-to-group group-id="MainToolbarRight" anchor="before" relative-to-action="NewUiRunWidget">
                 </add-to-group>
             </action>
         </group>
