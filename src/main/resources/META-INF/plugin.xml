@@ -73,7 +73,7 @@
             </action>
             <action id="com.actions.BrowserAction" class="com.actions.BrowserAction" icon="/icons/webService.svg" text="Open Task In Browser">
             </action>
-            <action id="com.actions.Submit" class="com.actions.Submit" text="Submit" icon="/icons/submitDB.svg" description="Submit" popup="true">
+            <action id="com.actions.Submit" class="com.actions.Submit" text="Submit" icon="/icons/submit.svg" description="Submit">
                 <add-to-group group-id="MainToolbarRight" anchor="before" relative-to-action="NewUiRunWidget">
                 </add-to-group>
             </action>
