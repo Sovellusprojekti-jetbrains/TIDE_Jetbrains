@@ -65,13 +65,13 @@
                     group-id="MainMenu"
                     anchor="last"
             />
-            <action id="com.actions.About" class="com.actions.About" text="TIDE" description="TIDE menu">
+            <action id="com.actions.About" class="com.actions.About" text="TIDE" icon="/icons/help.svg" description="TIDE menu">
             </action>
-            <action id="com.actions.Settings" class="com.actions.Settings" text="Settings" description="Tide settings">
+            <action id="com.actions.Settings" class="com.actions.Settings" text="Settings" icon="/icons/inlaySettings.svg" description="Tide settings">
             </action>
-            <action id="com.actions.ResetExercise" class="com.actions.ResetExercise" text="Reset Exercise" description="Reset current exercise">
+            <action id="com.actions.ResetExercise" class="com.actions.ResetExercise" text="Reset Exercise" icon="/icons/reset.svg" description="Reset current exercise">
             </action>
-            <action id="com.actions.BrowserAction" class="com.actions.BrowserAction" text="Open Task In Browser">
+            <action id="com.actions.BrowserAction" class="com.actions.BrowserAction" icon="/icons/webService.svg" text="Open Task In Browser">
             </action>
             <action id="com.actions.Submit" class="com.actions.Submit" text="Submit" icon="/icons/submitDB.svg" description="Submit" popup="true">
                 <add-to-group group-id="MainToolbarRight" anchor="before" relative-to-action="NewUiRunWidget">
