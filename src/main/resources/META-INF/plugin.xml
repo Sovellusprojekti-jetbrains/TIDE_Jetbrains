@@ -76,6 +76,7 @@
             <action id="com.actions.Submit" class="com.actions.Submit" text="Submit" icon="/icons/submit.svg" description="Submit">
                 <add-to-group group-id="MainToolbarRight" anchor="before" relative-to-action="NewUiRunWidget">
                 </add-to-group>
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift F1"/>
             </action>
         </group>
 
