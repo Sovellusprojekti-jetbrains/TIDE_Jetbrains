@@ -67,7 +67,9 @@ public class ActiveState {
                         isSubmittable = false;
                         messageTaskName(" ", " ", " ");
                     }
-                } catch (IOException e) { //Should never happen.
+                } catch (IOException e) {
+                    //Exception is thrown because courseList is null while ActiveStates constructor is run.
+                    //State of the plugin must be set properly while opening IDE.
                     throw new RuntimeException(e);
                 }
             }
