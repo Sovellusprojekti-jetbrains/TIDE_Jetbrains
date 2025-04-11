@@ -91,8 +91,9 @@ public final class StateManager implements PersistentStateComponent<StateManager
             submits = new ArrayList<>();
         }
         if (!submits.contains(taskPath)) {
-            submits.add(taskPath);
-            properties.setList("myPlugin.submits", submits);
+            List<String> copy = new ArrayList<>(submits);
+            copy.add(taskPath);
+            properties.setList("myPlugin.submits", copy);
         }
         properties.setValue(taskPath, points, 0.0F);
         //String value = properties.getValue("myPlugin.path", System.getProperty("user.dir"));
