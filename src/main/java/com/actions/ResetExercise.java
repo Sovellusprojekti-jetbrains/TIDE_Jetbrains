@@ -62,7 +62,7 @@ public class ResetExercise extends AnAction {
     }
 
     /**
-     * This function is called by ActiveState to update the actions state (able/disabled).
+     * This function is called by the IDE when changes in the editor occur. Action's state will be updated.
      * @param e AnActionEvent originating from idea's internal messaging system.
      */
     @Override

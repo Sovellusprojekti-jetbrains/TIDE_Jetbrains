@@ -18,7 +18,6 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.util.Util;
 import com.views.InfoView;
-import org.jdesktop.swingx.action.ActionManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.PropertyChangeEvent;
@@ -66,10 +65,11 @@ public class ActiveState {
                     } else { //Is it possible to construct new Virtual file with null canonical path?
                         //It would be better if it was possible to call setSubmittable with null as the argument
                         isSubmittable = false;
-                        messageChanges();
                         messageTaskName(" ", " ", " ");
                     }
-                } catch (IOException e) { //Should never happen.
+                } catch (IOException e) {
+                    //Exception is thrown because courseList is null while ActiveStates constructor is run.
+                    //State of the plugin must be set properly while opening IDE.
                     throw new RuntimeException(e);
                 }
             }
@@ -328,14 +328,12 @@ public class ActiveState {
             String sub = this.findSubTask(child).getIdeTaskId();
             this.messageTaskName(course, demo, sub);
         }
-        this.messageChanges();
     }
 
     /**
      * This method is used to send messages to CourseTaskPane to change state of the buttons.
      */
     public void messageChanges() {
-        ActionManager.getInstance().getAction("Reset Exercise"); //Actions must be able/disabled also
         if (!isSubmittable) {
             Util.setIcons(project, "/icons/timgray.svg");
             //Is null ok or should one send isSubmittable values?

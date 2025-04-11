@@ -56,15 +56,17 @@ public class Submit extends AnAction {
     }
 
     /**
-     * This function is called by ActiveState to update the actions state (able/disabled).
+     * This function is called by the IDE when changes in the editor occur. Action's state will be updated.
      * @param e AnActionEvent originating from idea's internal messaging system.
      */
     @Override
     public void update(@NotNull AnActionEvent e) {
         if (!ActiveState.getInstance().getLogin()) {
             e.getPresentation().setEnabled(ActiveState.getInstance().getLogin());
+            ActiveState.getInstance().messageChanges(); //Update in this class is used to inform changes to CourseTaskPane.
             return;
         }
         e.getPresentation().setEnabled(ActiveState.getInstance().isSubmittable());
+        ActiveState.getInstance().messageChanges();
     }
 }
