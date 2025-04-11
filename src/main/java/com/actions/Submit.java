@@ -63,8 +63,10 @@ public class Submit extends AnAction {
     public void update(@NotNull AnActionEvent e) {
         if (!ActiveState.getInstance().getLogin()) {
             e.getPresentation().setEnabled(ActiveState.getInstance().getLogin());
+            ActiveState.getInstance().messageChanges();
             return;
         }
         e.getPresentation().setEnabled(ActiveState.getInstance().isSubmittable());
+        ActiveState.getInstance().messageChanges();
     }
 }
