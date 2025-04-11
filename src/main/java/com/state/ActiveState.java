@@ -65,7 +65,6 @@ public class ActiveState {
                     } else { //Is it possible to construct new Virtual file with null canonical path?
                         //It would be better if it was possible to call setSubmittable with null as the argument
                         isSubmittable = false;
-                        //messageChanges();
                         messageTaskName(" ", " ", " ");
                     }
                 } catch (IOException e) { //Should never happen.
@@ -327,7 +326,6 @@ public class ActiveState {
             String sub = this.findSubTask(child).getIdeTaskId();
             this.messageTaskName(course, demo, sub);
         }
-        //this.messageChanges();
     }
 
     /**
