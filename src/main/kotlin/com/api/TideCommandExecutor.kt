@@ -25,6 +25,10 @@ import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
+import com.intellij.openapi.module.JavaModuleType;
+import com.intellij.openapi.util.io.endsWithName
+import java.io.FileFilter
+import java.util.UUID
 
 object TideCommandExecutor {
 
@@ -265,6 +269,12 @@ object TideCommandExecutor {
                     } else if (productName.contains("PyCharm")) {
                         command += "pycharm64.exe"
                     } else if (productName.contains("Rider")) {
+                        //TODO: make check for solution in demo folder
+                        val root = File(taskPath)
+                        val list = root.listFiles(FileFilter { pathname -> pathname.endsWith(".csproj") })
+                        for (file : File in list ) {
+                            createOrUpdateSlnWithCsproj(taskPath, file.absolutePath)
+                        }
                         command += "rider64.exe"
                     }
                 } else if (System.getProperty("os.name").contains("Linux")) {
@@ -292,6 +302,77 @@ object TideCommandExecutor {
             handleCommandLine(listOf(command, taskPath))
         }
     }
+
+    fun createOrUpdateSlnWithCsproj(slnPath: String, csprojPath: String) {
+        val slnFile = File(slnPath)
+        val csprojFile = File(csprojPath)
+
+        if (!csprojFile.exists()) {
+            println("❌ Project file not found: $csprojPath")
+            return
+        }
+
+        val projectName = csprojFile.nameWithoutExtension
+        val projectGuid = UUID.randomUUID().toString().uppercase()
+        val slnDir = slnFile.parentFile ?: File(".")
+        val relativeCsprojPath = slnDir.toPath().relativize(csprojFile.toPath()).toString().replace("\\", "/")
+
+        val projectEntry = """
+        Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "$projectName", "$relativeCsprojPath", "{$projectGuid}"
+        EndProject
+    """.trimIndent()
+
+        val projectConfigSection = """
+        GlobalSection(ProjectConfigurationPlatforms) = postSolution
+            {$projectGuid}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+            {$projectGuid}.Debug|Any CPU.Build.0 = Debug|Any CPU
+            {$projectGuid}.Release|Any CPU.ActiveCfg = Release|Any CPU
+            {$projectGuid}.Release|Any CPU.Build.0 = Release|Any CPU
+        EndGlobalSection
+    """.trimIndent()
+
+        if (!slnFile.exists()) {
+            println("ℹ️ Creating new .sln file at: ${slnFile.absolutePath}")
+            slnFile.writeText(
+                buildString {
+                    appendLine("Microsoft Visual Studio Solution File, Format Version 12.00")
+                    appendLine("VisualStudioVersion = 17.0.31903.59")
+                    appendLine("MinimumVisualStudioVersion = 10.0.40219.1")
+                    appendLine(projectEntry)
+                    appendLine("Global")
+                    appendLine(projectConfigSection)
+                    appendLine("EndGlobal")
+                }
+            )
+        } else {
+            val lines = slnFile.readLines().toMutableList()
+
+            // Avoid duplicate project entry
+            if (lines.any { it.contains(csprojFile.name) }) {
+                println("⚠️ Project already exists in solution. Skipping.")
+                return
+            }
+
+            val endProjectIndex = lines.indexOfLast { it.trim().startsWith("EndProject") }
+            val globalIndex = lines.indexOfFirst { it.trim() == "Global" }
+            val endGlobalIndex = lines.indexOfFirst { it.trim() == "EndGlobal" }
+
+            if (endProjectIndex != -1) {
+                lines.add(endProjectIndex + 1, projectEntry)
+            } else {
+                lines.add(projectEntry)
+            }
+
+            // Insert project configuration section before EndGlobal
+            if (globalIndex != -1 && endGlobalIndex > globalIndex) {
+                lines.add(endGlobalIndex, projectConfigSection)
+            }
+
+            slnFile.writeText(lines.joinToString(System.lineSeparator()))
+            println("✅ Added $projectName to existing .sln at: ${slnFile.absolutePath}")
+        }
+    }
+
 
 
     /**
