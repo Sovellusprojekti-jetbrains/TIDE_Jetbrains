@@ -18,7 +18,6 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.util.Util;
 import com.views.InfoView;
-import org.jdesktop.swingx.action.ActionManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.PropertyChangeEvent;
