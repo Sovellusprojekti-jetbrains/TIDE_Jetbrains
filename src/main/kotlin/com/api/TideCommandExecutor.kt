@@ -332,6 +332,7 @@ object TideCommandExecutor {
     fun createOrUpdateSlnWithCsproj(slnPath: String, csprojPath: String) {
 
         var slnFile = File(slnPath)
+        var slnFilePath = File(slnPath)
         var folderName = slnFile.name
         var folderGuid = UUID.randomUUID().toString().uppercase()
         var demoPathSplit = csprojPath.split(Regex("[/\\\\]"))
@@ -375,7 +376,7 @@ object TideCommandExecutor {
 
         if (!slnFile.isFile()) {
             slnFile = File("$slnPath/course.sln")
-            println("ℹ️ Creating new .sln file at: ${slnFile.absolutePath}")
+            println("Creating new .sln file at: ${slnFile.absolutePath}")
             val nestedProjectEntry = "    {$projectGuid} = {$folderGuid}"
             slnFile.writeText(
                 buildString {
@@ -399,13 +400,13 @@ object TideCommandExecutor {
 
             // Avoid duplicate project entry
             if (lines.any { it.contains(csprojFile.name) }) {
-                println("⚠️ Project already exists in solution. Skipping.")
+                println("Project already exists in solution. Skipping.")
                 return
             }
 
             val endProjectIndex = lines.indexOfLast { it.trim().startsWith("EndProject") }
             val globalIndex = lines.indexOfFirst { it.trim() == "Global" }
-            val endGlobalIndex = lines.indexOfFirst { it.trim() == "EndGlobal" }
+            val endGlobalIndex = lines.indexOfFirst { it.trim() == "EndGlobalSection" }
 
             if (endProjectIndex != -1) {
                 lines.add(endProjectIndex + 1, projectEntry)
@@ -418,10 +419,14 @@ object TideCommandExecutor {
                 lines.add(endGlobalIndex, projectConfigSection)
             }
             var nestedIndex = lines.indexOfFirst { it.trim() == "GlobalSection(NestedProjects) = preSolution" }
-            if (lines.any { it.contains(demoName) }) {
-                var demoFolderIndex = lines.indexOfFirst { it.trim().contains(demoName)  }
+            if (lines.any { it.contains("\"$demoName\"") }) {
+                var demoFolderIndex = lines.indexOfFirst { it.trim().contains("\"$demoName\"")  }
                 var demoFolderSplit = lines[demoFolderIndex].split(",")
                 var demoGuid = demoFolderSplit.last()
+                demoGuid = demoGuid.replace("\"","")
+                demoGuid = demoGuid.replace("{","")
+                demoGuid = demoGuid.replace("}","")
+                demoGuid = demoGuid.replace(" ","")
                 val nestedProjectEntry = "    {$projectGuid} = {$demoGuid}"
                 lines.add(nestedIndex+1,nestedProjectEntry)
             } else {
@@ -431,7 +436,7 @@ object TideCommandExecutor {
             }
 
             slnFile.writeText(lines.joinToString(System.lineSeparator()))
-            println("✅ Added $projectName to existing .sln at: ${slnFile.absolutePath}")
+            println("Added $projectName to existing .sln at: ${slnFile.absolutePath}")
         }
     }
 
