@@ -449,6 +449,9 @@ public class CourseMainPane {
             }
         });
         tree.setCellRenderer(new SubmitRenderer());
+        for (int i = 0; i < tree.getRowCount(); i++) {
+            tree.collapseRow(i);
+        }
         return tree;
     }
 
