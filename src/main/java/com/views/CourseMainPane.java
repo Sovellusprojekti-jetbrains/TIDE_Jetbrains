@@ -329,7 +329,6 @@ public class CourseMainPane {
         JButton oButton = new JButton();
         oButton.setText("Open as Project");
         oButton.addActionListener(event -> {
-            spinner.setVisible(true);
             int lastPartStart = courseTask.getPath().lastIndexOf('/');
             String demoDirectory = File.separatorChar + courseTask.getPath().substring(lastPartStart + 1);
             new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName + demoDirectory);
