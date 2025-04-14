@@ -333,8 +333,9 @@ object TideCommandExecutor {
 
         var slnFile = File(slnPath)
         for (file in slnFile.listFiles()!!){
-            if (file.endsWith(".sln")) {
+            if (file.name.endsWith(".sln")) {
                 slnFile = file
+                break
             }
         }
 

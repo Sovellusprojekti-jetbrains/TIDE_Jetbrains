@@ -334,7 +334,7 @@ public class CourseMainPane {
             spinner.setVisible(true);
             int lastPartStart = courseTask.getPath().lastIndexOf('/');
             String demoDirectory = File.separatorChar + courseTask.getPath().substring(lastPartStart + 1);
-            new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName + demoDirectory);
+            new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName);
         });
         buttonPanel.add(oButton);
 
