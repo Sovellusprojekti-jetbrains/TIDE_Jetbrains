@@ -82,7 +82,7 @@
 
     </actions>
     <applicationListeners>
-        <listener class="com.listeners.LoginWindowListener"
+        <listener class="com.listeners.ToolWindowListener"
                   topic="com.intellij.openapi.wm.ex.ToolWindowManagerListener"/>
     </applicationListeners>
 </idea-plugin>

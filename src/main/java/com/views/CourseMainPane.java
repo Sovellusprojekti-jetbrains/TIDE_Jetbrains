@@ -11,6 +11,8 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.openapi.project.Project;
 import javax.swing.*;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -230,16 +232,16 @@ public class CourseMainPane {
                 // Makes own subpanel for every task
                 // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
                 List<CourseTask> tasks = course.getTasks();
-                final int[] j = {0};
+                int j = 0;
                 for (CourseTask courseTask: tasks) {
                     courseTask.setParent(course);
                     JPanel subPanel = createExercise(courseTask, course.getName());
                     subPanel.setBackground(bgColor);
-                    gbc.gridy = j[0];
+                    gbc.gridy = j;
                     panel.add(subPanel, gbc);
                     panel.setBackground(bgColor);
                     panel.setOpaque(true);
-                    j[0]++;
+                    j++;
                 }
 
                 final int thickness = 2;
@@ -255,11 +257,6 @@ public class CourseMainPane {
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
                 singleCourse.add(labelPanel, gbc);
-                final int padding = 10;
-
-                // Ensure scrollPane doesn't stretch too much
-                Dimension preferredSize = panel.getPreferredSize();
-                scrollPane.setPreferredSize(new Dimension(preferredSize.width, preferredSize.height + padding)); // Small padding
 
                 // Add scrollPane below label, but restrict expansion
                 gbc.gridy = 1;
@@ -269,7 +266,7 @@ public class CourseMainPane {
 
 
                 coursePanel.add(singleCourse);
-        }
+            }
         });
     }
 
@@ -332,7 +329,6 @@ public class CourseMainPane {
         JButton oButton = new JButton();
         oButton.setText("Open as Project");
         oButton.addActionListener(event -> {
-            spinner.setVisible(true);
             int lastPartStart = courseTask.getPath().lastIndexOf('/');
             String demoDirectory = File.separatorChar + courseTask.getPath().substring(lastPartStart + 1);
             new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName + demoDirectory);
@@ -388,15 +384,41 @@ public class CourseMainPane {
                 for (SubTask.TaskFile file: task.getTaskFiles()) {
                     DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file.getFileName());
                     leaf.add(submitNode);
-                    rowCount += 1;
+                    rowCount++;
                 }
                 root.add(leaf);
-                rowCount += 1;
+                rowCount++;
             }
         }
         Tree tree = new Tree(root);
         tree.setRootVisible(false);
         tree.setVisibleRowCount(rowCount);
+        for (int i = 0; i < tree.getRowCount(); i++) {
+            tree.expandRow(i);
+        }
+
+        tree.addTreeExpansionListener(new TreeExpansionListener() {
+            @Override
+            public void treeExpanded(TreeExpansionEvent event) {
+                updateTree();
+            }
+
+            @Override
+            public void treeCollapsed(TreeExpansionEvent event) {
+                updateTree();
+            }
+
+            /**
+             * Updates tree.
+             */
+            private void updateTree() {
+                SwingUtilities.invokeLater(() -> {
+                    tree.setVisibleRowCount(tree.getRowCount());
+                    panel1.revalidate();
+                    panel1.repaint();
+                });
+            }
+        });
 
         //TODO: korjaa avaaminen tuplaklikillä lisäämällä  kurssifolderi.
         tree.addMouseListener(new MouseAdapter() {
