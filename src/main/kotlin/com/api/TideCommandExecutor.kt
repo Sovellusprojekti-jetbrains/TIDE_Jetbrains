@@ -1,6 +1,5 @@
 package com.api
 
-import com.state.ActiveState
 import com.actions.Settings
 import com.course.Course
 import com.course.SubTask
@@ -15,6 +14,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findDocument
 import com.intellij.util.io.awaitExit
+import com.state.ActiveState
 import com.views.InfoView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,10 +25,10 @@ import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
-import com.intellij.openapi.module.JavaModuleType;
-import com.intellij.openapi.util.io.endsWithName
-import java.io.FileFilter
-import java.util.UUID
+import java.util.*
+import kotlin.io.path.Path
+import kotlin.io.path.extension
+
 
 object TideCommandExecutor {
 
@@ -271,7 +271,10 @@ object TideCommandExecutor {
                     } else if (productName.contains("Rider")) {
                         //TODO: make check for solution in demo folder
                         val root = File(taskPath)
-                        val list = root.listFiles(FileFilter { pathname -> pathname.endsWith(".csproj") })
+                        val path = Path(taskPath)
+                        val list = mutableListOf<File>()
+                        listAllFiles(path, list)
+
                         for (file : File in list ) {
                             createOrUpdateSlnWithCsproj(taskPath, file.absolutePath)
                         }
@@ -302,6 +305,22 @@ object TideCommandExecutor {
             handleCommandLine(listOf(command, taskPath))
         }
     }
+
+
+    @Throws(IOException::class)
+    private fun listAllFiles(currentPath: Path, allFiles: MutableList<File>) {
+        Files.newDirectoryStream(currentPath).use { stream ->
+            for (entry in stream) {
+                if (Files.isDirectory(entry)) {
+                    listAllFiles(entry, allFiles)
+                } else if (entry.toString().endsWith(".csproj")) {
+                    allFiles.add(entry.toFile())
+                }
+            }
+        }
+    }
+
+
 
     fun createOrUpdateSlnWithCsproj(slnPath: String, csprojPath: String) {
         val slnFile = File(slnPath)
