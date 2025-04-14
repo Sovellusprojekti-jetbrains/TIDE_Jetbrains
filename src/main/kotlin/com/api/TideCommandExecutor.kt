@@ -332,6 +332,11 @@ object TideCommandExecutor {
     fun createOrUpdateSlnWithCsproj(slnPath: String, csprojPath: String) {
 
         var slnFile = File(slnPath)
+        var folderName = slnFile.name
+        var folderGuid = UUID.randomUUID().toString().uppercase()
+        var demoPathSplit = csprojPath.split(Regex("[/\\\\]"))
+
+        var demoName = demoPathSplit[demoPathSplit.size -3]
         for (file in slnFile.listFiles()!!){
             if (file.name.endsWith(".sln")) {
                 slnFile = file
@@ -350,11 +355,16 @@ object TideCommandExecutor {
         val projectGuid = UUID.randomUUID().toString().uppercase()
         val slnDir = slnFile.parentFile ?: File(".")
         val relativeCsprojPath = slnDir.toPath().relativize(csprojFile.toPath()).toString().replace("\\", "/")
-
         val projectEntry = """
         Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "$projectName", "$relativeCsprojPath", "{$projectGuid}"
         EndProject
     """.trimIndent()
+
+        val folderEntry = """
+        Project("{66A26720-8FB5-11D2-AA7E-00C04F688DDE}") = "$demoName", "$demoName", "{$folderGuid}"
+        EndProject
+    """.trimIndent()
+
 
         val projectConfigSection = """
             {$projectGuid}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -366,6 +376,7 @@ object TideCommandExecutor {
         if (!slnFile.isFile()) {
             slnFile = File("$slnPath/course.sln")
             println("ℹ️ Creating new .sln file at: ${slnFile.absolutePath}")
+            val nestedProjectEntry = "    {$projectGuid} = {$folderGuid}"
             slnFile.writeText(
                 buildString {
                     appendLine("Microsoft Visual Studio Solution File, Format Version 12.00")
@@ -375,6 +386,9 @@ object TideCommandExecutor {
                     appendLine("Global")
                     appendLine("GlobalSection(ProjectConfigurationPlatforms) = postSolution")
                     appendLine(projectConfigSection)
+                    appendLine("EndGlobalSection")
+                    appendLine("GlobalSection(NestedProjects) = preSolution")
+                    appendLine(nestedProjectEntry)
                     appendLine("EndGlobalSection")
                     appendLine("EndGlobal")
                 }
@@ -401,6 +415,18 @@ object TideCommandExecutor {
             // Insert project configuration section before EndGlobal
             if (globalIndex != -1 && endGlobalIndex > globalIndex) {
                 lines.add(endGlobalIndex, projectConfigSection)
+            }
+            var nestedIndex = lines.indexOfFirst { it.trim() == "GlobalSection(NestedProjects) = preSolution" }
+            if (lines.any { it.contains(demoName) }) {
+                var demoFolderIndex = lines.indexOfFirst { it.trim() == demoName }
+                var demoFolderSplit = lines[demoFolderIndex].split(",")
+                var demoGuid = demoFolderSplit.last()
+                val nestedProjectEntry = "    {$projectGuid} = {$demoGuid}"
+                lines.add(nestedIndex+1,nestedProjectEntry)
+            } else {
+                lines.add(endGlobalIndex-1,folderEntry)
+                val nestedProjectEntry = "    {$projectGuid} = {$folderGuid}"
+                lines.add(nestedIndex+1,nestedProjectEntry)
             }
 
             slnFile.writeText(lines.joinToString(System.lineSeparator()))
