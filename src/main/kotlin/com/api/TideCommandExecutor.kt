@@ -419,7 +419,7 @@ object TideCommandExecutor {
             }
             var nestedIndex = lines.indexOfFirst { it.trim() == "GlobalSection(NestedProjects) = preSolution" }
             if (lines.any { it.contains(demoName) }) {
-                var demoFolderIndex = lines.indexOfFirst { it.trim() == demoName }
+                var demoFolderIndex = lines.indexOfFirst { it.trim().contains(demoName)  }
                 var demoFolderSplit = lines[demoFolderIndex].split(",")
                 var demoGuid = demoFolderSplit.last()
                 val nestedProjectEntry = "    {$projectGuid} = {$demoGuid}"
