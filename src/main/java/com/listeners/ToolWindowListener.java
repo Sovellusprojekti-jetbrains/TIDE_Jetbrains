@@ -13,11 +13,10 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 /**
- * Listen to all tool windows being opened.
- * TODO: rename the class to something more appropriate
+ * Reacts to TIDE toolwindows when they are opened.
  */
 @Service
-public final class LoginWindowListener implements ToolWindowManagerListener  {
+public final class ToolWindowListener implements ToolWindowManagerListener  {
     @Override
     public void toolWindowShown(ToolWindow toolWindow) {
         System.out.println("tool window listener was called");
@@ -56,7 +55,7 @@ public final class LoginWindowListener implements ToolWindowManagerListener  {
         }
         if ("Output Window".equals(toolWindow.getId())) {
             System.out.println("output window was opened");
-            LogHandler.logInfo("LoginWindowListener: Output window was opened.");
+            LogHandler.logInfo("ToolWindowListener: Output window was opened.");
             for (Content content : contentManager.getContents()) {
                 if ("Output".equals(content.getTabName())) {
                     // Select existing tab instead of adding a new one
