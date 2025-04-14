@@ -286,6 +286,13 @@ object TideCommandExecutor {
                     } else if (productName.contains("PyCharm")) {
                         command += "pycharm"
                     } else if (productName.contains("Rider")) {
+                        val path = Path(taskPath)
+                        val list = mutableListOf<File>()
+                        listAllFiles(path, list)
+
+                        for (file : File in list ) {
+                            createOrUpdateSlnWithCsproj(taskPath, file.absolutePath)
+                        }
                         command += "rider"
                     }
                 //TODO: This is the Mac section. It is not possible to test functionality without a Mac
