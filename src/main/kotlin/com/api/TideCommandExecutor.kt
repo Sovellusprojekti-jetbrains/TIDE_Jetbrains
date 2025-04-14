@@ -330,7 +330,14 @@ object TideCommandExecutor {
 
 
     fun createOrUpdateSlnWithCsproj(slnPath: String, csprojPath: String) {
-        val slnFile = File(slnPath)
+
+        var slnFile = File(slnPath)
+        for (file in slnFile.listFiles()!!){
+            if (file.endsWith(".sln")) {
+                slnFile = file
+            }
+        }
+
         val csprojFile = File(csprojPath)
 
         if (!csprojFile.exists()) {
@@ -357,7 +364,8 @@ object TideCommandExecutor {
         EndGlobalSection
     """.trimIndent()
 
-        if (!slnFile.exists()) {
+        if (!slnFile.isFile()) {
+            slnFile = File("$slnPath/course.sln")
             println("ℹ️ Creating new .sln file at: ${slnFile.absolutePath}")
             slnFile.writeText(
                 buildString {
