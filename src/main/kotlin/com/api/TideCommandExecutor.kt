@@ -357,12 +357,10 @@ object TideCommandExecutor {
     """.trimIndent()
 
         val projectConfigSection = """
-        GlobalSection(ProjectConfigurationPlatforms) = postSolution
             {$projectGuid}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
             {$projectGuid}.Debug|Any CPU.Build.0 = Debug|Any CPU
             {$projectGuid}.Release|Any CPU.ActiveCfg = Release|Any CPU
             {$projectGuid}.Release|Any CPU.Build.0 = Release|Any CPU
-        EndGlobalSection
     """.trimIndent()
 
         if (!slnFile.isFile()) {
@@ -375,7 +373,9 @@ object TideCommandExecutor {
                     appendLine("MinimumVisualStudioVersion = 10.0.40219.1")
                     appendLine(projectEntry)
                     appendLine("Global")
+                    appendLine("GlobalSection(ProjectConfigurationPlatforms) = postSolution")
                     appendLine(projectConfigSection)
+                    appendLine("EndGlobalSection")
                     appendLine("EndGlobal")
                 }
             )
