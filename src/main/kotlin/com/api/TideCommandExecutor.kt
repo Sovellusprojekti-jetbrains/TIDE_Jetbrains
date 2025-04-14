@@ -383,6 +383,7 @@ object TideCommandExecutor {
                     appendLine("VisualStudioVersion = 17.0.31903.59")
                     appendLine("MinimumVisualStudioVersion = 10.0.40219.1")
                     appendLine(projectEntry)
+                    appendLine(folderEntry)
                     appendLine("Global")
                     appendLine("GlobalSection(ProjectConfigurationPlatforms) = postSolution")
                     appendLine(projectConfigSection)
