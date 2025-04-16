@@ -101,6 +101,7 @@ public class CourseTaskPane {
      * Holds the current project.
      */
     private Project project;
+    private static CourseTaskPane pane;
 
     /**
      * getter for the contents of the task panel.
@@ -109,7 +110,7 @@ public class CourseTaskPane {
     public JPanel getContent() {
         return taskPane;
     }
-    private static CourseTaskPane pane;
+
     /**
      * A constructor that takes a ToolWindow as a parameter.
      * The Toolwindow instance lets us access the current project
