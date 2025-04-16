@@ -7,7 +7,9 @@ import com.intellij.openapi.vfs.VirtualFile;
  */
 public class TimTask {
 
+    private static TimTask selected; //Keep the instance of timtask open in the editor here.
     private final VirtualFile delegate;
+    //TODO: Add attributes for subtask info etc.
 
     /**
      * In order to "extend" VirtualFile we must have one as a delegate.
@@ -44,5 +46,29 @@ public class TimTask {
      */
     public void syncChanges() {
         //TODO: Implement updating the file on disk here.
+    }
+
+    /**
+     * This method is used to update the information in the CourseTaskPane and it's state.
+     */
+    public static void updatePane() {
+        //TODO: Implement
+    }
+
+    /**
+     * Getter for active instance.
+     * @return TimTask.
+     */
+    public static TimTask getInstance() {
+        return selected;
+    }
+
+    /**
+     * This method is called from ActiveState when MessageBus event fires.
+     * @param file VirtualFile open in the editor which must be evaluated of being a tim task.
+     */
+    public static void evaluateFile(VirtualFile file) {
+        //TODO: Make new TimTask if file open in the editor is one. Set selected null otherwise
+        updatePane();
     }
 }
