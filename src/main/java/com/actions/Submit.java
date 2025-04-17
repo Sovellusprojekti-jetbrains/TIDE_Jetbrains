@@ -51,7 +51,11 @@ public class Submit extends AnAction {
             return;
         }
 
-        com.views.CoursePaneWindow.getPane().setProgress(true, "Submitting...");
+        try {
+            com.views.CoursePaneWindow.getPane().setProgress(true, "Submitting...");
+        } catch (Exception ex) {
+            LogHandler.logError("Submit action", ex);
+        }
         new ApiHandler().submitExercise(file);
     }
 
