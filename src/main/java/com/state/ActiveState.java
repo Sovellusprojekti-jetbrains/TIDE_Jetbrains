@@ -310,11 +310,11 @@ public class ActiveState {
 
     /**
      * This method is used to determine if the file is tim-task.
-     * @param path Path of the file on disk.
+     * @param file Virtual file corresponding to the file on disk.
      * @return True if the file is tim-task, false otherwise.
      */
-    private boolean isTask(String path) {
-        return false;
+    private boolean isTask(VirtualFile file) {
+        return this.findSubTask(file) != null;
     }
 
     /**
@@ -327,10 +327,9 @@ public class ActiveState {
         if (child.getCanonicalPath() != null && this.allowedName(child)) {
             this.isSubmittable = child.getCanonicalPath()
                     .replaceAll("/", Matcher.quoteReplacement(File.separator))
-                    .contains(parent.getCanonicalPath());
-            if (this.isSubmittable) { //Will make setSubmittable considerably better with TimTask. Now just appending
-                this.isSubmittable = isTask(child.getCanonicalPath());
-            }
+                    .contains(parent.getCanonicalPath()) && this.isTask(child);
+            //Now it is checked that file is tim-task.
+            // With TimTask-class, considerably better implementation will be possible but works for now.
         } else {
             this.isSubmittable = false;
         }
