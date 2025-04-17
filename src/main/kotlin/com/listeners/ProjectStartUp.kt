@@ -3,9 +3,12 @@ package com.listeners
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import com.api.TideCommandExecutor
-import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.fileEditor.FileEditorManagerListener
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.ToolWindowManager
 import com.state.ActiveState
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
 
 
@@ -29,6 +32,24 @@ class ProjectStartUp : ProjectActivity {
                 }
             }
             TideCommandExecutor.fetchCoursesAsync()
+            runBlocking { //Checks if editor is ready and if necessary waits until it is
+                val editorReady = CompletableDeferred<Unit>()
+
+                val connection = project.messageBus.connect()
+                connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, object : FileEditorManagerListener {
+                    override fun fileOpened(source: FileEditorManager, file: VirtualFile) {
+                        if (!editorReady.isCompleted) {
+                            editorReady.complete(Unit)
+                        }
+                    }
+                })
+
+                if (FileEditorManager.getInstance(project).openFiles.isNotEmpty()) {
+                    editorReady.complete(Unit)
+                }
+
+                editorReady.await()
+            }
         }
     }
 }
