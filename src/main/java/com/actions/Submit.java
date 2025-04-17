@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.state.ActiveState;
 import com.util.Util;
+import com.views.CourseTaskPane;
 import com.views.InfoView;
 import org.jetbrains.annotations.NotNull;
 
