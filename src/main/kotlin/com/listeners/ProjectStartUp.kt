@@ -9,8 +9,10 @@ class ProjectStartUp : ProjectActivity {
 
 
     override suspend fun execute(project: Project) {
-        TideCommandExecutor.checkLogin()
-        TideCommandExecutor.fetchCoursesAsync()
+        com.intellij.openapi.project.DumbService.getInstance(project).runWhenSmart { //Project must be ready first
+            TideCommandExecutor.checkLogin()
+            TideCommandExecutor.fetchCoursesAsync()
+        }
     }
 }
 
