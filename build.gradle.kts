@@ -36,6 +36,15 @@ intellijPlatform {
     }
 }
 
+tasks.withType<Jar> {
+    manifest {
+        attributes(
+            "Implementation-Title" to name,
+            "Implementation-Version" to version.toString()
+        )
+    }
+}
+
 apply {
     plugin("idea")
     plugin("java")
