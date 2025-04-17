@@ -5,9 +5,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 /**
  * This class "extends" VirtualFile with actions of tide task.
  */
-public class TimTask {
+public final class TimTask {
 
-    private static TimTask selected; //Keep the instance of timtask open in the editor here.
+    private static TimTask selected; //Keep the instance of TimTask open in the editor here.
     private final VirtualFile delegate;
     //TODO: Add attributes for subtask info etc.
 
@@ -15,7 +15,7 @@ public class TimTask {
      * In order to "extend" VirtualFile we must have one as a delegate.
      * @param file VirtualFile which is used as a delegate.
      */
-    public TimTask(VirtualFile file) {
+    private TimTask(VirtualFile file) {
         this.delegate = file;
     }
 
@@ -44,14 +44,14 @@ public class TimTask {
     /**
      * This method updates the changes in delegate VirtualFile to actual file on disk.
      */
-    public void syncChanges() {
+    private void syncChanges() {
         //TODO: Implement updating the file on disk here.
     }
 
     /**
-     * This method is used to update the information in the CourseTaskPane and it's state.
+     * This method is used to update the information in the CourseTaskPane, and it's state.
      */
-    public static void updatePane() {
+    private static void updatePane() {
         //TODO: Implement
     }
 
@@ -69,6 +69,8 @@ public class TimTask {
      */
     public static void evaluateFile(VirtualFile file) {
         //TODO: Make new TimTask if file open in the editor is one. Set selected null otherwise
-        updatePane();
+        //TODO: Maybe TimTasks once made could be cached for later use?
+        //TODO: use ActiveState's setSubmittable to make actions enabled/disabled.
+        updatePane(); //This can be used to update the CourseTaskPane. Info shown and buttons enabled/disabled.
     }
 }
