@@ -101,6 +101,7 @@ public class CourseTaskPane {
      * Holds the current project.
      */
     private Project project;
+    private static CourseTaskPane pane;
 
     /**
      * getter for the contents of the task panel.
@@ -109,7 +110,6 @@ public class CourseTaskPane {
     public JPanel getContent() {
         return taskPane;
     }
-
 
     /**
      * A constructor that takes a ToolWindow as a parameter.
@@ -180,6 +180,7 @@ public class CourseTaskPane {
 
         stateManager.updateCourses();
         setProgress(false, "");
+        pane = this;
     }
 
 
@@ -287,6 +288,14 @@ public class CourseTaskPane {
             taskPane.revalidate();
             taskPane.repaint();
         });
+    }
+
+    /**
+     * Getter for the instance of CourseTaskPane.
+     * @return CourseTaskPane.
+     */
+    public static CourseTaskPane getInstance() {
+        return pane;
     }
 }
 

@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.state.ActiveState;
 import com.util.Util;
+import com.views.CourseTaskPane;
 import com.views.InfoView;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +52,7 @@ public class Submit extends AnAction {
             return;
         }
 
-        com.views.CoursePaneWindow.getPane().setProgress(true, "Submitting...");
+        CourseTaskPane.getInstance().setProgress(true, "Submitting...");
         new ApiHandler().submitExercise(file);
     }
 
