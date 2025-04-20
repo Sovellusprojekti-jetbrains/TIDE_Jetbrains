@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,8 +28,14 @@ public class InstallScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (System.getProperty("os.name").contains("Windows")) {
-                    //TODO: call install script.
-                    ProcessBuilder process = new ProcessBuilder("powershell.exe ./scripts/install.ps1");
+                    //TODO: Maybe let the user decide where to install?
+                    //TODO: Would require an install wizard.
+                    String username = System.getProperty("user.name");
+                    String path = "c:/Users/" + username + "/tide";
+                    new File(path).mkdirs();
+                    ProcessBuilder process = new ProcessBuilder();
+                    process.directory(new File(path));
+
                     return;
                 }
                 if (System.getProperty("os.name").contains("Linux")) {

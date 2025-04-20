@@ -10,8 +10,10 @@ Invoke-WebRequest -Uri "https://github.com/TIDE-project/TIDE-CLI/releases/latest
 
 Expand-Archive .\tide.zip -DestinationPath $directoryPath
 
-[Environment]::SetEnvironmentVariable("Path", $env:Path + $directoryPath,"Machine")
+[Environment]::SetEnvironmentVariable("Path", $env:Path + $directoryPath,"User")
 
-Set-ItemProperty -Path "$directoryPath + "\tide.exe" -Name IsReadOnly $false
+$exePath = Join-Path $directoryPath "tide.exe"
+
+Set-ItemProperty -Path $exePath -Name IsReadOnly -Value $false
 
 
