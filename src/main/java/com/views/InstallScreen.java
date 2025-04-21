@@ -49,8 +49,23 @@ public class InstallScreen {
                                 "powershell.exe", "-ExecutionPolicy", "Bypass", "-File", tempScript.toString()
                         );
                         process.redirectErrorStream(true);
-                        process.start();
-                    } catch (IOException ex) {
+                        Process pb = process.start();
+                        int exitCode = pb.waitFor();
+
+                        if(exitCode == 0) {
+                            Messages.showMessageDialog(
+                                    "Tide installed successfully",
+                                    "Installation Complete",
+                                    Messages.getInformationIcon()
+                            );
+                        } else {
+                            Messages.showMessageDialog(
+                                    "Something went wrong with the install",
+                                    "Installation Failed",
+                                    Messages.getErrorIcon()
+                            );
+                        }
+                    } catch (IOException | InterruptedException ex) {
                         throw new RuntimeException(ex);
                     }
                     return;
