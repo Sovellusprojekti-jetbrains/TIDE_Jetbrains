@@ -8,8 +8,12 @@ import java.awt.event.ActionListener;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 
 public class InstallScreen {
@@ -35,7 +39,20 @@ public class InstallScreen {
                     new File(path).mkdirs();
                     ProcessBuilder process = new ProcessBuilder();
                     process.directory(new File(path));
+                    InputStream inputStream = getClass().getResourceAsStream("/scripts/installTideCLI.ps1");
 
+                    try {
+                        Path tempScript = Files.createTempFile("temp-script", ".ps1");
+                        Files.copy(inputStream, tempScript, StandardCopyOption.REPLACE_EXISTING);
+                        tempScript.toFile().deleteOnExit();
+                        process.command(
+                                "powershell.exe", "-ExecutionPolicy", "Bypass", "-File", tempScript.toString()
+                        );
+                        process.redirectErrorStream(true);
+                        process.start();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     return;
                 }
                 if (System.getProperty("os.name").contains("Linux")) {
