@@ -37,10 +37,13 @@ public class About extends AnAction {
         }
         String message = String.format(
                 """
-                %s \n
-                See instruction here: \n
-                %s \n
-                Keyboard shortcut for submit: %s""", version, manualUrl, submitShortcut);
+                <html>
+                    <body>
+                        <p>%s</p>
+                        <p>Learn how to use extension: <a href='%s'>tide instructions</a></p>
+                        <p>Keyboard shortcut for submit: %s</p>
+                    </body>
+                </html>""", version, manualUrl, submitShortcut);
         Messages.showMessageDialog(
                 message,
                 "About",
