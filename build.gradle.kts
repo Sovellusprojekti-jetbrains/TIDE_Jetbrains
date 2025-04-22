@@ -137,10 +137,10 @@ val generatePluginInfo by tasks.registering {
 
 // Tell the compiler to include the generated source dir
 sourceSets["main"].java.srcDir("build/generated/sources/version")
-/*
+
 // Make sure Java compile step depends on this
 tasks.named("compileJava").configure {
     dependsOn(generatePluginInfo)
-}*/
-//While developing, you run the commented section above once to generate PluginInfo class into generated resources
-//Running it first time gives an error but the class gets generated anyway
+}
+//While developing, you run the tasks.named section above once to generate PluginInfo class into generated resources
+//Running it first time gives an error but the class gets generated anyway. Comment the section out once the class is generated.
