@@ -12,6 +12,7 @@ import com.intellij.openapi.ui.Messages;
  * Class for the about-screen.
  */
 public class About extends AnAction {
+    private final String manualUrl  = "https://tim.jyu.fi/view/kurssit/tie/proj/2025/tide-jetbrains/tide-jetbrains-lisaosan-kayttoohjeet";
 
     /**
      * Method for performed action.
@@ -38,8 +39,8 @@ public class About extends AnAction {
                 """
                 %s \n
                 See instruction here: \n
-                https://tim.jyu.fi/view/kurssit/tie/proj/2025/tide-jetbrains/tide-jetbrains-lisaosan-kayttoohjeet \n
-                Keyboard shortcut for submit: %s""", version, submitShortcut);
+                %s \n
+                Keyboard shortcut for submit: %s""", version, manualUrl, submitShortcut);
         Messages.showMessageDialog(
                 message,
                 "About",
