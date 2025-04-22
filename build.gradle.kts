@@ -36,15 +36,6 @@ intellijPlatform {
     }
 }
 
-tasks.withType<Jar> {
-    manifest {
-        attributes(
-            "Implementation-Title" to name,
-            "Implementation-Version" to version.toString()
-        )
-    }
-}
-
 apply {
     plugin("idea")
     plugin("java")
@@ -123,3 +114,30 @@ tasks.test {
 // From https://gitlab.jyu.fi/tie/tools/comtest.intellij/-/blob/master/build.gradle.kts
 fun prop(key: String) = extra.properties[key] as? String
     ?: error("Property `$key` is not defined in gradle.properties")
+
+val generatePluginInfo by tasks.registering {
+    val outputDir = layout.buildDirectory.dir("generated/sources/version")
+    outputs.dir(outputDir)
+
+    doLast {
+        val file = outputDir.get().file("java/com/actions/PluginInfo.java").asFile
+        file.parentFile.mkdirs()
+        file.writeText(
+            """
+            package com.actions;
+
+            public class PluginInfo {
+                public static final String VERSION = "${prop("pluginVersion")}";
+            }
+            """.trimIndent()
+        )
+    }
+}
+
+// Tell the compiler to include the generated source dir
+sourceSets["main"].java.srcDir("build/generated/sources/version")
+/*
+// Make sure Java compile step depends on this
+tasks.named("compileJava").configure {
+    dependsOn(generatePluginInfo)
+}*/

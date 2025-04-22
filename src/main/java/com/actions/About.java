@@ -2,7 +2,6 @@ package com.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.util.VersionUtil;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.ui.Messages;
 
@@ -17,7 +16,7 @@ public class About extends AnAction {
      */
     @Override
     public void actionPerformed(@NotNull final AnActionEvent e) {
-        //String version = VersionUtil.class.getPackage().getImplementationVersion();
+        String version = com.actions.PluginInfo.VERSION;
         Messages.showMessageDialog(
                 "Tide 1.0",
                 "About",
