@@ -1,5 +1,6 @@
 package com.actions;
 
+import com.api.LogHandler;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.keymap.Keymap;
@@ -18,20 +19,27 @@ public class About extends AnAction {
      */
     @Override
     public void actionPerformed(@NotNull final AnActionEvent e) {
-        String version = com.actions.PluginInfo.VERSION;
+        String version;
+        try {
+            version = "Tide " + com.actions.PluginInfo.VERSION;
+        } catch (Exception ex) {
+            version = "Tide";
+            LogHandler.logError("Submit action", ex);
+        }
         Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
         var shortcuts = keymap.getShortcuts("com.actions.Submit");
         StringBuilder submitShortcut = new StringBuilder();
 
         for (var key : shortcuts) {
             submitShortcut.append(key.toString());
+            submitShortcut.append(System.lineSeparator());
         }
         String message = String.format(
                 """
-                Tide %s \n
+                %s \n
                 See instruction here: \n
                 https://tim.jyu.fi/view/kurssit/tie/proj/2025/tide-jetbrains/tide-jetbrains-lisaosan-kayttoohjeet \n
-                Default keyboard shortcut for submit: %s""", version, submitShortcut);
+                Keyboard shortcut for submit: %s""", version, submitShortcut);
         Messages.showMessageDialog(
                 message,
                 "About",
