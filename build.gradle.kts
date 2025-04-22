@@ -1,3 +1,31 @@
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.*
+
+abstract class GeneratePluginInfo : DefaultTask() {
+
+    @get:Input
+    abstract val pluginVersion: Property<String>
+
+    @get:OutputDirectory
+    abstract val outputDir: DirectoryProperty
+
+    @TaskAction
+    fun generate() {
+        val file = outputDir.get().file("java/com/actions/PluginInfo.java").asFile
+        file.parentFile.mkdirs()
+        file.writeText(
+            """
+            package com.actions;
+
+            public class PluginInfo {
+                public static final String VERSION = "${pluginVersion.get()}";
+            }
+
+            """.trimIndent()
+        )
+    }
+}
+
 val riderPlatformVersionProp = prop("riderPlatformVersion")
 val ideaPlatformVersionProp = prop("ideaPlatformVersion")
 val pluginSinceBuildProp = prop("pluginSinceBuild")
@@ -115,32 +143,21 @@ tasks.test {
 fun prop(key: String) = extra.properties[key] as? String
     ?: error("Property `$key` is not defined in gradle.properties")
 
-val generatePluginInfo by tasks.registering {
-    val outputDir = layout.buildDirectory.dir("generated/sources/version")
-    outputs.dir(outputDir)
-
-    doLast {
-        val file = outputDir.get().file("java/com/actions/PluginInfo.java").asFile
-        file.parentFile.mkdirs()
-        file.writeText(
-            """
-            package com.actions;
-
-            public class PluginInfo {
-                public static final String VERSION = "${prop("pluginVersion")}";
-            }
-
-            """.trimIndent()
-        )
-    }
+val generatePluginInfo = tasks.register<GeneratePluginInfo>("generatePluginInfo") {
+    pluginVersion.set(
+        project.findProperty("pluginVersion")?.toString()
+            ?: error("Missing 'pluginVersion' property.")
+    )
+    outputDir.set(layout.buildDirectory.dir("generated/sources/version/java"))
 }
 
 // Tell the compiler to include the generated source dir
 sourceSets["main"].java.srcDir("build/generated/sources/version")
 
 // Make sure Java compile step depends on this
-tasks.named("compileJava").configure {
+tasks.named<JavaCompile>("compileJava") {
     dependsOn(generatePluginInfo)
 }
-//While developing, you run the tasks.named section above once to generate PluginInfo class into generated resources
-//Running it first time gives an error but the class gets generated anyway. Comment the section out once the class is generated.
+tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileKotlin") {
+    dependsOn(generatePluginInfo)
+}
