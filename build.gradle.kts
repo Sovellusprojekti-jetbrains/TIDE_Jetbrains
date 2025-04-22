@@ -142,5 +142,5 @@ sourceSets["main"].java.srcDir("build/generated/sources/version")
 tasks.named("compileJava").configure {
     dependsOn(generatePluginInfo)
 }*/
-//While developing, you run the commented section above once to generate PluginInfo class to generated resources
+//While developing, you run the commented section above once to generate PluginInfo class into generated resources
 //Running it first time gives an error but the class gets generated anyway
