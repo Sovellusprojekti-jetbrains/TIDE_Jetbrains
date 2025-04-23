@@ -328,7 +328,15 @@ object TideCommandExecutor {
     }
 
 
-
+    /**
+     * Adds a csproj file to a solution and creates a solution if it doesn't exist.
+     * This might be completely useless after finding out that
+     * you can't have a projects with the same name in a solution.
+     * Maybe in the future this will be changed for the better
+     * and this becomes useful.
+     *@param slnPath Path to the folder where the sln file is
+     * @param csprojPath path to the folder where the csproj file is
+     */
     fun createOrUpdateSlnWithCsproj(slnPath: String, csprojPath: String) {
 
         var slnFile = File(slnPath)
@@ -348,7 +356,7 @@ object TideCommandExecutor {
         val csprojFile = File(csprojPath)
 
         if (!csprojFile.exists()) {
-            println("❌ Project file not found: $csprojPath")
+            println("Project file not found: $csprojPath")
             return
         }
 
@@ -381,11 +389,13 @@ object TideCommandExecutor {
             slnFile.writeText(
                 buildString {
                     appendLine("Microsoft Visual Studio Solution File, Format Version 12.00")
-                    appendLine("VisualStudioVersion = 17.0.31903.59")
-                    appendLine("MinimumVisualStudioVersion = 10.0.40219.1")
                     appendLine(projectEntry)
                     appendLine(folderEntry)
                     appendLine("Global")
+                    appendLine("GlobalSection(SolutionConfigurationPlatforms) = preSolution")
+                    appendLine("Debug|Any CPU = Debug|Any CPU")
+                    appendLine("Release|Any CPU = Release|Any CPU")
+                    appendLine("EndGlobalSection")
                     appendLine("GlobalSection(ProjectConfigurationPlatforms) = postSolution")
                     appendLine(projectConfigSection)
                     appendLine("EndGlobalSection")
@@ -399,25 +409,27 @@ object TideCommandExecutor {
             val lines = slnFile.readLines().toMutableList()
 
             // Avoid duplicate project entry
-            if (lines.any { it.contains(csprojFile.name) }) {
+            if (lines.any { it.contains(relativeCsprojPath) }) {
                 println("Project already exists in solution. Skipping.")
                 return
             }
 
             val endProjectIndex = lines.indexOfLast { it.trim().startsWith("EndProject") }
             val globalIndex = lines.indexOfFirst { it.trim() == "Global" }
-            val endGlobalIndex = lines.indexOfFirst { it.trim() == "EndGlobalSection" }
+
 
             if (endProjectIndex != -1) {
                 lines.add(endProjectIndex + 1, projectEntry)
             } else {
                 lines.add(projectEntry)
             }
-
-            // Insert project configuration section before EndGlobal
-            if (globalIndex != -1 && endGlobalIndex > globalIndex) {
-                lines.add(endGlobalIndex, projectConfigSection)
+            val projectConfigurationPlatformsIndex = lines.indexOfFirst {
+                it.trim() == "GlobalSection(ProjectConfigurationPlatforms) = postSolution" }
+            // Insert project configuration section at the start of project configuration
+            if (globalIndex != -1 && projectConfigurationPlatformsIndex > globalIndex) {
+                lines.add(projectConfigurationPlatformsIndex+1, projectConfigSection)
             }
+
             var nestedIndex = lines.indexOfFirst { it.trim() == "GlobalSection(NestedProjects) = preSolution" }
             if (lines.any { it.contains("\"$demoName\"") }) {
                 var demoFolderIndex = lines.indexOfFirst { it.trim().contains("\"$demoName\"")  }
@@ -430,7 +442,7 @@ object TideCommandExecutor {
                 val nestedProjectEntry = "    {$projectGuid} = {$demoGuid}"
                 lines.add(nestedIndex+1,nestedProjectEntry)
             } else {
-                lines.add(endGlobalIndex-1,folderEntry)
+                lines.add(endProjectIndex-1,folderEntry)
                 val nestedProjectEntry = "    {$projectGuid} = {$folderGuid}"
                 lines.add(nestedIndex+1,nestedProjectEntry)
             }
