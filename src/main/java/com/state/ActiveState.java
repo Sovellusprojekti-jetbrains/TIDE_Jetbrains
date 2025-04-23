@@ -309,6 +309,15 @@ public class ActiveState {
     }
 
     /**
+     * This method is used to determine if the file is tim-task.
+     * @param file Virtual file corresponding to the file on disk.
+     * @return True if the file is tim-task, false otherwise.
+     */
+    private boolean isTask(VirtualFile file) {
+        return this.findSubTask(file) != null;
+    }
+
+    /**
      * This method evaluates if the file opened in the editor is in sub-path of task download path.
      * @param child File under evaluation should be child of task download folder.
      * @throws IOException If making File object fails.
@@ -318,7 +327,9 @@ public class ActiveState {
         if (child.getCanonicalPath() != null && this.allowedName(child)) {
             this.isSubmittable = child.getCanonicalPath()
                     .replaceAll("/", Matcher.quoteReplacement(File.separator))
-                    .contains(parent.getCanonicalPath());
+                    .contains(parent.getCanonicalPath()) && this.isTask(child);
+            //Now it is checked that file is tim-task.
+            // With TimTask-class, considerably better implementation will be possible but works for now.
         } else {
             this.isSubmittable = false;
         }

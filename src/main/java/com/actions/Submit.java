@@ -52,7 +52,11 @@ public class Submit extends AnAction {
             return;
         }
 
-        CourseTaskPane.getInstance().setProgress(true, "Submitting...");
+        try {
+            CourseTaskPane.getInstance().setProgress(true, "Submitting...");
+        } catch (Exception ex) {
+            LogHandler.logError("Submit action", ex);
+        }
         new ApiHandler().submitExercise(file);
     }
 
