@@ -5,6 +5,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.state.ActiveState;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class "extends" VirtualFile with actions of tide task.
@@ -15,6 +16,7 @@ public final class TimTask {
     private final VirtualFile delegate;
     private final ArrayList<String> headers;
     private final SubTask task;
+    private static final HashMap<String, TimTask> CACHE = new HashMap<>();
     //TODO: Add attributes for subtask info etc.
 
     /**
@@ -63,7 +65,11 @@ public final class TimTask {
      */
     private static void updatePane() {
         //TODO: Implement
+        /*
         System.out.println(selected);
+        if (selected != null) {
+            System.out.println(selected.delegate.getUrl());
+        }*/
     }
 
     /**
@@ -80,21 +86,26 @@ public final class TimTask {
      */
     public static void evaluateFile(VirtualFile file) {
         //TODO: Make new TimTask if file open in the editor is one. Set selected null otherwise
+        //TODO: Maybe TimTasks once made could be cached for later use?
         if (file != null && file.getCanonicalPath() != null) {
-            ArrayList<String> taskData = new ArrayList<>();
-            taskData.add(ActiveState.getInstance().getCourseName(file.getPath()));
-            taskData.add(ActiveState.getInstance().findTaskName(taskData.getFirst(), file));
-            SubTask taskHolder = ActiveState.getInstance().findSubTask(file);
-            if (taskHolder != null) {
-                taskData.add(taskHolder.getIdeTaskId());
-                selected = new TimTask(file, taskData, taskHolder);
+            if (CACHE.containsKey(file.getUrl())) {
+                selected = CACHE.get(file.getUrl());
             } else {
-                selected = null;
+                ArrayList<String> taskData = new ArrayList<>();
+                taskData.add(ActiveState.getInstance().getCourseName(file.getPath()));
+                taskData.add(ActiveState.getInstance().findTaskName(taskData.getFirst(), file));
+                SubTask taskHolder = ActiveState.getInstance().findSubTask(file);
+                if (taskHolder != null) {
+                    taskData.add(taskHolder.getIdeTaskId());
+                    selected = new TimTask(file, taskData, taskHolder);
+                    CACHE.put(file.getUrl(), selected);
+                } else {
+                    selected = null;
+                }
             }
         } else {
             selected = null;
         }
-        //TODO: Maybe TimTasks once made could be cached for later use?
         //TODO: use ActiveState's setSubmittable to make actions enabled/disabled.
         updatePane(); //This can be used to update the CourseTaskPane. Info shown and buttons enabled/disabled.
     }
