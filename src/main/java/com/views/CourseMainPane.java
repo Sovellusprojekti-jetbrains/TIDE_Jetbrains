@@ -193,7 +193,6 @@ public class CourseMainPane {
         SwingUtilities.invokeLater(() -> {
             setProgress(true, "Checking login info...");
         });
-        apiHandler.checkLogin();
     }
 
     /**
