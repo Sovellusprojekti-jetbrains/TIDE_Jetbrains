@@ -48,7 +48,7 @@ class StartUp : StartupActivity {
             stateManager.updateCourses()
             */
         }
-          showWindow(project)
+          //showWindow(project)
 
     }
 
