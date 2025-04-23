@@ -1,6 +1,13 @@
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
 
+val riderPlatformVersionProp = prop("riderPlatformVersion")
+val ideaPlatformVersionProp = prop("ideaPlatformVersion")
+val pluginSinceBuildProp = prop("pluginSinceBuild")
+val pluginUntilBuildProp = prop("pluginUntilBuild")
+val versionProp = prop("pluginVersion")
+val projectType = System.getenv("IDE_TYPE") ?: "IC"
+
 abstract class GeneratePluginInfo : DefaultTask() {
 
     @get:Input
@@ -26,12 +33,6 @@ abstract class GeneratePluginInfo : DefaultTask() {
     }
 }
 
-val riderPlatformVersionProp = prop("riderPlatformVersion")
-val ideaPlatformVersionProp = prop("ideaPlatformVersion")
-val pluginSinceBuildProp = prop("pluginSinceBuild")
-val pluginUntilBuildProp = prop("pluginUntilBuild")
-val projectType = System.getenv("IDE_TYPE") ?: "IC"
-
 val runIdeForUiTests by intellijPlatformTesting.runIde.registering {
     task {
         jvmArgumentProviders += CommandLineArgumentProvider {
@@ -56,7 +57,7 @@ plugins {
 }
 
 group = "org.jyu"
-version = "1.0.6"
+version = versionProp
 
 intellijPlatform {
     pluginConfiguration {
