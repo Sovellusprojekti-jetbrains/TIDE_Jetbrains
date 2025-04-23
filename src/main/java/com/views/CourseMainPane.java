@@ -1,6 +1,7 @@
 package com.views;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.state.ActiveState;
 import com.actions.Settings;
 import com.api.ApiHandler;
@@ -334,7 +335,13 @@ public class CourseMainPane {
             spinner.setVisible(true);
             int lastPartStart = courseTask.getPath().lastIndexOf('/');
             String demoDirectory = File.separatorChar + courseTask.getPath().substring(lastPartStart + 1);
-            new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName);
+            ApplicationInfo appInfo = ApplicationInfo.getInstance();
+            String productName = appInfo.getFullApplicationName();
+            if (productName.contains("Rider")) {
+                new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName + File.separatorChar + demoDirectory);
+            } else {
+                new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName);
+            }
         });
         buttonPanel.add(oButton);
 
