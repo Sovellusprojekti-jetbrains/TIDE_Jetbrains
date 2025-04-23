@@ -1,8 +1,37 @@
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.*
+
 val riderPlatformVersionProp = prop("riderPlatformVersion")
 val ideaPlatformVersionProp = prop("ideaPlatformVersion")
 val pluginSinceBuildProp = prop("pluginSinceBuild")
 val pluginUntilBuildProp = prop("pluginUntilBuild")
+val versionProp = prop("pluginVersion")
 val projectType = System.getenv("IDE_TYPE") ?: "IC"
+
+abstract class GeneratePluginInfo : DefaultTask() {
+
+    @get:Input
+    abstract val pluginVersion: Property<String>
+
+    @get:OutputDirectory
+    abstract val outputDir: DirectoryProperty
+
+    @TaskAction
+    fun generate() {
+        val file = outputDir.get().file("java/com/actions/PluginInfo.java").asFile
+        file.parentFile.mkdirs()
+        file.writeText(
+            """
+            package com.actions;
+
+            public class PluginInfo {
+                public static final String VERSION = "${pluginVersion.get()}";
+            }
+
+            """.trimIndent()
+        )
+    }
+}
 
 val runIdeForUiTests by intellijPlatformTesting.runIde.registering {
     task {
@@ -28,7 +57,7 @@ plugins {
 }
 
 group = "org.jyu"
-version = "1.0.6"
+version = versionProp
 
 intellijPlatform {
     pluginConfiguration {
@@ -114,3 +143,22 @@ tasks.test {
 // From https://gitlab.jyu.fi/tie/tools/comtest.intellij/-/blob/master/build.gradle.kts
 fun prop(key: String) = extra.properties[key] as? String
     ?: error("Property `$key` is not defined in gradle.properties")
+
+val generatePluginInfo = tasks.register<GeneratePluginInfo>("generatePluginInfo") {
+    pluginVersion.set(
+        project.findProperty("pluginVersion")?.toString()
+            ?: error("Missing 'pluginVersion' property.")
+    )
+    outputDir.set(layout.buildDirectory.dir("generated/sources/version/java"))
+}
+
+// Tell the compiler to include the generated source dir
+sourceSets["main"].java.srcDir("build/generated/sources/version")
+
+// Make sure Java compile step depends on this
+tasks.named<JavaCompile>("compileJava") {
+    dependsOn(generatePluginInfo)
+}
+tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileKotlin") {
+    dependsOn(generatePluginInfo)
+}
