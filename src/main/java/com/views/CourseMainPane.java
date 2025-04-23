@@ -337,11 +337,7 @@ public class CourseMainPane {
             String demoDirectory = File.separatorChar + courseTask.getPath().substring(lastPartStart + 1);
             ApplicationInfo appInfo = ApplicationInfo.getInstance();
             String productName = appInfo.getFullApplicationName();
-            if (productName.contains("Rider")) {
-                new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName + File.separatorChar + demoDirectory);
-            } else {
-                new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName);
-            }
+            new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName);
         });
         buttonPanel.add(oButton);
 

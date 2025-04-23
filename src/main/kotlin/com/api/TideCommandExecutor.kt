@@ -27,7 +27,6 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
 import kotlin.io.path.Path
-import kotlin.io.path.extension
 
 
 object TideCommandExecutor {
@@ -330,19 +329,16 @@ object TideCommandExecutor {
 
     /**
      * Adds a csproj file to a solution and creates a solution if it doesn't exist.
-     * This might be completely useless after finding out that
-     * you can't have a projects with the same name in a solution.
-     * Maybe in the future this will be changed for the better
-     * and this becomes useful.
-     *The commented code is related to the folder structure given by TIDE-CLI
-     * and how that could be turned into solution with solution folders.
+     * there is a lot of hard coded values here to get the programming 1 folder structure to work
+     * with solutions. In the future this method should be changed so that it would have
+     * a more broad use case
      *@param slnPath Path to the folder where the sln file is
-     * @param csprojPath path to the folder where the csproj file is
+     * @param csprojPath path to the .csproj file
      */
     private fun createOrUpdateSlnWithCsproj(slnPath: String, csprojPath: String) {
 
         var slnFile = File(slnPath)
-        //var folderGuid = UUID.randomUUID().toString().uppercase()
+        var folderGuid = UUID.randomUUID().toString().uppercase()
         val demoPathSplit = csprojPath.split(Regex("[/\\\\]"))
 
         var demoName = demoPathSplit[demoPathSplit.size -3]
@@ -353,12 +349,17 @@ object TideCommandExecutor {
             }
         }
 
-        val csprojFile = File(csprojPath)
+        var csprojFile = File(csprojPath)
 
         if (!csprojFile.exists()) {
             println("Project file not found: $csprojPath")
             return
         }
+        /*
+        if(!csprojFile.name.contains(demoName)) {
+            csprojFile.renameTo(File(csprojFile.parent + "\\" + demoName + csprojFile.name) )
+            csprojFile = File(csprojFile.parent + "\\" + demoName + csprojFile.name)
+        }*/
 
         val projectName = csprojFile.nameWithoutExtension
         val projectGuid = UUID.randomUUID().toString().uppercase()
@@ -375,12 +376,12 @@ object TideCommandExecutor {
         Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "$projectName", "$relativeCsprojPath", "{$projectGuid}"
         EndProject
     """.trimIndent()
-        /*
+
         val folderEntry = """
-        Project("{66A26720-8FB5-11D2-AA7E-00C04F688DDE}") = "$demoName", "$demoName", "{$folderGuid}"
+        Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "$demoName", "$demoName", "{$folderGuid}"
         EndProject
     """.trimIndent()
-        */
+
 
         val projectConfigSection = """
             {$projectGuid}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -390,14 +391,14 @@ object TideCommandExecutor {
     """.trimIndent()
 
         if (!slnFile.isFile()) {
-            slnFile = File("$slnPath/$demoName.sln")
+            slnFile = File("$slnPath/course.sln")
             println("Creating new .sln file at: ${slnFile.absolutePath}")
-            //val nestedProjectEntry = "    {$projectGuid} = {$folderGuid}"
+            val nestedProjectEntry = "    {$projectGuid} = {$folderGuid}"
             slnFile.writeText(
                 buildString {
                     appendLine("Microsoft Visual Studio Solution File, Format Version 12.00")
                     appendLine(projectEntry)
-                    //appendLine(folderEntry)
+                    appendLine(folderEntry)
                     appendLine("Global")
                     appendLine("GlobalSection(SolutionConfigurationPlatforms) = preSolution")
                     appendLine("Debug|Any CPU = Debug|Any CPU")
@@ -407,7 +408,7 @@ object TideCommandExecutor {
                     appendLine(projectConfigSection)
                     appendLine("EndGlobalSection")
                     appendLine("GlobalSection(NestedProjects) = preSolution")
-                    //appendLine(nestedProjectEntry)
+                    appendLine(nestedProjectEntry)
                     appendLine("EndGlobalSection")
                     appendLine("EndGlobal")
                 }
@@ -436,11 +437,11 @@ object TideCommandExecutor {
             if (globalIndex != -1 && projectConfigurationPlatformsIndex > globalIndex) {
                 lines.add(projectConfigurationPlatformsIndex+1, projectConfigSection)
             }
-            /*
-            var nestedIndex = lines.indexOfFirst { it.trim() == "GlobalSection(NestedProjects) = preSolution" }
+
+            val nestedIndex = lines.indexOfFirst { it.trim() == "GlobalSection(NestedProjects) = preSolution" }
             if (lines.any { it.contains("\"$demoName\"") }) {
-                var demoFolderIndex = lines.indexOfFirst { it.trim().contains("\"$demoName\"")  }
-                var demoFolderSplit = lines[demoFolderIndex].split(",")
+                val demoFolderIndex = lines.indexOfFirst { it.trim().contains("\"$demoName\"")  }
+                val demoFolderSplit = lines[demoFolderIndex].split(",")
                 var demoGuid = demoFolderSplit.last()
                 demoGuid = demoGuid.replace("\"","")
                 demoGuid = demoGuid.replace("{","")
@@ -451,8 +452,9 @@ object TideCommandExecutor {
             } else {
                 lines.add(endProjectIndex-1,folderEntry)
                 val nestedProjectEntry = "    {$projectGuid} = {$folderGuid}"
-                lines.add(nestedIndex+1,nestedProjectEntry)
-            }*/
+                //folder entry adds two lines to the file so we need to off set that
+                lines.add(nestedIndex+2,nestedProjectEntry)
+            }
 
             slnFile.writeText(lines.joinToString(System.lineSeparator()))
             println("Added $projectName to existing .sln at: ${slnFile.absolutePath}")
