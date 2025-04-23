@@ -17,16 +17,14 @@ import javax.swing.*;
  */
 @Service
 public final class ToolWindowListener implements ToolWindowManagerListener  {
-    private boolean loginStatus = false;
+
     @Override
     public void toolWindowShown(ToolWindow toolWindow) {
         System.out.println("tool window listener was called");
         ApiHandler api = new ApiHandler();
         var contentManager = toolWindow.getContentManager();
-        if ("TIDE Tool Window".equals(toolWindow.getId()) && !loginStatus) { // the toolWindow here is the tool window that was opened
+        if ("TIDE Tool Window".equals(toolWindow.getId())) { // the toolWindow here is the tool window that was opened
             System.out.println("login window was opened");
-            api.checkLogin();
-            loginStatus = true;
 
             for (Content content : contentManager.getContents()) {
                 if ("Courses".equals(content.getTabName())) {
