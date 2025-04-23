@@ -59,21 +59,16 @@ public class ActiveState {
             @Override
             public void selectionChanged(@NotNull FileEditorManagerEvent event) {
                 FileEditorManagerListener.super.selectionChanged(event);
-                try {
-                    VirtualFile temp = event.getNewFile();
-                    TimTask.evaluateFile(temp); //TODO: just testing
+                VirtualFile temp = event.getNewFile();
+                TimTask.evaluateFile(temp);
+                    /*
                     if (temp != null) {
                         setSubmittable(temp);
                     } else { //Is it possible to construct new Virtual file with null canonical path?
                         //It would be better if it was possible to call setSubmittable with null as the argument
                         isSubmittable = false;
                         messageTaskName(" ", " ", " ");
-                    }
-                } catch (IOException e) {
-                    //Exception is thrown because courseList is null while ActiveStates constructor is run.
-                    //State of the plugin must be set properly while opening IDE.
-                    throw new RuntimeException(e);
-                }
+                    }*/
             }
         });
         this.addPropertyChangeListener(new PropertyChangeListener() {
@@ -320,11 +315,12 @@ public class ActiveState {
     }
 
     /**
-     * This method evaluates if the file opened in the editor is in sub-path of task download path.
-     * @param child File under evaluation should be child of task download folder.
-     * @throws IOException If making File object fails.
+     * This method sets the state variable.
+     * @param status if file in the editor can be submitted.
      */
-    public void setSubmittable(VirtualFile child) throws IOException {
+    public void setSubmittable(Boolean status) {
+        this.isSubmittable = status;
+        /*
         File parent = new File(Settings.getPath());
         if (child.getCanonicalPath() != null && this.allowedName(child)) {
             this.isSubmittable = child.getCanonicalPath()
@@ -340,7 +336,7 @@ public class ActiveState {
             String demo = this.findTaskName(course, child);
             String sub = this.findSubTask(child).getIdeTaskId();
             this.messageTaskName(course, demo, sub);
-        }
+        }*/
     }
 
     /**

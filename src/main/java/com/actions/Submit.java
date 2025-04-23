@@ -2,6 +2,7 @@ package com.actions;
 
 import com.api.ApiHandler;
 import com.api.LogHandler;
+import com.customfile.TimTask;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -40,13 +41,8 @@ public class Submit extends AnAction {
         // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
         // String path = submitAll ? file.getParent().getPath() : file.getPath();
 
-        try {
-            ActiveState.getInstance().setSubmittable(file);
-        } catch (IOException ex) {
-            InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
-            LogHandler.logError("Submit action", ex);
-            throw new RuntimeException(ex);
-        }
+        //ActiveState.getInstance().setSubmittable(file);
+        TimTask.evaluateFile(file);
         if (!ActiveState.getInstance().isSubmittable()) {
             InfoView.displayWarning("File in editor is not a tim task!");
             return;

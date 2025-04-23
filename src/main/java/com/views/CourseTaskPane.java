@@ -4,6 +4,8 @@
 package com.views;
 
 import java.util.regex.*;
+
+import com.customfile.TimTask;
 import com.state.ActiveState;
 import com.state.StateManager;
 import com.intellij.openapi.actionSystem.ActionManager;
@@ -158,9 +160,11 @@ public class CourseTaskPane {
                 }
                 if ("disableButtons".equals(evt.getPropertyName())) {
                     disableButtons();
+                    setDemoName();
                 }
                 if ("enableButtons".equals(evt.getPropertyName())) {
                     enableButtons();
+                    setDemoName();
                 }
                 if ("setSubmitData".equals(evt.getPropertyName())) {
                     String[] messages = (String[]) evt.getNewValue();
@@ -169,9 +173,9 @@ public class CourseTaskPane {
                     setMaxSubmits(messages[2]);
 
                 }
-                if ("setDemoName".equals(evt.getPropertyName())) {
+                /*if ("setDemoName".equals(evt.getPropertyName())) {
                     setDemoName((String[]) evt.getNewValue());
-                }
+                }*/
                 if ("tideSubmitResponse".equals(evt.getPropertyName())) {
                     setProgress(false, "");
                 }
@@ -266,13 +270,17 @@ public class CourseTaskPane {
 
     /**
      * Changes the text values of the demoTiedot abel and tehtavaNimi label.
-     * @param values Values to be set.
      */
-    private void setDemoName(String[] values) {
+    private void setDemoName() {
         SwingUtilities.invokeLater(() -> {
-            String info = values[0] + " - " + values[1];
-            this.demoTiedot.setText(info);
-            this.tehtavaNimi.setText(values[2]);
+            if (TimTask.getInstance() != null) {
+                String info = TimTask.getInstance().getCourseName() + " - " + TimTask.getInstance().getDemoName();
+                this.demoTiedot.setText(info);
+                this.tehtavaNimi.setText(TimTask.getInstance().getSubTaskName());
+            } else {
+                this.demoTiedot.setText(" - ");
+                this.tehtavaNimi.setText("");
+            }
         });
     }
 

@@ -61,15 +61,12 @@ public final class TimTask {
     }
 
     /**
-     * This method is used to update the information in the CourseTaskPane, and it's state.
+     * This method is used to update the information in the CourseTaskPane, and it's state etc.
      */
-    private static void updatePane() {
+    private static void messageUpdates() {
         //TODO: Implement
-
-        System.out.println(selected);
-        if (selected != null) {
-            System.out.println(selected.delegate.getUrl());
-        }
+        ActiveState.getInstance().setSubmittable(selected != null);
+        ActiveState.getInstance().messageChanges();
     }
 
     /**
@@ -78,6 +75,30 @@ public final class TimTask {
      */
     public static TimTask getInstance() {
         return selected;
+    }
+
+    /**
+     * Returns Course name.
+     * @return Course name as String.
+     */
+    public String getCourseName() {
+        return this.headers.getFirst();
+    }
+
+    /**
+     * Returns Demo name.
+     * @return Demo name as String.
+     */
+    public String getDemoName() {
+        return this.headers.get(1);
+    }
+
+    /**
+     * Returns SubTask name.
+     * @return SubTask name as String.
+     */
+    public String getSubTaskName() {
+        return this.headers.getLast();
     }
 
     /**
@@ -108,6 +129,6 @@ public final class TimTask {
             selected = null;
         }
         //TODO: use ActiveState's setSubmittable to make actions enabled/disabled.
-        updatePane(); //This can be used to update the CourseTaskPane. Info shown and buttons enabled/disabled.
+        messageUpdates();
     }
 }

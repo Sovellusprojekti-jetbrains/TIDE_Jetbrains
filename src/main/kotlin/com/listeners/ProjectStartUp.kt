@@ -3,6 +3,7 @@ package com.listeners
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import com.api.TideCommandExecutor
+import com.customfile.TimTask
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.wm.ToolWindowManager
@@ -38,7 +39,8 @@ class ProjectStartUp : ProjectActivity {
                 val fileEditorManager = FileEditorManager.getInstance(project)
                 val selectedEditor = fileEditorManager.selectedEditor
                 if (selectedEditor?.file != null) {
-                    ActiveState.getInstance().setSubmittable(selectedEditor.file)
+                    //ActiveState.getInstance().setSubmittable(selectedEditor.file)
+                    TimTask.evaluateFile(selectedEditor.file)
                 } else {
                     ActiveState.getInstance().messageChanges()
                     //If CourseTaskPane is not open, messages might be ignored

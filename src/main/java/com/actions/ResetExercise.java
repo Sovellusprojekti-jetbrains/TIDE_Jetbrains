@@ -1,6 +1,7 @@
 package com.actions;
 
 import com.api.ApiHandler;
+import com.customfile.TimTask;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -32,13 +33,9 @@ public class ResetExercise extends AnAction {
         if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
             return;
         }
-        try {
-            ActiveState.getInstance().setSubmittable(file);
-            ActiveState.getInstance().messageChanges(); //Might be unnecessary but just in case
-        } catch (IOException ex) { //If actions are disabled prior login, this shouldn't be issue.
-            InfoView.displayError("An error occurred during reset action!");
-            throw new RuntimeException(ex);
-        }
+        //ActiveState.getInstance().setSubmittable(file);
+        //ActiveState.getInstance().messageChanges(); //Might be unnecessary but just in case
+        TimTask.evaluateFile(file);
         if (!ActiveState.getInstance().isSubmittable()) {
             InfoView.displayWarning("File in editor is not a tim task!");
             return;
