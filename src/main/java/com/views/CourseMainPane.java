@@ -1,17 +1,18 @@
 package com.views;
-import com.actions.ActiveState;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.util.ui.JBFont;
+import com.state.ActiveState;
 import com.actions.Settings;
 import com.api.ApiHandler;
-import com.api.JsonHandler;
 import com.api.LogHandler;
-import com.api.TimDataHandler;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import javax.swing.*;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,17 +22,19 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
-import java.nio.file.*;
 
 import com.course.*;
 import com.intellij.ui.treeStructure.Tree;
-import java.util.ArrayList;
+import com.intellij.util.ui.AsyncProcessIcon;
+
 import java.util.List;
+
+import static javax.swing.BorderFactory.createEmptyBorder;
 
 /**
  * Class for displaying a template course window.
  */
-public class CustomScreen {
+public class CourseMainPane {
     /**
      * The currently open project.
      */
@@ -95,10 +98,10 @@ public class CustomScreen {
     private final int scrollSpeed = 16;
 
     /**
-     * Creator for the CustomScreen class, that holds the courses and tasks.
+     * Creator for the CourseMainPane class, that holds the courses and tasks.
      * @param toolWindow The Toolwindow this view belongs to
      */
-    public CustomScreen(ToolWindow toolWindow) {
+    public CourseMainPane(ToolWindow toolWindow) {
         this.project = toolWindow.getProject();
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
@@ -109,6 +112,9 @@ public class CustomScreen {
 
         // Fetching data from TIM and creating a list of course objects,
         // for more information see package com.course and class ApiHandler.
+
+        // This overrides the form's own font to use a default JetBrains font.
+        courseLabel.setFont(JBFont.h0().asBold());
 
 
         // needs tests in the future.
@@ -134,8 +140,9 @@ public class CustomScreen {
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Project defaultProject = ProjectManager.getInstance().getDefaultProject();
-                ShowSettingsUtil.getInstance().showSettingsDialog(defaultProject, "TIDE Settings");
+                ActionManager manager = ActionManager.getInstance();
+                AnAction action = manager.getAction("com.actions.Settings");
+                manager.tryToExecute(action, null, null, null, true);
             }
         });
 
@@ -155,15 +162,15 @@ public class CustomScreen {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("logout".equals(evt.getPropertyName())) {
-                    LogHandler.logInfo("CustomScreen received event logout");
+                    LogHandler.logInfo("CourseMainPane received event logout");
                     switchToLoggedOut(); // Poistaa kurssinäkymän näkyvistä
                 }
                 if ("login".equals(evt.getPropertyName())) {
-                    LogHandler.logInfo("CustomScreen received event login");
+                    LogHandler.logInfo("CourseMainPane received event login");
                     switchToLoggedIn();
                 }
                 if ("courseList".equals(evt.getPropertyName())) {
-                    LogHandler.logInfo("CustomScreen received event courseList");
+                    LogHandler.logInfo("CourseMainPane received event courseList");
                     // Do some extra processing to ensure the courseList shows up as a list instead of object.
                     Object newValue = evt.getNewValue();
 
@@ -186,7 +193,6 @@ public class CustomScreen {
         SwingUtilities.invokeLater(() -> {
             setProgress(true, "Checking login info...");
         });
-        apiHandler.checkLogin();
     }
 
     /**
@@ -211,12 +217,11 @@ public class CustomScreen {
                 final int left = 5;
                 final int bottom = 5;
                 final int right = 0;
-                final int fontSize = 26;
-                labelPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
+                labelPanel.setBorder(createEmptyBorder(top, left, bottom, right));
 
                 JLabel label = new JLabel();
                 label.setText(course.getName());
-                label.setFont(new Font("Arial", Font.BOLD, fontSize));
+                label.setFont(JBFont.h1().asBold());
                 label.setHorizontalAlignment(SwingConstants.LEFT);
 
                 labelPanel.add(label);
@@ -226,19 +231,19 @@ public class CustomScreen {
                 // Makes own subpanel for every task
                 // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
                 List<CourseTask> tasks = course.getTasks();
-                final int[] j = {0};
+                int j = 0;
                 for (CourseTask courseTask: tasks) {
                     courseTask.setParent(course);
                     JPanel subPanel = createExercise(courseTask, course.getName());
                     subPanel.setBackground(bgColor);
-                    gbc.gridy = j[0];
+                    gbc.gridy = j;
                     panel.add(subPanel, gbc);
                     panel.setBackground(bgColor);
                     panel.setOpaque(true);
-                    j[0]++;
+                    j++;
                 }
 
-                final int thickness = 4;
+                final int thickness = 2;
 
                 JScrollPane scrollPane = new JBScrollPane(panel);
                 scrollPane.setBorder(BorderFactory.createLineBorder(JBColor.border(), thickness));
@@ -251,11 +256,6 @@ public class CustomScreen {
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
                 singleCourse.add(labelPanel, gbc);
-                final int padding = 10;
-
-                // Ensure scrollPane doesn't stretch too much
-                Dimension preferredSize = panel.getPreferredSize();
-                scrollPane.setPreferredSize(new Dimension(preferredSize.width, preferredSize.height + padding)); // Small padding
 
                 // Add scrollPane below label, but restrict expansion
                 gbc.gridy = 1;
@@ -265,7 +265,7 @@ public class CustomScreen {
 
 
                 coursePanel.add(singleCourse);
-        }
+            }
         });
     }
 
@@ -286,38 +286,38 @@ public class CustomScreen {
      * @return the subpanel that contains the tasks name and the two buttons
      */
     private JPanel createExercise(CourseTask courseTask, String courseName) {
-        final int fontsize = 16;
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
         JLabel labelWeek = new JLabel();
         labelWeek.setText(courseTask.getName());
-        labelWeek.setFont(new Font("Arial", Font.BOLD, fontsize));
-        //subPanel.add(labelWeek, BorderLayout.WEST);
+        labelWeek.setFont(JBFont.medium().asBold());
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.setBackground(bgColor);
         subPanel.setBackground(bgColor);
 
-
+        AsyncProcessIcon spinner = new AsyncProcessIcon("Loading");
+        spinner.setVisible(false);  // Initially hidden
+        buttonPanel.add(spinner);
         JButton dButton = new JButton();
         dButton.setText("Download");
-        dButton.setBackground(bgColor);
         dButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                spinner.setVisible(true);
                 setProgress(true, "Downloading...");
                 System.out.println(courseTask.getPath());
                 ApiHandler api = new ApiHandler();
                 try {
                     api.loadExercise(courseName, courseTask.getPath(), "--all");
                 } catch (IOException ex) {
-                    com.api.LogHandler.logError("268 CustomScreen.createExercise(CourseTask courseTask, String courseName)", ex);
+                    com.api.LogHandler.logError("268 CourseMainPane.createExercise(CourseTask courseTask, String courseName)", ex);
                     com.api.LogHandler.logDebug(new String[]{"268 CourseTask courseTask", "268 String courseName"},
                             new String[]{courseTask.toString(), courseName});
                     InfoView.displayError("Couldn't load exercise. Check Tide CLI");
                     throw new RuntimeException(ex);
                 } catch (InterruptedException ex) {
-                    com.api.LogHandler.logError("268 CustomScreen.createExercise(CourseTask courseTask, String courseName)", ex);
+                    com.api.LogHandler.logError("268 CourseMainPane.createExercise(CourseTask courseTask, String courseName)", ex);
                     InfoView.displayError("Couldn't load exercise. Check Tide CLI");
                     throw new RuntimeException(ex);
                 }
@@ -327,7 +327,6 @@ public class CustomScreen {
 
         JButton oButton = new JButton();
         oButton.setText("Open as Project");
-        oButton.setBackground(bgColor);
         oButton.addActionListener(event -> {
             int lastPartStart = courseTask.getPath().lastIndexOf('/');
             String demoDirectory = File.separatorChar + courseTask.getPath().substring(lastPartStart + 1);
@@ -338,13 +337,14 @@ public class CustomScreen {
         JPanel nameAndButtonPanel = new JPanel(new BorderLayout());
         nameAndButtonPanel.add(labelWeek, BorderLayout.WEST);
         nameAndButtonPanel.add(buttonPanel, BorderLayout.EAST);
+        final int borderpad = 10;
+        nameAndButtonPanel.setBorder(createEmptyBorder(0, borderpad, 0, 0));
         subPanel.add(nameAndButtonPanel);
 
-        //subPanel.add(buttonPanel, BorderLayout.EAST);
         try {
-            createSubTaskpanel(subPanel, courseTask, courseName);
+            createSubTaskpanel(subPanel, courseTask);
         } catch (Exception e) {
-            com.api.LogHandler.logError("318 CustomScreen.createExercise createSubTaskpanel", e);
+            com.api.LogHandler.logError("318 CourseMainPane.createExercise createSubTaskpanel", e);
             throw new RuntimeException(e);
         }
         return subPanel;
@@ -354,53 +354,71 @@ public class CustomScreen {
      * Creates and adds a panel of clickable subtasks to the panel containing the course that the subtasks belong to.
      * @param subPanel the panel that the panel of subtasks is appended to.
      * @param courseTask The Course task that the subtasks belong to.
-     * @param courseName Course name for subdirectory
      */
-    private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask, String courseName) {
-        String pathToFile = Settings.getPath() + File.separatorChar + courseName;
-        JsonHandler jsonHandler = new JsonHandler();
-        TimDataHandler tim = new TimDataHandler();
-        String timData = tim.readTimData(pathToFile);
-        if (!timData.isEmpty()) {
-            List<SubTask> subtasks = jsonHandler.jsonToSubtask(timData);
-            ActiveState.getInstance().setSubTasks(subtasks); //Subtasks are needed to add task name to CourseTaskPane
-            Tree tree = createTree(subtasks, courseTask);
+    private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask) {
+        Tree tree = createTree(courseTask);
+        if (tree.getRowCount() != 0) {
             JBScrollPane container = new JBScrollPane();
             container.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
             container.add(tree);
             container.setViewportView(tree);
             subPanel.add(container, BorderLayout.SOUTH);
+            container.setBorder(createEmptyBorder());
         }
     }
 
     /**
      * Creates a clickable Tree view used to show subtasks and their files.
-     * @param subtasks Subtask for a course that also contain the files for the subtask.
      * @param courseTask The coursetask that the subtasks belong to
      * @return The created tree view.
      */
-    private Tree createTree(List<SubTask> subtasks, CourseTask courseTask) {
+    private Tree createTree(CourseTask courseTask) {
         ApiHandler api = new ApiHandler();
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(courseTask.getName());
         int rowCount = 0;
-        for (SubTask task: subtasks) {
-            List<SubTask> listForCourse = new ArrayList<>();
-            if (task.getPath().equals(courseTask.getPath())) {
-                listForCourse.add(task);
+        var subtasks = courseTask.getSubtasks();
+        if (subtasks != null) {
+            for (SubTask task : subtasks) {
                 DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task);
-                for (String file : task.getFileName()) {
-                            DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file);
-                            leaf.add(submitNode);
-                            rowCount = rowCount + 1;
+                for (SubTask.TaskFile file: task.getTaskFiles()) {
+                    DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file.getFileName());
+                    leaf.add(submitNode);
+                    rowCount++;
                 }
                 root.add(leaf);
+                rowCount++;
             }
-            rowCount = rowCount + listForCourse.size();
-            courseTask.setTasks(listForCourse);
         }
         Tree tree = new Tree(root);
         tree.setRootVisible(false);
         tree.setVisibleRowCount(rowCount);
+        for (int i = 0; i < tree.getRowCount(); i++) {
+            tree.expandRow(i);
+        }
+
+        tree.addTreeExpansionListener(new TreeExpansionListener() {
+            @Override
+            public void treeExpanded(TreeExpansionEvent event) {
+                updateTree();
+            }
+
+            @Override
+            public void treeCollapsed(TreeExpansionEvent event) {
+                updateTree();
+            }
+
+            /**
+             * Updates tree.
+             */
+            private void updateTree() {
+                SwingUtilities.invokeLater(() -> {
+                    tree.setVisibleRowCount(tree.getRowCount());
+                    panel1.revalidate();
+                    panel1.repaint();
+                });
+            }
+        });
+
         //TODO: korjaa avaaminen tuplaklikillä lisäämällä  kurssifolderi.
         tree.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -413,16 +431,26 @@ public class CustomScreen {
                     DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
                     DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
                     if (selectedNode.getChildCount() == 0) {
-                        api.openTaskProject(Settings.getPath() + File.separatorChar + selectedNode.getRoot()
-                                + File.separatorChar + parent.toString() + File.separatorChar + selectedNode);
-                    } else {
-                        api.openTaskProject(Settings.getPath() + File.separatorChar + parent.toString()
-                                + File.separatorChar + selectedNode);
+                        SubTask taskToOpen = (SubTask) parent.getUserObject();
+                        String taskPath;
+                        if (taskToOpen.getTaskDirectory() == null) {
+                            taskPath = Settings.getPath() + File.separatorChar + courseTask.getParent().getName()
+                                    + File.separatorChar + selectedNode.getRoot()
+                                    + File.separatorChar + parent.toString() + File.separatorChar + selectedNode.toString();
+                        } else {
+                            taskPath = Settings.getPath() + File.separatorChar + courseTask.getParent().getName() + File.separatorChar
+                                    + taskToOpen.getTaskDirectory()
+                                    + File.separatorChar + selectedNode.toString().replace('/', File.separatorChar);
+                        }
+                        api.openTaskProject(taskPath);
                     }
                 }
             }
         });
         tree.setCellRenderer(new SubmitRenderer());
+        for (int i = 0; i < tree.getRowCount(); i++) {
+            tree.collapseRow(i);
+        }
         return tree;
     }
 
@@ -430,12 +458,10 @@ public class CustomScreen {
      * Switches to a state where logging out is possible.
      */
     private void switchToLoggedIn() {
-        //tabbedPane.remove(loginPane); // Hide Login tab
         ActiveState stateManager = ActiveState.getInstance();
         stateManager.updateCourses();
         setProgress(true, "Loading courses...");
         // A panel that contains the courses and tasks is created in its own sub-program.
-        // createCourseListPane(courselist);
         tabbedPane.addTab("Courses", coursesPane); // Show Logout tab
         loginButton.setText("Logout");
         ActionListener[] tempLogin = loginButton.getActionListeners(); //Need to change LoginButton into LogoutButton
@@ -445,7 +471,6 @@ public class CustomScreen {
         panel1.revalidate();
         panel1.repaint();
         tabbedPane.setSelectedComponent(coursesPane);
-        //loginButton.setText("Logout");
     }
 
 
@@ -481,7 +506,6 @@ public class CustomScreen {
             createCourseListPane(courselist);
             panel1.revalidate();
             panel1.repaint();
-            //loginButton.setText("Logout");
             setProgress(false, "");
         });
     }
@@ -501,6 +525,4 @@ public class CustomScreen {
             panel1.repaint();
         });
     }
-
-
 }

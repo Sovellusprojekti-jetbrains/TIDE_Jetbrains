@@ -1,11 +1,17 @@
 package com.api;
 
+import com.actions.Settings;
+import com.course.SubTask;
+import com.intellij.openapi.vfs.VirtualFile;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Objects;
 
 public class TimDataHandler {
     /**
@@ -26,10 +32,27 @@ public class TimDataHandler {
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            com.api.LogHandler.logError("CustomScreen.readTimData(String pathToFile), lines: 405-413", e);
+            com.api.LogHandler.logError("CourseMainPane.readTimData(String pathToFile), lines: 405-413", e);
             com.api.LogHandler.logDebug(new String[]{"402 String pathToFile"}, new String[]{pathToFile});
             System.out.println("File timdata was not found");
         }
         return sb.toString();
+    }
+
+    /**
+     * method to read subtask data from a timdatafile from under the timdatafile.
+     * @param file the file used to find the right timdata file.
+     * @return list of the subtasks that can be found in the timdata file.
+     */
+    private List<SubTask> getTimDataSubTasks(VirtualFile file) {
+        TimDataHandler tim = new TimDataHandler();
+        JsonHandler json = new JsonHandler();
+        VirtualFile parentFile = file.getParent();
+        String data = "";
+        while (data.isEmpty() && !Objects.equals(parentFile.getCanonicalPath(), Settings.getPath())) {
+            data = tim.readTimData(parentFile.getCanonicalPath());
+            parentFile = parentFile.getParent();
+        }
+        return json.jsonToSubtask(data);
     }
 }

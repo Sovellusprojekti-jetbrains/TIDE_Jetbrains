@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.state.ActiveState;
 import com.views.InfoView;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +62,7 @@ public class ResetExercise extends AnAction {
     }
 
     /**
-     * This function is called by ActiveState to update the actions state (able/disabled).
+     * This function is called by the IDE when changes in the editor occur. Action's state will be updated.
      * @param e AnActionEvent originating from idea's internal messaging system.
      */
     @Override

@@ -8,9 +8,10 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
+import com.state.ActiveState;
 import org.jetbrains.annotations.NotNull;
 
-public class BrowserAction extends AnAction {
+public final class BrowserAction extends AnAction {
 
     private final String baseURL = "https://tim.jyu.fi/view/";
 
@@ -32,10 +33,14 @@ public class BrowserAction extends AnAction {
             return;
         }
         ActiveState instance = ActiveState.getInstance();
-        SubTask openTask = instance.getOpenTask(taskFile.getPath());
+        SubTask openTask = instance.findSubTask(taskFile);
         //TODO: handle null case.
         url += openTask.getPath();
-        url += "#" + openTask.getIdeTaskId();
+        //the task name needed for the url is not part of the subtask but part of the task file
+        //we need to get the first file of the task to get the right id.
+        //id is in form number.name.idstring
+        //thus we split the id to get the relevant part in the middle.
+        url += "#" + openTask.getTaskFiles().get(0).getTaskIdExt().split("\\.")[1];
 
         // Set the website URL
         HtmlEditorProvider.setUrl(url);
@@ -48,7 +53,7 @@ public class BrowserAction extends AnAction {
     }
 
     /**
-     * This function is called by ActiveState to update the actions state (able/disabled).
+     * This function is called by the IDE when changes in the editor occur. Action's state will be updated.
      * @param e AnActionEvent originating from idea's internal messaging system.
      */
     @Override

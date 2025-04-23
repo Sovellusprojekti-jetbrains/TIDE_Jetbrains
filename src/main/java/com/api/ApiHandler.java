@@ -15,12 +15,28 @@ import java.util.stream.Collectors;
  */
 public class ApiHandler {
     private final String checkLoginCommand = "tide check-login --json";
+    private TideCommandExecutor tideCommandExecutor;
+
+    /**
+     * Constructor sets a singleton of TideCommandExecutor to a variable. This is for mocking purposes.
+     */
+    public ApiHandler() {
+        tideCommandExecutor = TideCommandExecutor.INSTANCE;
+    }
+
+    /**
+     * Sets the tide command executor to a new TideCommandExecutor, for mocking purposes.
+     * @param executor
+     */
+    public void setTideCommandExecutor(TideCommandExecutor executor) {
+        tideCommandExecutor = executor;
+    }
 
     /**
      * Logs in to TIDE-CLI.
      */
     public void login() {
-        TideCommandExecutor.INSTANCE.login();
+        tideCommandExecutor.login();
     }
 
 
@@ -28,7 +44,7 @@ public class ApiHandler {
      * Logs out from TIDE-CLI.
      */
     public void logout() {
-        TideCommandExecutor.INSTANCE.logout();
+        tideCommandExecutor.logout();
     }
 
 
@@ -36,7 +52,7 @@ public class ApiHandler {
      * Fetches IDE courses from TIM via TIDE-CLI.
      */
     public void courses() {
-        TideCommandExecutor.INSTANCE.fetchCoursesAsync();
+        tideCommandExecutor.fetchCoursesAsync();
     }
 
 
@@ -46,7 +62,7 @@ public class ApiHandler {
      * @param cmdArgs Arguments for the tide create command, e.g. Tim path and flags
      */
     public void loadExercise(String courseDirectory, String... cmdArgs) throws IOException, InterruptedException {
-        TideCommandExecutor.INSTANCE.loadExercise(courseDirectory, cmdArgs);
+        tideCommandExecutor.loadExercise(courseDirectory, cmdArgs);
     }
 
 
@@ -71,7 +87,7 @@ public class ApiHandler {
      * @throws InterruptedException If TIDE CLI process fails or something else goes wrong.
      */
     public void resetSubTask(VirtualFile file, String courseDirectory) throws IOException, InterruptedException {
-        TideCommandExecutor.INSTANCE.resetSubTask(file, courseDirectory);
+        tideCommandExecutor.resetSubTask(file, courseDirectory);
     }
 
 
@@ -80,7 +96,7 @@ public class ApiHandler {
      * @param file Virtual file containing subtask to be submitted
      */
     public void submitExercise(VirtualFile file) {
-        TideCommandExecutor.INSTANCE.submitExercise(file);
+        tideCommandExecutor.submitExercise(file);
     }
 
 
@@ -111,7 +127,7 @@ public class ApiHandler {
      * Asks tide to check for login info asynchronously.
      */
     public void checkLogin() {
-        TideCommandExecutor.INSTANCE.checkLogin();
+        tideCommandExecutor.checkLogin();
     }
 
 
@@ -120,7 +136,7 @@ public class ApiHandler {
      * @param taskPath path to the folder that has the clicked subtask.
      */
     public void openTaskProject(String taskPath) {
-        TideCommandExecutor.INSTANCE.openTaskProject(taskPath);
+        tideCommandExecutor.openTaskProject(taskPath);
     }
 
     /**

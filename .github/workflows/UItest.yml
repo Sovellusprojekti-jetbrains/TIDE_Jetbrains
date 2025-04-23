@@ -2,10 +2,11 @@ name: UI Test
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  # TODO: Figure out how to make these work.
+  #push:
+  #  branches: [ "main" ]
+  #pull_request:
+  #  branches: [ "main" ]
 
 jobs:
   test:

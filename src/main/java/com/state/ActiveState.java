@@ -1,28 +1,33 @@
-package com.actions;
+package com.state;
 
+import com.actions.Settings;
 import com.api.ApiHandler;
+import com.api.JsonHandler;
 import com.api.LogHandler;
+import com.api.TimDataHandler;
 import com.course.Course;
 import com.course.CourseTask;
 import com.course.SubTask;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.util.ReflectionUtil;
-import org.jdesktop.swingx.action.ActionManager;
+import com.util.Util;
+import com.views.InfoView;
 import org.jetbrains.annotations.NotNull;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -38,7 +43,6 @@ public class ActiveState {
     private boolean isLoggedIn = false;
     private Project project;
     private boolean isSubmittable = false;
-    private List<SubTask> subTaskList;
 
     /**
      * Constructor for active state attempts to hide the right and bottom toolwindows.
@@ -46,8 +50,8 @@ public class ActiveState {
     public ActiveState() {
         project = ProjectManager.getInstance().getOpenProjects()[0];
         ApplicationManager.getApplication().invokeLater(() -> {
-            hideWindow("Course Task");
-            hideWindow("Output Window");
+            Util.setWindowAvailable(project, "Course Task", false, "/icons/timgray.svg");
+            Util.setWindowAvailable(project, "Output Window", false, "/icons/timgray.svg");
         });
         project.getMessageBus().connect(Disposer.newDisposable())
                 .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
@@ -61,11 +65,21 @@ public class ActiveState {
                     } else { //Is it possible to construct new Virtual file with null canonical path?
                         //It would be better if it was possible to call setSubmittable with null as the argument
                         isSubmittable = false;
-                        messageChanges();
                         messageTaskName(" ", " ", " ");
                     }
-                } catch (IOException e) { //Should never happen.
+                } catch (IOException e) {
+                    //Exception is thrown because courseList is null while ActiveStates constructor is run.
+                    //State of the plugin must be set properly while opening IDE.
                     throw new RuntimeException(e);
+                }
+            }
+        });
+        this.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("tideBaseResponse".equals(evt.getPropertyName())) {
+                    String response = (String) evt.getNewValue();
+                    InfoView.displayInfo(response);
                 }
             }
         });
@@ -87,42 +101,6 @@ public class ActiveState {
     public static ActiveState getInstance() {
         return ApplicationManager.getApplication().getService(ActiveState.class);
     }
-
-    /**
-     * Makes the toolwindow unavailable.
-     * @param id String of the toolwindow.
-     */
-    private void hideWindow(String id) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow(id);
-            var callerClass = ReflectionUtil.getGrandCallerClass();
-            if (callerClass != null) {
-                window.setIcon(IconLoader.getIcon("/icons/timgray.svg", callerClass));
-            }
-            //assert window != null;
-            window.setAvailable(false);
-        });
-    }
-
-    /**
-     * Makes the toolwindow available.
-     * @param id String of the toolwindow.
-     */
-    private void showWindow(String id) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow(id);
-            var callerClass = ReflectionUtil.getGrandCallerClass();
-            if (callerClass != null) {
-                window.setIcon(IconLoader.getIcon("/icons/tim.svg", callerClass));
-            }
-            //assert window != null;
-            window.setAvailable(true);
-        });
-    }
-
-
     /**
      * Add listener for property change.
      * @param listener Listener to be added.
@@ -184,6 +162,30 @@ public class ActiveState {
 
 
     /**
+     * Reads downloaded .timdata files and creates Subtasks accordingly.
+     * @param course to get subtasks for
+     */
+    public void addDownloadedSubtasksToCourse(Course course) {
+        String pathToFile = Settings.getPath() + File.separatorChar + course.getName();
+        JsonHandler jsonHandler = new JsonHandler();
+        TimDataHandler tim = new TimDataHandler();
+        String timData = tim.readTimData(pathToFile);
+        if (timData.isEmpty()) {
+            return;
+        }
+        List<SubTask> subtasks = jsonHandler.jsonToSubtask(timData);
+        var demos = course.getTasks();
+        for (CourseTask ct: demos) {
+            for (SubTask st: subtasks) {
+                if (ct.getPath().equals(st.getPath())) {
+                    ct.addSubtask(st);
+                }
+            }
+        }
+    }
+
+
+    /**
      * Sets a new value for the tideSubmitResponse property.
      * Needed because response to tide submit gets parsed for
      * information and thus needs to be differentiated from
@@ -194,6 +196,7 @@ public class ActiveState {
         String oldTideSubmitResponse = tideSubmitResponse;
         tideSubmitResponse = response;
         pcs.firePropertyChange("tideSubmitResponse", null, tideSubmitResponse);
+        pcs.firePropertyChange("setSubmitData", null, getSubmitData());
         LogHandler.logInfo("ActiveState fired event tideSubmitResponse");
         setTideBaseResponse(response);
     }
@@ -220,8 +223,10 @@ public class ActiveState {
         }
         pcs.firePropertyChange("login", false, isLoggedIn);
         LogHandler.logInfo("ActiveState fired event login");
-        showWindow("Course Task");
-        showWindow("Output Window");
+
+        // These are here because calling them from inside the toolwindow would not work.
+        Util.setWindowAvailable(project, "Course Task", true, "/icons/tim.svg");
+        Util.setWindowAvailable(project, "Output Window", true, "/icons/tim.svg");
     }
 
     /**
@@ -233,8 +238,8 @@ public class ActiveState {
         }
         pcs.firePropertyChange("logout", true, isLoggedIn);
         LogHandler.logInfo("ActiveState fired event logout");
-        hideWindow("Course Task");
-        hideWindow("Output Window");
+        Util.setWindowAvailable(project, "Course Task", false, "/icons/timgray.svg");
+        Util.setWindowAvailable(project, "Output Window", false, "/icons/timgray.svg");
     }
 
     /**
@@ -267,25 +272,15 @@ public class ActiveState {
      * @return CourseTask name as String.
      */
     private String findTaskName(String course, VirtualFile file) {
-        Course courseTemp = null;
-        for (Course temp: this.courseList) {
-            if (temp.getName().equals(course)) {
-                courseTemp = temp;
-                break;
-            }
-        }
-        if (courseTemp != null) {
-            SubTask subTaskTemp = null;
-                for (SubTask temp2 : this.subTaskList) {
-                    if (file.getPath().contains(temp2.getFileName().getFirst())) {
-                        subTaskTemp = temp2;
-                        break;
-                    }
-                }
-            if (subTaskTemp != null) {
-                for (CourseTask temp3 : courseTemp.getTasks()) {
-                    if (temp3.getPath().equals(subTaskTemp.getPath())) {
-                        return temp3.getName();
+        for (Course courseToCheck: this.getCourses()) {
+            if (courseToCheck.getName().equals(course)) {
+                for (CourseTask courseTask: courseToCheck.getTasks()) {
+                    for (SubTask subtask: courseTask.getSubtasks()) {
+                        for (SubTask.TaskFile taskFile: subtask.getTaskFiles()) {
+                            if (file.getPath().contains(taskFile.getFileName())) {
+                                return courseTask.getName();
+                            }
+                        }
                     }
                 }
             }
@@ -298,13 +293,28 @@ public class ActiveState {
      * @param file Virtual file of the file open in the editor.
      * @return Subtask's name as String.
      */
-    private String findSubTaskName(VirtualFile file) {
-        for (SubTask task : this.subTaskList) {
-            if(file.getPath().contains(task.getFileName().getFirst())) {
-                return task.getIdeTaskId();
+    public SubTask findSubTask(VirtualFile file) {
+        for (Course course: this.getCourses()) {
+            for (CourseTask task: course.getTasks()) {
+                for (SubTask subTask: task.getSubtasks()) {
+                    for (SubTask.TaskFile tf: subTask.getTaskFiles()) {
+                        if (file.getPath().contains(tf.getFileName())) {
+                            return subTask;
+                        }
+                    }
+                }
             }
         }
-        return "";
+        return null;
+    }
+
+    /**
+     * This method is used to determine if the file is tim-task.
+     * @param file Virtual file corresponding to the file on disk.
+     * @return True if the file is tim-task, false otherwise.
+     */
+    private boolean isTask(VirtualFile file) {
+        return this.findSubTask(file) != null;
     }
 
     /**
@@ -317,30 +327,32 @@ public class ActiveState {
         if (child.getCanonicalPath() != null && this.allowedName(child)) {
             this.isSubmittable = child.getCanonicalPath()
                     .replaceAll("/", Matcher.quoteReplacement(File.separator))
-                    .contains(parent.getCanonicalPath());
+                    .contains(parent.getCanonicalPath()) && this.isTask(child);
+            //Now it is checked that file is tim-task.
+            // With TimTask-class, considerably better implementation will be possible but works for now.
         } else {
             this.isSubmittable = false;
         }
         if (this.isSubmittable) { // Updates the info displayed on CourseTaskPane.
             String course = this.getCourseName(child.getPath());
             String demo = this.findTaskName(course, child);
-            String sub = this.findSubTaskName(child);
+            String sub = this.findSubTask(child).getIdeTaskId();
             this.messageTaskName(course, demo, sub);
         }
-        this.messageChanges();
     }
 
     /**
      * This method is used to send messages to CourseTaskPane to change state of the buttons.
      */
     public void messageChanges() {
-        ActionManager.getInstance().getAction("Reset Exercise"); //Actions must be able/disabled also
         if (!isSubmittable) {
+            Util.setIcons(project, "/icons/timgray.svg");
             //Is null ok or should one send isSubmittable values?
             pcs.firePropertyChange("disableButtons", null, null);
         } else {
+            Util.setIcons(project, "/icons/tim.svg");
             pcs.firePropertyChange("enableButtons", null, null);
-            pcs.firePropertyChange("setPoints", null, null);
+            pcs.firePropertyChange("setSubmitData", null, getSubmitData());
         }
     }
 
@@ -355,32 +367,41 @@ public class ActiveState {
         pcs.firePropertyChange("setDemoName", null, values);
     }
 
+
     /**
-     * Sets the subTask list. The implementation is weird because CustomScreen might call this with smaller list than
-     * was set a moment ago. During tree view update JsonData is read and objects created multiple times.
-     * @param subTasks List of subtasks.
+     * a method that makes messages for the points, deadline and maximum number of submits.
+     * @return string array of messages
      */
-    public void setSubTasks(List<SubTask> subTasks) {
-        if (this.subTaskList == null) {
-            this.subTaskList = subTasks;
-        } else {
-            //TODO: fix the bloating of the subtasklist. JSON should only be read again if new tasks are donwloaded.
-            this.subTaskList.addAll(subTasks);
-        }
+    public String[] getSubmitData() {
+        StateManager state = new StateManager();
+        VirtualFile file = FileEditorManager
+                .getInstance(project)
+                .getSelectedEditor()
+                .getFile();
+        SubTask current = findSubTask(file);
+        float points = state.getPoints(file.getCanonicalPath());
+        String pointsMessage = "Points : " + points + "/" + current.getMaxPoints();
+        String deadLineMessage = checkDeadline(current);
+        String submitMessage = "Maximum number of submissions allowed: " + current.getAnswerLimit();
+        return new String[] {pointsMessage, deadLineMessage, submitMessage};
     }
 
     /**
-     * This method returns the subtask object instance of the open task file.
-     * from the file path on the local disk drive.
-     * @param filePath File's path on disk.
-     * @return SubTask object
+     * Checks if the deadline exists, and changes it into the systems current timezone if it does.
+     * @param current the currently open subtask which deadline is being checked.
+     * @return a string containing the deadline.
      */
-    public SubTask getOpenTask(String filePath) {
-        for (SubTask task : this.subTaskList) {
-            if (filePath.contains(task.getFileName().getFirst())) {
-                return task;
-            }
+    private String checkDeadline(SubTask current) {
+        String deadLineMessage = "no deadline";
+        if (current.getDeadLine() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx")
+                    .withZone(ZoneId.of("UTC"));
+            ZonedDateTime date = ZonedDateTime.parse(current.getDeadLine(), formatter);
+            ZoneId localZone = ZoneId.systemDefault();
+            ZonedDateTime localDeadline = date.withZoneSameInstant(localZone);
+            DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z");
+            deadLineMessage = localDeadline.format(deadlineFormat);
         }
-        return null;
+        return deadLineMessage;
     }
 }

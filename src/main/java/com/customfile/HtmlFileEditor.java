@@ -13,12 +13,12 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 
-public class HtmlFileEditor implements FileEditor {
+public final class HtmlFileEditor implements FileEditor {
     private final JBCefBrowser browser;
 
     /**
-     * starts the browser in the file editor.
-     * @param url url that is opened in the browser
+     * a method that loads a html file into the middle file editor window.
+     * @param url the url that gets loaded into the middle editor window.
      */
     public HtmlFileEditor(String url) {
         browser = new JBCefBrowser();

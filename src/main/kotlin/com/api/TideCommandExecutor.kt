@@ -1,7 +1,8 @@
 package com.api
 
-import com.actions.ActiveState
+import com.state.ActiveState
 import com.actions.Settings
+import com.course.Course
 import com.course.SubTask
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
@@ -14,6 +15,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findDocument
 import com.intellij.util.io.awaitExit
+import com.views.InfoView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,16 +45,23 @@ object TideCommandExecutor {
                 withContext(Dispatchers.Main) {
                     val activeState = ActiveState.getInstance()
                     // TODO: This can't be the right way to do this.
-                    if (output.contains("Login successful!") || output.contains("Logged in")) {
+                    if (output.contains("Login successful!")) {
                         activeState.login()
+                        // If no prior login details, don't show the "please finish logging in"-message.
+                        InfoView.displayInfo("Login successful!")
+                    } else if (output.contains("Logged in")) {
+                        activeState.login()
+                        InfoView.displayInfo(output)
                     } else {
                         activeState.logout()
+                        InfoView.displayError(output)
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     val activeState = ActiveState.getInstance()
                     activeState.logout()
+                    InfoView.displayError(e.message)
                 }
             }
         }
@@ -66,6 +75,9 @@ object TideCommandExecutor {
                 val courses = handler.jsonToCourses(jsonString)
 
                 val activeState = ActiveState.getInstance()
+                for (crs: Course in courses) {
+                    activeState.addDownloadedSubtasksToCourse(crs)
+                }
                 activeState.setCourses(courses)  // No need to switch dispatcher unless UI update is needed
 
             } catch (e: Exception) {
@@ -84,6 +96,7 @@ object TideCommandExecutor {
 
                 if (output.loggedIn != null) {
                     activeState.login()
+                    InfoView.displayInfo(jsonOutput)
                 } else {
                     activeState.logout()
                 }
@@ -109,6 +122,7 @@ object TideCommandExecutor {
                 withContext(Dispatchers.Main) {
                     val activeState = ActiveState.getInstance()
                     activeState.logout()
+                    InfoView.displayInfo(result)
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -200,8 +214,8 @@ object TideCommandExecutor {
         var taskPath: String = ""
         var filePath = file.getPath()
         for (subtask: SubTask in subtasks) {
-            for (name: String in subtask.fileName) {
-                if (filePath.contains(name.replace("\"", ""))) {
+            for (taskFile: SubTask.TaskFile in subtask.taskFiles) {
+                if (filePath.contains(taskFile.fileName)) {
                     taskId = subtask.ideTaskId
                     taskPath = subtask.path
                     break
@@ -246,7 +260,7 @@ object TideCommandExecutor {
                 val appInfo = ApplicationInfo.getInstance()
                 val productName = appInfo.fullApplicationName
                 if (System.getProperty("os.name").contains("Windows")) {
-                    if (productName.contains("Idea")){
+                    if (productName.contains("IDEA")){
                         command += "idea64.exe"
                     } else if (productName.contains("PyCharm")) {
                         command += "pycharm64.exe"
@@ -254,7 +268,7 @@ object TideCommandExecutor {
                         command += "rider64.exe"
                     }
                 } else if (System.getProperty("os.name").contains("Linux")) {
-                    if (productName.contains("Idea")){
+                    if (productName.contains("IDEA")){
                         command += "idea"
                     } else if (productName.contains("PyCharm")) {
                         command += "pycharm"
@@ -263,7 +277,7 @@ object TideCommandExecutor {
                     }
                 //TODO: This is the Mac section. It is not possible to test functionality without a Mac
                 } else {
-                    if (productName.contains("Idea")) {
+                    if (productName.contains("IDEA")) {
 
                     } else if (productName.contains("PyCharm")) {
 

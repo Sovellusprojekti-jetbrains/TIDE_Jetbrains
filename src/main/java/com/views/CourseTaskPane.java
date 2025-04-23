@@ -2,17 +2,10 @@
 //26.1.2025
 
 package com.views;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
+
 import java.util.regex.*;
-import com.actions.ActiveState;
-import com.actions.Settings;
-import com.actions.StateManager;
-import com.api.ApiHandler;
-import com.api.JsonHandler;
-import com.api.TimDataHandler;
-import com.course.SubTask;
+import com.state.ActiveState;
+import com.state.StateManager;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
@@ -20,17 +13,13 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
+import com.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
-import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
 * Hoidetaan kaikki ruudun oikealla puolella olevan tehtävän palautuksen suorittavan ikkunan toiminnalliset sekä graaffiset toiminnot
@@ -96,15 +85,23 @@ public class CourseTaskPane {
      * Reset panel.
      */
     private JPanel resetPane;
+    /**
+     * progressbar for ongoing tasks.
+     */
     private JProgressBar taskProgressBar;
     /**
-     * label for the possible deadline of the subtask
+     * label for the possible deadline of the subtask.
      */
     private JLabel deadLineLabel;
+    /**
+     * label for the maximum amount of submissions allowed.
+     */
+    private JLabel maxSubmitsLabel;
     /**
      * Holds the current project.
      */
     private Project project;
+    private static CourseTaskPane pane;
 
     /**
      * getter for the contents of the task panel.
@@ -113,7 +110,6 @@ public class CourseTaskPane {
     public JPanel getContent() {
         return taskPane;
     }
-
 
     /**
      * A constructor that takes a ToolWindow as a parameter.
@@ -130,115 +126,25 @@ public class CourseTaskPane {
             ActionManager manager = ActionManager.getInstance();
             AnAction action = manager.getAction("com.actions.BrowserAction");
             manager.tryToExecute(action, null, null, null, true);
-            /*
-            if (Desktop.isDesktopSupported()) {
-                Desktop desktop = Desktop.getDesktop();
-                //TODO: The following lines of code up to line 133 repeats in many action listeners.
-                // Is there a way to refactor this?
-                VirtualFile file = FileEditorManager
-                        .getInstance(project)
-                        .getSelectedEditor()
-                        .getFile();
-                try {
-                    ActiveState.getInstance().setSubmittable(file);
-                } catch (IOException ex) {
-                    InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
-                    throw new RuntimeException(ex);
-                }
-                if (!ActiveState.getInstance().isSubmittable()) {
-                    InfoView.displayWarning("File in editor is not a tim task!");
-                    return;
-                }
-                try {
-                    desktop.browse(new URI("https://timbeta01.tim.education"));
-                } catch (IOException | URISyntaxException e) {
-                    com.api.LogHandler.logError("111 CourseTaskPane avaaTehtava ActionListener", e);
-                    throw new RuntimeException(e);
-                }
-            } */
         });
 
         //Resets subtask back to the state of last submit.
         resetButton.addActionListener(event -> {
-            if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
-                com.views.InfoView.displayWarning("No files open in editor!");
-                return;
-            }
-
-            VirtualFile file = FileEditorManager
-                    .getInstance(project)
-                    .getSelectedEditor()
-                    .getFile();
-
-            // show confirmation dialog and return if the user decides to cancel
-            if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
-                return;
-            }
-            try {
-                ActiveState.getInstance().setSubmittable(file);
-            } catch (IOException ex) {
-                InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
-                throw new RuntimeException(ex);
-            }
-            if (!ActiveState.getInstance().isSubmittable()) {
-                InfoView.displayWarning("File in editor is not a tim task!");
-                return;
-            }
-            ApiHandler handler = new ApiHandler();
-            ActiveState stateManager = ActiveState.getInstance();
-            String coursePath = stateManager.getCourseName(file.getPath());
-            try {
-                handler.resetSubTask(file, coursePath);
-            } catch (IOException e) {
-                com.api.LogHandler.logError("142 CourseTaskPane resetButton ActionListener", e);
-                com.api.LogHandler.logDebug(new String[]{"148 VirtualFile file", "169 String coursePath"},
-                        new String[]{file.toString(), coursePath});
-                InfoView.displayError(".timdata file not found!");
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
-                com.api.LogHandler.logError("CourseTaskPane resetButton ActionListener", e);
-                InfoView.displayError("An error occurred during task reset! Check Tide CLI");
-                throw new RuntimeException(e);
-            }
+            ActionManager manager = ActionManager.getInstance();
+            AnAction action = manager.getAction("com.actions.ResetExercise");
+            manager.tryToExecute(action, null, null, null, true);
         });
 
         // submit exercise
         submitButton.addActionListener(event -> {
-            if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
-                printOutput("Please open a file to submit in the editor.");
-                return;
-            }
-            OutputWindow.showWindow(project);
-
-            VirtualFile file = FileEditorManager
-                    .getInstance(project)
-                    .getSelectedEditor()
-                    .getFile();
-
-            // TODO: do something like the following to use the TIDE-CLI
-            // function to submit all task files in a directory by checking
-            // a checkbox, or find a more sensible way to implement it
-            // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
-            // String path = submitAll ? file.getParent().getPath() : file.getPath();
-
-            try {
-                ActiveState.getInstance().setSubmittable(file);
-            } catch (IOException ex) {
-                InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
-                throw new RuntimeException(ex);
-            }
-            if (!ActiveState.getInstance().isSubmittable()) {
-                InfoView.displayWarning("File in editor is not a tim task!");
-                return;
-            }
-
-            setProgress(true, "Submitting...");
-            new ApiHandler().submitExercise(file);
+            ActionManager manager = ActionManager.getInstance();
+            AnAction action = manager.getAction("com.actions.Submit");
+            manager.tryToExecute(action, null, null, null, true);
         });
 
 
         showOutputButton.addActionListener(event -> {
-            OutputWindow.showWindow(project);
+            Util.showWindow(project, "Output Window", true);
         });
 
 
@@ -246,12 +152,6 @@ public class CourseTaskPane {
         stateManager.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                if ("logout".equals(evt.getPropertyName())) {
-                    hideWindow();
-                }
-                if ("login".equals(evt.getPropertyName())) {
-                    showWindow();
-                }
                 if ("tideSubmitResponse".equals(evt.getPropertyName())) {
                     String response = (String) evt.getNewValue();
                     handleSubmitResponse(response);
@@ -262,8 +162,11 @@ public class CourseTaskPane {
                 if ("enableButtons".equals(evt.getPropertyName())) {
                     enableButtons();
                 }
-                if ("setPoints".equals(evt.getPropertyName())) {
-                    setPoints();
+                if ("setSubmitData".equals(evt.getPropertyName())) {
+                    String[] messages = (String[]) evt.getNewValue();
+                    setPoints(messages[0]);
+                    setDeadLine(messages[1]);
+                    setMaxSubmits(messages[2]);
 
                 }
                 if ("setDemoName".equals(evt.getPropertyName())) {
@@ -277,47 +180,7 @@ public class CourseTaskPane {
 
         stateManager.updateCourses();
         setProgress(false, "");
-    }
-
-
-    /**
-     * Prints a string to the output toolWindow.
-     * @param output String to print
-     */
-    public void printOutput(String output) {
-        OutputWindow.showWindow(project);
-        OutputWindow outputWindow = OutputWindow.getInstance();
-        if (outputWindow != null) {
-            OutputWindow.getInstance().printText(output);
-        }
-    }
-
-
-    /**
-     * Makes the toolwindow unavailable.
-     */
-    private void hideWindow() {
-        SwingUtilities.invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow("Course Task");
-            if (window != null) {
-                window.setAvailable(false);
-            }
-        });
-    }
-
-
-    /**
-     * Makes the toolwindow available.
-     */
-    private void showWindow() {
-        SwingUtilities.invokeLater(() -> {
-            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-            ToolWindow window = toolWindowManager.getToolWindow("Course Task");
-            if (window != null) {
-                window.setAvailable(true);
-            }
-        });
+        pane = this;
     }
 
 
@@ -328,7 +191,7 @@ public class CourseTaskPane {
      */
     private void handleSubmitResponse(String response) {
         if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
-            printOutput("Please open a file to submit in the editor.");
+            InfoView.displayError("Please open a file to submit in the editor.");
             return;
         }
 
@@ -358,82 +221,30 @@ public class CourseTaskPane {
             ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
         }
         System.out.println(path);
-        setPoints();
     }
 
     /**
      * Setter to show the points above the submit button.
+     * @param message message containing the points for the submission
      */
-    public void setPoints() {
-        StateManager state = new StateManager();
-        VirtualFile file = FileEditorManager
-                .getInstance(project)
-                .getSelectedEditor()
-                .getFile();
-
-        float points = state.getPoints(file.getCanonicalPath());
-        List<SubTask> sub = getTimDataSubTasks(file);
-        float max = 0.0F;
-        for (SubTask task : sub) {
-            for (String name : task.getFileName()) {
-                if (name.contains(file.getName())
-                        && (task.getIdeTaskId().equals(file.getParent().getName()) || name.contains(file.getParent().getName()))) {
-                    max = task.getMaxPoints();
-                }
-            }
-        }
-            pisteLabel.setText("Points : " + points + "/" + max);
-            setDeadLine(file, sub);
+    public void setPoints(String message) {
+            pisteLabel.setText(message);
     }
 
     /**
      * setter for the subtask deadline .
-     * @param file the file currently open in the editor
-     * @param sub list of subtasks for the coursetask;
+     * @param message message containing the deadline.
      */
-    private void setDeadLine(VirtualFile file, List<SubTask> sub) {
-        String deadline = "";
-        for (SubTask task : sub) {
-            for (String name : task.getFileName()) {
-                if (name.contains(file.getName())
-                        && (task.getIdeTaskId().equals(file.getParent().getName()) || name.contains(file.getParent().getName()))) {
-                     deadline = task.getDeadLine();
-                }
-            }
-        }
-        if (deadline != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx")
-                    .withZone(ZoneId.of("UTC"));
-            ZonedDateTime date = ZonedDateTime.parse(deadline, formatter);
-            ZoneId localZone = ZoneId.systemDefault();
-            ZonedDateTime localDeadline = date.withZoneSameInstant(localZone);
-
-
-            DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z");
-            deadLineLabel.setText(localDeadline.format(deadlineFormat));
-        }
-        else {
-            deadLineLabel.setText("no deadline");
-        }
+    private void setDeadLine(String message) {
+        deadLineLabel.setText(message);
     }
     /**
-     * method to read subtask data from a timdatafile from under the timdatafile.
-     * @param file the file used to find the right timdata file.
-     * @return list of the subtasks that can be found in the timdata file.
+     * sets visible number for maximum amount of submissions that is allowed for the subtask.
+     * @param message  a message containing the maximum amount of submits allowed.
      */
-    private List<SubTask> getTimDataSubTasks(VirtualFile file) {
-        TimDataHandler tim = new TimDataHandler();
-        JsonHandler json = new JsonHandler();
-        VirtualFile parentFile = file.getParent();
-        String data = "";
-        while (data.isEmpty() && !Objects.equals(parentFile.getCanonicalPath(), Settings.getPath())) {
-            data = tim.readTimData(parentFile.getCanonicalPath());
-            parentFile = parentFile.getParent();
-        }
-        return json.jsonToSubtask(data);
+    private void setMaxSubmits(String message) {
+           maxSubmitsLabel.setText(message);
     }
-
-
 
     /**
      * Private method for disabling buttons.
@@ -470,13 +281,21 @@ public class CourseTaskPane {
      * @param state Visible, true or false.
      * @param text Text to display on progress bar.
      */
-    private void setProgress(boolean state, String text) {
+    public void setProgress(boolean state, String text) {
         SwingUtilities.invokeLater(() -> {
             taskProgressBar.setString(text);
             taskProgressBar.setVisible(state);
             taskPane.revalidate();
             taskPane.repaint();
         });
+    }
+
+    /**
+     * Getter for the instance of CourseTaskPane.
+     * @return CourseTaskPane.
+     */
+    public static CourseTaskPane getInstance() {
+        return pane;
     }
 }
 

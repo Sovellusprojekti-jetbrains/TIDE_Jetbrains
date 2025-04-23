@@ -6,18 +6,18 @@ import com.intellij.openapi.components.Service;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.ui.content.Content;
+import com.views.CourseMainPane;
 import com.views.CoursePaneWindow;
-import com.views.CustomScreen;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 /**
- * Listen to all tool windows being opened.
- * TODO: rename the class to something more appropriate
+ * Reacts to TIDE toolwindows when they are opened.
  */
 @Service
-public final class LoginWindowListener implements ToolWindowManagerListener  {
+public final class ToolWindowListener implements ToolWindowManagerListener  {
+
     @Override
     public void toolWindowShown(ToolWindow toolWindow) {
         System.out.println("tool window listener was called");
@@ -25,7 +25,6 @@ public final class LoginWindowListener implements ToolWindowManagerListener  {
         var contentManager = toolWindow.getContentManager();
         if ("TIDE Tool Window".equals(toolWindow.getId())) { // the toolWindow here is the tool window that was opened
             System.out.println("login window was opened");
-            api.checkLogin();
 
             for (Content content : contentManager.getContents()) {
                 if ("Courses".equals(content.getTabName())) {
@@ -37,7 +36,7 @@ public final class LoginWindowListener implements ToolWindowManagerListener  {
             }
             toolWindow.getContentManager().addContent(
                     com.intellij.ui.content.ContentFactory.getInstance()
-                            .createContent(new CustomScreen(toolWindow)
+                            .createContent(new CourseMainPane(toolWindow)
                                     .getContent(), "Courses", false));
         }
         if ("Course Task".equals(toolWindow.getId())) {
@@ -56,7 +55,7 @@ public final class LoginWindowListener implements ToolWindowManagerListener  {
         }
         if ("Output Window".equals(toolWindow.getId())) {
             System.out.println("output window was opened");
-            LogHandler.logInfo("LoginWindowListener: Output window was opened.");
+            LogHandler.logInfo("ToolWindowListener: Output window was opened.");
             for (Content content : contentManager.getContents()) {
                 if ("Output".equals(content.getTabName())) {
                     // Select existing tab instead of adding a new one
