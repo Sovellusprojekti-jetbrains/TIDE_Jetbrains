@@ -65,11 +65,11 @@ public final class TimTask {
      */
     private static void updatePane() {
         //TODO: Implement
-        /*
+
         System.out.println(selected);
         if (selected != null) {
             System.out.println(selected.delegate.getUrl());
-        }*/
+        }
     }
 
     /**
@@ -86,7 +86,7 @@ public final class TimTask {
      */
     public static void evaluateFile(VirtualFile file) {
         //TODO: Make new TimTask if file open in the editor is one. Set selected null otherwise
-        //TODO: Maybe TimTasks once made could be cached for later use?
+        //TODO: Maybe TimTasks once made could be cached for later use? Edit: Why not cache all results!?
         if (file != null && file.getCanonicalPath() != null) {
             if (CACHE.containsKey(file.getUrl())) {
                 selected = CACHE.get(file.getUrl());
@@ -101,6 +101,7 @@ public final class TimTask {
                     CACHE.put(file.getUrl(), selected);
                 } else {
                     selected = null;
+                    CACHE.put(file.getUrl(), selected);
                 }
             }
         } else {
