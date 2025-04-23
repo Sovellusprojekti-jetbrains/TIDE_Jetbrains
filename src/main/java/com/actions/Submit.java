@@ -24,7 +24,8 @@ public class Submit extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();
-        if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
+        TimTask.getInstance().submit(project); //This action shouldn't be available if TimTask instance is null
+        /*if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
             InfoView.displayError("Please open a file to submit in the editor.");
             return;
         }
@@ -53,7 +54,7 @@ public class Submit extends AnAction {
         } catch (Exception ex) {
             LogHandler.logError("Submit action", ex);
         }
-        new ApiHandler().submitExercise(file);
+        new ApiHandler().submitExercise(file);*/
     }
 
     /**
@@ -64,10 +65,10 @@ public class Submit extends AnAction {
     public void update(@NotNull AnActionEvent e) {
         if (!ActiveState.getInstance().getLogin()) {
             e.getPresentation().setEnabled(ActiveState.getInstance().getLogin());
-            ActiveState.getInstance().messageChanges(); //Update in this class is used to inform changes to CourseTaskPane.
+            //ActiveState.getInstance().messageChanges(); //Update in this class is used to inform changes to CourseTaskPane.
             return;
         }
         e.getPresentation().setEnabled(ActiveState.getInstance().isSubmittable());
-        ActiveState.getInstance().messageChanges();
+        //ActiveState.getInstance().messageChanges();
     }
 }

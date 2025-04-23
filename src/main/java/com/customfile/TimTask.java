@@ -1,8 +1,13 @@
 package com.customfile;
 
+import com.api.ApiHandler;
+import com.api.LogHandler;
 import com.course.SubTask;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.state.ActiveState;
+import com.util.Util;
+import com.views.CourseTaskPane;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,9 +38,17 @@ public final class TimTask {
 
     /**
      * This method submits exercise to tim.
+     * @param project project that is open in the ide.
      */
-    public void submit() {
+    public void submit(Project project) {
         //TODO: Implement submit here.
+        Util.showWindow(project, "Output Window", true);
+        try {
+            CourseTaskPane.getInstance().setProgress(true, "Submitting...");
+        } catch (Exception ex) {
+            LogHandler.logError("Submit action", ex);
+        }
+        new ApiHandler().submitExercise(this.delegate);
     }
 
     /**
