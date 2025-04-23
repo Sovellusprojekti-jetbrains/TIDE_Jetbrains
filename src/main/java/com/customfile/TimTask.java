@@ -1,6 +1,10 @@
 package com.customfile;
 
+import com.course.SubTask;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.state.ActiveState;
+
+import java.util.ArrayList;
 
 /**
  * This class "extends" VirtualFile with actions of tide task.
@@ -9,14 +13,20 @@ public final class TimTask {
 
     private static TimTask selected; //Keep the instance of TimTask open in the editor here.
     private final VirtualFile delegate;
+    private final ArrayList<String> headers;
+    private final SubTask task;
     //TODO: Add attributes for subtask info etc.
 
     /**
      * In order to "extend" VirtualFile we must have one as a delegate.
      * @param file VirtualFile which is used as a delegate.
+     * @param headerList Contains course name, demo name, and subtask name.
+     * @param subTask Object reference to SubTask object containing all the goods.
      */
-    private TimTask(VirtualFile file) {
+    private TimTask(VirtualFile file, ArrayList<String> headerList, SubTask subTask) {
         this.delegate = file;
+        this.headers = headerList;
+        this.task = subTask;
     }
 
     /**
@@ -53,6 +63,7 @@ public final class TimTask {
      */
     private static void updatePane() {
         //TODO: Implement
+        System.out.println(selected);
     }
 
     /**
@@ -69,6 +80,20 @@ public final class TimTask {
      */
     public static void evaluateFile(VirtualFile file) {
         //TODO: Make new TimTask if file open in the editor is one. Set selected null otherwise
+        if (file != null && file.getCanonicalPath() != null) {
+            ArrayList<String> taskData = new ArrayList<>();
+            taskData.add(ActiveState.getInstance().getCourseName(file.getPath()));
+            taskData.add(ActiveState.getInstance().findTaskName(taskData.getFirst(), file));
+            SubTask taskHolder = ActiveState.getInstance().findSubTask(file);
+            if (taskHolder != null) {
+                taskData.add(taskHolder.getIdeTaskId());
+                selected = new TimTask(file, taskData, taskHolder);
+            } else {
+                selected = null;
+            }
+        } else {
+            selected = null;
+        }
         //TODO: Maybe TimTasks once made could be cached for later use?
         //TODO: use ActiveState's setSubmittable to make actions enabled/disabled.
         updatePane(); //This can be used to update the CourseTaskPane. Info shown and buttons enabled/disabled.

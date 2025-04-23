@@ -8,6 +8,7 @@ import com.api.TimDataHandler;
 import com.course.Course;
 import com.course.CourseTask;
 import com.course.SubTask;
+import com.customfile.TimTask;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
@@ -60,6 +61,7 @@ public class ActiveState {
                 FileEditorManagerListener.super.selectionChanged(event);
                 try {
                     VirtualFile temp = event.getNewFile();
+                    TimTask.evaluateFile(temp); //TODO: just testing
                     if (temp != null) {
                         setSubmittable(temp);
                     } else { //Is it possible to construct new Virtual file with null canonical path?
@@ -271,7 +273,7 @@ public class ActiveState {
      * @param file Virtual file of the file opened in the editor.
      * @return CourseTask name as String.
      */
-    private String findTaskName(String course, VirtualFile file) {
+    public String findTaskName(String course, VirtualFile file) {
         for (Course courseToCheck: this.getCourses()) {
             if (courseToCheck.getName().equals(course)) {
                 for (CourseTask courseTask: courseToCheck.getTasks()) {
