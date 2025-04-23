@@ -52,9 +52,9 @@ public class InstallScreen {
                         Process pb = process.start();
                         int exitCode = pb.waitFor();
 
-                        if(exitCode == 0) {
+                        if (exitCode == 0) {
                             Messages.showMessageDialog(
-                                    "Tide installed successfully",
+                                    "Tide installed successfully to your home folder. Please restart your IDE",
                                     "Installation Complete",
                                     Messages.getInformationIcon()
                             );

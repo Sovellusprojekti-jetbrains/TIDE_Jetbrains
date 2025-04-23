@@ -12,6 +12,10 @@ public class HtmlEditorProvider implements FileEditorProvider {
     private static final Logger LOG = Logger.getInstance(HtmlEditorProvider.class);
     private static String urlToLoad = "https://www.google.com"; // Default website
 
+    /**
+     * sets the url that is opened in the browser
+     * @param url that is loaded
+     */
     public static void setUrl(String url) {
         urlToLoad = url;
     }

@@ -18,7 +18,9 @@ public class BrowserAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         Project project = event.getProject();
-        if (project == null) return;
+        if (project == null) {
+            return;
+        }
         //get demo and task with path from open file
         String url = baseURL;
         VirtualFile taskFile = FileEditorManager
