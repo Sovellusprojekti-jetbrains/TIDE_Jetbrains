@@ -2,6 +2,7 @@ package com.actions;
 
 import com.course.SubTask;
 import com.customfile.HtmlEditorProvider;
+import com.customfile.TimTask;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -18,7 +19,8 @@ public final class BrowserAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        Project project = event.getProject();
+        TimTask.getInstance().openInBrowser(baseURL, event.getProject());
+        /*Project project = event.getProject();
         if (project == null) {
             return;
         }
@@ -49,7 +51,7 @@ public final class BrowserAction extends AnAction {
         VirtualFile file = new LightVirtualFile("website_view"); // Must match HtmlEditorProvider's `accept()`
 
         // Open the file in the editor
-        FileEditorManager.getInstance(project).openFile(file, true);
+        FileEditorManager.getInstance(project).openFile(file, true);*/
     }
 
     /**

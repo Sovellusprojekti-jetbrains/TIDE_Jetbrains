@@ -7,8 +7,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.testFramework.LightVirtualFile;
 import com.state.ActiveState;
 import com.util.Util;
 import com.views.CourseTaskPane;
@@ -83,9 +83,27 @@ public final class TimTask {
     /**
      * This method is used to show the exercise in browser.
      * @param baseURL URL for tim.
+     * @param project project that is open in the ide.
      */
-    public void openInBrowser(String baseURL) {
+    public void openInBrowser(String baseURL, Project project) {
         //TODO: Implement the action here.
+        String url = baseURL;
+        //TODO: handle null case.
+        url += this.task.getPath();
+        //the task name needed for the url is not part of the subtask but part of the task file
+        //we need to get the first file of the task to get the right id.
+        //id is in form number.name.idstring
+        //thus we split the id to get the relevant part in the middle.
+        url += "#" + this.task.getTaskFiles().getFirst().getTaskIdExt().split("\\.")[1];
+
+        // Set the website URL
+        HtmlEditorProvider.setUrl(url);
+
+        // Create a virtual file with the expected name
+        VirtualFile file = new LightVirtualFile("website_view"); // Must match HtmlEditorProvider's `accept()`
+
+        // Open the file in the editor
+        FileEditorManager.getInstance(project).openFile(file, true);
     }
 
     /**
