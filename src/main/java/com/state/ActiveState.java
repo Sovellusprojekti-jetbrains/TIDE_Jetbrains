@@ -49,28 +49,7 @@ public class ActiveState {
      * Constructor for active state attempts to hide the right and bottom toolwindows.
      */
     public ActiveState() {
-        project = ProjectManager.getInstance().getOpenProjects()[0];
-        ApplicationManager.getApplication().invokeLater(() -> {
-            Util.setWindowAvailable(project, "Course Task", false, "/icons/timgray.svg");
-            Util.setWindowAvailable(project, "Output Window", false, "/icons/timgray.svg");
-        });
-        project.getMessageBus().connect(Disposer.newDisposable())
-                .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
-            @Override
-            public void selectionChanged(@NotNull FileEditorManagerEvent event) {
-                FileEditorManagerListener.super.selectionChanged(event);
-                VirtualFile temp = event.getNewFile();
-                TimTask.evaluateFile(temp);
-                    /*
-                    if (temp != null) {
-                        setSubmittable(temp);
-                    } else { //Is it possible to construct new Virtual file with null canonical path?
-                        //It would be better if it was possible to call setSubmittable with null as the argument
-                        isSubmittable = false;
-                        messageTaskName(" ", " ", " ");
-                    }*/
-            }
-        });
+
         this.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -88,6 +67,34 @@ public class ActiveState {
      */
     public boolean getLogin() {
         return isLoggedIn;
+    }
+
+    /**
+     * Tries to solve the problem plaguing our plugin startup.
+     */
+    public void initProjectDependents() {
+        project = ProjectManager.getInstance().getOpenProjects()[0];
+        ApplicationManager.getApplication().invokeLater(() -> {
+            Util.setWindowAvailable(project, "Course Task", false, "/icons/timgray.svg");
+            Util.setWindowAvailable(project, "Output Window", false, "/icons/timgray.svg");
+        });
+        project.getMessageBus().connect(Disposer.newDisposable())
+                .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+                    @Override
+                    public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+                        FileEditorManagerListener.super.selectionChanged(event);
+                        VirtualFile temp = event.getNewFile();
+                        TimTask.evaluateFile(temp);
+                    /*
+                    if (temp != null) {
+                        setSubmittable(temp);
+                    } else { //Is it possible to construct new Virtual file with null canonical path?
+                        //It would be better if it was possible to call setSubmittable with null as the argument
+                        isSubmittable = false;
+                        messageTaskName(" ", " ", " ");
+                    }*/
+                    }
+                });
     }
 
 

@@ -20,7 +20,7 @@ public class ResetExercise extends AnAction {
      */
     @Override
     public void actionPerformed(@NotNull final AnActionEvent e) {
-        Project project = e.getProject();
+        /*Project project = e.getProject();
         if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
             com.views.InfoView.displayWarning("No files open in editor!");
             return;
@@ -28,14 +28,15 @@ public class ResetExercise extends AnAction {
         VirtualFile file = FileEditorManager
                 .getInstance(project)
                 .getSelectedEditor()
-                .getFile();
+                .getFile();*/
 
         if (com.views.InfoView.displayOkCancelWarning("Confirm reset exercise?", "Reset exercise")) {
             return;
         }
+        TimTask.getInstance().resetExercise();
         //ActiveState.getInstance().setSubmittable(file);
         //ActiveState.getInstance().messageChanges(); //Might be unnecessary but just in case
-        TimTask.evaluateFile(file);
+        /*TimTask.evaluateFile(file);
         if (!ActiveState.getInstance().isSubmittable()) {
             InfoView.displayWarning("File in editor is not a tim task!");
             return;
@@ -55,7 +56,7 @@ public class ResetExercise extends AnAction {
             com.api.LogHandler.logError("ResetExercise action performer", ex);
             InfoView.displayError("An error occurred during task reset! Check Tide CLI");
             throw new RuntimeException(ex);
-        }
+        }*/
     }
 
     /**

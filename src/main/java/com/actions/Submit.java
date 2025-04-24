@@ -69,6 +69,6 @@ public class Submit extends AnAction {
             return;
         }
         e.getPresentation().setEnabled(ActiveState.getInstance().isSubmittable());
-        //ActiveState.getInstance().messageChanges();
+        ActiveState.getInstance().messageChanges();
     }
 }

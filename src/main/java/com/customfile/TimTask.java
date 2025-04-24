@@ -3,12 +3,18 @@ package com.customfile;
 import com.api.ApiHandler;
 import com.api.LogHandler;
 import com.course.SubTask;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.state.ActiveState;
 import com.util.Util;
 import com.views.CourseTaskPane;
+import com.views.InfoView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -48,6 +54,7 @@ public final class TimTask {
         } catch (Exception ex) {
             LogHandler.logError("Submit action", ex);
         }
+        this.syncChanges();
         new ApiHandler().submitExercise(this.delegate);
     }
 
@@ -56,6 +63,21 @@ public final class TimTask {
      */
     public void resetExercise() {
         //TODO: Implement reset here.
+        ApiHandler handler = new ApiHandler();
+        ActiveState stateManager = ActiveState.getInstance();
+        String coursePath = stateManager.getCourseName(this.delegate.getPath());
+        this.syncChanges();
+        try {
+            handler.resetSubTask(this.delegate, coursePath);
+        } catch (IOException ex) {
+            com.api.LogHandler.logError("TimTask.resetExercise()", ex);
+            InfoView.displayError(".timdata file not found!");
+            throw new RuntimeException(ex);
+        } catch (InterruptedException ex) {
+            com.api.LogHandler.logError("TimTask.resetExercise()", ex);
+            InfoView.displayError("An error occurred during task reset! Check Tide CLI");
+            throw new RuntimeException(ex);
+        }
     }
 
     /**
@@ -71,6 +93,11 @@ public final class TimTask {
      */
     private void syncChanges() {
         //TODO: Implement updating the file on disk here.
+        FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
+        Document document = fileDocumentManager.getDocument(this.delegate);
+        if (document != null) {
+            fileDocumentManager.saveDocument(document);
+        }
     }
 
     /**

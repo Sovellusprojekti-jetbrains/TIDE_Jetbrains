@@ -21,7 +21,7 @@ class ProjectStartUp : ProjectActivity {
                 TideCommandExecutor.checkLogin()
             }
             runBlocking { //This forces ActiveState instantiation I guess
-                ActiveState.getInstance()
+                ActiveState.getInstance().initProjectDependents()
             }
             runBlocking { //Not ideal but maybe better solution will be found
                 while (true) {

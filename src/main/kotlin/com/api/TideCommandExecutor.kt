@@ -140,7 +140,7 @@ object TideCommandExecutor {
      */
     fun submitExercise(file: VirtualFile) {
         CoroutineScope(Dispatchers.IO).launch {
-            syncChanges(file)
+            //syncChanges(file)
             val activeState = ActiveState.getInstance()
             try {
                 val commandLineArgs: ArrayList<String> = ArrayList(submitCommand.split(" "))
@@ -227,7 +227,7 @@ object TideCommandExecutor {
         }
 
         if (taskId != "") {
-            syncChanges(file)
+            //syncChanges(file)
             loadExercise(courseDir, taskPath, taskId, "-f")
             // Virtual file must be refreshed and Intellij Idea's UI notified
             file.refresh(true, true)
