@@ -66,7 +66,7 @@ public final class TimTask {
     public void resetExercise() {
         this.syncChanges();
         try {
-            new ApiHandler().resetSubTask(this.delegate, this.headers.getFirst());
+            new ApiHandler().resetSubTask(this.task, this.headers.getFirst());
         } catch (IOException ex) {
             com.api.LogHandler.logError("TimTask.resetExercise()", ex);
             InfoView.displayError(".timdata file not found!");

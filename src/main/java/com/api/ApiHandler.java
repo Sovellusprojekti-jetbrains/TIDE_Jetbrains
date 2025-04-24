@@ -1,5 +1,6 @@
 package com.api;
 
+import com.course.SubTask;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.intellij.openapi.editor.Document;
@@ -81,13 +82,13 @@ public class ApiHandler {
 
     /**
      * Resets subtask back to the state of latest submit.
-     * @param file Virtual file to get files local path and to communicate changes to idea's UI.
+     * @param task to reset.
      * @param courseDirectory Course directory
      * @throws IOException If .timdata file is not found or some other file reading error occurs.
      * @throws InterruptedException If TIDE CLI process fails or something else goes wrong.
      */
-    public void resetSubTask(VirtualFile file, String courseDirectory) throws IOException, InterruptedException {
-        tideCommandExecutor.resetSubTask(file, courseDirectory);
+    public void resetSubTask(SubTask task, String courseDirectory) throws IOException, InterruptedException {
+        tideCommandExecutor.resetSubTask(task, courseDirectory);
     }
 
 
