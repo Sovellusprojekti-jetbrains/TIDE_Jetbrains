@@ -10,11 +10,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
 import com.state.ActiveState;
+import com.state.StateManager;
 import com.util.Util;
 import com.views.CourseTaskPane;
 import com.views.InfoView;
 
 import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -148,6 +152,37 @@ public final class TimTask {
      */
     public String getSubTaskName() {
         return this.headers.getLast();
+    }
+
+    /**
+     * Getter for SuTask's submit data.
+     * @return string array of messages.
+     */
+    public String[] getSubmitData() {
+        StateManager state = new StateManager();
+        float points = state.getPoints(this.delegate.getCanonicalPath());
+        String pointsMessage = "Points : " + points + "/" + this.task.getMaxPoints();
+        String deadLineMessage = this.getDeadline();
+        String submitMessage = "Maximum number of submissions allowed: " + this.task.getAnswerLimit();
+        return new String[] {pointsMessage, deadLineMessage, submitMessage};
+    }
+
+    /**
+     * Checks if the deadline exists, and changes it into the systems current timezone if it does.
+     * @return a string containing the deadline.
+     */
+    private String getDeadline() {
+        String deadLineMessage = "no deadline";
+        if (this.task.getDeadLine() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx")
+                    .withZone(ZoneId.of("UTC"));
+            ZonedDateTime date = ZonedDateTime.parse(this.task.getDeadLine(), formatter);
+            ZoneId localZone = ZoneId.systemDefault();
+            ZonedDateTime localDeadline = date.withZoneSameInstant(localZone);
+            DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z");
+            deadLineMessage = localDeadline.format(deadlineFormat);
+        }
+        return deadLineMessage;
     }
 
     /**

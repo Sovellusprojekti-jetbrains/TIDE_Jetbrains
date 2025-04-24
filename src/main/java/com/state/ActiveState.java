@@ -25,12 +25,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
-import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.regex.Matcher;
 
 
 /**
@@ -49,7 +47,6 @@ public class ActiveState {
      * Constructor for active state attempts to hide the right and bottom toolwindows.
      */
     public ActiveState() {
-
         this.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -378,7 +375,7 @@ public class ActiveState {
      * @return string array of messages
      */
     public String[] getSubmitData() {
-        StateManager state = new StateManager();
+        /*StateManager state = new StateManager();
         VirtualFile file = FileEditorManager
                 .getInstance(project)
                 .getSelectedEditor()
@@ -388,7 +385,8 @@ public class ActiveState {
         String pointsMessage = "Points : " + points + "/" + current.getMaxPoints();
         String deadLineMessage = checkDeadline(current);
         String submitMessage = "Maximum number of submissions allowed: " + current.getAnswerLimit();
-        return new String[] {pointsMessage, deadLineMessage, submitMessage};
+        return new String[] {pointsMessage, deadLineMessage, submitMessage};*/
+        return TimTask.getInstance().getSubmitData();
     }
 
     /**
