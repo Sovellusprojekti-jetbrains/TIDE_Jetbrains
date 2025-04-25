@@ -1,10 +1,13 @@
 package com.views;
 
-import com.actions.Settings;
+import com.intellij.openapi.application.ApplicationManager;
+import com.state.StateManager;
 
 import javax.swing.*;
+import javax.swing.text.DefaultFormatter;
 import java.awt.*;
 import java.io.File;
+import java.util.Objects;
 
 /**
  * Settings screen.
@@ -12,7 +15,7 @@ import java.io.File;
 public class SettingsScreen {
     private JPanel settings;
     private JTextField pathText;
-    private final int maxScrollSpeed = 1000;
+    private JSpinner scrollSpeedSpinner;
 
     /**
      * Constructor for the plugin settings screen.
@@ -61,6 +64,7 @@ public class SettingsScreen {
      * @return next row index
      */
     private int createScrollSpeedSetting(int row) {
+        StateManager state = Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = row++;
         gbc.gridx = 0;
@@ -68,10 +72,17 @@ public class SettingsScreen {
         JLabel scrollSpeedLabel = new JLabel("Scroll speed:");
         SpinnerModel model = new SpinnerNumberModel(com.actions.Settings.getScrollSpeed(),
                 1,
-                maxScrollSpeed,
+                state.getMaxScrollSpeed(),
                 1);
-        JSpinner scrollSpeedSpinner = new JSpinner(model);
-        scrollSpeedSpinner.addChangeListener(e -> Settings.setScrollSpeed((int) scrollSpeedSpinner.getValue()));
+        scrollSpeedSpinner = new JSpinner(model);
+
+        // spinner default behavior is to commit the value on loss of focus, so we need to do
+        // the following for the apply button in the settings screen to enable on spinner value changes
+        DefaultFormatter formatter = (DefaultFormatter) ((JFormattedTextField) scrollSpeedSpinner.getEditor()
+                .getComponent(0))
+                .getFormatter();
+        formatter.setCommitsOnValidEdit(true);
+
         scrollSpeedSpinner.setToolTipText("Set course view scroll speed");
         this.settings.add(scrollSpeedLabel, gbc);
         gbc.gridx = 2;
@@ -127,6 +138,24 @@ public class SettingsScreen {
      */
     public JPanel getContent() {
         return settings;
+    }
+
+
+    /**
+     * This method is needed to check changes in the method in AppSettingsConfigurable.
+     * @return Value from spinner element
+     */
+    public int getScrollSpeedSpinnerValue() {
+        return (int) this.scrollSpeedSpinner.getValue();
+    }
+
+
+    /**
+     * This method is needed to revert changes in the idea settings.
+     * @param val Value to set for spinner
+     */
+    public void setScrollSpeedSpinnerValue(int val) {
+        this.scrollSpeedSpinner.setValue(val);
     }
 
 

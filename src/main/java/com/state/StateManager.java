@@ -36,6 +36,7 @@ public final class StateManager implements PersistentStateComponent<StateManager
 
     private State myState = new State(); //Object reference to state class
     private static final int DEFAULTSCROLLSPEED = 16;
+    private static final int MAXSCROLLSPEED = 1000;
 
     /**
      * This method is called when updating state class fields and to save the state of the State class when IDE is closed.
@@ -149,5 +150,14 @@ public final class StateManager implements PersistentStateComponent<StateManager
     public int getScrollSpeed() {
         PropertiesComponent properties = PropertiesComponent.getInstance();
         return properties.getInt("myPlugin.scrollSpeed", DEFAULTSCROLLSPEED);
+    }
+
+
+    /**
+     * Get max scroll speed.
+     * @return The MAXSCROLLSPEED attribute
+     */
+    public int getMaxScrollSpeed() {
+        return MAXSCROLLSPEED;
     }
 }
