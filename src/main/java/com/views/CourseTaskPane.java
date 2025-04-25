@@ -6,7 +6,6 @@ package com.views;
 import java.util.regex.*;
 
 import com.customfile.TimTask;
-import com.intellij.openapi.project.ProjectManager;
 import com.state.ActiveState;
 import com.state.StateManager;
 import com.intellij.openapi.actionSystem.ActionManager;
