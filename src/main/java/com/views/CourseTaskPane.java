@@ -157,6 +157,7 @@ public class CourseTaskPane {
                 if ("tideSubmitResponse".equals(evt.getPropertyName())) {
                     String response = (String) evt.getNewValue();
                     handleSubmitResponse(response);
+                    setProgress(false, "");
                 }
                 if ("disableButtons".equals(evt.getPropertyName())) {
                     disableButtons();
@@ -176,9 +177,6 @@ public class CourseTaskPane {
                 /*if ("setDemoName".equals(evt.getPropertyName())) {
                     setDemoName((String[]) evt.getNewValue());
                 }*/
-                if ("tideSubmitResponse".equals(evt.getPropertyName())) {
-                    setProgress(false, "");
-                }
             }
         });
 
