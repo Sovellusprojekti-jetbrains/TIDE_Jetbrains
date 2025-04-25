@@ -9,6 +9,7 @@ import com.views.SettingsScreen;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.util.Objects;
 
@@ -16,7 +17,6 @@ import java.util.Objects;
  * This class provides controller functionality for application settings.
  */
 public final class AppSettingsConfigurable implements Configurable {
-
     private SettingsScreen mySettingsComponent; //Reference to the SettingsScreen panel
 
     /**
@@ -35,8 +35,10 @@ public final class AppSettingsConfigurable implements Configurable {
     @Override
     public @Nullable JComponent createComponent() {
         this.mySettingsComponent = new SettingsScreen();
-        this.mySettingsComponent.noButtons();
-        return this.mySettingsComponent.getContent();
+        JPanel settingsView = this.mySettingsComponent.getContent();
+        JPanel settingsWrapper = new JPanel(new BorderLayout());
+        settingsWrapper.add(settingsView, BorderLayout.NORTH);
+        return settingsWrapper;
     }
 
     /**
@@ -47,7 +49,13 @@ public final class AppSettingsConfigurable implements Configurable {
     public boolean isModified() {
         StateManager state =
                 Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
-        return !this.mySettingsComponent.getPathText().equals(state.getPath());
+        if (!this.mySettingsComponent.getPathText().equals(state.getPath())) {
+            return true;
+        }
+        if (this.mySettingsComponent.getScrollSpeedSpinnerValue() != state.getScrollSpeed()) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -57,11 +65,16 @@ public final class AppSettingsConfigurable implements Configurable {
     @Override
     public void apply() throws ConfigurationException {
         File tempFile = new File(this.mySettingsComponent.getPathText());
-        if (tempFile.exists()) {
-            com.actions.Settings.savePath(this.mySettingsComponent.getPathText());
-        } else {
+        int spinnerValue = this.mySettingsComponent.getScrollSpeedSpinnerValue();
+        StateManager state =
+                Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
+        if (!tempFile.exists()
+                || (spinnerValue < 1 || state.getMaxScrollSpeed() < spinnerValue)) {
             this.reset();
-            throw new ConfigurationException("Directory doesn't exist!");
+            throw new ConfigurationException("Please input valid settings!");
+        } else {
+            com.actions.Settings.savePath(this.mySettingsComponent.getPathText());
+            com.actions.Settings.setScrollSpeed(spinnerValue);
         }
     }
 
@@ -73,6 +86,7 @@ public final class AppSettingsConfigurable implements Configurable {
         StateManager state =
                 Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
         this.mySettingsComponent.setPathText(state.getPath());
+        this.mySettingsComponent.setScrollSpeedSpinnerValue(state.getScrollSpeed());
     }
 
     /**

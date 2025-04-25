@@ -2,6 +2,7 @@ package com.views;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationInfo;
+import com.intellij.util.ui.JBFont;
 import com.state.ActiveState;
 import com.actions.Settings;
 import com.api.ApiHandler;
@@ -11,6 +12,8 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.openapi.project.Project;
 import javax.swing.*;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -26,6 +29,8 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.AsyncProcessIcon;
 
 import java.util.List;
+
+import static javax.swing.BorderFactory.createEmptyBorder;
 
 /**
  * Class for displaying a template course window.
@@ -89,11 +94,6 @@ public class CourseMainPane {
     private final Color bgColor = JBColor.background();
 
     /**
-     * the scrollspeed for the jscrollpanels.
-     */
-    private final int scrollSpeed = 16;
-
-    /**
      * Creator for the CourseMainPane class, that holds the courses and tasks.
      * @param toolWindow The Toolwindow this view belongs to
      */
@@ -103,11 +103,14 @@ public class CourseMainPane {
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
         ApiHandler apiHandler = new ApiHandler();
 
-        coursesPane.getVerticalScrollBar().setUnitIncrement(scrollSpeed);
+        coursesPane.getVerticalScrollBar().setUnitIncrement(Settings.getScrollSpeed());
         coursesPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         // Fetching data from TIM and creating a list of course objects,
         // for more information see package com.course and class ApiHandler.
+
+        // This overrides the form's own font to use a default JetBrains font.
+        courseLabel.setFont(JBFont.h0().asBold());
 
 
         // needs tests in the future.
@@ -179,6 +182,9 @@ public class CourseMainPane {
                         System.err.println("Unexpected event value type: " + newValue);
                     }
                 }
+                if ("scrollSpeed".equals(evt.getPropertyName())) {
+                    coursesPane.getVerticalScrollBar().setUnitIncrement(Settings.getScrollSpeed());
+                }
             }
         });
 
@@ -186,7 +192,6 @@ public class CourseMainPane {
         SwingUtilities.invokeLater(() -> {
             setProgress(true, "Checking login info...");
         });
-        apiHandler.checkLogin();
     }
 
     /**
@@ -211,12 +216,11 @@ public class CourseMainPane {
                 final int left = 5;
                 final int bottom = 5;
                 final int right = 0;
-                final int fontSize = 26;
-                labelPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
+                labelPanel.setBorder(createEmptyBorder(top, left, bottom, right));
 
                 JLabel label = new JLabel();
                 label.setText(course.getName());
-                label.setFont(new Font("Arial", Font.BOLD, fontSize));
+                label.setFont(JBFont.h1().asBold());
                 label.setHorizontalAlignment(SwingConstants.LEFT);
 
                 labelPanel.add(label);
@@ -226,19 +230,19 @@ public class CourseMainPane {
                 // Makes own subpanel for every task
                 // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
                 List<CourseTask> tasks = course.getTasks();
-                final int[] j = {0};
+                int j = 0;
                 for (CourseTask courseTask: tasks) {
                     courseTask.setParent(course);
                     JPanel subPanel = createExercise(courseTask, course.getName());
                     subPanel.setBackground(bgColor);
-                    gbc.gridy = j[0];
+                    gbc.gridy = j;
                     panel.add(subPanel, gbc);
                     panel.setBackground(bgColor);
                     panel.setOpaque(true);
-                    j[0]++;
+                    j++;
                 }
 
-                final int thickness = 4;
+                final int thickness = 2;
 
                 JScrollPane scrollPane = new JBScrollPane(panel);
                 scrollPane.setBorder(BorderFactory.createLineBorder(JBColor.border(), thickness));
@@ -251,11 +255,6 @@ public class CourseMainPane {
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
                 singleCourse.add(labelPanel, gbc);
-                final int padding = 10;
-
-                // Ensure scrollPane doesn't stretch too much
-                Dimension preferredSize = panel.getPreferredSize();
-                scrollPane.setPreferredSize(new Dimension(preferredSize.width, preferredSize.height + padding)); // Small padding
 
                 // Add scrollPane below label, but restrict expansion
                 gbc.gridy = 1;
@@ -265,7 +264,7 @@ public class CourseMainPane {
 
 
                 coursePanel.add(singleCourse);
-        }
+            }
         });
     }
 
@@ -286,13 +285,11 @@ public class CourseMainPane {
      * @return the subpanel that contains the tasks name and the two buttons
      */
     private JPanel createExercise(CourseTask courseTask, String courseName) {
-        final int fontsize = 16;
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
         JLabel labelWeek = new JLabel();
         labelWeek.setText(courseTask.getName());
-        labelWeek.setFont(new Font("Arial", Font.BOLD, fontsize));
-        //subPanel.add(labelWeek, BorderLayout.WEST);
+        labelWeek.setFont(JBFont.medium().asBold());
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.setBackground(bgColor);
@@ -303,7 +300,6 @@ public class CourseMainPane {
         buttonPanel.add(spinner);
         JButton dButton = new JButton();
         dButton.setText("Download");
-        dButton.setBackground(bgColor);
         dButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -330,9 +326,7 @@ public class CourseMainPane {
 
         JButton oButton = new JButton();
         oButton.setText("Open as Project");
-        oButton.setBackground(bgColor);
         oButton.addActionListener(event -> {
-            spinner.setVisible(true);
             int lastPartStart = courseTask.getPath().lastIndexOf('/');
             String demoDirectory = File.separatorChar + courseTask.getPath().substring(lastPartStart + 1);
             ApplicationInfo appInfo = ApplicationInfo.getInstance();
@@ -344,9 +338,10 @@ public class CourseMainPane {
         JPanel nameAndButtonPanel = new JPanel(new BorderLayout());
         nameAndButtonPanel.add(labelWeek, BorderLayout.WEST);
         nameAndButtonPanel.add(buttonPanel, BorderLayout.EAST);
+        final int borderpad = 10;
+        nameAndButtonPanel.setBorder(createEmptyBorder(0, borderpad, 0, 0));
         subPanel.add(nameAndButtonPanel);
 
-        // subPanel.add(buttonPanel, BorderLayout.EAST);
         try {
             createSubTaskpanel(subPanel, courseTask);
         } catch (Exception e) {
@@ -369,6 +364,7 @@ public class CourseMainPane {
             container.add(tree);
             container.setViewportView(tree);
             subPanel.add(container, BorderLayout.SOUTH);
+            container.setBorder(createEmptyBorder());
         }
     }
 
@@ -388,15 +384,41 @@ public class CourseMainPane {
                 for (SubTask.TaskFile file: task.getTaskFiles()) {
                     DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file.getFileName());
                     leaf.add(submitNode);
-                    rowCount += 1;
+                    rowCount++;
                 }
                 root.add(leaf);
-                rowCount += 1;
+                rowCount++;
             }
         }
         Tree tree = new Tree(root);
         tree.setRootVisible(false);
         tree.setVisibleRowCount(rowCount);
+        for (int i = 0; i < tree.getRowCount(); i++) {
+            tree.expandRow(i);
+        }
+
+        tree.addTreeExpansionListener(new TreeExpansionListener() {
+            @Override
+            public void treeExpanded(TreeExpansionEvent event) {
+                updateTree();
+            }
+
+            @Override
+            public void treeCollapsed(TreeExpansionEvent event) {
+                updateTree();
+            }
+
+            /**
+             * Updates tree.
+             */
+            private void updateTree() {
+                SwingUtilities.invokeLater(() -> {
+                    tree.setVisibleRowCount(tree.getRowCount());
+                    panel1.revalidate();
+                    panel1.repaint();
+                });
+            }
+        });
 
         //TODO: korjaa avaaminen tuplaklikillä lisäämällä  kurssifolderi.
         tree.addMouseListener(new MouseAdapter() {
@@ -427,6 +449,9 @@ public class CourseMainPane {
             }
         });
         tree.setCellRenderer(new SubmitRenderer());
+        for (int i = 0; i < tree.getRowCount(); i++) {
+            tree.collapseRow(i);
+        }
         return tree;
     }
 
@@ -434,12 +459,10 @@ public class CourseMainPane {
      * Switches to a state where logging out is possible.
      */
     private void switchToLoggedIn() {
-        //tabbedPane.remove(loginPane); // Hide Login tab
         ActiveState stateManager = ActiveState.getInstance();
         stateManager.updateCourses();
         setProgress(true, "Loading courses...");
         // A panel that contains the courses and tasks is created in its own sub-program.
-        // createCourseListPane(courselist);
         tabbedPane.addTab("Courses", coursesPane); // Show Logout tab
         loginButton.setText("Logout");
         ActionListener[] tempLogin = loginButton.getActionListeners(); //Need to change LoginButton into LogoutButton
@@ -449,7 +472,6 @@ public class CourseMainPane {
         panel1.revalidate();
         panel1.repaint();
         tabbedPane.setSelectedComponent(coursesPane);
-        //loginButton.setText("Logout");
     }
 
 
@@ -485,7 +507,6 @@ public class CourseMainPane {
             createCourseListPane(courselist);
             panel1.revalidate();
             panel1.repaint();
-            //loginButton.setText("Logout");
             setProgress(false, "");
         });
     }

@@ -4,9 +4,10 @@
 package com.views;
 
 import java.util.regex.*;
+
+import com.customfile.TimTask;
 import com.state.ActiveState;
 import com.state.StateManager;
-import com.api.ApiHandler;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
@@ -21,7 +22,6 @@ import java.util.List;
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 
 /**
 * Hoidetaan kaikki ruudun oikealla puolella olevan tehtävän palautuksen suorittavan ikkunan toiminnalliset sekä graaffiset toiminnot
@@ -103,6 +103,7 @@ public class CourseTaskPane {
      * Holds the current project.
      */
     private Project project;
+    private static CourseTaskPane pane;
 
     /**
      * getter for the contents of the task panel.
@@ -111,7 +112,6 @@ public class CourseTaskPane {
     public JPanel getContent() {
         return taskPane;
     }
-
 
     /**
      * A constructor that takes a ToolWindow as a parameter.
@@ -139,36 +139,9 @@ public class CourseTaskPane {
 
         // submit exercise
         submitButton.addActionListener(event -> {
-            if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
-                printOutput("Please open a file to submit in the editor.");
-                return;
-            }
-            Util.showWindow(project, "Output Window", true);
-
-            VirtualFile file = FileEditorManager
-                    .getInstance(project)
-                    .getSelectedEditor()
-                    .getFile();
-
-            // TODO: do something like the following to use the TIDE-CLI
-            // function to submit all task files in a directory by checking
-            // a checkbox, or find a more sensible way to implement it
-            // boolean submitAll = submitAllInDirectoryCheckBox.isSelected();
-            // String path = submitAll ? file.getParent().getPath() : file.getPath();
-
-            try {
-                ActiveState.getInstance().setSubmittable(file);
-            } catch (IOException ex) {
-                InfoView.displayError("An error occurred while evaluating if the file is a tim task!");
-                throw new RuntimeException(ex);
-            }
-            if (!ActiveState.getInstance().isSubmittable()) {
-                InfoView.displayWarning("File in editor is not a tim task!");
-                return;
-            }
-
-            setProgress(true, "Submitting...");
-            new ApiHandler().submitExercise(file);
+            ActionManager manager = ActionManager.getInstance();
+            AnAction action = manager.getAction("com.actions.Submit");
+            manager.tryToExecute(action, null, null, null, true);
         });
 
 
@@ -187,9 +160,11 @@ public class CourseTaskPane {
                 }
                 if ("disableButtons".equals(evt.getPropertyName())) {
                     disableButtons();
+                    setDemoName();
                 }
                 if ("enableButtons".equals(evt.getPropertyName())) {
                     enableButtons();
+                    setDemoName();
                 }
                 if ("setSubmitData".equals(evt.getPropertyName())) {
                     String[] messages = (String[]) evt.getNewValue();
@@ -198,9 +173,9 @@ public class CourseTaskPane {
                     setMaxSubmits(messages[2]);
 
                 }
-                if ("setDemoName".equals(evt.getPropertyName())) {
+                /*if ("setDemoName".equals(evt.getPropertyName())) {
                     setDemoName((String[]) evt.getNewValue());
-                }
+                }*/
                 if ("tideSubmitResponse".equals(evt.getPropertyName())) {
                     setProgress(false, "");
                 }
@@ -209,19 +184,7 @@ public class CourseTaskPane {
 
         stateManager.updateCourses();
         setProgress(false, "");
-    }
-
-
-    /**
-     * Prints a string to the output toolWindow.
-     * @param output String to print
-     */
-    public void printOutput(String output) {
-        Util.showWindow(project, "Output Window", true);
-        OutputWindow outputWindow = OutputWindow.getInstance();
-        if (outputWindow != null) {
-            OutputWindow.getInstance().printText(output);
-        }
+        pane = this;
     }
 
 
@@ -232,7 +195,7 @@ public class CourseTaskPane {
      */
     private void handleSubmitResponse(String response) {
         if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
-            printOutput("Please open a file to submit in the editor.");
+            InfoView.displayError("Please open a file to submit in the editor.");
             return;
         }
 
@@ -307,13 +270,17 @@ public class CourseTaskPane {
 
     /**
      * Changes the text values of the demoTiedot abel and tehtavaNimi label.
-     * @param values Values to be set.
      */
-    private void setDemoName(String[] values) {
+    private void setDemoName() {
         SwingUtilities.invokeLater(() -> {
-            String info = values[0] + " - " + values[1];
-            this.demoTiedot.setText(info);
-            this.tehtavaNimi.setText(values[2]);
+            if (TimTask.getInstance() != null) {
+                String info = TimTask.getInstance().getCourseName() + " - " + TimTask.getInstance().getDemoName();
+                this.demoTiedot.setText(info);
+                this.tehtavaNimi.setText(TimTask.getInstance().getSubTaskName());
+            } else {
+                this.demoTiedot.setText(" - ");
+                this.tehtavaNimi.setText("");
+            }
         });
     }
 
@@ -322,13 +289,21 @@ public class CourseTaskPane {
      * @param state Visible, true or false.
      * @param text Text to display on progress bar.
      */
-    private void setProgress(boolean state, String text) {
+    public void setProgress(boolean state, String text) {
         SwingUtilities.invokeLater(() -> {
             taskProgressBar.setString(text);
             taskProgressBar.setVisible(state);
             taskPane.revalidate();
             taskPane.repaint();
         });
+    }
+
+    /**
+     * Getter for the instance of CourseTaskPane.
+     * @return CourseTaskPane.
+     */
+    public static CourseTaskPane getInstance() {
+        return pane;
     }
 }
 

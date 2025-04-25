@@ -31,7 +31,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           ide-versions: |
-            ideaIC:2024.3
+            ideaIC:2025.1
           #riderRD:2024.3
             
 

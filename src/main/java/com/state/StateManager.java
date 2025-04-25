@@ -30,9 +30,13 @@ public final class StateManager implements PersistentStateComponent<StateManager
          * List of file paths to the files that have been submitted trough tidecli.
          */
         private List<String> submits;
+
+        private int scrollSpeed;
     }
 
     private State myState = new State(); //Object reference to state class
+    private static final int DEFAULTSCROLLSPEED = 16;
+    private static final int MAXSCROLLSPEED = 1000;
 
     /**
      * This method is called when updating state class fields and to save the state of the State class when IDE is closed.
@@ -78,6 +82,7 @@ public final class StateManager implements PersistentStateComponent<StateManager
         return properties.getValue("myPlugin.path", System.getProperty("user.dir"));
         //System.out.println(getState().path);
     }
+
     /**
      * adds a new value to the list of submitted tasks.
      *
@@ -91,8 +96,9 @@ public final class StateManager implements PersistentStateComponent<StateManager
             submits = new ArrayList<>();
         }
         if (!submits.contains(taskPath)) {
-            submits.add(taskPath);
-            properties.setList("myPlugin.submits", submits);
+            List<String> copy = new ArrayList<>(submits);
+            copy.add(taskPath);
+            properties.setList("myPlugin.submits", copy);
         }
         properties.setValue(taskPath, points, 0.0F);
         //String value = properties.getValue("myPlugin.path", System.getProperty("user.dir"));
@@ -123,5 +129,35 @@ public final class StateManager implements PersistentStateComponent<StateManager
     public Float getPoints(String path) {
         PropertiesComponent properties = PropertiesComponent.getInstance();
         return properties.getFloat(path, 0.0F);
+    }
+
+
+    /**
+     * Set scroll speed value used in CourseMainPane.
+     * @param newScrollSpeed New scroll speed value
+     */
+    public void setScrollSpeed(int newScrollSpeed) {
+        PropertiesComponent properties = PropertiesComponent.getInstance();
+        properties.setValue("myPlugin.scrollSpeed", newScrollSpeed, DEFAULTSCROLLSPEED);
+        ActiveState.getInstance().signalScrollSpeedUpdate();
+    }
+
+
+    /**
+     * Get scroll speed used in CourseMainPane from settings.
+     * @return Scroll speed value
+     */
+    public int getScrollSpeed() {
+        PropertiesComponent properties = PropertiesComponent.getInstance();
+        return properties.getInt("myPlugin.scrollSpeed", DEFAULTSCROLLSPEED);
+    }
+
+
+    /**
+     * Get max scroll speed.
+     * @return The MAXSCROLLSPEED attribute
+     */
+    public int getMaxScrollSpeed() {
+        return MAXSCROLLSPEED;
     }
 }

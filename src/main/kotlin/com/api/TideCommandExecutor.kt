@@ -78,10 +78,10 @@ object TideCommandExecutor {
                 val courses = handler.jsonToCourses(jsonString)
 
                 val activeState = ActiveState.getInstance()
-                activeState.setCourses(courses)  // No need to switch dispatcher unless UI update is needed
                 for (crs: Course in courses) {
                     activeState.addDownloadedSubtasksToCourse(crs)
                 }
+                activeState.setCourses(courses)  // No need to switch dispatcher unless UI update is needed
 
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -143,7 +143,6 @@ object TideCommandExecutor {
      */
     fun submitExercise(file: VirtualFile) {
         CoroutineScope(Dispatchers.IO).launch {
-            syncChanges(file)
             val activeState = ActiveState.getInstance()
             try {
                 val commandLineArgs: ArrayList<String> = ArrayList(submitCommand.split(" "))
@@ -208,37 +207,20 @@ object TideCommandExecutor {
      * @param file Virtual file to get files local path and to communicate changes to idea's UI.
      * @param courseDir Course directory
      */
-    fun resetSubTask(file: VirtualFile, courseDir: String) {
-        val timData: String = Settings.getPath() + File.separatorChar + courseDir + File.separatorChar + ".timdata"
-        val taskData: String = Files.readString(Path.of(timData), StandardCharsets.UTF_8)
-        val handler: JsonHandler = JsonHandler();
-        val subtasks: List<SubTask> = handler.jsonToSubtask(taskData)
-        var taskId: String = ""
-        var taskPath: String = ""
-        var filePath = file.getPath()
-        for (subtask: SubTask in subtasks) {
-            for (taskFile: SubTask.TaskFile in subtask.taskFiles) {
-                if (filePath.contains(taskFile.fileName)) {
-                    taskId = subtask.ideTaskId
-                    taskPath = subtask.path
-                    break
-                }
-            }
-            if (taskId != "") {
-                break
-            }
-        }
+    fun resetSubTask(task: SubTask, courseDir: String) {
+        val taskId: String = task.ideTaskId
+        val taskPath: String = task.path
+
 
         if (taskId != "") {
-            syncChanges(file)
             loadExercise(courseDir, taskPath, taskId, "-f")
             // Virtual file must be refreshed and Intellij Idea's UI notified
-            file.refresh(true, true)
+            /*file.refresh(true, true) //Doesn't work anyway
             CoroutineScope(Dispatchers.IO).launch {
                 if (file.isValid) {
                     file.parent.refresh(false, false)
                 }
-            }
+            }*/
         } else {
             com.views.InfoView.displayError("File open in editor is not a tide task!")
         }

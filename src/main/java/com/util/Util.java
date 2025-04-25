@@ -7,8 +7,7 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ReflectionUtil;
-
-import javax.swing.*;
+import com.views.OutputWindow;
 
 public final class Util {
 
@@ -73,5 +72,21 @@ public final class Util {
                 window2.setIcon(IconLoader.getIcon(iconPath, callerClass));
             }
         });
+    }
+
+
+    /**
+     * Print a message to the OutputWindow instance.
+     * For now not used for anything; this is intentional.
+     * Use for any of your printing needs.
+     * @param project Current project
+     * @param message The message to print
+     */
+    public static void printToOutput(Project project, String message) {
+        showWindow(project, "Output Window", true);
+        OutputWindow outputWindow = OutputWindow.getInstance();
+        if (outputWindow != null) {
+            OutputWindow.getInstance().printText(message);
+        }
     }
 }

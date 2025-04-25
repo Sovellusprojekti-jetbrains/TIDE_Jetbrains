@@ -52,4 +52,20 @@ public class Settings extends AnAction {
     public static void savePath(String path) {
         ApplicationManager.getApplication().getService(StateManager.class).setPath(path);
     }
+
+    /**
+     * Calls StateManager for getting CourseMainPane scroll speed.
+     * @return Scroll speed value
+     */
+    public static int getScrollSpeed() {
+        return ApplicationManager.getApplication().getService(StateManager.class).getScrollSpeed();
+    }
+
+    /**
+     * Calls StateManager for setting CourseMainPane scroll speed.
+     * @param speed New scroll speed value
+     */
+    public static void setScrollSpeed(int speed) {
+        ApplicationManager.getApplication().getService(StateManager.class).setScrollSpeed(speed);
+    }
 }
