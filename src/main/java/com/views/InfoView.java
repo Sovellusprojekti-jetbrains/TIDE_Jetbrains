@@ -4,6 +4,7 @@ import com.intellij.notification.NotificationGroupManager;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.Messages;
+import com.state.ActiveState;
 
 public final class InfoView {
     /**
@@ -16,7 +17,7 @@ public final class InfoView {
         NotificationGroupManager.getInstance()
                 .getNotificationGroup("Custom Notification Group")
                 .createNotification(message, type)
-                .notify(ProjectManager.getInstance().getOpenProjects()[0]); //This should return the open project
+                .notify(ActiveState.getInstance().getProject()); //This should return the open project
     }
 
     /**

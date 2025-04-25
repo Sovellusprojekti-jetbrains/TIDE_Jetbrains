@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.state.ActiveState;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -20,7 +21,7 @@ public class OpenCustomEditorAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
         // Get the current project
-        Project project = event.getProject();
+        Project project = ActiveState.getInstance().getProject();
         if (project == null) {
             return;
         }

@@ -118,6 +118,13 @@ public class ActiveState {
     }
 
     /**
+     * getter for the currently open project.
+     * @return the opened project
+     */
+    public Project getProject() {
+        return this.project;
+    }
+    /**
      * Use this to change the list of courses inside ActiveState. Fires a "courseList" event.
      * @param courses List of courses to change to.
      */

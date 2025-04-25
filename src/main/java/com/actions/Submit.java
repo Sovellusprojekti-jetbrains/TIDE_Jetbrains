@@ -4,6 +4,7 @@ import com.customfile.TimTask;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.state.ActiveState;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +15,7 @@ public class Submit extends AnAction {
      */
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        Project project = e.getProject();
+        Project project = ActiveState.getInstance().getProject();
         TimTask.getInstance().submit(project);
     }
 
