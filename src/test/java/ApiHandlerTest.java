@@ -3,6 +3,7 @@ import static org.mockito.Mockito.*;
 
 import com.api.ApiHandler;
 import com.api.TideCommandExecutor;
+import com.course.SubTask;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -75,12 +76,12 @@ public class ApiHandlerTest {
      */
     @Test
     public void testResetExercise() throws IOException, InterruptedException {
-        VirtualFile file = null;
+        SubTask task = new SubTask();
         String courseDirectory = "courseDir";
 
-        apiHandler.resetSubTask(file, courseDirectory);
+        apiHandler.resetSubTask(task, courseDirectory);
 
-        verify(tideCommandExecutorMock, times(1)).resetSubTask(file, courseDirectory);
+        verify(tideCommandExecutorMock, times(1)).resetSubTask(task, courseDirectory);
     }
 
     /**

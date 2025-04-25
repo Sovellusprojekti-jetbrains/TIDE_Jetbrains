@@ -1,55 +1,19 @@
 package com.actions;
 
-import com.course.SubTask;
-import com.customfile.HtmlEditorProvider;
+import com.customfile.TimTask;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.LightVirtualFile;
 import com.state.ActiveState;
 import org.jetbrains.annotations.NotNull;
 
 public final class BrowserAction extends AnAction {
 
-    private final String baseURL = "https://tim.jyu.fi/view/";
+    private static final String BASE_URL = "https://tim.jyu.fi/view/";
 
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        Project project = event.getProject();
-        if (project == null) {
-            return;
-        }
-        //get demo and task with path from open file
-        String url = baseURL;
-        VirtualFile taskFile = FileEditorManager
-                .getInstance(project)
-                .getSelectedEditor()
-                .getFile();
-
-        if (taskFile == null) {
-            return;
-        }
-        ActiveState instance = ActiveState.getInstance();
-        SubTask openTask = instance.findSubTask(taskFile);
-        //TODO: handle null case.
-        url += openTask.getPath();
-        //the task name needed for the url is not part of the subtask but part of the task file
-        //we need to get the first file of the task to get the right id.
-        //id is in form number.name.idstring
-        //thus we split the id to get the relevant part in the middle.
-        url += "#" + openTask.getTaskFiles().get(0).getTaskIdExt().split("\\.")[1];
-
-        // Set the website URL
-        HtmlEditorProvider.setUrl(url);
-
-        // Create a virtual file with the expected name
-        VirtualFile file = new LightVirtualFile("website_view"); // Must match HtmlEditorProvider's `accept()`
-
-        // Open the file in the editor
-        FileEditorManager.getInstance(project).openFile(file, true);
+        TimTask.getInstance().openInBrowser(BASE_URL, event.getProject());
     }
 
     /**

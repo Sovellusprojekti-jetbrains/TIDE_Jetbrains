@@ -8,8 +8,8 @@ import com.api.TimDataHandler;
 import com.course.Course;
 import com.course.CourseTask;
 import com.course.SubTask;
+import com.customfile.TimTask;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
@@ -24,12 +24,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
-import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.regex.Matcher;
 
 
 /**
@@ -48,32 +46,6 @@ public class ActiveState {
      * Constructor for active state attempts to hide the right and bottom toolwindows.
      */
     public ActiveState() {
-        project = ProjectManager.getInstance().getOpenProjects()[0];
-        ApplicationManager.getApplication().invokeLater(() -> {
-            Util.setWindowAvailable(project, "Course Task", false, "/icons/timgray.svg");
-            Util.setWindowAvailable(project, "Output Window", false, "/icons/timgray.svg");
-        });
-        project.getMessageBus().connect(Disposer.newDisposable())
-                .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
-            @Override
-            public void selectionChanged(@NotNull FileEditorManagerEvent event) {
-                FileEditorManagerListener.super.selectionChanged(event);
-                try {
-                    VirtualFile temp = event.getNewFile();
-                    if (temp != null) {
-                        setSubmittable(temp);
-                    } else { //Is it possible to construct new Virtual file with null canonical path?
-                        //It would be better if it was possible to call setSubmittable with null as the argument
-                        isSubmittable = false;
-                        messageTaskName(" ", " ", " ");
-                    }
-                } catch (IOException e) {
-                    //Exception is thrown because courseList is null while ActiveStates constructor is run.
-                    //State of the plugin must be set properly while opening IDE.
-                    throw new RuntimeException(e);
-                }
-            }
-        });
         this.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -91,6 +63,26 @@ public class ActiveState {
      */
     public boolean getLogin() {
         return isLoggedIn;
+    }
+
+    /**
+     * Solves one of the problems plaguing our plugin startup.
+     */
+    public void initProjectDependents() {
+        project = ProjectManager.getInstance().getOpenProjects()[0];
+        ApplicationManager.getApplication().invokeLater(() -> {
+            Util.setWindowAvailable(project, "Course Task", false, "/icons/timgray.svg");
+            Util.setWindowAvailable(project, "Output Window", false, "/icons/timgray.svg");
+        });
+        project.getMessageBus().connect(Disposer.newDisposable())
+                .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+                    @Override
+                    public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+                        FileEditorManagerListener.super.selectionChanged(event);
+                        VirtualFile temp = event.getNewFile();
+                        TimTask.evaluateFile(temp);
+                    }
+                });
     }
 
 
@@ -251,27 +243,12 @@ public class ActiveState {
     }
 
     /**
-     * This method checks if the opened file is .timdata or some log file.
-     * @param file Vrtual file in inspection.
-     * @return true if allowed file, false otherwise.
-     */
-    private boolean allowedName(VirtualFile file) {
-        String[] blacklist = {".timdata", "log"};
-        for (String name: blacklist) {
-            if (file.getName().contains(name)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      * This method is used to find CourseTask's name using course name and file name.
      * @param course Courses name to which the opened file is related to.
      * @param file Virtual file of the file opened in the editor.
      * @return CourseTask name as String.
      */
-    private String findTaskName(String course, VirtualFile file) {
+    public String findTaskName(String course, VirtualFile file) {
         for (Course courseToCheck: this.getCourses()) {
             if (courseToCheck.getName().equals(course)) {
                 for (CourseTask courseTask: courseToCheck.getTasks()) {
@@ -309,36 +286,11 @@ public class ActiveState {
     }
 
     /**
-     * This method is used to determine if the file is tim-task.
-     * @param file Virtual file corresponding to the file on disk.
-     * @return True if the file is tim-task, false otherwise.
+     * This method sets the state variable.
+     * @param status if file in the editor can be submitted.
      */
-    private boolean isTask(VirtualFile file) {
-        return this.findSubTask(file) != null;
-    }
-
-    /**
-     * This method evaluates if the file opened in the editor is in sub-path of task download path.
-     * @param child File under evaluation should be child of task download folder.
-     * @throws IOException If making File object fails.
-     */
-    public void setSubmittable(VirtualFile child) throws IOException {
-        File parent = new File(Settings.getPath());
-        if (child.getCanonicalPath() != null && this.allowedName(child)) {
-            this.isSubmittable = child.getCanonicalPath()
-                    .replaceAll("/", Matcher.quoteReplacement(File.separator))
-                    .contains(parent.getCanonicalPath()) && this.isTask(child);
-            //Now it is checked that file is tim-task.
-            // With TimTask-class, considerably better implementation will be possible but works for now.
-        } else {
-            this.isSubmittable = false;
-        }
-        if (this.isSubmittable) { // Updates the info displayed on CourseTaskPane.
-            String course = this.getCourseName(child.getPath());
-            String demo = this.findTaskName(course, child);
-            String sub = this.findSubTask(child).getIdeTaskId();
-            this.messageTaskName(course, demo, sub);
-        }
+    public void setSubmittable(Boolean status) {
+        this.isSubmittable = status;
     }
 
     /**
@@ -347,7 +299,6 @@ public class ActiveState {
     public void messageChanges() {
         if (!isSubmittable) {
             Util.setIcons(project, "/icons/timgray.svg");
-            //Is null ok or should one send isSubmittable values?
             pcs.firePropertyChange("disableButtons", null, null);
         } else {
             Util.setIcons(project, "/icons/tim.svg");
@@ -357,33 +308,11 @@ public class ActiveState {
     }
 
     /**
-     * Messages new values to the CourseTaskPane.
-     * @param course Name of the course.
-     * @param task CourseTask.
-     * @param subtask subtask.
-     */
-    private void messageTaskName(String course, String task, String subtask) {
-        String[] values = {course, task, subtask};
-        pcs.firePropertyChange("setDemoName", null, values);
-    }
-
-
-    /**
      * a method that makes messages for the points, deadline and maximum number of submits.
      * @return string array of messages
      */
-    public String[] getSubmitData() {
-        StateManager state = new StateManager();
-        VirtualFile file = FileEditorManager
-                .getInstance(project)
-                .getSelectedEditor()
-                .getFile();
-        SubTask current = findSubTask(file);
-        float points = state.getPoints(file.getCanonicalPath());
-        String pointsMessage = "Points : " + points + "/" + current.getMaxPoints();
-        String deadLineMessage = checkDeadline(current);
-        String submitMessage = "Maximum number of submissions allowed: " + current.getAnswerLimit();
-        return new String[] {pointsMessage, deadLineMessage, submitMessage};
+    public String[] getSubmitData() { //Moved to TimTask
+        return TimTask.getInstance().getSubmitData();
     }
 
     /**
@@ -391,7 +320,7 @@ public class ActiveState {
      * @param current the currently open subtask which deadline is being checked.
      * @return a string containing the deadline.
      */
-    private String checkDeadline(SubTask current) {
+    private String checkDeadline(SubTask current) { //Moved to TimTask
         String deadLineMessage = "no deadline";
         if (current.getDeadLine() != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx")
