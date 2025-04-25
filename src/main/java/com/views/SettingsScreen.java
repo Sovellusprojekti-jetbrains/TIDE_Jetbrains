@@ -1,47 +1,84 @@
 package com.views;
 
+import com.actions.Settings;
+
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 
 /**
  * Settings screen.
  */
 public class SettingsScreen {
-    /**
-     * Settings pane.
-     */
     private JPanel settings;
     private JTextField pathText;
-    /**
-     * Button that opens a file browser.
-     */
-    private JButton browseButton;
-    /**
-     * Button that submits the changes.
-     */
-    private JButton okButton;
-    /**
-     * Button that cancels the changes.
-     */
-    private JButton cancelButton;
-    /**
-     * Panel for the path.
-     */
-    private JPanel path;
-    /**
-     * Panel for the ok and cancel buttons.
-     */
-    private JPanel buttons;
+    private final int maxScrollSpeed = 1000;
 
     /**
-     * Constructor to add action listeners for buttons.
+     * Constructor for the plugin settings screen.
      */
     public SettingsScreen() {
-        this.pathText.setText(com.actions.Settings.getPath());
-        this.browseButton.addActionListener(e -> choosePath());
-        this.okButton.addActionListener(e -> updatePath());
-        this.cancelButton.addActionListener(e -> com.actions.Settings.close());
+        this.settings = new JPanel(new GridBagLayout());
+        int row = 0;
+        row = createPathSetting(row);
+        createScrollSpeedSetting(row);
     }
+
+
+    /**
+     * Create setting view for TIDE task save path.
+     * @param row GridBagLayout row index
+     * @return Next row index
+     */
+    private int createPathSetting(int row) {
+        JLabel pathSettingTitle = new JLabel("Task download folder:");
+        this.pathText = new JTextField();
+        JButton browseButton = new JButton();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0.0;
+        gbc.gridy = row++;
+        gbc.gridx = 0;
+        this.settings.add(pathSettingTitle, gbc);
+        gbc.weightx = 1.0;
+        gbc.gridx = 1;
+        this.settings.add(this.pathText, gbc);
+        gbc.weightx = 0.0;
+        gbc.gridx = 2;
+        this.settings.add(browseButton, gbc);
+        this.pathText.setText(com.actions.Settings.getPath());
+        this.pathText.setToolTipText("Tasks downloaded from the course listing will be saved here");
+        browseButton.setText("Browse");
+        browseButton.setToolTipText("Use GUI to select download folder");
+        browseButton.addActionListener(e -> choosePath());
+        return row;
+    }
+
+
+    /**
+     * Create setting view for CourseMainPane scroll speed.
+     * @param row GridBagLayout row index
+     * @return next row index
+     */
+    private int createScrollSpeedSetting(int row) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridy = row++;
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        JLabel scrollSpeedLabel = new JLabel("Scroll speed:");
+        SpinnerModel model = new SpinnerNumberModel(com.actions.Settings.getScrollSpeed(),
+                1,
+                maxScrollSpeed,
+                1);
+        JSpinner scrollSpeedSpinner = new JSpinner(model);
+        scrollSpeedSpinner.addChangeListener(e -> Settings.setScrollSpeed((int) scrollSpeedSpinner.getValue()));
+        this.settings.add(scrollSpeedLabel, gbc);
+        gbc.gridx = 2;
+        gbc.anchor = GridBagConstraints.EAST;
+        this.settings.add(scrollSpeedSpinner, gbc);
+        return row;
+    }
+
 
     /**
      * Displays a new window where user can choose folder to which demos will be saved.
@@ -58,6 +95,7 @@ public class SettingsScreen {
         }
     }
 
+
     /**
      * Displays error message on screen.
      * @param message Error message as String
@@ -66,6 +104,7 @@ public class SettingsScreen {
     private void displayError(String message, String title) {
         //com.views.InfoView.displayError(message, title);
     }
+
 
     /**
      * Saves path to persistent state component.
@@ -80,6 +119,7 @@ public class SettingsScreen {
         }
     }
 
+
     /**
      * Return main panel to be displayed.
      * @return JPanel containing all the elements
@@ -88,13 +128,6 @@ public class SettingsScreen {
         return settings;
     }
 
-    /**
-     * Removes ok and cancel buttons when this view is used inside idea settings.
-     */
-    public void noButtons() {
-        this.buttons.remove(this.okButton);
-        this.buttons.remove(this.cancelButton);
-    }
 
     /**
      * This method is needed to check changes in the method in AppSettingsConfigurable.
@@ -103,6 +136,7 @@ public class SettingsScreen {
     public String getPathText() {
         return this.pathText.getText();
     }
+
 
     /**
      * This method is needed to revert changes in the idea settings.

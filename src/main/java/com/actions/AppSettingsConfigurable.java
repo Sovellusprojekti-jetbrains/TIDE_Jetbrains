@@ -9,6 +9,7 @@ import com.views.SettingsScreen;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.util.Objects;
 
@@ -16,7 +17,6 @@ import java.util.Objects;
  * This class provides controller functionality for application settings.
  */
 public final class AppSettingsConfigurable implements Configurable {
-
     private SettingsScreen mySettingsComponent; //Reference to the SettingsScreen panel
 
     /**
@@ -35,8 +35,10 @@ public final class AppSettingsConfigurable implements Configurable {
     @Override
     public @Nullable JComponent createComponent() {
         this.mySettingsComponent = new SettingsScreen();
-        this.mySettingsComponent.noButtons();
-        return this.mySettingsComponent.getContent();
+        JPanel settingsView = this.mySettingsComponent.getContent();
+        JPanel settingsWrapper = new JPanel(new BorderLayout());
+        settingsWrapper.add(settingsView, BorderLayout.NORTH);
+        return settingsWrapper;
     }
 
     /**
