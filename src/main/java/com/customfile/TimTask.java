@@ -66,7 +66,7 @@ public final class TimTask {
     public void resetExercise() {
         this.syncChanges();
         try {
-            new ApiHandler().resetSubTask(this.task, this.headers.getFirst());
+            new ApiHandler().resetSubTask(this.task, this.headers.get(0));
         } catch (IOException ex) {
             com.api.LogHandler.logError("TimTask.resetExercise()", ex);
             InfoView.displayError(".timdata file not found!");
@@ -91,7 +91,7 @@ public final class TimTask {
         //we need to get the first file of the task to get the right id.
         //id is in form number.name.idstring
         //thus we split the id to get the relevant part in the middle.
-        url += "#" + this.task.getTaskFiles().getFirst().getTaskIdExt().split("\\.")[1];
+        url += "#" + this.task.getTaskFiles().get(0).getTaskIdExt().split("\\.")[1];
 
         // Set the website URL
         HtmlEditorProvider.setUrl(url);
@@ -135,7 +135,7 @@ public final class TimTask {
      * @return Course name as String.
      */
     public String getCourseName() {
-        return this.headers.getFirst();
+        return this.headers.get(0);
     }
 
     /**
@@ -151,7 +151,7 @@ public final class TimTask {
      * @return SubTask name as String.
      */
     public String getSubTaskName() {
-        return this.headers.getLast();
+        return this.headers.get(this.headers.size() - 1);
     }
 
     /**
@@ -196,7 +196,7 @@ public final class TimTask {
             } else {
                 ArrayList<String> taskHeaders = new ArrayList<>();
                 taskHeaders.add(ActiveState.getInstance().getCourseName(file.getPath()));
-                taskHeaders.add(ActiveState.getInstance().findTaskName(taskHeaders.getFirst(), file));
+                taskHeaders.add(ActiveState.getInstance().findTaskName(taskHeaders.get(0), file));
                 SubTask taskHolder = ActiveState.getInstance().findSubTask(file);
                 if (taskHolder != null) {
                     taskHeaders.add(taskHolder.getIdeTaskId());
