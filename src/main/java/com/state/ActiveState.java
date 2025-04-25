@@ -333,4 +333,12 @@ public class ActiveState {
         }
         return deadLineMessage;
     }
+
+
+    /**
+     * Used to notify CourseMainPane of scroll speed change in settings.
+     */
+    public void signalScrollSpeedUpdate() {
+        pcs.firePropertyChange("scrollSpeed", null, null);
+    }
 }

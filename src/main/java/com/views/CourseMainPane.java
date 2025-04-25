@@ -93,11 +93,6 @@ public class CourseMainPane {
     private final Color bgColor = JBColor.background();
 
     /**
-     * the scrollspeed for the jscrollpanels.
-     */
-    private final int scrollSpeed = 16;
-
-    /**
      * Creator for the CourseMainPane class, that holds the courses and tasks.
      * @param toolWindow The Toolwindow this view belongs to
      */
@@ -107,7 +102,7 @@ public class CourseMainPane {
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
         ApiHandler apiHandler = new ApiHandler();
 
-        coursesPane.getVerticalScrollBar().setUnitIncrement(scrollSpeed);
+        coursesPane.getVerticalScrollBar().setUnitIncrement(Settings.getScrollSpeed());
         coursesPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         // Fetching data from TIM and creating a list of course objects,
@@ -185,6 +180,9 @@ public class CourseMainPane {
                     } else {
                         System.err.println("Unexpected event value type: " + newValue);
                     }
+                }
+                if ("scrollSpeed".equals(evt.getPropertyName())) {
+                    coursesPane.getVerticalScrollBar().setUnitIncrement(Settings.getScrollSpeed());
                 }
             }
         });
