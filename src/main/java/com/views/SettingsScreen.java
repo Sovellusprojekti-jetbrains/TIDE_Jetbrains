@@ -72,6 +72,7 @@ public class SettingsScreen {
                 1);
         JSpinner scrollSpeedSpinner = new JSpinner(model);
         scrollSpeedSpinner.addChangeListener(e -> Settings.setScrollSpeed((int) scrollSpeedSpinner.getValue()));
+        scrollSpeedSpinner.setToolTipText("Set course view scroll speed");
         this.settings.add(scrollSpeedLabel, gbc);
         gbc.gridx = 2;
         gbc.anchor = GridBagConstraints.EAST;
