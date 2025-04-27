@@ -2,6 +2,7 @@ package com.views;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.util.ui.JBFont;
+import com.listeners.SmartLabelResizer;
 import com.state.ActiveState;
 import com.actions.Settings;
 import com.api.ApiHandler;
@@ -27,6 +28,7 @@ import com.course.*;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.AsyncProcessIcon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.swing.BorderFactory.createEmptyBorder;
@@ -86,6 +88,8 @@ public class CourseMainPane {
     private JLabel timLabel;
     private JProgressBar progressBar1;
     private JProgressBar coursesProgress;
+    private ToolWindow thisToolWindow;
+    private List<JLabel> labelList;
 
     /**
      * A color definition.
@@ -97,6 +101,7 @@ public class CourseMainPane {
      * @param toolWindow The Toolwindow this view belongs to
      */
     public CourseMainPane(ToolWindow toolWindow) {
+        thisToolWindow = toolWindow;
         this.project = toolWindow.getProject();
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
@@ -186,7 +191,6 @@ public class CourseMainPane {
                 }
             }
         });
-
         switchToLoggedOut();
         SwingUtilities.invokeLater(() -> {
             setProgress(true, "Checking login info...");
@@ -202,27 +206,26 @@ public class CourseMainPane {
         SwingUtilities.invokeLater(() -> {
             //Removes all previous courses added, to make refreshing possible. TODO:better solution?
             coursePanel.removeAll();
+            labelList = new ArrayList<JLabel>();
             for (Course course: courselist) {
                 JPanel panel = new JPanel(new GridBagLayout());
                 GridBagConstraints gbc = new GridBagConstraints();
                 gbc.gridx = 0;
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
-
-                // Kurssin nimelle vähän tilaa yläpuolelle
-                JPanel labelPanel = new JPanel(new BorderLayout());
                 final int top = 20;
                 final int left = 5;
                 final int bottom = 5;
                 final int right = 0;
-                labelPanel.setBorder(createEmptyBorder(top, left, bottom, right));
 
                 JLabel label = new JLabel();
                 label.setText(course.getName());
                 label.setFont(JBFont.h1().asBold());
-                label.setHorizontalAlignment(SwingConstants.LEFT);
+                label.setBorder(createEmptyBorder(top, left, bottom, right));
+                labelList.add(label);
 
-                labelPanel.add(label);
+
+                label.setHorizontalAlignment(SwingConstants.LEFT);
 
                 JPanel singleCourse = new JPanel(new GridBagLayout());
 
@@ -253,7 +256,7 @@ public class CourseMainPane {
                 gbc.anchor = GridBagConstraints.NORTHWEST;
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
-                singleCourse.add(labelPanel, gbc);
+                singleCourse.add(label, gbc);
 
                 // Add scrollPane below label, but restrict expansion
                 gbc.gridy = 1;
@@ -263,6 +266,7 @@ public class CourseMainPane {
 
 
                 coursePanel.add(singleCourse);
+                SmartLabelResizer.setupSmartResizeForLabels(labelList, thisToolWindow);
             }
         });
     }

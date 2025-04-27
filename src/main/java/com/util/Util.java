@@ -7,7 +7,14 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ReflectionUtil;
+import com.intellij.util.ui.ImageUtil;
+import com.intellij.util.ui.JBFont;
+import com.intellij.util.ui.UIUtil;
 import com.views.OutputWindow;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public final class Util {
 
@@ -88,5 +95,37 @@ public final class Util {
         if (outputWindow != null) {
             OutputWindow.getInstance().printText(message);
         }
+    }
+
+    public static int getTextWidth(String text, JBFont font) {
+        // Create a dummy image to get a Graphics object
+        BufferedImage img = ImageUtil.createImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = img.getGraphics();
+        g.setFont(font);
+
+        // Get the font metrics
+        FontMetrics metrics = g.getFontMetrics(font);
+
+        // Measure the text
+        int width = metrics.stringWidth(text);
+
+        // Clean up
+        g.dispose();
+
+        return width;
+    }
+
+    public static int getLabelTextWidth(JLabel label) {
+        // Get the FontMetrics from the label itself
+        FontMetrics metrics = label.getFontMetrics(label.getFont());
+
+        // Get the text
+        String text = label.getText();
+        if (text == null) {
+            return 0;
+        }
+
+        // Measure the text width
+        return metrics.stringWidth(text);
     }
 }
