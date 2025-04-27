@@ -52,6 +52,8 @@ public final class SmartLabelResizer {
             FontMetrics metrics = label.getFontMetrics(label.getFont());
             int textWidth = metrics.stringWidth(fullText);
 
+            System.out.println(textWidth + " | " + availableWidth);
+
             if (textWidth <= availableWidth) {
                 label.setText(fullText);
             } else {
