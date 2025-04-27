@@ -33,6 +33,7 @@ public final class SmartLabelResizer {
                 updateLabels(labels, component.getWidth());
             }
         });
+        updateLabels(labels, component.getWidth());
     }
 
     /**
@@ -68,7 +69,7 @@ public final class SmartLabelResizer {
      * @return The new text.
      */
     private static String contractTextToFit(String text, FontMetrics metrics, int maxWidth) {
-        String ellipsis = "...";
+        String ellipsis = "...  "; // double space for a bit of padding, because the scrollbar obscures them otherwise.
         int ellipsisWidth = metrics.stringWidth(ellipsis);
 
         if (ellipsisWidth > maxWidth) {
