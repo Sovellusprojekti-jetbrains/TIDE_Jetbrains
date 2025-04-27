@@ -206,7 +206,7 @@ public class CourseMainPane {
         SwingUtilities.invokeLater(() -> {
             //Removes all previous courses added, to make refreshing possible. TODO:better solution?
             coursePanel.removeAll();
-            labelList = new ArrayList<JLabel>();
+            labelList = new ArrayList<JLabel>(); // New label list for resizing purposes.
             for (Course course: courselist) {
                 JPanel panel = new JPanel(new GridBagLayout());
                 GridBagConstraints gbc = new GridBagConstraints();
@@ -222,10 +222,8 @@ public class CourseMainPane {
                 label.setText(course.getName());
                 label.setFont(JBFont.h1().asBold());
                 label.setBorder(createEmptyBorder(top, left, bottom, right));
-                labelList.add(label);
-
-
                 label.setHorizontalAlignment(SwingConstants.LEFT);
+                labelList.add(label);
 
                 JPanel singleCourse = new JPanel(new GridBagLayout());
 
@@ -263,7 +261,6 @@ public class CourseMainPane {
                 gbc.weighty = 0; // Prevent vertical stretching
                 gbc.fill = GridBagConstraints.HORIZONTAL; // Allow width expansion but not height
                 singleCourse.add(scrollPane, gbc);
-
 
                 coursePanel.add(singleCourse);
                 SmartLabelResizer.setupSmartResizeForLabels(labelList, thisToolWindow);

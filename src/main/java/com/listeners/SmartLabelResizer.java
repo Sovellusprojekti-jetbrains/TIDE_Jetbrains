@@ -8,14 +8,21 @@ import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SmartLabelResizer {
+/**
+ * A class that truncates names of courses automatically according to toolwindow size.
+ */
+public final class SmartLabelResizer {
+    private SmartLabelResizer() { };
+    private static final Map<JLabel, String> STRING_HASH_MAP = new HashMap<>();
 
-    private static Timer debounceTimer;
-    private static final Map<JLabel, String> labelToFullText = new HashMap<>();
-
+    /**
+     * Sets up a component listener for each label.
+     * @param labels A list of labels, namely the course names.
+     * @param toolWindow CourseMainPane.
+     */
     public static void setupSmartResizeForLabels(java.util.List<JLabel> labels, ToolWindow toolWindow) {
         for (JLabel label : labels) {
-            labelToFullText.put(label, label.getText());
+            STRING_HASH_MAP.put(label, label.getText());
         }
 
         JComponent component = toolWindow.getComponent();
@@ -23,27 +30,26 @@ public class SmartLabelResizer {
         component.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                if (debounceTimer != null && debounceTimer.isRunning()) {
-                    debounceTimer.restart();
-                } else {
-                    debounceTimer = new Timer(200, event -> updateLabels(labels, component.getWidth()));
-                    debounceTimer.setRepeats(false);
-                    debounceTimer.start();
-                }
+                updateLabels(labels, component.getWidth());
             }
         });
     }
 
+    /**
+     * Updates the labels to fit the available space.
+     * @param labels List of course names.
+     * @param availableWidth Width of the toolwindow.
+     */
     private static void updateLabels(java.util.List<JLabel> labels, int availableWidth) {
         System.out.println(labels.size());
         for (JLabel label : labels) {
-            String fullText = labelToFullText.get(label);
-            if (fullText == null) continue;
+            String fullText = STRING_HASH_MAP.get(label);
+            if (fullText == null) {
+                continue;
+            }
 
             FontMetrics metrics = label.getFontMetrics(label.getFont());
             int textWidth = metrics.stringWidth(fullText);
-
-            System.out.println(textWidth + " | " + availableWidth);
 
             if (textWidth <= availableWidth) {
                 label.setText(fullText);
@@ -51,11 +57,16 @@ public class SmartLabelResizer {
                 String contracted = contractTextToFit(fullText, metrics, availableWidth);
                 label.setText(contracted);
             }
-            label.revalidate();
-            label.repaint();
         }
     }
 
+    /**
+     * Changes the label text to the correct size, adding ellipses if it's too big otherwise.
+     * @param text Text that needs resizing.
+     * @param metrics Metrics of the font being used.
+     * @param maxWidth Width of the toolwindow.
+     * @return The new text.
+     */
     private static String contractTextToFit(String text, FontMetrics metrics, int maxWidth) {
         String ellipsis = "...";
         int ellipsisWidth = metrics.stringWidth(ellipsis);
@@ -74,6 +85,6 @@ public class SmartLabelResizer {
             }
         }
 
-        return sb.toString() + ellipsis;
+        return sb + ellipsis;
     }
 }
