@@ -121,7 +121,8 @@ public class CourseTaskPane {
      * @param toolWindow A ToolWindow instance
      */
     public CourseTaskPane(final ToolWindow toolWindow) {
-        this.project = toolWindow.getProject();
+        ActiveState stateManager = ActiveState.getInstance();
+        this.project = stateManager.getProject();
 
         // placeholder for opening the current exercise in browser
         avaaTehtava.addActionListener(event -> {
@@ -144,13 +145,12 @@ public class CourseTaskPane {
             manager.tryToExecute(action, null, null, null, true);
         });
 
-
         showOutputButton.addActionListener(event -> {
             Util.showWindow(project, "Output Window", true);
         });
 
 
-        ActiveState stateManager = ActiveState.getInstance();
+
         stateManager.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -192,6 +192,7 @@ public class CourseTaskPane {
      * @param response from TIDE-CLI
      */
     private void handleSubmitResponse(String response) {
+        this.project = ActiveState.getInstance().getProject();
         if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
             InfoView.displayError("Please open a file to submit in the editor.");
             return;

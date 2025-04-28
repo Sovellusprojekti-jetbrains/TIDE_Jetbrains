@@ -14,7 +14,7 @@ public class Submit extends AnAction {
      */
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        Project project = e.getProject();
+        Project project = ActiveState.getInstance().getProject();
         TimTask.getInstance().submit(project);
     }
 
