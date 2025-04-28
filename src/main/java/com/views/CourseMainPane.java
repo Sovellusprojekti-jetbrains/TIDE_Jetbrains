@@ -1,6 +1,7 @@
 package com.views;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.util.ui.JBFont;
 import com.state.ActiveState;
 import com.actions.Settings;
@@ -328,7 +329,9 @@ public class CourseMainPane {
         oButton.addActionListener(event -> {
             int lastPartStart = courseTask.getPath().lastIndexOf('/');
             String demoDirectory = File.separatorChar + courseTask.getPath().substring(lastPartStart + 1);
-            new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName + demoDirectory);
+            ApplicationInfo appInfo = ApplicationInfo.getInstance();
+            String productName = appInfo.getFullApplicationName();
+            new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName);
         });
         buttonPanel.add(oButton);
 

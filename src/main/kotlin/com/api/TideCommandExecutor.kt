@@ -1,6 +1,5 @@
 package com.api
 
-import com.state.ActiveState
 import com.actions.Settings
 import com.course.Course
 import com.course.SubTask
@@ -15,6 +14,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findDocument
 import com.intellij.util.io.awaitExit
+import com.state.ActiveState
 import com.views.InfoView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +25,9 @@ import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.*
+import kotlin.io.path.Path
+
 
 object TideCommandExecutor {
 
@@ -247,6 +250,15 @@ object TideCommandExecutor {
                     } else if (productName.contains("PyCharm")) {
                         command += "pycharm64.exe"
                     } else if (productName.contains("Rider")) {
+                        //TODO: make check for solution in demo folder
+                        val root = File(taskPath)
+                        val path = Path(taskPath)
+                        val list = mutableListOf<File>()
+                        listAllFiles(path, list)
+
+                        for (file : File in list ) {
+                            createOrUpdateSlnWithCsproj(taskPath, file.absolutePath)
+                        }
                         command += "rider64.exe"
                     }
                 } else if (System.getProperty("os.name").contains("Linux")) {
@@ -255,6 +267,13 @@ object TideCommandExecutor {
                     } else if (productName.contains("PyCharm")) {
                         command += "pycharm"
                     } else if (productName.contains("Rider")) {
+                        val path = Path(taskPath)
+                        val list = mutableListOf<File>()
+                        listAllFiles(path, list)
+
+                        for (file : File in list ) {
+                            createOrUpdateSlnWithCsproj(taskPath, file.absolutePath)
+                        }
                         command += "rider"
                     }
                 //TODO: This is the Mac section. It is not possible to test functionality without a Mac
@@ -274,6 +293,156 @@ object TideCommandExecutor {
             handleCommandLine(listOf(command, taskPath))
         }
     }
+
+
+    @Throws(IOException::class)
+    private fun listAllFiles(currentPath: Path, allFiles: MutableList<File>) {
+        Files.newDirectoryStream(currentPath).use { stream ->
+            for (entry in stream) {
+                if (Files.isDirectory(entry)) {
+                    listAllFiles(entry, allFiles)
+                } else if (entry.toString().endsWith(".csproj")) {
+                    allFiles.add(entry.toFile())
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Adds a csproj file to a solution and creates a solution if it doesn't exist.
+     * there is a lot of hard coded values here to get the programming 1 folder structure to work
+     * with solutions. In the future this method should be changed so that it would have
+     * a more broad use case
+     *@param slnPath Path to the folder where the sln file is
+     * @param csprojPath path to the .csproj file
+     */
+    private fun createOrUpdateSlnWithCsproj(slnPath: String, csprojPath: String) {
+
+        var slnFile = File(slnPath)
+        var folderGuid = UUID.randomUUID().toString().uppercase()
+        val demoPathSplit = csprojPath.split(Regex("[/\\\\]"))
+
+        var demoName = demoPathSplit[demoPathSplit.size -3]
+        for (file in slnFile.listFiles()!!){
+            if (file.name.endsWith(".sln")) {
+                slnFile = file
+                break
+            }
+        }
+
+        var csprojFile = File(csprojPath)
+
+        if (!csprojFile.exists()) {
+            println("Project file not found: $csprojPath")
+            return
+        }
+        /*
+        if(!csprojFile.name.contains(demoName)) {
+            csprojFile.renameTo(File(csprojFile.parent + "\\" + demoName + csprojFile.name) )
+            csprojFile = File(csprojFile.parent + "\\" + demoName + csprojFile.name)
+        }*/
+
+        val projectName = csprojFile.nameWithoutExtension
+        val projectGuid = UUID.randomUUID().toString().uppercase()
+        val slnDir = slnFile.parentFile ?: File(".")
+        var relativeCsprojPath = ""
+        if (!slnFile.isFile()) {
+            relativeCsprojPath = slnDir.toPath().relativize(csprojFile.toPath()).toString().replace("\\", "/")
+            relativeCsprojPath = relativeCsprojPath.split("/", ignoreCase = false,limit = 2)[1]
+        } else {
+            relativeCsprojPath = slnDir.toPath().relativize(csprojFile.toPath()).toString().replace("\\", "/")
+        }
+
+        val projectEntry = """
+        Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "$projectName", "$relativeCsprojPath", "{$projectGuid}"
+        EndProject
+    """.trimIndent()
+
+        val folderEntry = """
+        Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "$demoName", "$demoName", "{$folderGuid}"
+        EndProject
+    """.trimIndent()
+
+
+        val projectConfigSection = """
+            {$projectGuid}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+            {$projectGuid}.Debug|Any CPU.Build.0 = Debug|Any CPU
+            {$projectGuid}.Release|Any CPU.ActiveCfg = Release|Any CPU
+            {$projectGuid}.Release|Any CPU.Build.0 = Release|Any CPU
+    """.trimIndent()
+
+        if (!slnFile.isFile()) {
+            slnFile = File("$slnPath/course.sln")
+            println("Creating new .sln file at: ${slnFile.absolutePath}")
+            val nestedProjectEntry = "    {$projectGuid} = {$folderGuid}"
+            slnFile.writeText(
+                buildString {
+                    appendLine("Microsoft Visual Studio Solution File, Format Version 12.00")
+                    appendLine(projectEntry)
+                    appendLine(folderEntry)
+                    appendLine("Global")
+                    appendLine("GlobalSection(SolutionConfigurationPlatforms) = preSolution")
+                    appendLine("Debug|Any CPU = Debug|Any CPU")
+                    appendLine("Release|Any CPU = Release|Any CPU")
+                    appendLine("EndGlobalSection")
+                    appendLine("GlobalSection(ProjectConfigurationPlatforms) = postSolution")
+                    appendLine(projectConfigSection)
+                    appendLine("EndGlobalSection")
+                    appendLine("GlobalSection(NestedProjects) = preSolution")
+                    appendLine(nestedProjectEntry)
+                    appendLine("EndGlobalSection")
+                    appendLine("EndGlobal")
+                }
+            )
+        } else {
+            val lines = slnFile.readLines().toMutableList()
+
+            // Avoid duplicate project entry
+            if (lines.any { it.contains(relativeCsprojPath) }) {
+                println("Project already exists in solution. Skipping.")
+                return
+            }
+
+            val endProjectIndex = lines.indexOfLast { it.trim().startsWith("EndProject") }
+            val globalIndex = lines.indexOfFirst { it.trim() == "Global" }
+
+
+            if (endProjectIndex != -1) {
+                lines.add(endProjectIndex + 1, projectEntry)
+            } else {
+                lines.add(projectEntry)
+            }
+            val projectConfigurationPlatformsIndex = lines.indexOfFirst {
+                it.trim() == "GlobalSection(ProjectConfigurationPlatforms) = postSolution" }
+            // Insert project configuration section at the start of project configuration
+            if (globalIndex != -1 && projectConfigurationPlatformsIndex > globalIndex) {
+                lines.add(projectConfigurationPlatformsIndex+1, projectConfigSection)
+            }
+
+            val nestedIndex = lines.indexOfFirst { it.trim() == "GlobalSection(NestedProjects) = preSolution" }
+            if (lines.any { it.contains("\"$demoName\"") }) {
+                val demoFolderIndex = lines.indexOfFirst { it.trim().contains("\"$demoName\"")  }
+                val demoFolderSplit = lines[demoFolderIndex].split(",")
+                var demoGuid = demoFolderSplit.last()
+                demoGuid = demoGuid.replace("\"","")
+                demoGuid = demoGuid.replace("{","")
+                demoGuid = demoGuid.replace("}","")
+                demoGuid = demoGuid.replace(" ","")
+                val nestedProjectEntry = "    {$projectGuid} = {$demoGuid}"
+                lines.add(nestedIndex+1,nestedProjectEntry)
+            } else {
+                lines.add(endProjectIndex-1,folderEntry)
+                val nestedProjectEntry = "    {$projectGuid} = {$folderGuid}"
+                //folder entry adds two lines to the file so we need to off set that
+                lines.add(nestedIndex+2,nestedProjectEntry)
+            }
+
+            slnFile.writeText(lines.joinToString(System.lineSeparator()))
+            println("Added $projectName to existing .sln at: ${slnFile.absolutePath}")
+        }
+    }
+
 
 
     /**
