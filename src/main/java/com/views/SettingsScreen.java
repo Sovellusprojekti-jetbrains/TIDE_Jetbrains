@@ -43,9 +43,19 @@ public class SettingsScreen {
         gbc.gridy = row++;
         gbc.gridx = 0;
         this.settings.add(pathSettingTitle, gbc);
+
         gbc.weightx = 1.0;
         gbc.gridx = 1;
+        // Explicitly setting the column number for the JTextField prevents the
+        // SettingsScreen from expanding beyond the size of the containing element
+        // and creating an unwanted horizontal scrollbar when the JTextField content
+        // is too long for the viewport. The value can be arbitrary as long as it is
+        // small enough. The GridBagConstraints properties make the text field expand
+        // to fill the settings view, but no further.
+        final int pathColumns = 10;
+        pathText.setColumns(pathColumns);
         this.settings.add(this.pathText, gbc);
+
         gbc.weightx = 0.0;
         gbc.gridx = 2;
         this.settings.add(browseButton, gbc);
