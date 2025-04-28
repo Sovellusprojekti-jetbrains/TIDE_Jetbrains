@@ -190,7 +190,6 @@ public class ActiveState {
         pcs.firePropertyChange("tideSubmitResponse", null, tideSubmitResponse);
         pcs.firePropertyChange("setSubmitData", null, getSubmitData());
         LogHandler.logInfo("ActiveState fired event tideSubmitResponse");
-        setTideBaseResponse(response);
     }
 
 
