@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="42.748123mm"
-   height="43.51656mm"
-   viewBox="0 0 42.748123 43.51656"
+   width="14.739052"
+   height="15.003999"
+   viewBox="0 0 3.8997075 3.969808"
    version="1.1"
    id="svg1"
    inkscape:version="1.4 (86a8ad7, 2024-10-11)"
@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="true"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="3.8954759"
-     inkscape:cx="80.863035"
-     inkscape:cy="87.152382"
+     inkscape:zoom="15.581904"
+     inkscape:cx="12.418252"
+     inkscape:cy="14.022677"
      inkscape:window-width="1920"
      inkscape:window-height="991"
      inkscape:window-x="-9"
@@ -34,25 +34,26 @@
      inkscape:current-layer="layer1"
      showborder="false"
      borderlayer="false"
-     inkscape:antialias-rendering="true" />
+     inkscape:antialias-rendering="true"
+     showgrid="false" />
   <defs
      id="defs1" />
   <g
      inkscape:label="Taso 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-85.789614,-121.72357)"
+     transform="translate(-85.789595,-121.7236)"
      style="display:inline;opacity:1">
     <ellipse
-       style="fill:#aa0000;stroke:#000000;stroke-width:0.1"
+       style="fill:#aa0000;stroke:#000000;stroke-width:0.00912254"
        id="path1"
-       cx="107.16366"
-       cy="143.48187"
-       rx="21.324062"
-       ry="21.708281" />
+       cx="87.739449"
+       cy="123.7085"
+       rx="1.9452925"
+       ry="1.9803427" />
     <path
-       style="fill:#dee3db;stroke:#000000;stroke-width:0.112788"
-       d="m 93.940791,129.48938 11.490409,13.43173 -11.550051,13.65312 3.04158,1.93727 10.715101,-12.84132 10.85427,12.76752 2.86265,-1.84501 -11.37113,-13.59779 11.40095,-13.69003 -2.92231,-1.87269 -10.79461,12.7583 -10.754861,-12.80442 -3.063941,1.98109 z"
+       style="fill:#dee3db;stroke:#000000;stroke-width:0.0102891"
+       d="m 86.533186,122.43203 1.048216,1.22531 -1.053657,1.24551 0.277469,0.17673 0.977488,-1.17146 0.990184,1.16473 0.261146,-0.16832 -1.037335,-1.24046 1.040055,-1.24887 -0.266588,-0.17084 -0.984741,1.16388 -0.981115,-1.16809 -0.279509,0.18073 z"
        id="path3" />
   </g>
 </svg>

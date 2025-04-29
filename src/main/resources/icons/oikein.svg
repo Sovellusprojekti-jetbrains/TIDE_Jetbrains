@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="73.101288mm"
-   height="70.79599mm"
-   viewBox="0 0 73.101288 70.79599"
+   width="14.996091"
+   height="14.52318"
+   viewBox="0 0 3.9677157 3.8425914"
    version="1.1"
    id="svg1"
    inkscape:version="1.4 (86a8ad7, 2024-10-11)"
@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="true"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="0.97386896"
-     inkscape:cx="-34.912294"
-     inkscape:cy="105.2503"
+     inkscape:zoom="31.163807"
+     inkscape:cx="6.1770374"
+     inkscape:cy="9.6105076"
      inkscape:window-width="1920"
      inkscape:window-height="991"
      inkscape:window-x="-9"
@@ -39,17 +39,17 @@
      inkscape:label="Taso 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-76.025039,-108.29929)">
+     transform="translate(-76.025038,-108.29929)">
     <ellipse
-       style="fill:#008000;stroke:#000000;stroke-width:0.1"
+       style="fill:#008000;stroke:#000000;stroke-width:0.00542769"
        id="path1"
-       cx="112.57568"
-       cy="143.69728"
-       rx="36.500645"
-       ry="35.347996" />
+       cx="78.008896"
+       cy="110.22058"
+       rx="1.9811441"
+       ry="1.9185818" />
     <path
-       style="fill:#f6fff6;fill-opacity:1;stroke:#000000;stroke-width:0.10855"
-       d="m 142.85481,124.90751 c 0,0 -30.21872,41.63049 -31.91486,40.96716 -2.00848,0.46714 -26.397029,-30.82229 -26.397029,-30.82229 -0.891873,-1.76894 1.037977,-0.55717 1.037977,-0.55717 0,0 24.659452,21.97129 25.471492,21.22359 0.94222,0.77496 31.80242,-30.81129 31.80242,-30.81129 z"
+       style="fill:#f6fff6;fill-opacity:1;stroke:#000000;stroke-width:0.00589176"
+       d="m 79.652356,109.20073 c 0,0 -1.640181,2.25957 -1.732242,2.22357 -0.109014,0.0254 -1.432751,-1.67294 -1.432751,-1.67294 -0.04841,-0.096 0.05634,-0.0303 0.05634,-0.0303 0,0 1.33844,1.19255 1.382516,1.15196 0.05114,0.0421 1.726139,-1.67234 1.726139,-1.67234 z"
        id="path3"
        sodipodi:nodetypes="cccccc" />
   </g>
