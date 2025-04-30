@@ -81,6 +81,7 @@ public class CourseMainPane {
         });
     }
 
+
     private void addActionListeners() {
         refreshButton.addActionListener(new ActionListener() {
             @Override
@@ -378,8 +379,7 @@ public class CourseMainPane {
             private void updateTree() {
                 SwingUtilities.invokeLater(() -> {
                     tree.setVisibleRowCount(tree.getRowCount());
-                    mainPanel.revalidate();
-                    mainPanel.repaint();
+                    refreshPanel(mainPanel);
                 });
             }
         });
@@ -432,8 +432,7 @@ public class CourseMainPane {
         loginButton.removeActionListener(tempLogin[0]);
         ActionListener[] tempLogout = logoutButton.getActionListeners();
         loginButton.addActionListener(tempLogout[0]);
-        mainPanel.revalidate();
-        mainPanel.repaint();
+        refreshPanel(mainPanel);
         tabbedPane.setSelectedComponent(coursesPane);
     }
 
@@ -455,8 +454,7 @@ public class CourseMainPane {
                 api.login();
             }
         });
-        mainPanel.revalidate();
-        mainPanel.repaint();
+        refreshPanel(mainPanel);
         tabbedPane.setSelectedComponent(loginPane);
         setProgress(false, "");
     }
@@ -468,8 +466,7 @@ public class CourseMainPane {
     private void updateCourseContent(List<Course> courselist) {
         ApplicationManager.getApplication().invokeLater(() -> {
             createCourseListPane(courselist);
-            mainPanel.revalidate();
-            mainPanel.repaint();
+            refreshPanel(mainPanel);
             setProgress(false, "");
         });
     }
@@ -485,8 +482,16 @@ public class CourseMainPane {
             progressBar1.setVisible(state);
             coursesProgress.setString(text);
             coursesProgress.setVisible(state);
-            mainPanel.revalidate();
-            mainPanel.repaint();
+            refreshPanel(mainPanel);
         });
+    }
+
+    /**
+     * Revalidates and repaints the panel.
+     * @param panel The panel to be refreshed.
+     */
+    private void refreshPanel(JPanel panel) {
+        panel.revalidate();
+        panel.repaint();
     }
 }
