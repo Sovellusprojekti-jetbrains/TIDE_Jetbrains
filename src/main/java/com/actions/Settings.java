@@ -70,10 +70,21 @@ public class Settings extends AnAction {
     }
 
 
+    /**
+     * Calls StateManager to get value for whether to
+     * open TIM documents in browser or IDE.
+     * @returns True for browser, false for IDE
+     */
     public static boolean getBrowserChoice() {
         return ApplicationManager.getApplication().getService(StateManager.class).getBrowserChoice();
     }
 
+
+    /**
+     * Calls StateManager to set value for whether to
+     * open TIM documents in browser or IDE.
+     * @param True for browser, false for IDE
+     */
     public static void setBrowserChoice(boolean choice) {
         ApplicationManager.getApplication().getService(StateManager.class).setBrowserChoice(choice);
     }
