@@ -66,16 +66,21 @@ public final class AppSettingsConfigurable implements Configurable {
     public void apply() throws ConfigurationException {
         File tempFile = new File(this.mySettingsComponent.getPathText());
         int spinnerValue = this.mySettingsComponent.getScrollSpeedSpinnerValue();
+        String tidePathString = this.mySettingsComponent.getTidePath();
         StateManager state =
                 Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
         if (!tempFile.exists()
-                || (spinnerValue < 1 || state.getMaxScrollSpeed() < spinnerValue)) {
+                || (spinnerValue < 1 || state.getMaxScrollSpeed() < spinnerValue
+                )) {
             this.reset();
             throw new ConfigurationException("Please input valid settings!");
         } else {
             com.actions.Settings.savePath(this.mySettingsComponent.getPathText());
             com.actions.Settings.setScrollSpeed(spinnerValue);
+            com.actions.Settings.saveTidePath(tidePathString);
+
         }
+
     }
 
     /**
@@ -87,6 +92,7 @@ public final class AppSettingsConfigurable implements Configurable {
                 Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
         this.mySettingsComponent.setPathText(state.getPath());
         this.mySettingsComponent.setScrollSpeedSpinnerValue(state.getScrollSpeed());
+        this.mySettingsComponent.setTidePathText(state.getTidePath());
     }
 
     /**

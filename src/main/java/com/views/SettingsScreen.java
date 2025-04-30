@@ -16,6 +16,7 @@ public class SettingsScreen {
     private JPanel settings;
     private JTextField pathText;
     private JSpinner scrollSpeedSpinner;
+    private JTextField tidePathText;
 
     /**
      * Constructor for the plugin settings screen.
@@ -24,7 +25,8 @@ public class SettingsScreen {
         this.settings = new JPanel(new GridBagLayout());
         int row = 0;
         row = createPathSetting(row);
-        createScrollSpeedSetting(row);
+        row = createScrollSpeedSetting(row);
+        row = TidePathSetting(row);
     }
 
 
@@ -63,7 +65,7 @@ public class SettingsScreen {
         this.pathText.setToolTipText("Tasks downloaded from the course listing will be saved here");
         browseButton.setText("Browse");
         browseButton.setToolTipText("Use GUI to select download folder");
-        browseButton.addActionListener(e -> choosePath());
+        browseButton.addActionListener(e -> choosePath(this.pathText));
         return row;
     }
 
@@ -105,7 +107,7 @@ public class SettingsScreen {
     /**
      * Displays a new window where user can choose folder to which demos will be saved.
      */
-    private void choosePath() {
+    private void choosePath(JTextField field) {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         JFrame frame = new JFrame("Choose folder");
@@ -113,7 +115,7 @@ public class SettingsScreen {
         int value = chooser.showOpenDialog(frame);
         if (value == JFileChooser.APPROVE_OPTION) {
             File selectedFolder = chooser.getSelectedFile();
-            this.pathText.setText(selectedFolder.getAbsolutePath());
+            field.setText(selectedFolder.getAbsolutePath());
         }
     }
 
@@ -140,6 +142,45 @@ public class SettingsScreen {
             displayError("Directory doesn't exist!", "Path error");
         }
     }
+
+    /**
+     *
+     * @param row GridBagLayout row index
+     * @return Next row index
+     */
+    private int TidePathSetting(int row) {
+        JLabel tideSettingTitle = new JLabel("Tide install folder:");
+        this.tidePathText = new JTextField();
+        JButton browseButton = new JButton();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0.0;
+        gbc.gridy = row++;
+        gbc.gridx = 0;
+        this.settings.add(tideSettingTitle, gbc);
+        gbc.weightx = 1.0;
+        gbc.gridx = 1;
+        // Explicitly setting the column number for the JTextField prevents the
+        // SettingsScreen from expanding beyond the size of the containing element
+        // and creating an unwanted horizontal scrollbar when the JTextField content
+        // is too long for the viewport. The value can be arbitrary as long as it is
+        // small enough. The GridBagConstraints properties make the text field expand
+        // to fill the settings view, but no further.
+        final int pathColumns = 10;
+        tidePathText.setColumns(pathColumns);
+        this.settings.add(this.tidePathText, gbc);
+        this.tidePathText.setText(com.actions.Settings.getTidePath());
+        this.tidePathText.setToolTipText("select where tide is installed leave empty to use computer path instead");
+        gbc.weightx = 0.0;
+        gbc.gridx = 2;
+        this.settings.add(browseButton, gbc);
+        browseButton.setText("Browse");
+        browseButton.setToolTipText("Use GUI to select tide install folder");
+        browseButton.addActionListener(e -> choosePath(this.tidePathText));
+        return row;
+    }
+
+
 
 
     /**
@@ -184,5 +225,21 @@ public class SettingsScreen {
      */
     public void setPathText(String text) {
         this.pathText.setText(text);
+    }
+
+
+    /**
+     * This method is needed to check changes in the method in AppSettingsConfigurable.
+     * @return text in the text field
+     */
+    public String getTidePath(){
+        return  this.tidePathText.getText();
+    }
+    /**
+     * This method is needed to revert changes in the idea settings.
+     * @param text valid path to set into the pathText text field
+     */
+    public void setTidePathText(String text) {
+        this.tidePathText.setText(text);
     }
 }

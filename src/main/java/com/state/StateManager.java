@@ -32,6 +32,8 @@ public final class StateManager implements PersistentStateComponent<StateManager
         private List<String> submits;
 
         private int scrollSpeed;
+
+        private String tidePath;
     }
 
     private State myState = new State(); //Object reference to state class
@@ -160,4 +162,15 @@ public final class StateManager implements PersistentStateComponent<StateManager
     public int getMaxScrollSpeed() {
         return MAXSCROLLSPEED;
     }
+
+    public void setTidePath(String path) {
+        PropertiesComponent properties = PropertiesComponent.getInstance();
+        properties.setValue("myPlugin.tidepath", path);
+    }
+
+    public String getTidePath() {
+        PropertiesComponent properties = PropertiesComponent.getInstance();
+        return properties.getValue("myPlugin.tidepath", "");
+    }
+
 }
