@@ -24,84 +24,36 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 /**
-* Hoidetaan kaikki ruudun oikealla puolella olevan tehtävän palautuksen suorittavan ikkunan toiminnalliset sekä graaffiset toiminnot
-* Taskpane = Kaikki muut paneelit sisältävä pääpaneeli
-* demoTiedot = tidecli kautta saadut Demon numero sekä tehtävän numero sisältävä label
-* tehtavaNimi = Tidecli kautta saadun tehtävän nimen sisältävä label.
-* avaaTehtava = Nappi, jota painamalla tehtävät avautuvat selaimen ikkunaan
-* tehtavaTiedot = Tidecli kautta saadun tehtävän tiedot, ei toimi vielä tidecli puolella.
-* pisteLabel = Tehtävän palautuksen jälkeen Tidecli antamat pisteet sisältävä label, ei toimi vielä tidecli puolella
-* submitButton = nappi, jota painamalla tehtävä lähetetään tidecli kautta TIM-järjestelmälle.
-* showOutputButton = nappi, jota painamalla näytetään tidecli lähettämät tiedot terminaalissa.
-* resetButton = nappi, jota painamalla tyhjennetään IDE:n tiedosto ja haetaan siihen tehtävän tiedosto uudestaan.
-* submitPane = paneeli, joka sisältää pisteLabelin, submitButtonin sekä showOutputButtonin
-* infoPane = paneeli, joka sisältää demoTiedot, tehtäväNimi, avaaTehtävä sekä tehtäväTiedot osat.
-*  resetPane = paneeli, joka siältää resetButtonin.
+* Handles the functional and graphical operations of the right-side task view.
+* Taskpane = Main panel containing everything else.
+* taskInfoLabel = Label containing the task number from TIDE-CLI.
+* taskNameLabel = Label containing the name of the task from TIDE-CLI.
+* openTaskButton = Opens a browser window that shows the task description in TIM.
+* taskInformationLabel = Nonfunctional label for containing the task description when available from TIM.
+* pointsLabel = Label containing the points received from TIDE-CLI.
+* submitButton = Submits the task to TIDE-CLI.
+* showOutputButton = Shows the output view.
+* resetButton = Refetches the task that is open in the editor view from TIDE-CLI.
+* submitPane = Contains the points label, submit button and show output buttons.
+* infoPane = Contains taskInfo, taskName, openTaskButton, and openTaskButton.
+* resetPane = Contains resetButton.
 */
 public class CourseTaskPane {
-    /**
-     * The main task pane.
-     */
     private JPanel taskPane;
-    /**
-     * Information of the exercise.
-     */
-    private JLabel demoTiedot;
-    /**
-     * Name of the task.
-     */
-    private JLabel tehtavaNimi;
-    /**
-     * Button that opens the task.
-     */
-    private JButton avaaTehtava;
-    /**
-     * Label for the task info.
-     */
-    private JLabel tehtavaTiedot;
-    /**
-     * Points earned from the task.
-     */
-    private JLabel pisteLabel;
-    /**
-     * A submit button.
-     */
+    private JLabel taskInfoLabel;
+    private JLabel taskNameLabel;
+    private JButton openTaskButton;
+    private JLabel taskInformationLabel;
+    private JLabel pointsLabel;
     private JButton submitButton;
-    /**
-     * Button that shows the console output.
-     */
     private JButton showOutputButton;
-    /**
-     * Button for resetting.
-     */
     private JButton resetButton;
-    /**
-     * Panel for the submission.
-     */
     private JPanel submitPane;
-    /**
-     * Info panel.
-     */
     private JPanel infoPane;
-    /**
-     * Reset panel.
-     */
     private JPanel resetPane;
-    /**
-     * progressbar for ongoing tasks.
-     */
     private JProgressBar taskProgressBar;
-    /**
-     * label for the possible deadline of the subtask.
-     */
     private JLabel deadLineLabel;
-    /**
-     * label for the maximum amount of submissions allowed.
-     */
     private JLabel maxSubmitsLabel;
-    /**
-     * Holds the current project.
-     */
     private Project project;
     private static CourseTaskPane courseTaskPane;
 
@@ -161,7 +113,7 @@ public class CourseTaskPane {
 
     private void addActionListeners() {
         // Open the current exercise in browser
-        avaaTehtava.addActionListener(event -> {
+        openTaskButton.addActionListener(event -> {
             ActionManager manager = ActionManager.getInstance();
             AnAction action = manager.getAction("com.actions.BrowserAction");
             manager.tryToExecute(action, null, null, null, true);
@@ -232,7 +184,7 @@ public class CourseTaskPane {
      * @param message message containing the points for the submission
      */
     public void setPoints(String message) {
-            pisteLabel.setText(message);
+            pointsLabel.setText(message);
     }
 
     /**
@@ -254,7 +206,7 @@ public class CourseTaskPane {
      * Private method for disabling buttons.
      */
     private void disableButtons() {
-        this.avaaTehtava.setEnabled(false);
+        this.openTaskButton.setEnabled(false);
         this.resetButton.setEnabled(false);
         this.submitButton.setEnabled(false);
     }
@@ -263,7 +215,7 @@ public class CourseTaskPane {
      * Private method for enabling buttons.
      */
     private void enableButtons() {
-        this.avaaTehtava.setEnabled(true);
+        this.openTaskButton.setEnabled(true);
         this.resetButton.setEnabled(true);
         this.submitButton.setEnabled(true);
     }
@@ -275,11 +227,11 @@ public class CourseTaskPane {
         ApplicationManager.getApplication().invokeLater(() -> {
             if (TimTask.getInstance() != null) {
                 String info = TimTask.getInstance().getCourseName() + " - " + TimTask.getInstance().getDemoName();
-                this.demoTiedot.setText(info);
-                this.tehtavaNimi.setText(TimTask.getInstance().getSubTaskName());
+                this.taskInfoLabel.setText(info);
+                this.taskNameLabel.setText(TimTask.getInstance().getSubTaskName());
             } else {
-                this.demoTiedot.setText(" - ");
-                this.tehtavaNimi.setText("");
+                this.taskInfoLabel.setText(" - ");
+                this.taskNameLabel.setText("");
             }
         });
     }
