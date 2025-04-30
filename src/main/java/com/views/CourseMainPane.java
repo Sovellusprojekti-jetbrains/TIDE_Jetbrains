@@ -2,6 +2,7 @@ package com.views;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationInfo;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.ui.JBFont;
 import com.listeners.SmartLabelResizer;
 import com.state.ActiveState;
@@ -106,19 +107,22 @@ public class CourseMainPane {
         this.project = toolWindow.getProject();
         // ilman setLayout-kutsua tämä kaatuu nullpointteriin
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
-        ApiHandler apiHandler = new ApiHandler();
 
         coursesPane.getVerticalScrollBar().setUnitIncrement(Settings.getScrollSpeed());
         coursesPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        // Fetching data from TIM and creating a list of course objects,
-        // for more information see package com.course and class ApiHandler.
-
         // This overrides the form's own font to use a default JetBrains font.
         courseLabel.setFont(JBFont.h0().asBold());
 
+        addActionListeners();
 
-        // needs tests in the future.
+        switchToLoggedOut();
+        ApplicationManager.getApplication().invokeLater(() -> {
+            setProgress(true, "Checking login info...");
+        });
+    }
+
+    private void addActionListeners() {
         refreshButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -156,8 +160,6 @@ public class CourseMainPane {
                 api.logout();
             }
         });
-
-
         ActiveState stateManager = ActiveState.getInstance();
         stateManager.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
@@ -192,10 +194,6 @@ public class CourseMainPane {
                 }
             }
         });
-        switchToLoggedOut();
-        SwingUtilities.invokeLater(() -> {
-            setProgress(true, "Checking login info...");
-        });
     }
 
     /**
@@ -204,10 +202,9 @@ public class CourseMainPane {
      * @param courselist list of courses with tidecli demos.
      */
     private void createCourseListPane(List<Course> courselist) {
-        SwingUtilities.invokeLater(() -> {
-            //Removes all previous courses added, to make refreshing possible. TODO:better solution?
+        ApplicationManager.getApplication().invokeLater(() -> {
             coursePanel.removeAll();
-            labelList = new ArrayList<JLabel>(); // New label list for resizing purposes.
+            labelList = new ArrayList<>(); // New label list for resizing purposes.
             for (Course course: courselist) {
                 JPanel panel = new JPanel(new GridBagLayout());
                 GridBagConstraints gbc = new GridBagConstraints();
@@ -228,20 +225,7 @@ public class CourseMainPane {
 
                 JPanel singleCourse = new JPanel(new GridBagLayout());
 
-                // Makes own subpanel for every task
-                // gbc.gridy asettaa ne paikalleen GridBagLayoutissa
-                List<CourseTask> tasks = course.getTasks();
-                int j = 0;
-                for (CourseTask courseTask: tasks) {
-                    courseTask.setParent(course);
-                    JPanel subPanel = createExercise(courseTask, course.getName());
-                    subPanel.setBackground(bgColor);
-                    gbc.gridy = j;
-                    panel.add(subPanel, gbc);
-                    panel.setBackground(bgColor);
-                    panel.setOpaque(true);
-                    j++;
-                }
+                createSubPanels(course, panel, gbc);
 
                 final int thickness = 2;
 
@@ -267,6 +251,27 @@ public class CourseMainPane {
                 SmartLabelResizer.setupSmartResizeForLabels(labelList, thisToolWindow);
             }
         });
+    }
+
+    /**
+     * Makes a subpanel for every task. Place defined by gbc.gridy.
+     * @param course Course the subtasks get added to.
+     * @param panel The Panel they get added to.
+     * @param gbc Grid Bag Constraints.
+     */
+    private void createSubPanels(Course course, JPanel panel, GridBagConstraints gbc) {
+        List<CourseTask> tasks = course.getTasks();
+        int j = 0;
+        for (CourseTask courseTask: tasks) {
+            courseTask.setParent(course);
+            JPanel subPanel = createExercise(courseTask, course.getName());
+            subPanel.setBackground(bgColor);
+            gbc.gridy = j;
+            panel.add(subPanel, gbc);
+            panel.setBackground(bgColor);
+            panel.setOpaque(true);
+            j++;
+        }
     }
 
     /**
@@ -299,9 +304,9 @@ public class CourseMainPane {
         AsyncProcessIcon spinner = new AsyncProcessIcon("Loading");
         spinner.setVisible(false);  // Initially hidden
         buttonPanel.add(spinner);
-        JButton dButton = new JButton();
-        dButton.setText("Download");
-        dButton.addActionListener(new ActionListener() {
+        JButton downloadButton = new JButton();
+        downloadButton.setText("Download");
+        downloadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 spinner.setVisible(true);
@@ -323,18 +328,18 @@ public class CourseMainPane {
                 }
             }
         });
-        buttonPanel.add(dButton);
+        buttonPanel.add(downloadButton);
 
-        JButton oButton = new JButton();
-        oButton.setText("Open as Project");
-        oButton.addActionListener(event -> {
+        JButton openButton = new JButton();
+        openButton.setText("Open as Project");
+        openButton.addActionListener(event -> {
             int lastPartStart = courseTask.getPath().lastIndexOf('/');
             String demoDirectory = File.separatorChar + courseTask.getPath().substring(lastPartStart + 1);
             ApplicationInfo appInfo = ApplicationInfo.getInstance();
             String productName = appInfo.getFullApplicationName();
             new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName);
         });
-        buttonPanel.add(oButton);
+        buttonPanel.add(openButton);
 
         JPanel nameAndButtonPanel = new JPanel(new BorderLayout());
         nameAndButtonPanel.add(labelWeek, BorderLayout.WEST);
@@ -504,7 +509,7 @@ public class CourseMainPane {
      * @param courselist Courselist to update with.
      */
     private void updateCourseContent(List<Course> courselist) {
-        SwingUtilities.invokeLater(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
             createCourseListPane(courselist);
             panel1.revalidate();
             panel1.repaint();
@@ -518,7 +523,7 @@ public class CourseMainPane {
      * @param text Text to display on progress bar.
      */
     private void setProgress(boolean state, String text) {
-        SwingUtilities.invokeLater(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
             progressBar1.setString(text);
             progressBar1.setVisible(state);
             coursesProgress.setString(text);

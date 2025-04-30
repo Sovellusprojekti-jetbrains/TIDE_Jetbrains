@@ -119,30 +119,6 @@ public class SettingsScreen {
 
 
     /**
-     * Displays error message on screen.
-     * @param message Error message as String
-     * @param title Title for error message
-     */
-    private void displayError(String message, String title) {
-        //com.views.InfoView.displayError(message, title);
-    }
-
-
-    /**
-     * Saves path to persistent state component.
-     */
-    private void updatePath() {
-        File tempFile = new File(this.pathText.getText());
-        if (tempFile.exists()) {
-            com.actions.Settings.savePath(this.pathText.getText());
-            com.actions.Settings.close();
-        } else {
-            displayError("Directory doesn't exist!", "Path error");
-        }
-    }
-
-
-    /**
      * Return main panel to be displayed.
      * @return JPanel containing all the elements
      */

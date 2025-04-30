@@ -103,7 +103,7 @@ public class CourseTaskPane {
      * Holds the current project.
      */
     private Project project;
-    private static CourseTaskPane pane;
+    private static CourseTaskPane courseTaskPane;
 
     /**
      * getter for the contents of the task panel.
@@ -117,40 +117,22 @@ public class CourseTaskPane {
      * A constructor that takes a ToolWindow as a parameter.
      * The Toolwindow instance lets us access the current project
      * and thus the path of the currently open file.
-     * TODO: implement actual functionality somewhere
      * @param toolWindow A ToolWindow instance
      */
     public CourseTaskPane(final ToolWindow toolWindow) {
         ActiveState stateManager = ActiveState.getInstance();
         this.project = stateManager.getProject();
 
-        // placeholder for opening the current exercise in browser
-        avaaTehtava.addActionListener(event -> {
-            ActionManager manager = ActionManager.getInstance();
-            AnAction action = manager.getAction("com.actions.BrowserAction");
-            manager.tryToExecute(action, null, null, null, true);
-        });
+        addActionListeners();
 
-        //Resets subtask back to the state of last submit.
-        resetButton.addActionListener(event -> {
-            ActionManager manager = ActionManager.getInstance();
-            AnAction action = manager.getAction("com.actions.ResetExercise");
-            manager.tryToExecute(action, null, null, null, true);
-        });
+        addPropertyChangeListeners(stateManager);
 
-        // submit exercise
-        submitButton.addActionListener(event -> {
-            ActionManager manager = ActionManager.getInstance();
-            AnAction action = manager.getAction("com.actions.Submit");
-            manager.tryToExecute(action, null, null, null, true);
-        });
+        stateManager.updateCourses();
+        setProgress(false, "");
+        courseTaskPane = this;
+    }
 
-        showOutputButton.addActionListener(event -> {
-            Util.showWindow(project, "Output Window", true);
-        });
-
-
-
+    private void addPropertyChangeListeners(ActiveState stateManager) {
         stateManager.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -172,17 +154,36 @@ public class CourseTaskPane {
                     setPoints(messages[0]);
                     setDeadLine(messages[1]);
                     setMaxSubmits(messages[2]);
-
                 }
-                /*if ("setDemoName".equals(evt.getPropertyName())) {
-                    setDemoName((String[]) evt.getNewValue());
-                }*/
             }
         });
+    }
 
-        stateManager.updateCourses();
-        setProgress(false, "");
-        pane = this;
+    private void addActionListeners() {
+        // Open the current exercise in browser
+        avaaTehtava.addActionListener(event -> {
+            ActionManager manager = ActionManager.getInstance();
+            AnAction action = manager.getAction("com.actions.BrowserAction");
+            manager.tryToExecute(action, null, null, null, true);
+        });
+
+        // Reset subtask back to the state of last submit.
+        resetButton.addActionListener(event -> {
+            ActionManager manager = ActionManager.getInstance();
+            AnAction action = manager.getAction("com.actions.ResetExercise");
+            manager.tryToExecute(action, null, null, null, true);
+        });
+
+        // Submit exercise
+        submitButton.addActionListener(event -> {
+            ActionManager manager = ActionManager.getInstance();
+            AnAction action = manager.getAction("com.actions.Submit");
+            manager.tryToExecute(action, null, null, null, true);
+        });
+
+        showOutputButton.addActionListener(event -> {
+            Util.showWindow(project, "Output Window", true);
+        });
     }
 
 
@@ -271,7 +272,7 @@ public class CourseTaskPane {
      * Changes the text values of the demoTiedot abel and tehtavaNimi label.
      */
     private void setDemoName() {
-        SwingUtilities.invokeLater(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
             if (TimTask.getInstance() != null) {
                 String info = TimTask.getInstance().getCourseName() + " - " + TimTask.getInstance().getDemoName();
                 this.demoTiedot.setText(info);
@@ -289,7 +290,7 @@ public class CourseTaskPane {
      * @param text Text to display on progress bar.
      */
     public void setProgress(boolean state, String text) {
-        SwingUtilities.invokeLater(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
             taskProgressBar.setString(text);
             taskProgressBar.setVisible(state);
             taskPane.revalidate();
@@ -302,7 +303,7 @@ public class CourseTaskPane {
      * @return CourseTaskPane.
      */
     public static CourseTaskPane getInstance() {
-        return pane;
+        return courseTaskPane;
     }
 }
 

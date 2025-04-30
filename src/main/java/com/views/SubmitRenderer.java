@@ -56,7 +56,6 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
     private Icon isSubmitted(Object value) {
         List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-        //String regex = node.getParent().toString() + "/" + node.toString();
         if (submits != null) {
             for (String s : submits) {
                 if (node.getChildCount() == 0 &&  s.contains(node.toString())) {
