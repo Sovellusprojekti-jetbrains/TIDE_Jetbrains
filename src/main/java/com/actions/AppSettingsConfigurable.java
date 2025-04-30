@@ -55,6 +55,9 @@ public final class AppSettingsConfigurable implements Configurable {
         if (this.mySettingsComponent.getScrollSpeedSpinnerValue() != state.getScrollSpeed()) {
             return true;
         }
+        if (this.mySettingsComponent.getBrowserChoice() != state.getBrowserChoice()) {
+            return true;
+        }
         return false;
     }
 
@@ -66,6 +69,7 @@ public final class AppSettingsConfigurable implements Configurable {
     public void apply() throws ConfigurationException {
         File tempFile = new File(this.mySettingsComponent.getPathText());
         int spinnerValue = this.mySettingsComponent.getScrollSpeedSpinnerValue();
+        boolean browserChoice = this.mySettingsComponent.getBrowserChoice();
         StateManager state =
                 Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
         if (!tempFile.exists()
@@ -75,6 +79,7 @@ public final class AppSettingsConfigurable implements Configurable {
         } else {
             com.actions.Settings.savePath(this.mySettingsComponent.getPathText());
             com.actions.Settings.setScrollSpeed(spinnerValue);
+            com.actions.Settings.setBrowserChoice(browserChoice);
         }
     }
 
@@ -87,6 +92,7 @@ public final class AppSettingsConfigurable implements Configurable {
                 Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
         this.mySettingsComponent.setPathText(state.getPath());
         this.mySettingsComponent.setScrollSpeedSpinnerValue(state.getScrollSpeed());
+        this.mySettingsComponent.setBrowserChoice(state.getBrowserChoice());
     }
 
     /**

@@ -68,4 +68,13 @@ public class Settings extends AnAction {
     public static void setScrollSpeed(int speed) {
         ApplicationManager.getApplication().getService(StateManager.class).setScrollSpeed(speed);
     }
+
+
+    public static boolean getBrowserChoice() {
+        return ApplicationManager.getApplication().getService(StateManager.class).getBrowserChoice();
+    }
+
+    public static void setBrowserChoice(boolean choice) {
+        ApplicationManager.getApplication().getService(StateManager.class).setBrowserChoice(choice);
+    }
 }

@@ -13,9 +13,10 @@ import java.util.Objects;
  * Settings screen.
  */
 public class SettingsScreen {
-    private JPanel settings;
+    private final JPanel settings;
     private JTextField pathText;
     private JSpinner scrollSpeedSpinner;
+    private boolean browserChoice; // true to use browser, false to use IDE
 
     /**
      * Constructor for the plugin settings screen.
@@ -24,7 +25,8 @@ public class SettingsScreen {
         this.settings = new JPanel(new GridBagLayout());
         int row = 0;
         row = createPathSetting(row);
-        createScrollSpeedSetting(row);
+        row = createScrollSpeedSetting(row);
+        createBrowserSetting(row);
     }
 
 
@@ -71,10 +73,12 @@ public class SettingsScreen {
     /**
      * Create setting view for CourseMainPane scroll speed.
      * @param row GridBagLayout row index
-     * @return next row index
+     * @return Next row index
      */
     private int createScrollSpeedSetting(int row) {
-        StateManager state = Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
+        StateManager state = Objects.requireNonNull(ApplicationManager
+                .getApplication()
+                .getService(StateManager.class));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = row++;
         gbc.gridx = 0;
@@ -98,6 +102,49 @@ public class SettingsScreen {
         gbc.gridx = 2;
         gbc.anchor = GridBagConstraints.EAST;
         this.settings.add(scrollSpeedSpinner, gbc);
+        return row;
+    }
+
+
+    /**
+     * Creates setting view for whether to open
+     * TIM view in the IDE or in the browser.
+     * @param row GridBagLayout row index
+     * @return Next row index
+     */
+    public int createBrowserSetting(int row) {
+        ButtonGroup buttonGroup = new ButtonGroup();
+        JRadioButton browserChoiceIde = new JRadioButton("IDE");
+        JRadioButton browserChoiceBrowser = new JRadioButton("Browser");
+        JLabel browserSettingTitle = new JLabel("Open exercise TIM pages in:");
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        this.browserChoice = com.actions.Settings.getBrowserChoice();
+        browserChoiceIde.setSelected(!this.browserChoice);
+        browserChoiceBrowser.setSelected(this.browserChoice);
+
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0.0;
+        gbc.gridy = row++;
+        gbc.gridx = 0;
+        this.settings.add(browserSettingTitle, gbc);
+
+        browserChoiceIde.setToolTipText("Open exercise TIM pages in IDE");
+        browserChoiceBrowser.setToolTipText("Open exercise TIM pages in browser");
+        buttonGroup.add(browserChoiceIde);
+        buttonGroup.add(browserChoiceBrowser);
+
+        browserChoiceBrowser.addActionListener(e ->
+                this.browserChoice = browserChoiceBrowser.isSelected());
+        browserChoiceIde.addActionListener(e ->
+                this.browserChoice = !browserChoiceIde.isSelected());
+
+        gbc.gridx = 2;
+        gbc.anchor = GridBagConstraints.EAST;
+        this.settings.add(browserChoiceIde, gbc);
+        gbc.gridy = row++;
+        this.settings.add(browserChoiceBrowser, gbc);
+
         return row;
     }
 
@@ -184,5 +231,22 @@ public class SettingsScreen {
      */
     public void setPathText(String text) {
         this.pathText.setText(text);
+    }
+
+
+    /**
+     * Sets the choice for whether to open the TIM view in browser.
+     * @param choice True to use browser, false to use IDE
+     */
+    public void setBrowserChoice(boolean choice) {
+        this.browserChoice = choice;
+    }
+
+
+    /**
+     * @return Browser choice attribute value
+     */
+    public boolean getBrowserChoice() {
+        return this.browserChoice;
     }
 }
