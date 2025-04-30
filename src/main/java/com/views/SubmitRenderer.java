@@ -21,12 +21,12 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
      * The constructor for the tree rendering component.
      * @param tree      the receiver is being configured for
      * @param value     the value to render
-     * @param sel  whether node is selected
+     * @param sel       whether node is selected
      * @param expanded  whether node is expanded
      * @param leaf      whether node is a lead node
      * @param row       row index
      * @param hasFocus  whether node has focus
-     * @return the rendered component
+     * @return          the rendered component
      */
     public Component getTreeCellRendererComponent(
             JTree tree,
@@ -49,9 +49,9 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
     }
 
     /**
-     * method used to set icons for subtasks with 0 or more points.
-     * @param value the node that the icon belongs to
-     * @return the correct icon depending on the points given
+     * Sets icons for subtasks with 0 or more points.
+     * @param value The node that the icon belongs to
+     * @return The correct icon depending on the points given
      */
     private Icon isSubmitted(Object value) {
         List<String> submits = ApplicationManager.getApplication().getService(StateManager.class).getSubmits();

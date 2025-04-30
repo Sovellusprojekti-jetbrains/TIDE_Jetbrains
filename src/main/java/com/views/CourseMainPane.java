@@ -39,53 +39,17 @@ import static javax.swing.BorderFactory.createEmptyBorder;
  * Class for displaying a template course window.
  */
 public class CourseMainPane {
-    /**
-     * The currently open project.
-     */
     private Project project;
-    /**
-     * The button that does the login action.
-     */
     private JButton loginButton;
-    /**
-     * The main pane for the window.
-     */
-    private JPanel panel1;
-    /**
-     * The pane that contains all the tabs for the window.
-     */
+    private JPanel mainPanel;
     private JTabbedPane tabbedPane;
-    /**
-     * The pane containing the login and settings buttons.
-     */
     private JPanel loginPane;
-    /**
-     * TitlePanel seems to exist for a test.
-     */
-    private JPanel titlePanel;
-    /**
-     * Label for the course. Investigate usefulness.
-     */
+    private JPanel titlePanel; // TODO: Does this exist for a reason?
     private JLabel courseLabel;
-    /**
-     * Course panel contains all the courses and their exercises.
-     */
     private JPanel coursePanel;
-    /**
-     * Courses pane should be turned into a normal pane instead of a scrollPane.
-     */
-    private JScrollPane coursesPane;
-    /**
-     * Button for logging out.
-     */
+    private JScrollPane coursesPane; // TODO: This is not meant to scroll under any circumstances.
     private JButton logoutButton;
-    /**
-     * Button that opens the settings window.
-     */
     private JButton settingsButton;
-    /**
-     * Button that refreshes the available courses and tasks.
-     */
     private JButton refreshButton;
     private JLabel timLabel;
     private JProgressBar progressBar1;
@@ -94,18 +58,13 @@ public class CourseMainPane {
     private List<JLabel> labelList;
 
     /**
-     * A color definition.
-     */
-    private final Color bgColor = JBColor.background();
-
-    /**
      * Creator for the CourseMainPane class, that holds the courses and tasks.
      * @param toolWindow The Toolwindow this view belongs to
      */
     public CourseMainPane(ToolWindow toolWindow) {
         thisToolWindow = toolWindow;
         this.project = toolWindow.getProject();
-        // ilman setLayout-kutsua tämä kaatuu nullpointteriin
+        // This setLayout needs to be here, else a nullpointer exception happens.
         coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
 
         coursesPane.getVerticalScrollBar().setUnitIncrement(Settings.getScrollSpeed());
@@ -166,7 +125,7 @@ public class CourseMainPane {
             public void propertyChange(PropertyChangeEvent evt) {
                 if ("logout".equals(evt.getPropertyName())) {
                     LogHandler.logInfo("CourseMainPane received event logout");
-                    switchToLoggedOut(); // Poistaa kurssinäkymän näkyvistä
+                    switchToLoggedOut(); // Hides the course view.
                 }
                 if ("login".equals(evt.getPropertyName())) {
                     LogHandler.logInfo("CourseMainPane received event login");
@@ -265,10 +224,10 @@ public class CourseMainPane {
         for (CourseTask courseTask: tasks) {
             courseTask.setParent(course);
             JPanel subPanel = createExercise(courseTask, course.getName());
-            subPanel.setBackground(bgColor);
+            subPanel.setBackground(JBColor.background());
             gbc.gridy = j;
             panel.add(subPanel, gbc);
-            panel.setBackground(bgColor);
+            panel.setBackground(JBColor.background());
             panel.setOpaque(true);
             j++;
         }
@@ -280,12 +239,11 @@ public class CourseMainPane {
      * @return main panel
      */
     public JPanel getContent() {
-        return panel1;
+        return mainPanel;
     }
 
     /**
      * Creates a panel for the task together with the buttons to download or open it.
-     *
      * @param courseTask a CourseTask object for which to create the panel
      * @param courseName Course name for save path
      * @return the subpanel that contains the tasks name and the two buttons
@@ -298,8 +256,8 @@ public class CourseMainPane {
         labelWeek.setFont(JBFont.medium().asBold());
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
-        buttonPanel.setBackground(bgColor);
-        subPanel.setBackground(bgColor);
+        buttonPanel.setBackground(JBColor.background());
+        subPanel.setBackground(JBColor.background());
 
         AsyncProcessIcon spinner = new AsyncProcessIcon("Loading");
         spinner.setVisible(false);  // Initially hidden
@@ -420,13 +378,12 @@ public class CourseMainPane {
             private void updateTree() {
                 SwingUtilities.invokeLater(() -> {
                     tree.setVisibleRowCount(tree.getRowCount());
-                    panel1.revalidate();
-                    panel1.repaint();
+                    mainPanel.revalidate();
+                    mainPanel.repaint();
                 });
             }
         });
 
-        //TODO: korjaa avaaminen tuplaklikillä lisäämällä  kurssifolderi.
         tree.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
@@ -471,12 +428,12 @@ public class CourseMainPane {
         // A panel that contains the courses and tasks is created in its own sub-program.
         tabbedPane.addTab("Courses", coursesPane); // Show Logout tab
         loginButton.setText("Logout");
-        ActionListener[] tempLogin = loginButton.getActionListeners(); //Need to change LoginButton into LogoutButton
+        ActionListener[] tempLogin = loginButton.getActionListeners();
         loginButton.removeActionListener(tempLogin[0]);
         ActionListener[] tempLogout = logoutButton.getActionListeners();
         loginButton.addActionListener(tempLogout[0]);
-        panel1.revalidate();
-        panel1.repaint();
+        mainPanel.revalidate();
+        mainPanel.repaint();
         tabbedPane.setSelectedComponent(coursesPane);
     }
 
@@ -498,8 +455,8 @@ public class CourseMainPane {
                 api.login();
             }
         });
-        panel1.revalidate();
-        panel1.repaint();
+        mainPanel.revalidate();
+        mainPanel.repaint();
         tabbedPane.setSelectedComponent(loginPane);
         setProgress(false, "");
     }
@@ -511,8 +468,8 @@ public class CourseMainPane {
     private void updateCourseContent(List<Course> courselist) {
         ApplicationManager.getApplication().invokeLater(() -> {
             createCourseListPane(courselist);
-            panel1.revalidate();
-            panel1.repaint();
+            mainPanel.revalidate();
+            mainPanel.repaint();
             setProgress(false, "");
         });
     }
@@ -528,8 +485,8 @@ public class CourseMainPane {
             progressBar1.setVisible(state);
             coursesProgress.setString(text);
             coursesProgress.setVisible(state);
-            panel1.revalidate();
-            panel1.repaint();
+            mainPanel.revalidate();
+            mainPanel.repaint();
         });
     }
 }
