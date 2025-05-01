@@ -1,6 +1,7 @@
 package com.listeners;
 
 import com.intellij.openapi.wm.ToolWindow;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -8,11 +9,8 @@ import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * A class that truncates names of courses automatically according to toolwindow size.
- */
-public final class SmartLabelResizer {
-    private SmartLabelResizer() { };
+public final class SmartLabelRewrapper {
+    private SmartLabelRewrapper() { };
     private static final Map<JLabel, String> STRING_HASH_MAP = new HashMap<>();
 
     /**
@@ -20,7 +18,7 @@ public final class SmartLabelResizer {
      * @param labels A list of labels, namely the course names.
      * @param toolWindow CourseMainPane.
      */
-    public static void setupSmartResizeForLabels(java.util.List<JLabel> labels, ToolWindow toolWindow) {
+    public static void setupSmartRewrapForLabels(java.util.List<JLabel> labels, ToolWindow toolWindow) {
         for (JLabel label : labels) {
             STRING_HASH_MAP.put(label, label.getText());
         }
@@ -42,52 +40,45 @@ public final class SmartLabelResizer {
      * @param availableWidth Width of the toolwindow.
      */
     private static void updateLabels(java.util.List<JLabel> labels, int availableWidth) {
-        System.out.println(labels.size());
         for (JLabel label : labels) {
             String fullText = STRING_HASH_MAP.get(label);
-            System.out.println(fullText);
             if (fullText == null) {
                 continue;
             }
 
             FontMetrics metrics = label.getFontMetrics(label.getFont());
             int textWidth = metrics.stringWidth(fullText);
-
-            System.out.println(textWidth + " | " + availableWidth);
-
             if (textWidth <= availableWidth) {
                 label.setText(fullText);
             } else {
-                String contracted = contractTextToFit(fullText, metrics, availableWidth);
+                String contracted = rewraptextToFit(fullText, metrics, availableWidth);
                 label.setText(contracted);
             }
         }
     }
 
     /**
-     * Changes the label text to the correct size, adding ellipses if it's too big otherwise.
+     * rewraps the label text by adding a newline to a empty space if the label is too long.
      * @param text Text that needs resizing.
      * @param metrics Metrics of the font being used.
      * @param maxWidth Width of the toolwindow.
      * @return The new text.
      */
-    private static String contractTextToFit(String text, FontMetrics metrics, int maxWidth) {
-        String ellipsis = "...  "; // double space for a bit of padding, because the scrollbar obscures them otherwise.
-        int ellipsisWidth = metrics.stringWidth(ellipsis);
-
-        if (ellipsisWidth > maxWidth) {
-            return ""; // No space even for ellipsis
-        }
-
-        int available = maxWidth - ellipsisWidth;
+    private static String rewraptextToFit(String text, FontMetrics metrics, int maxWidth) {
         StringBuilder sb = new StringBuilder();
+        if (!text.contains("<html>")) {
+            sb.append("<html>");
+        }
         for (char c : text.toCharArray()) {
             sb.append(c);
-            if (metrics.stringWidth(sb.toString()) > available) {
-                sb.setLength(sb.length() - 1); // remove last char that overflows
-                break;
+            if (metrics.stringWidth(sb.toString()) > maxWidth && !sb.toString().contains("<br>")) {
+                sb.replace(sb.lastIndexOf(" "), sb.lastIndexOf(" ") + 1, "<br>");
             }
         }
-        return sb + ellipsis;
+        if (!text.contains("</html>")) {
+            sb.append("</html>");
+        }
+        System.out.println(sb.toString());
+        return sb.toString();
     }
 }

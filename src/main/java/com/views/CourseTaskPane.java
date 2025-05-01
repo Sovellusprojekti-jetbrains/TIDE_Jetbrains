@@ -3,9 +3,12 @@
 
 package com.views;
 
+import java.util.Arrays;
 import java.util.regex.*;
 
 import com.customfile.TimTask;
+import com.listeners.SmartLabelResizer;
+import com.listeners.SmartLabelRewrapper;
 import com.state.ActiveState;
 import com.state.StateManager;
 import com.intellij.openapi.actionSystem.ActionManager;
@@ -104,7 +107,9 @@ public class CourseTaskPane {
      */
     private Project project;
     private static CourseTaskPane pane;
-
+    private List<JLabel> labelList = Arrays.asList(tehtavaTiedot, tehtavaNimi, demoTiedot, pisteLabel);
+    private List<JLabel> chanhingLabes = Arrays.asList(maxSubmitsLabel, deadLineLabel);
+    private ToolWindow thisToolWindow;
     /**
      * getter for the contents of the task panel.
      * @return the task panel
@@ -122,8 +127,8 @@ public class CourseTaskPane {
      */
     public CourseTaskPane(final ToolWindow toolWindow) {
         ActiveState stateManager = ActiveState.getInstance();
+        thisToolWindow = toolWindow;
         this.project = stateManager.getProject();
-
         // placeholder for opening the current exercise in browser
         avaaTehtava.addActionListener(event -> {
             ActionManager manager = ActionManager.getInstance();
@@ -172,7 +177,7 @@ public class CourseTaskPane {
                     setPoints(messages[0]);
                     setDeadLine(messages[1]);
                     setMaxSubmits(messages[2]);
-
+                    SmartLabelRewrapper.setupSmartRewrapForLabels(chanhingLabes, thisToolWindow);
                 }
                 /*if ("setDemoName".equals(evt.getPropertyName())) {
                     setDemoName((String[]) evt.getNewValue());
@@ -182,6 +187,7 @@ public class CourseTaskPane {
 
         stateManager.updateCourses();
         setProgress(false, "");
+        SmartLabelRewrapper.setupSmartRewrapForLabels(labelList, thisToolWindow);
         pane = this;
     }
 
