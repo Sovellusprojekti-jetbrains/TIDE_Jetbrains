@@ -71,8 +71,9 @@ public class SettingsScreen {
     /**
      * Create setting view for CourseMainPane scroll speed.
      * @param row GridBagLayout row index
+     * @return Next row index
      */
-    private void createScrollSpeedSetting(int row) {
+    private int createScrollSpeedSetting(int row) {
         StateManager state = Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = row++;
@@ -97,6 +98,7 @@ public class SettingsScreen {
         gbc.gridx = 2;
         gbc.anchor = GridBagConstraints.EAST;
         this.settings.add(scrollSpeedSpinner, gbc);
+        return row;
     }
 
 
