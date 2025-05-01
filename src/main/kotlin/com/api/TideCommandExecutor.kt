@@ -460,11 +460,18 @@ object TideCommandExecutor {
     private suspend fun handleCommandLine(command: List<String>, workingDirectory: File? = null): String =
         withContext(Dispatchers.IO) {
             val tidePath = ApplicationManager.getApplication().getService<StateManager?>(StateManager::class.java).getTidePath()
-
+            val command2 = command.toMutableList()
+            var pb = ProcessBuilder()
             if(!tidePath.equals("")) {
-                command[0] = tidePath + "/" + command[0]
+                command2[0] = tidePath + "/" + command[0]
+                if(System.getProperty("os.name").contains("Windows")) {
+                    command2[0] = command2[0] + ".exe"
+                }
+                pb = ProcessBuilder(command2)
+            } else {
+                pb = ProcessBuilder(command)
             }
-            val pb = ProcessBuilder(command)
+
             if (workingDirectory != null) {
                 pb.directory(workingDirectory)
             }

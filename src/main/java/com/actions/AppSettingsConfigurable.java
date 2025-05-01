@@ -55,6 +55,9 @@ public final class AppSettingsConfigurable implements Configurable {
         if (this.mySettingsComponent.getScrollSpeedSpinnerValue() != state.getScrollSpeed()) {
             return true;
         }
+        if (!this.mySettingsComponent.getTidePath().equals(state.getTidePath())) {
+            return true;
+        }
         return false;
     }
 
