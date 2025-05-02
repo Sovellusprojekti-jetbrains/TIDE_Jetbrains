@@ -1,6 +1,5 @@
 package com.listeners
 
-
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
@@ -9,47 +8,27 @@ import com.views.InstallScreen
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import javax.swing.JFrame
-import javax.swing.SwingUtilities
 
 class StartUp : StartupActivity {
-
-
-
-      override fun runActivity(project: Project) {
-
+    override fun runActivity(project: Project) {
         ApplicationManager.getApplication().invokeLater {
             val programName = "tide"
             val pluginsPath = System.getProperty("idea.plugins.path")
             println(pluginsPath)
             if (System.getProperty("os.name").contains("Windows")) {
-
-
                 val process = ProcessBuilder("where", programName).start()
                 val exitcode = process.waitFor()
-                if(exitcode != 0){
+                if (exitcode != 0) {
                     showInstall()
                 }
-
             } else {
                 val process = ProcessBuilder("which", programName).start()
                 val exitCode = process.waitFor()
-                if(exitCode != 0){
+                if (exitCode != 0) {
                     showInstall()
                 }
             }
-
-            /*
-            //tabbedPane.remove(loginPane); // Hide Login tab
-            val api = ApiHandler()
-            val result = async { api.checkLogin()}
-            TideCommandExecutor.checkLogin()
-            System.out.println()
-            val stateManager = ActiveState.getInstance()
-            stateManager.updateCourses()
-            */
         }
-          //showWindow(project)
-
     }
 
     /**
@@ -57,15 +36,13 @@ class StartUp : StartupActivity {
      * @param project The current project
      */
     private fun showWindow(project: Project) {
-
-            val toolWindowManager = ToolWindowManager.getInstance(project)
-            val window = checkNotNull(toolWindowManager.getToolWindow("TIDE Tool Window"))
-            window.show(null)
-
+        val toolWindowManager = ToolWindowManager.getInstance(project)
+        val window = checkNotNull(toolWindowManager.getToolWindow("TIDE Tool Window"))
+        window.show(null)
     }
 
     private fun showInstall() {
-        SwingUtilities.invokeLater {
+        ApplicationManager.getApplication().invokeLater {
             val frame = JFrame("Settings")
             frame.add(InstallScreen().content)
             frame.addWindowListener(object : WindowAdapter() {
@@ -77,6 +54,4 @@ class StartUp : StartupActivity {
             frame.isVisible = true
         }
     }
-
-
 }
