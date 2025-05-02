@@ -15,7 +15,7 @@ import java.awt.*;
 import java.beans.PropertyChangeListener;
 
 /**
- * Custom file editor.
+ * Opens the course view in the middle editor window. Not used in the current build.
  */
 public class MyCustomFileEditor implements FileEditor {
 

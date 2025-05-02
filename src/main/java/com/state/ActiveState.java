@@ -27,6 +27,7 @@ import java.io.File;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -35,7 +36,8 @@ import java.util.List;
  */
 public class ActiveState {
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private List<Course> courseList;
+    // creating the ArrayList here should make sure it's never null
+    private List<Course> courseList = new ArrayList<>();
     private String tideSubmitResponse;
     private String tideBaseResponse;
     private boolean isLoggedIn = false;

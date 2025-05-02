@@ -59,6 +59,9 @@ public final class AppSettingsConfigurable implements Configurable {
         if (this.mySettingsComponent.getBrowserChoice() != state.getBrowserChoice()) {
             return true;
         }
+        if (!this.mySettingsComponent.getTidePath().equals(state.getTidePath())) {
+            return true;
+        }
         return false;
     }
 
@@ -71,16 +74,19 @@ public final class AppSettingsConfigurable implements Configurable {
         File tempFile = new File(this.mySettingsComponent.getPathText());
         int spinnerValue = this.mySettingsComponent.getScrollSpeedSpinnerValue();
         boolean browserChoice = this.mySettingsComponent.getBrowserChoice();
+        String tidePathString = this.mySettingsComponent.getTidePath();
         StateManager state =
                 Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
-        if (!tempFile.exists()
-                || (spinnerValue < 1 || state.getMaxScrollSpeed() < spinnerValue)) {
+        if (!tempFile.isDirectory()
+                || (spinnerValue < 1 || state.getMaxScrollSpeed() < spinnerValue
+                || (!tidePathString.equals("") &&  !new File(tidePathString).isDirectory()))) {
             this.reset();
             throw new ConfigurationException("Please input valid settings!");
         } else {
             com.actions.Settings.savePath(this.mySettingsComponent.getPathText());
             com.actions.Settings.setScrollSpeed(spinnerValue);
             com.actions.Settings.setBrowserChoice(browserChoice);
+            com.actions.Settings.saveTidePath(tidePathString);
         }
     }
 
@@ -95,6 +101,7 @@ public final class AppSettingsConfigurable implements Configurable {
         this.mySettingsComponent.setScrollSpeedSpinnerValue(state.getScrollSpeed());
         this.mySettingsComponent.setBrowserChoice(state.getBrowserChoice());
         ActiveState.getInstance().signalBrowserChoiceUpdate();
+        this.mySettingsComponent.setTidePathText(state.getTidePath());
     }
 
     /**
