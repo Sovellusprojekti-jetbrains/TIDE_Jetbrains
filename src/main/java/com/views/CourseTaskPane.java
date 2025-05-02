@@ -59,11 +59,9 @@ public class CourseTaskPane {
     private JLabel maxSubmitsLabel;
     private Project project;
      private static CourseTaskPane courseTaskPane;
-    private List<JLabel> labelList = Arrays.asList(tehtavaTiedot, tehtavaNimi, demoTiedot, pisteLabel);
-    private List<JLabel> chanhingLabes = Arrays.asList(maxSubmitsLabel, deadLineLabel);
+    private List<JLabel> labelList = Arrays.asList(taskInformationLabel);
+    private List<JLabel> chanhingLabes = Arrays.asList(taskInfoLabel, taskNameLabel, pointsLabel, maxSubmitsLabel, deadLineLabel);
     private ToolWindow thisToolWindow;
-   
-
     /**
      * getter for the contents of the task panel.
      * @return the task panel

@@ -44,6 +44,11 @@ public final class SmartLabelRewrapper {
      */
     private static void updateLabels(java.util.List<JLabel> labels, int availableWidth) {
         for (JLabel label : labels) {
+            if (label.getText().contains("<br/>")) {
+                label.setText(label.getText().replaceAll("<br/>", " "));
+            }
+            STRING_HASH_MAP.put(label, label.getText());
+
             String fullText = STRING_HASH_MAP.get(label);
             if (fullText == null) {
                 continue;
@@ -80,7 +85,11 @@ public final class SmartLabelRewrapper {
             if (metrics.stringWidth(sb.toString()) > maxWidth && !sb.toString().contains("<br/>")
              || (metrics.stringWidth(sb.toString()) > maxWidth && sb.toString().startsWith("<br/>")
             && sb.toString().contains(" "))) {
-                sb.replace(sb.lastIndexOf(" "), sb.lastIndexOf(" ") + 1, "<br/>");
+                try {
+                    sb.replace(sb.lastIndexOf(" "), sb.lastIndexOf(" ") + 1, "<br/>");
+                } catch (Exception e) {
+                    continue;
+                }
             }
         }
         if (!text.contains("</html>") && !text.contains("<br/>")) {
