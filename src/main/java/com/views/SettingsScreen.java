@@ -71,7 +71,7 @@ public class SettingsScreen {
     /**
      * Create setting view for CourseMainPane scroll speed.
      * @param row GridBagLayout row index
-     * @return next row index
+     * @return Next row index
      */
     private int createScrollSpeedSetting(int row) {
         StateManager state = Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
@@ -114,30 +114,6 @@ public class SettingsScreen {
         if (value == JFileChooser.APPROVE_OPTION) {
             File selectedFolder = chooser.getSelectedFile();
             this.pathText.setText(selectedFolder.getAbsolutePath());
-        }
-    }
-
-
-    /**
-     * Displays error message on screen.
-     * @param message Error message as String
-     * @param title Title for error message
-     */
-    private void displayError(String message, String title) {
-        //com.views.InfoView.displayError(message, title);
-    }
-
-
-    /**
-     * Saves path to persistent state component.
-     */
-    private void updatePath() {
-        File tempFile = new File(this.pathText.getText());
-        if (tempFile.exists()) {
-            com.actions.Settings.savePath(this.pathText.getText());
-            com.actions.Settings.close();
-        } else {
-            displayError("Directory doesn't exist!", "Path error");
         }
     }
 

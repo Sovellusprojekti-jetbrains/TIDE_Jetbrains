@@ -23,7 +23,7 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="8433e" class="javax.swing.JLabel" binding="pisteLabel">
+          <component id="8433e" class="javax.swing.JLabel" binding="pointsLabel">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -98,7 +98,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="d1a8e" class="javax.swing.JLabel" binding="demoTiedot">
+          <component id="d1a8e" class="javax.swing.JLabel" binding="taskInfoLabel">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -106,7 +106,7 @@
               <text value="Demon nro - tht nro"/>
             </properties>
           </component>
-          <component id="d61fa" class="javax.swing.JLabel" binding="tehtavaNimi">
+          <component id="d61fa" class="javax.swing.JLabel" binding="taskNameLabel">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -114,7 +114,7 @@
               <text value="Tehtävän nimi"/>
             </properties>
           </component>
-          <component id="44332" class="javax.swing.JLabel" binding="tehtavaTiedot">
+          <component id="44332" class="javax.swing.JLabel" binding="taskInformationLabel">
             <constraints>
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -122,7 +122,7 @@
               <text value="To see instructions, please open the exercise in TIM"/>
             </properties>
           </component>
-          <component id="adf" class="javax.swing.JButton" binding="avaaTehtava">
+          <component id="adf" class="javax.swing.JButton" binding="openTaskButton">
             <constraints>
               <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
