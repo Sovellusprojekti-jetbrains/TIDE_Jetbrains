@@ -1,5 +1,0 @@
-indent_size: 4
-continuation_indent_size: 4
-disabled_rules:
-  - no-wildcard-imports
-  - max-line-length
