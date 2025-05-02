@@ -282,6 +282,7 @@ public class SettingsScreen {
     }
 
 
+    /**
      * This method is needed to check changes in the method in AppSettingsConfigurable.
      * @return text in the text field
      */
