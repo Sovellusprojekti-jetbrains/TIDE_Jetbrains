@@ -8,7 +8,6 @@ import com.views.InstallScreen
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import javax.swing.JFrame
-import javax.swing.SwingUtilities
 
 class StartUp : StartupActivity {
     override fun runActivity(project: Project) {
@@ -19,7 +18,7 @@ class StartUp : StartupActivity {
             if (System.getProperty("os.name").contains("Windows")) {
                 val process = ProcessBuilder("where", programName).start()
                 val exitcode = process.waitFor()
-                if(exitcode != 0){
+                if (exitcode != 0) {
                     showInstall()
                 }
             } else {
@@ -46,8 +45,7 @@ class StartUp : StartupActivity {
         ApplicationManager.getApplication().invokeLater {
             val frame = JFrame("Settings")
             frame.add(InstallScreen().content)
-            frame.addWindowListener(object : WindowAdapter()
-            {
+            frame.addWindowListener(object : WindowAdapter() {
                 override fun windowClosing(e: WindowEvent) {
                     frame.isVisible = false
                 }
