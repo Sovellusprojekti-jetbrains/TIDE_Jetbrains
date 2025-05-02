@@ -116,7 +116,7 @@ tasks {
         }
     }
 }
-// Plugin signing might be important later so these are only commented out
+
     /*
     signPlugin {
         certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
