@@ -119,8 +119,6 @@ public class SettingsScreen {
             field.setText(selectedFolder.getAbsolutePath());
         }
     }
-
-
     /**
      * Displays error message on screen.
      * @param message Error message as String
