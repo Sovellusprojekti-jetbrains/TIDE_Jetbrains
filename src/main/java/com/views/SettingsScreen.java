@@ -28,7 +28,7 @@ public class SettingsScreen {
     public SettingsScreen() {
         this.settings = new JPanel(new GridBagLayout());
         int row = 0;
-        row = tidePathSetting(row);  
+        row = tidePathSetting(row);
         row = createPathSetting(row);
         row = createScrollSpeedSetting(row);
         row = createBrowserSetting(row);
