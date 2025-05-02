@@ -68,7 +68,7 @@ public class Settings extends AnAction {
     public static void setScrollSpeed(int speed) {
         ApplicationManager.getApplication().getService(StateManager.class).setScrollSpeed(speed);
     }
-  
+
     /**
      * Calls StateManager to get value for whether to
      * open TIM documents in browser or IDE.
@@ -86,7 +86,7 @@ public class Settings extends AnAction {
     public static void setBrowserChoice(boolean choice) {
         ApplicationManager.getApplication().getService(StateManager.class).setBrowserChoice(choice);
     }
-  
+
     /**
      * Calls StateManager for getting user defined tide install path.
      * @return File path as a String
