@@ -20,7 +20,9 @@ import com.state.StateManager
 import com.views.InfoView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
@@ -454,6 +456,12 @@ object TideCommandExecutor {
         }
     }
 
+    fun handleCommandLineTest(command: List<String>): String =
+        runBlocking {
+            val result = async { handleCommandLine(command, null) }
+            result.await()
+        }
+
     /**
      * Executes a command asynchronously.
      * @param command the command to execute.
@@ -465,7 +473,13 @@ object TideCommandExecutor {
         workingDirectory: File? = null,
     ): String =
         withContext(Dispatchers.IO) {
-            val tidePath = ApplicationManager.getApplication().getService<StateManager?>(StateManager::class.java).getTidePath()
+            var tidePath = ""
+            try {
+                tidePath = ApplicationManager.getApplication().getService<StateManager?>(StateManager::class.java).getTidePath()
+            } catch (e: Exception) {
+                println(e.toString())
+            }
+
             val command2 = command.toMutableList()
             var pb = ProcessBuilder()
             if (!tidePath.trim().equals("")) {

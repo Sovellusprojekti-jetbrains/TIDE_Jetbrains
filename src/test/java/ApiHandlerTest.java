@@ -102,11 +102,10 @@ public class ApiHandlerTest {
      */
     @Test
     @Disabled
-    public void testHandleCommandLine() throws IOException, InterruptedException {
+    public void testHandleCommandLine() {
         List<String> command = new ArrayList<>();
         command.add("tide");
-
-        String result = apiHandler.handleCommandLine(command);
+        String result = TideCommandExecutor.INSTANCE.handleCommandLineTest(command);
         String expect = "Usage: tide [OPTIONS] COMMAND [ARGS]...\n"
                 + "\n"
                 + "  CLI tool for downloading and submitting TIM tasks.\n"
@@ -120,7 +119,7 @@ public class ApiHandlerTest {
                 + "  login        Log in the user and saves the token to the keyring.\n"
                 + "  logout       Log out the user and deletes the token from the keyring.\n"
                 + "  submit       Enter the path of a task folder or a file to submit the...\n"
-                + "  task         Task related commands.";
+                + "  task         Task related commands.\n";
         assertEquals(expect, result, "Should return tide help message");
     }
 
