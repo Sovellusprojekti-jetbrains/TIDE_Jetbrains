@@ -26,7 +26,7 @@ public class SettingsScreen {
         int row = 0;
         row = createPathSetting(row);
         row = createScrollSpeedSetting(row);
-        row = TidePathSetting(row);
+        row = tidePathSetting(row);
     }
 
 
@@ -106,6 +106,7 @@ public class SettingsScreen {
 
     /**
      * Displays a new window where user can choose folder to which demos will be saved.
+     * @param field the text field that is being worked on
      */
     private void choosePath(JTextField field) {
         JFileChooser chooser = new JFileChooser();
@@ -148,7 +149,7 @@ public class SettingsScreen {
      * @param row GridBagLayout row index
      * @return Next row index
      */
-    private int TidePathSetting(int row) {
+    private int tidePathSetting(int row) {
         JLabel tideSettingTitle = new JLabel("Tide install folder:");
         this.tidePathText = new JTextField();
         JButton browseButton = new JButton();
@@ -232,8 +233,8 @@ public class SettingsScreen {
      * This method is needed to check changes in the method in AppSettingsConfigurable.
      * @return text in the text field
      */
-    public String getTidePath(){
-        return  this.tidePathText.getText();
+    public String getTidePath() {
+        return this.tidePathText.getText();
     }
     /**
      * This method is needed to revert changes in the idea settings.

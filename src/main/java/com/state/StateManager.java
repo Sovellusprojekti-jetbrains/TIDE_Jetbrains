@@ -163,11 +163,19 @@ public final class StateManager implements PersistentStateComponent<StateManager
         return MAXSCROLLSPEED;
     }
 
+    /**
+     * sets the tide installation location.
+     * @param path path to the tide folder
+     */
     public void setTidePath(String path) {
         PropertiesComponent properties = PropertiesComponent.getInstance();
         properties.setValue("myPlugin.tidepath", path);
     }
 
+    /**
+     * get the path to tide installation folder.
+     * @return path to the tide installation folder
+     */
     public String getTidePath() {
         PropertiesComponent properties = PropertiesComponent.getInstance();
         return properties.getValue("myPlugin.tidepath", "");
