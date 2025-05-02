@@ -29,5 +29,6 @@ jobs:
         env:
           VALIDATE_JAVA: true
           JAVA_FILE_NAME: java_linter_config.xml
+          VALIDATE_KOTLIN: true
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
