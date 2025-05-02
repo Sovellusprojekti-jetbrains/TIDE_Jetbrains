@@ -292,10 +292,6 @@ public class CourseMainPane {
         JButton openButton = new JButton();
         openButton.setText("Open as Project");
         openButton.addActionListener(event -> {
-            int lastPartStart = courseTask.getPath().lastIndexOf('/');
-            String demoDirectory = File.separatorChar + courseTask.getPath().substring(lastPartStart + 1);
-            ApplicationInfo appInfo = ApplicationInfo.getInstance();
-            String productName = appInfo.getFullApplicationName();
             new ApiHandler().openTaskProject(Settings.getPath() + File.separatorChar + courseName);
         });
         buttonPanel.add(openButton);
@@ -400,7 +396,7 @@ public class CourseMainPane {
                         if (taskToOpen.getTaskDirectory() == null) {
                             taskPath = Settings.getPath() + File.separatorChar + courseTask.getParent().getName()
                                     + File.separatorChar + selectedNode.getRoot()
-                                    + File.separatorChar + parent.toString() + File.separatorChar + selectedNode.toString();
+                                    + File.separatorChar + parent + File.separatorChar + selectedNode;
                         } else {
                             taskPath = Settings.getPath() + File.separatorChar + courseTask.getParent().getName() + File.separatorChar
                                     + taskToOpen.getTaskDirectory()
