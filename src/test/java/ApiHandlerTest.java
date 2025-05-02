@@ -101,6 +101,7 @@ public class ApiHandlerTest {
      * TODO: Remove disabled annotation during local testing.
      */
     @Test
+    @Disabled
     public void testHandleCommandLine() throws IOException, InterruptedException {
         List<String> command = new ArrayList<>();
         command.add("tide");
