@@ -6,7 +6,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import java.io.*;
 
 /**
- * Tänne tide cli -kutsut.
+ * here are the tide commands.
  */
 public class ApiHandler {
     private TideCommandExecutor tideCommandExecutor;
