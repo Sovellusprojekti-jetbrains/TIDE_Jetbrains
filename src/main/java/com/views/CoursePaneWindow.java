@@ -4,8 +4,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import javax.swing.*;
 
 /**
- * Luokka, joka palauttaa tehtävän tiedot sisältävän sekä sen palauttamiseen ja
- * uudelleenaloittamiseen käytettävät toiminnot sisältävän paneelin.
+ * Class that returns the panel containing the buttons and info to manipulate the task that is open in the editor.
  */
 public class CoursePaneWindow {
     /**
@@ -14,7 +13,7 @@ public class CoursePaneWindow {
     private JPanel coursePane;
 
     /**
-     * haetaan Paneeli courseTaksPane luokalta.
+     * Get the panel from CourseTaskPane.
      * @param toolWindow the toolWindow that is used to contain the course task panel
      */
     public CoursePaneWindow(final ToolWindow toolWindow) {
@@ -22,8 +21,8 @@ public class CoursePaneWindow {
     }
 
     /**
-     * palautetaan paneeli.
-     * @return paneeli
+     * Returns the panel.
+     * @return The panel.
      */
     public JPanel getContent() {
         return coursePane;
