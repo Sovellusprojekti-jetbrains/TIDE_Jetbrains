@@ -1,11 +1,14 @@
 package com.views;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.state.ActiveState;
 import com.state.StateManager;
 
 import javax.swing.*;
 import javax.swing.text.DefaultFormatter;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.Objects;
 
@@ -13,9 +16,10 @@ import java.util.Objects;
  * Settings screen.
  */
 public class SettingsScreen {
-    private JPanel settings;
+    private final JPanel settings;
     private JTextField pathText;
     private JSpinner scrollSpeedSpinner;
+    private boolean browserChoice; // true to use browser, false to use IDE
     private JTextField tidePathText;
 
     /**
@@ -24,9 +28,10 @@ public class SettingsScreen {
     public SettingsScreen() {
         this.settings = new JPanel(new GridBagLayout());
         int row = 0;
+        row = tidePathSetting(row);
         row = createPathSetting(row);
         row = createScrollSpeedSetting(row);
-        row = tidePathSetting(row);
+        row = createBrowserSetting(row);
     }
 
 
@@ -76,7 +81,9 @@ public class SettingsScreen {
      * @return Next row index
      */
     private int createScrollSpeedSetting(int row) {
-        StateManager state = Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
+        StateManager state = Objects.requireNonNull(ApplicationManager
+                .getApplication()
+                .getService(StateManager.class));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = row++;
         gbc.gridx = 0;
@@ -100,6 +107,60 @@ public class SettingsScreen {
         gbc.gridx = 2;
         gbc.anchor = GridBagConstraints.EAST;
         this.settings.add(scrollSpeedSpinner, gbc);
+        return row;
+    }
+
+
+    /**
+     * Creates setting view for whether to open
+     * TIM view in the IDE or in the browser.
+     * @param row GridBagLayout row index
+     * @return Next row index
+     */
+    public int createBrowserSetting(int row) {
+        ButtonGroup buttonGroup = new ButtonGroup();
+        JRadioButton browserChoiceIde = new JRadioButton("IDE");
+        JRadioButton browserChoiceBrowser = new JRadioButton("Browser");
+        JLabel browserSettingTitle = new JLabel("Open exercise TIM pages in:");
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        this.browserChoice = com.actions.Settings.getBrowserChoice();
+        browserChoiceIde.setSelected(!this.browserChoice);
+        browserChoiceBrowser.setSelected(this.browserChoice);
+
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0.0;
+        gbc.gridy = row++;
+        gbc.gridx = 0;
+        this.settings.add(browserSettingTitle, gbc);
+
+        browserChoiceIde.setToolTipText("Open exercise TIM pages in IDE");
+        browserChoiceBrowser.setToolTipText("Open exercise TIM pages in browser");
+        buttonGroup.add(browserChoiceIde);
+        buttonGroup.add(browserChoiceBrowser);
+
+        browserChoiceBrowser.addActionListener(e ->
+                this.browserChoice = browserChoiceBrowser.isSelected());
+        browserChoiceIde.addActionListener(e ->
+                this.browserChoice = !browserChoiceIde.isSelected());
+
+        gbc.gridx = 2;
+        gbc.anchor = GridBagConstraints.EAST;
+        this.settings.add(browserChoiceIde, gbc);
+        gbc.gridy = row++;
+        this.settings.add(browserChoiceBrowser, gbc);
+
+        ActiveState activeState = ActiveState.getInstance();
+        activeState.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("browserSetting".equals(evt.getPropertyName())) {
+                    browserChoiceIde.setSelected(!browserChoice);
+                    browserChoiceBrowser.setSelected(browserChoice);
+                }
+            }
+        });
+
         return row;
     }
 
@@ -205,12 +266,31 @@ public class SettingsScreen {
 
 
     /**
+     * Sets the choice for whether to open the TIM view in browser.
+     * @param choice True to use browser, false to use IDE
+     */
+    public void setBrowserChoice(boolean choice) {
+        this.browserChoice = choice;
+    }
+
+
+    /**
+     * @return Browser choice attribute value
+     */
+    public boolean getBrowserChoice() {
+        return this.browserChoice;
+    }
+
+
+    /**
      * This method is needed to check changes in the method in AppSettingsConfigurable.
      * @return text in the text field
      */
     public String getTidePath() {
         return this.tidePathText.getText();
     }
+
+
     /**
      * This method is needed to revert changes in the idea settings.
      * @param text valid path to set into the pathText text field
