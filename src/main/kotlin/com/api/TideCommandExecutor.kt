@@ -456,10 +456,11 @@ object TideCommandExecutor {
         }
     }
 
-    fun handleCommandLineTest(command: List<String>): String = runBlocking {
-        val result = async { handleCommandLine(command, null) }
-        result.await()
-    }
+    fun handleCommandLineTest(command: List<String>): String =
+        runBlocking {
+            val result = async { handleCommandLine(command, null) }
+            result.await()
+        }
 
     /**
      * Executes a command asynchronously.
@@ -475,7 +476,6 @@ object TideCommandExecutor {
             var tidePath = ""
             try {
                 tidePath = ApplicationManager.getApplication().getService<StateManager?>(StateManager::class.java).getTidePath()
-
             } catch (e: Exception) {
                 println(e.toString())
             }
