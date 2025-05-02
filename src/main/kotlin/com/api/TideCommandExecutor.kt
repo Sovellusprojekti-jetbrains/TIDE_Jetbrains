@@ -6,6 +6,7 @@ import com.course.SubTask
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.application.ApplicationInfo
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.EDT
 import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.components.service
@@ -15,6 +16,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findDocument
 import com.intellij.util.io.awaitExit
 import com.state.ActiveState
+import com.state.StateManager
 import com.views.InfoView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -229,7 +231,7 @@ object TideCommandExecutor {
      */
     fun openTaskProject(taskPath: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            var command: String = ""
+            var command = ""
             if (System.getenv("DEVELOP") != null && System.getenv("DEVELOP").equals("true")) {
                 command = System.getenv("IDEA_LOCATION")
                 LogHandler.logDebug(
@@ -239,6 +241,9 @@ object TideCommandExecutor {
             } else {
                 // TODO: This gets the directory where the IDE is installed.
                 // Implement actual handling of supported IDEs and operating systems.
+                // this whole system was build because we could not assume that users have their ide
+                // in path. Mac is just impossible to like this we will just assume that Mac users will
+                // have it in their path.
                 command = PathManager.getHomePath() + "/bin/"
                 val appInfo = ApplicationInfo.getInstance()
                 val productName = appInfo.fullApplicationName
@@ -274,11 +279,16 @@ object TideCommandExecutor {
                         }
                         command += "rider"
                     }
-                    // TODO: This is the Mac section. It is not possible to test functionality without a Mac
                 } else {
+                    //TODO: test that this works on Mac
+                    //here we assume that Mac users have their ide in their path
+                    //Mac is very peculiar about running the folder so we do it like this
                     if (productName.contains("IDEA")) {
+                            command = "idea"
                     } else if (productName.contains("PyCharm")) {
+                            command = "pycharm"
                     } else if (productName.contains("Rider")) {
+                            command = "rider"
                     }
                 }
             }
@@ -462,7 +472,19 @@ object TideCommandExecutor {
         workingDirectory: File? = null,
     ): String =
         withContext(Dispatchers.IO) {
-            val pb = ProcessBuilder(command)
+            val tidePath = ApplicationManager.getApplication().getService<StateManager?>(StateManager::class.java).getTidePath()
+            val command2 = command.toMutableList()
+            var pb = ProcessBuilder()
+            if(!tidePath.trim().equals("")) {
+                command2[0] = tidePath + "/" + command[0]
+                if(System.getProperty("os.name").contains("Windows")) {
+                    command2[0] = command2[0] + ".exe"
+                }
+                pb = ProcessBuilder(command2)
+            } else {
+                pb = ProcessBuilder(command)
+            }
+
             if (workingDirectory != null) {
                 pb.directory(workingDirectory)
             }
