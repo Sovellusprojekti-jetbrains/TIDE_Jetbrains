@@ -349,4 +349,12 @@ public class ActiveState {
     public void signalScrollSpeedUpdate() {
         pcs.firePropertyChange("scrollSpeed", null, null);
     }
+
+
+    /**
+     * Used to notify SettingsScreen of change in browser setting to facilitate JRadioButton update on settings revert.
+     */
+    public void signalBrowserChoiceUpdate() {
+        pcs.firePropertyChange("browserSetting", null, null);
+    }
 }

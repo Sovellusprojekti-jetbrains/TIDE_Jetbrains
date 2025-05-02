@@ -3,6 +3,7 @@ package com.customfile;
 import com.api.ApiHandler;
 import com.api.LogHandler;
 import com.course.SubTask;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -15,12 +16,16 @@ import com.util.Util;
 import com.views.CourseTaskPane;
 import com.views.InfoView;
 
+import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * This class "extends" VirtualFile with actions of tide task.
@@ -84,6 +89,7 @@ public final class TimTask {
      * @param project project that is open in the ide.
      */
     public void openInBrowser(String baseURL, Project project) {
+        StateManager state = Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
         String url = baseURL;
         //TODO: handle null case.
         url += this.task.getPath();
@@ -93,14 +99,25 @@ public final class TimTask {
         //thus we split the id to get the relevant part in the middle.
         url += "#" + this.task.getTaskFiles().get(0).getTaskIdExt().split("\\.")[1];
 
-        // Set the website URL
-        HtmlEditorProvider.setUrl(url);
+        if (state.getBrowserChoice()) {
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().browse(new URI(url));
+                } catch (URISyntaxException | IOException e) {
+                    InfoView.displayError(e.getMessage());
+                    LogHandler.logError("TimTask.OpenInBrowser()", e);
+                }
+            }
+        } else {
+            // Set the website URL
+            HtmlEditorProvider.setUrl(url);
 
-        // Create a virtual file with the expected name
-        VirtualFile file = new LightVirtualFile("website_view"); // Must match HtmlEditorProvider's `accept()`
+            // Create a virtual file with the expected name
+            VirtualFile file = new LightVirtualFile("website_view"); // Must match HtmlEditorProvider's `accept()`
 
-        // Open the file in the editor
-        FileEditorManager.getInstance(project).openFile(file, true);
+            // Open the file in the editor
+            FileEditorManager.getInstance(project).openFile(file, true);
+        }
     }
 
     /**

@@ -4,6 +4,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.NlsContexts;
+import com.state.ActiveState;
 import com.state.StateManager;
 import com.views.SettingsScreen;
 import org.jetbrains.annotations.Nullable;
@@ -55,6 +56,9 @@ public final class AppSettingsConfigurable implements Configurable {
         if (this.mySettingsComponent.getScrollSpeedSpinnerValue() != state.getScrollSpeed()) {
             return true;
         }
+        if (this.mySettingsComponent.getBrowserChoice() != state.getBrowserChoice()) {
+            return true;
+        }
         if (!this.mySettingsComponent.getTidePath().equals(state.getTidePath())) {
             return true;
         }
@@ -69,6 +73,7 @@ public final class AppSettingsConfigurable implements Configurable {
     public void apply() throws ConfigurationException {
         File tempFile = new File(this.mySettingsComponent.getPathText());
         int spinnerValue = this.mySettingsComponent.getScrollSpeedSpinnerValue();
+        boolean browserChoice = this.mySettingsComponent.getBrowserChoice();
         String tidePathString = this.mySettingsComponent.getTidePath();
         StateManager state =
                 Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
@@ -80,10 +85,9 @@ public final class AppSettingsConfigurable implements Configurable {
         } else {
             com.actions.Settings.savePath(this.mySettingsComponent.getPathText());
             com.actions.Settings.setScrollSpeed(spinnerValue);
+            com.actions.Settings.setBrowserChoice(browserChoice);
             com.actions.Settings.saveTidePath(tidePathString);
-
         }
-
     }
 
     /**
@@ -95,6 +99,8 @@ public final class AppSettingsConfigurable implements Configurable {
                 Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
         this.mySettingsComponent.setPathText(state.getPath());
         this.mySettingsComponent.setScrollSpeedSpinnerValue(state.getScrollSpeed());
+        this.mySettingsComponent.setBrowserChoice(state.getBrowserChoice());
+        ActiveState.getInstance().signalBrowserChoiceUpdate();
         this.mySettingsComponent.setTidePathText(state.getTidePath());
     }
 
