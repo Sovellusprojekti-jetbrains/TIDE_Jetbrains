@@ -102,7 +102,7 @@ public class ApiHandlerTest {
      */
     @Test
     @Disabled
-    public void testHandleCommandLine() throws IOException, InterruptedException {
+    public void testHandleCommandLine() {
         List<String> command = new ArrayList<>();
         command.add("tide");
         String result = TideCommandExecutor.INSTANCE.handleCommandLineTest(command);

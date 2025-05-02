@@ -9,7 +9,6 @@ import java.io.*;
  * Tänne tide cli -kutsut.
  */
 public class ApiHandler {
-    private final String checkLoginCommand = "tide check-login --json";
     private TideCommandExecutor tideCommandExecutor;
 
     /**
@@ -21,7 +20,7 @@ public class ApiHandler {
 
     /**
      * Sets the tide command executor to a new TideCommandExecutor, for mocking purposes.
-     * @param executor
+     * @param executor the tideCommandExecutor for handling tide commands
      */
     public void setTideCommandExecutor(TideCommandExecutor executor) {
         tideCommandExecutor = executor;
