@@ -462,7 +462,7 @@ object TideCommandExecutor {
             val tidePath = ApplicationManager.getApplication().getService<StateManager?>(StateManager::class.java).getTidePath()
             val command2 = command.toMutableList()
             var pb = ProcessBuilder()
-            if(!tidePath.equals("")) {
+            if(!tidePath.trim().equals("")) {
                 command2[0] = tidePath + "/" + command[0]
                 if(System.getProperty("os.name").contains("Windows")) {
                     command2[0] = command2[0] + ".exe"

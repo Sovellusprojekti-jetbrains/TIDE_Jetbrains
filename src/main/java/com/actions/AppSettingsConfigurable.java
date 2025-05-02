@@ -72,9 +72,9 @@ public final class AppSettingsConfigurable implements Configurable {
         String tidePathString = this.mySettingsComponent.getTidePath();
         StateManager state =
                 Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
-        if (!tempFile.exists()
+        if (!tempFile.isDirectory()
                 || (spinnerValue < 1 || state.getMaxScrollSpeed() < spinnerValue
-                )) {
+                || (!tidePathString.equals("") &&  !new File(tidePathString).isDirectory()))) {
             this.reset();
             throw new ConfigurationException("Please input valid settings!");
         } else {
