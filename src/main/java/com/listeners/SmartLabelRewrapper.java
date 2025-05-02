@@ -68,20 +68,28 @@ public final class SmartLabelRewrapper {
      * @return The new text.
      */
     private static String rewraptextToFit(String text, FontMetrics metrics, int maxWidth) {
+        if (!text.contains(" ")) {
+            return text;
+        }
         StringBuilder sb = new StringBuilder();
-        if (!text.contains("<html>")) {
+        if (!text.contains("<html>") && !text.contains("<br/>")) {
             sb.append("<html>");
         }
         for (char c : text.toCharArray()) {
             sb.append(c);
-            if (metrics.stringWidth(sb.toString()) > maxWidth && !sb.toString().contains("<br>")) {
-                sb.replace(sb.lastIndexOf(" "), sb.lastIndexOf(" ") + 1, "<br>");
+            if (metrics.stringWidth(sb.toString()) > maxWidth && !sb.toString().contains("<br/>")
+             || (metrics.stringWidth(sb.toString()) > maxWidth && sb.toString().startsWith("<br/>")
+            && sb.toString().contains(" "))) {
+                sb.replace(sb.lastIndexOf(" "), sb.lastIndexOf(" ") + 1, "<br/>");
             }
         }
-        if (!text.contains("</html>")) {
+        if (!text.contains("</html>") && !text.contains("<br/>")) {
             sb.append("</html>");
         }
-        System.out.println(sb.toString());
+        if (sb.substring(sb.lastIndexOf("<br/>")).contains(" ")
+                && metrics.stringWidth(sb.substring(sb.lastIndexOf("<br/>"))) > maxWidth) {
+            sb.replace(sb.lastIndexOf("<br/>"), sb.length(), rewraptextToFit(sb.substring(sb.lastIndexOf("<br/>")), metrics, maxWidth));
+        }
         return sb.toString();
     }
 }
