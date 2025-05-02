@@ -9,6 +9,9 @@ import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * a copy of the smartLabelResizer class, that wraps the text instead of using 3 dots if its too long.
+ */
 public final class SmartLabelRewrapper {
     private SmartLabelRewrapper() { };
     private static final Map<JLabel, String> STRING_HASH_MAP = new HashMap<>();
@@ -58,7 +61,7 @@ public final class SmartLabelRewrapper {
     }
 
     /**
-     * rewraps the label text by adding a newline to a empty space if the label is too long.
+     * rewraps the label text by replacing an empty space with a <br> tag if the label is too long.
      * @param text Text that needs resizing.
      * @param metrics Metrics of the font being used.
      * @param maxWidth Width of the toolwindow.
