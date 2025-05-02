@@ -1,7 +1,6 @@
 package com.views;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.ui.JBFont;
 import com.listeners.SmartLabelResizer;
