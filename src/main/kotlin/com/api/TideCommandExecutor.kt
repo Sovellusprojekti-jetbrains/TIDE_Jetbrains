@@ -213,13 +213,6 @@ object TideCommandExecutor {
 
         if (taskId != "") {
             loadExercise(courseDir, taskPath, taskId, "-f")
-            // Virtual file must be refreshed and Intellij Idea's UI notified
-            /*file.refresh(true, true) //Doesn't work anyway
-            CoroutineScope(Dispatchers.IO).launch {
-                if (file.isValid) {
-                    file.parent.refresh(false, false)
-                }
-            }*/
         } else {
             com.views.InfoView.displayError("File open in editor is not a tide task!")
         }
@@ -280,21 +273,21 @@ object TideCommandExecutor {
                         command += "rider"
                     }
                 } else {
-                    //TODO: test that this works on Mac
-                    //here we assume that Mac users have their ide in their path
-                    //Mac is very peculiar about running the folder so we do it like this
+                    // TODO: test that this works on Mac
+                    // here we assume that Mac users have their ide in their path
+                    // Mac is very peculiar about running the folder so we do it like this
                     if (productName.contains("IDEA")) {
-                            command = "idea"
+                        command = "idea"
                     } else if (productName.contains("PyCharm")) {
-                            command = "pycharm"
+                        command = "pycharm"
                     } else if (productName.contains("Rider")) {
-                            command = "rider"
+                        command = "rider"
                     }
                 }
             }
 
-            // how does this behave in production?
-            // do we need to catch and handle or print the string returned by handleCommandLine?
+            // How does this behave in production?
+            // Do we need to catch and handle or print the string returned by handleCommandLine?
             handleCommandLine(listOf(command, taskPath))
         }
     }
@@ -475,9 +468,9 @@ object TideCommandExecutor {
             val tidePath = ApplicationManager.getApplication().getService<StateManager?>(StateManager::class.java).getTidePath()
             val command2 = command.toMutableList()
             var pb = ProcessBuilder()
-            if(!tidePath.trim().equals("")) {
+            if (!tidePath.trim().equals("")) {
                 command2[0] = tidePath + "/" + command[0]
-                if(System.getProperty("os.name").contains("Windows")) {
+                if (System.getProperty("os.name").contains("Windows")) {
                     command2[0] = command2[0] + ".exe"
                 }
                 pb = ProcessBuilder(command2)
