@@ -1,11 +1,14 @@
 package com.views;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.state.ActiveState;
 import com.state.StateManager;
 
 import javax.swing.*;
 import javax.swing.text.DefaultFormatter;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.Objects;
 
@@ -144,6 +147,17 @@ public class SettingsScreen {
         this.settings.add(browserChoiceIde, gbc);
         gbc.gridy = row++;
         this.settings.add(browserChoiceBrowser, gbc);
+
+        ActiveState activeState = ActiveState.getInstance();
+        activeState.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("browserSetting".equals(evt.getPropertyName())) {
+                    browserChoiceIde.setSelected(!browserChoice);
+                    browserChoiceBrowser.setSelected(browserChoice);
+                }
+            }
+        });
 
         return row;
     }
