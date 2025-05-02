@@ -9,6 +9,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.wm.ToolWindowManager
 import com.state.ActiveState
 import kotlinx.coroutines.runBlocking
+
 class ProjectStartUp : ProjectActivity {
     override suspend fun execute(project: Project) {
         com.intellij.openapi.project.DumbService.getInstance(project).runWhenSmart { // Project must be ready first
@@ -23,7 +24,7 @@ class ProjectStartUp : ProjectActivity {
                 while (true) {
                     val toolWindow = ToolWindowManager.getInstance(project).getToolWindow("TIDE Tool Window")
                     if (toolWindow != null && (toolWindow.isAvailable)) {
-                        break;
+                        break
                     }
                 }
             }

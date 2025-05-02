@@ -12,45 +12,28 @@ import javax.swing.JFrame
 import javax.swing.SwingUtilities
 
 class StartUp : StartupActivity {
-
-
-
       override fun runActivity(project: Project) {
 
-        ApplicationManager.getApplication().invokeLater {
-            val programName = "tide"
-            val pluginsPath = System.getProperty("idea.plugins.path")
-            println(pluginsPath)
-            if (System.getProperty("os.name").contains("Windows")) {
+          ApplicationManager.getApplication().invokeLater {
+              val programName = "tide"
+              val pluginsPath = System.getProperty("idea.plugins.path")
+              println(pluginsPath)
+              if (System.getProperty("os.name").contains("Windows")) {
 
-
-                val process = ProcessBuilder("where", programName).start()
-                val exitcode = process.waitFor()
-                if(exitcode != 0){
-                    showInstall()
-                }
-
-            } else {
-                val process = ProcessBuilder("which", programName).start()
-                val exitCode = process.waitFor()
-                if(exitCode != 0){
-                    showInstall()
-                }
-            }
-
-            /*
-            //tabbedPane.remove(loginPane); // Hide Login tab
-            val api = ApiHandler()
-            val result = async { api.checkLogin()}
-            TideCommandExecutor.checkLogin()
-            System.out.println()
-            val stateManager = ActiveState.getInstance()
-            stateManager.updateCourses()
-            */
-        }
-          //showWindow(project)
-
-    }
+                  val process = ProcessBuilder("where", programName).start()
+                  val exitcode = process.waitFor()
+                  if(exitcode != 0){
+                      showInstall()
+                  }
+              } else {
+                  val process = ProcessBuilder("which", programName).start()
+                  val exitCode = process.waitFor()
+                  if(exitCode != 0){
+                      showInstall()
+                  }
+              }
+          }
+      }
 
     /**
      * Displays the toolwindow.
