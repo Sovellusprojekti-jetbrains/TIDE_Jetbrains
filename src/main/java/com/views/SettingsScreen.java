@@ -120,11 +120,7 @@ public class SettingsScreen {
         }
     }
 
-
-    
-
     /**
-     *
      * @param row GridBagLayout row index
      * @return Next row index
      */
