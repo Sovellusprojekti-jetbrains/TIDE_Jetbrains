@@ -31,3 +31,8 @@ jobs:
           JAVA_FILE_NAME: java_linter_config.xml
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run KTLint
+        run: |
+          curl -sSLO https://github.com/pinterest/ktlint/releases/download/1.2.1/ktlint && chmod +x ktlint
+          ./ktlint --relative

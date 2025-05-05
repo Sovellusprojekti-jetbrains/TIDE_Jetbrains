@@ -20,7 +20,9 @@ import com.state.StateManager
 import com.views.InfoView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
@@ -30,12 +32,12 @@ import java.util.*
 import kotlin.io.path.Path
 
 object TideCommandExecutor {
-    private const val loginCommand = "tide login"
-    private const val logoutCommand = "tide logout"
-    private const val coursesCommand = "tide courses --json"
-    private const val checkLoginCommand = "tide check-login --json"
-    private const val submitCommand = "tide submit"
-    private const val taskCreateCommand = "tide task create"
+    private const val LOGIN_COMMAND = "tide login"
+    private const val LOGOUT_COMMAND = "tide logout"
+    private const val COURSES_COMMAND = "tide courses --json"
+    private const val CHECK_LOGIN_COMMAND = "tide check-login --json"
+    private const val SUBMIT_COMMAND = "tide submit"
+    private const val TASK_CREATE_COMMAND = "tide task create"
 
     /**
      * Logs in to TIDE-CLI asynchronously.
@@ -43,7 +45,7 @@ object TideCommandExecutor {
     fun login() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val output = handleCommandLine(loginCommand.split(" ")) // Run command
+                val output = handleCommandLine(LOGIN_COMMAND.split(" ")) // Run command
                 withContext(Dispatchers.Main) {
                     val activeState = ActiveState.getInstance()
                     // TODO: This can't be the right way to do this.
@@ -72,7 +74,7 @@ object TideCommandExecutor {
     fun fetchCoursesAsync() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val jsonString = handleCommandLine(coursesCommand.split(" ")) // Already runs in Dispatchers.IO
+                val jsonString = handleCommandLine(COURSES_COMMAND.split(" ")) // Already runs in Dispatchers.IO
                 val handler = JsonHandler()
                 val courses = handler.jsonToCourses(jsonString)
 
@@ -92,7 +94,7 @@ object TideCommandExecutor {
             val activeState = service<ActiveState>() // Get IntelliJ service
 
             runCatching {
-                val jsonOutput = handleCommandLine(checkLoginCommand.split(" ")) // Run command
+                val jsonOutput = handleCommandLine(CHECK_LOGIN_COMMAND.split(" ")) // Run command
                 val output = Gson().fromJson(jsonOutput, LoginOutput::class.java) // Parse JSON
 
                 if (output.loggedIn != null) {
@@ -119,7 +121,7 @@ object TideCommandExecutor {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 // Doesn't really care if you're logged in or not.
-                val result = handleCommandLine(logoutCommand.split(" "))
+                val result = handleCommandLine(LOGOUT_COMMAND.split(" "))
                 withContext(Dispatchers.Main) {
                     val activeState = ActiveState.getInstance()
                     activeState.logout()
@@ -142,7 +144,7 @@ object TideCommandExecutor {
         CoroutineScope(Dispatchers.IO).launch {
             val activeState = ActiveState.getInstance()
             try {
-                val commandLineArgs: ArrayList<String> = ArrayList(submitCommand.split(" "))
+                val commandLineArgs: ArrayList<String> = ArrayList(SUBMIT_COMMAND.split(" "))
                 commandLineArgs.add(file.path)
                 val response = handleCommandLine(commandLineArgs)
                 activeState.setTideSubmitResponse(response)
@@ -191,7 +193,7 @@ object TideCommandExecutor {
                 courseDirFile.mkdir()
             }
 
-            val commandLineArgs: ArrayList<String> = ArrayList(taskCreateCommand.split(" "))
+            val commandLineArgs: ArrayList<String> = ArrayList(TASK_CREATE_COMMAND.split(" "))
             commandLineArgs.addAll(cmdArgs)
             val response = handleCommandLine(commandLineArgs, courseDirFile)
             activeState.setTideBaseResponse(response)
@@ -363,13 +365,11 @@ object TideCommandExecutor {
             Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "$projectName", "$relativeCsprojPath", "{$projectGuid}"
             EndProject
             """.trimIndent()
-
         val folderEntry =
             """
             Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "$demoName", "$demoName", "{$folderGuid}"
             EndProject
             """.trimIndent()
-
         val projectConfigSection =
             """
             {$projectGuid}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -451,6 +451,17 @@ object TideCommandExecutor {
     }
 
     /**
+     * Java doesn't like calling Kotlin coroutine functions
+     * so this is needed as an intermediator.
+     * @param command The command to execute.
+     */
+    fun handleCommandLineTest(command: List<String>): String =
+        runBlocking {
+            val result = async { handleCommandLine(command, null) }
+            result.await()
+        }
+
+    /**
      * Executes a command asynchronously.
      * @param command the command to execute.
      * @param workingDirectory optional working directory.
@@ -463,9 +474,16 @@ object TideCommandExecutor {
         tideCommand: Boolean = true,
     ): String =
         withContext(Dispatchers.IO) {
-            val tidePath = ApplicationManager.getApplication().getService<StateManager?>(StateManager::class.java).getTidePath()
+            var tidePath = ""
+            try {
+                tidePath = ApplicationManager.getApplication().getService<StateManager?>(StateManager::class.java).getTidePath()
+            } catch (e: Exception) {
+                println(e.toString())
+            }
+
             val command2 = command.toMutableList()
             var pb = ProcessBuilder()
+
             if (!tidePath.trim().equals("") && tideCommand) {
                 command2[0] = tidePath + "/" + command[0]
                 if (System.getProperty("os.name").contains("Windows")) {

@@ -7,6 +7,9 @@ import com.intellij.openapi.project.Project;
 import com.state.ActiveState;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * AnAction to submit an exercise to TIM.
+ */
 public class Submit extends AnAction {
     /**
      * This function is called when subtask is submitted via TIDE dropdown menu action.
@@ -20,7 +23,7 @@ public class Submit extends AnAction {
 
     /**
      * This function is called by the IDE when changes in the editor occur. Action's state will be updated.
-     * @param e AnActionEvent originating from idea's internal messaging system.
+     * @param e AnActionEvent originating from Intellij platform's internal messaging system.
      */
     @Override
     public void update(@NotNull AnActionEvent e) {

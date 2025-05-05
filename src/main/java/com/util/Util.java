@@ -46,6 +46,11 @@ public final class Util {
         ApplicationManager.getApplication().invokeLater(() -> {
             ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
             ToolWindow window = toolWindowManager.getToolWindow(id);
+            if (window == null) {
+                LogHandler.logInfo("Util.setWindowAvailable could not find requested ToolWindow.");
+                LogHandler.logDebug(new String[]{"id"}, new String[]{id});
+                throw new NullPointerException("Could not find ToolWindow " + id);
+            }
             var callerClass = ReflectionUtil.getGrandCallerClass();
             if (callerClass != null) {
                 window.setIcon(IconLoader.getIcon(iconPath, callerClass));
@@ -66,6 +71,8 @@ public final class Util {
             ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
             ToolWindow window = toolWindowManager.getToolWindow("Output Window");
             ToolWindow window2 = toolWindowManager.getToolWindow("Course Task");
+            assert window != null;
+            assert window2 != null;
             var callerClass = ReflectionUtil.getGrandCallerClass();
             if (callerClass != null) {
                 window.setIcon(IconLoader.getIcon(iconPath, callerClass));

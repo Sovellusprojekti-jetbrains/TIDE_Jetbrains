@@ -9,7 +9,6 @@ val versionProp = prop("pluginVersion")
 val projectType = System.getenv("IDE_TYPE") ?: "IC"
 
 abstract class GeneratePluginInfo : DefaultTask() {
-
     @get:Input
     abstract val pluginVersion: Property<String>
 
@@ -28,7 +27,7 @@ abstract class GeneratePluginInfo : DefaultTask() {
                 public static final String VERSION = "${pluginVersion.get()}";
             }
 
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 }
@@ -88,17 +87,15 @@ dependencies {
             create("IC", ideaPlatformVersionProp, useInstaller = false)
             bundledPlugins("com.intellij.java", "JUnit")
         }
-
     }
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
     implementation("com.google.code.gson:gson:2.12.1")
     testImplementation("com.intellij.remoterobot:remote-robot:0.11.23")
-    testImplementation ("com.intellij.remoterobot:remote-fixtures:0.11.23")
+    testImplementation("com.intellij.remoterobot:remote-fixtures:0.11.23")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.mockito:mockito-core:5.16.1")
 }
-
 
 tasks {
     // Set the JVM compatibility versions
@@ -112,14 +109,14 @@ tasks {
         }
     }
 
-
     patchPluginXml {
         sinceBuild.set(pluginSinceBuildProp)
-        if (pluginUntilBuildProp.isNotEmpty())
+        if (pluginUntilBuildProp.isNotEmpty()) {
             untilBuild.set(pluginUntilBuildProp)
-
+        }
     }
-    // Plugin signing might be important later so these are only commented out
+}
+
     /*
     signPlugin {
         certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
@@ -131,23 +128,21 @@ tasks {
         token.set(System.getenv("PUBLISH_TOKEN"))
     }*/
 
-}
-
 tasks.test {
     useJUnitPlatform()
 
     jvmArgs("--add-javaagent=${configurations.testRuntimeClasspath.get().find { it.name.contains("mockito") }?.absolutePath}")
 }
 
-
 // From https://gitlab.jyu.fi/tie/tools/comtest.intellij/-/blob/master/build.gradle.kts
-fun prop(key: String) = extra.properties[key] as? String
-    ?: error("Property `$key` is not defined in gradle.properties")
+fun prop(key: String) =
+    extra.properties[key] as? String
+        ?: error("Property `$key` is not defined in gradle.properties")
 
 val generatePluginInfo = tasks.register<GeneratePluginInfo>("generatePluginInfo") {
     pluginVersion.set(
         project.findProperty("pluginVersion")?.toString()
-            ?: error("Missing 'pluginVersion' property.")
+            ?: error("Missing 'pluginVersion' property."),
     )
     outputDir.set(layout.buildDirectory.dir("generated/sources/version/java"))
 }

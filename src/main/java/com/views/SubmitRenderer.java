@@ -1,5 +1,6 @@
 package com.views;
 
+import com.intellij.openapi.util.IconLoader;
 import com.state.StateManager;
 import com.course.SubTask;
 import com.intellij.icons.AllIcons;
@@ -63,15 +64,15 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
                     SubTask parent = (SubTask) parentNode.getUserObject();
                     if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == 0
                             && s.contains(parent.getIdeTaskId())) {
-                        return AllIcons.Debugger.Db_set_breakpoint;
+                        return IconLoader.getIcon("/icons/0_points.svg");
                     }
                     if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) < parent.getMaxPoints()
                             && s.contains(parent.getIdeTaskId())) {
-                        return AllIcons.Debugger.Db_no_suspend_breakpoint;
+                        return IconLoader.getIcon("/icons/some_points.svg");
                     }
                     if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == parent.getMaxPoints()
                             && s.contains(parent.getIdeTaskId())) {
-                        return AllIcons.General.SuccessDialog;
+                        return IconLoader.getIcon("/icons/oikein.svg");
                     }
                 }
             }

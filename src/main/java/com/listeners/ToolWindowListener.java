@@ -7,7 +7,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.ui.content.Content;
 import com.views.CourseMainPane;
-import com.views.CoursePaneWindow;
+import com.views.CourseTaskPane;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -42,7 +42,7 @@ public final class ToolWindowListener implements ToolWindowManagerListener  {
         if ("Course Task".equals(toolWindow.getId())) {
             System.out.println("course view was opened");
             for (Content content : contentManager.getContents()) {
-                if ("Course View".equals(content.getTabName())) {
+                if ("Task View".equals(content.getTabName())) {
                     // Select existing tab instead of adding a new one
                     contentManager.setSelectedContent(content);
                     System.out.println("Tab '" + "Course View" + "' already exists. Selecting it.");
@@ -51,7 +51,7 @@ public final class ToolWindowListener implements ToolWindowManagerListener  {
             }
             toolWindow.getContentManager().addContent(
                     com.intellij.ui.content.ContentFactory.getInstance().createContent(
-                            new CoursePaneWindow(toolWindow).getContent(), "Course View", false));
+                            new CourseTaskPane(toolWindow).getContent(), "Course View", false));
         }
         if ("Output Window".equals(toolWindow.getId())) {
             System.out.println("output window was opened");
@@ -64,9 +64,6 @@ public final class ToolWindowListener implements ToolWindowManagerListener  {
                     return;
                 }
             }
-            toolWindow.getContentManager().addContent(
-                    com.intellij.ui.content.ContentFactory.getInstance().createContent(
-                            new CoursePaneWindow(toolWindow).getContent(), "Output", false));
         }
 
     }

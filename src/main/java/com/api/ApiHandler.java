@@ -1,21 +1,14 @@
 package com.api;
 
 import com.course.SubTask;
-import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.*;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * Tänne tide cli -kutsut.
+ * here are the tide commands.
  */
 public class ApiHandler {
-    private final String checkLoginCommand = "tide check-login --json";
     private TideCommandExecutor tideCommandExecutor;
 
     /**
@@ -27,7 +20,7 @@ public class ApiHandler {
 
     /**
      * Sets the tide command executor to a new TideCommandExecutor, for mocking purposes.
-     * @param executor
+     * @param executor the tideCommandExecutor for handling tide commands
      */
     public void setTideCommandExecutor(TideCommandExecutor executor) {
         tideCommandExecutor = executor;
@@ -68,19 +61,6 @@ public class ApiHandler {
 
 
     /**
-     * This method is used to save changes in virtual file to physical file on disk.
-     * @param file Virtual file
-     */
-    private void syncChanges(VirtualFile file) {
-        FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
-        Document document = fileDocumentManager.getDocument(file);
-        if (document != null) {
-            fileDocumentManager.saveDocument(document);
-        }
-    }
-
-
-    /**
      * Resets subtask back to the state of latest submit.
      * @param task to reset.
      * @param courseDirectory Course directory
@@ -102,37 +82,6 @@ public class ApiHandler {
 
 
     /**
-     * asks tide-cli if there is a login and returns a boolean. Deprecated.
-     * @return login status in boolean
-     */
-    public boolean isLoggedIn() {
-        try {
-            String jsonOutput = handleCommandLine(List.of(checkLoginCommand.split(" ")));
-            // Parse JSON
-            Gson gson = new Gson();
-            LoginOutput output = gson.fromJson(jsonOutput, LoginOutput.class);
-            if (output.loggedIn != null) {
-                return true;
-            }
-
-        } catch (IOException | InterruptedException ex) {
-            com.api.LogHandler.logError("192: ApiHandler.isLoggedIn()", ex);
-            ex.printStackTrace();
-        }
-
-
-        return false;
-    }
-
-    /**
-     * Asks tide to check for login info asynchronously.
-     */
-    public void checkLogin() {
-        tideCommandExecutor.checkLogin();
-    }
-
-
-    /**
      * opens the clicked subtasks project.
      * @param taskPath path to the folder that has the clicked subtask.
      */
@@ -140,57 +89,5 @@ public class ApiHandler {
         tideCommandExecutor.openTaskProject(taskPath);
     }
 
-    /**
-     * Serialized login data.
-     */
-    class LoginOutput {
-        @SerializedName(value = "logged_in")
-        private String loggedIn;
-    }
 
-
-    /**
-     *
-     * @param command the command that is executed.
-     * @return the results of the execution.
-     * @throws IOException if the command is wrong or can't be executed then an error is thrown.
-     */
-    public String handleCommandLine(List<String> command) throws IOException, InterruptedException {
-        return handleCommandLine(command, null);
-    }
-
-    /**
-     * Executes a process with given arguments.
-     * A working directory is needed for the TIDE command
-     * 'tide task create' which is supposed to be executed
-     * in the course subdirectory.
-     *
-     * @param command     command that is executed.
-     * @param workingDirectory working directory for TIDE-CLI
-     * @return the results of the execution
-     * @throws IOException if the command is wrong or can't be executed then an error is thrown.
-     */
-    public String handleCommandLine(List<String> command, File workingDirectory) throws IOException, InterruptedException {
-        ProcessBuilder pb = new ProcessBuilder(command);
-
-        if (workingDirectory != null) {
-            pb.directory(workingDirectory);
-        }
-
-        pb.redirectErrorStream(true);
-        Process process = pb.start();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String tideOutput = reader.lines().collect(Collectors.joining(System.lineSeparator()));
-        System.out.println("Raw Output from Python:" + System.lineSeparator() + tideOutput);
-
-        int exitCode = process.waitFor();
-        System.out.println("Process exited with code: " + exitCode);
-
-        if (exitCode != 0) {
-            // Maybe there could be more advanced error reporting
-            com.views.InfoView.displayError("An error occurred during TIDE call");
-        }
-
-        return tideOutput;
-    }
 }
