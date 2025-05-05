@@ -60,7 +60,7 @@ public class CourseTaskPane {
     private Project project;
      private static CourseTaskPane courseTaskPane;
     private List<JLabel> labelList = Arrays.asList(taskInformationLabel);
-    private List<JLabel> chanhingLabes = Arrays.asList(taskInfoLabel, taskNameLabel, pointsLabel, maxSubmitsLabel, deadLineLabel);
+    private List<JLabel> changingLabels = Arrays.asList(taskInfoLabel, taskNameLabel, pointsLabel, maxSubmitsLabel, deadLineLabel);
     private ToolWindow thisToolWindow;
     /**
      * getter for the contents of the task panel.
@@ -113,7 +113,7 @@ public class CourseTaskPane {
                     setPoints(messages[0]);
                     setDeadLine(messages[1]);
                     setMaxSubmits(messages[2]);
-                    SmartLabelRewrapper.setupSmartRewrapForLabels(chanhingLabes, thisToolWindow);
+                    SmartLabelRewrapper.setupSmartRewrapForLabels(changingLabels, thisToolWindow);
                 }
             }
         });
