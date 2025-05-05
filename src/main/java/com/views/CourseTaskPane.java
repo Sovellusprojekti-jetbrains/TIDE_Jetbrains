@@ -24,86 +24,38 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 /**
-* Hoidetaan kaikki ruudun oikealla puolella olevan tehtävän palautuksen suorittavan ikkunan toiminnalliset sekä graaffiset toiminnot
-* Taskpane = Kaikki muut paneelit sisältävä pääpaneeli
-* demoTiedot = tidecli kautta saadut Demon numero sekä tehtävän numero sisältävä label
-* tehtavaNimi = Tidecli kautta saadun tehtävän nimen sisältävä label.
-* avaaTehtava = Nappi, jota painamalla tehtävät avautuvat selaimen ikkunaan
-* tehtavaTiedot = Tidecli kautta saadun tehtävän tiedot, ei toimi vielä tidecli puolella.
-* pisteLabel = Tehtävän palautuksen jälkeen Tidecli antamat pisteet sisältävä label, ei toimi vielä tidecli puolella
-* submitButton = nappi, jota painamalla tehtävä lähetetään tidecli kautta TIM-järjestelmälle.
-* showOutputButton = nappi, jota painamalla näytetään tidecli lähettämät tiedot terminaalissa.
-* resetButton = nappi, jota painamalla tyhjennetään IDE:n tiedosto ja haetaan siihen tehtävän tiedosto uudestaan.
-* submitPane = paneeli, joka sisältää pisteLabelin, submitButtonin sekä showOutputButtonin
-* infoPane = paneeli, joka sisältää demoTiedot, tehtäväNimi, avaaTehtävä sekä tehtäväTiedot osat.
-*  resetPane = paneeli, joka siältää resetButtonin.
+* Handles the functional and graphical operations of the right-side task view.
+* Taskpane = Main panel containing everything else.
+* taskInfoLabel = Label containing the task number from TIDE-CLI.
+* taskNameLabel = Label containing the name of the task from TIDE-CLI.
+* openTaskButton = Opens a browser window that shows the task description in TIM.
+* taskInformationLabel = Nonfunctional label for containing the task description when available from TIM.
+* pointsLabel = Label containing the points received from TIDE-CLI.
+* submitButton = Submits the task to TIDE-CLI.
+* showOutputButton = Shows the output view.
+* resetButton = Refetches the task that is open in the editor view from TIDE-CLI.
+* submitPane = Contains the points label, submit button and show output buttons.
+* infoPane = Contains taskInfo, taskName, openTaskButton, and openTaskButton.
+* resetPane = Contains resetButton.
 */
 public class CourseTaskPane {
-    /**
-     * The main task pane.
-     */
     private JPanel taskPane;
-    /**
-     * Information of the exercise.
-     */
-    private JLabel demoTiedot;
-    /**
-     * Name of the task.
-     */
-    private JLabel tehtavaNimi;
-    /**
-     * Button that opens the task.
-     */
-    private JButton avaaTehtava;
-    /**
-     * Label for the task info.
-     */
-    private JLabel tehtavaTiedot;
-    /**
-     * Points earned from the task.
-     */
-    private JLabel pisteLabel;
-    /**
-     * A submit button.
-     */
+    private JLabel taskInfoLabel;
+    private JLabel taskNameLabel;
+    private JButton openTaskButton;
+    private JLabel taskInformationLabel;
+    private JLabel pointsLabel;
     private JButton submitButton;
-    /**
-     * Button that shows the console output.
-     */
     private JButton showOutputButton;
-    /**
-     * Button for resetting.
-     */
     private JButton resetButton;
-    /**
-     * Panel for the submission.
-     */
     private JPanel submitPane;
-    /**
-     * Info panel.
-     */
     private JPanel infoPane;
-    /**
-     * Reset panel.
-     */
     private JPanel resetPane;
-    /**
-     * progressbar for ongoing tasks.
-     */
     private JProgressBar taskProgressBar;
-    /**
-     * label for the possible deadline of the subtask.
-     */
     private JLabel deadLineLabel;
-    /**
-     * label for the maximum amount of submissions allowed.
-     */
     private JLabel maxSubmitsLabel;
-    /**
-     * Holds the current project.
-     */
     private Project project;
-    private static CourseTaskPane pane;
+    private static CourseTaskPane courseTaskPane;
 
     /**
      * getter for the contents of the task panel.
@@ -117,40 +69,22 @@ public class CourseTaskPane {
      * A constructor that takes a ToolWindow as a parameter.
      * The Toolwindow instance lets us access the current project
      * and thus the path of the currently open file.
-     * TODO: implement actual functionality somewhere
      * @param toolWindow A ToolWindow instance
      */
     public CourseTaskPane(final ToolWindow toolWindow) {
         ActiveState stateManager = ActiveState.getInstance();
         this.project = stateManager.getProject();
 
-        // placeholder for opening the current exercise in browser
-        avaaTehtava.addActionListener(event -> {
-            ActionManager manager = ActionManager.getInstance();
-            AnAction action = manager.getAction("com.actions.BrowserAction");
-            manager.tryToExecute(action, null, null, null, true);
-        });
+        addActionListeners();
 
-        //Resets subtask back to the state of last submit.
-        resetButton.addActionListener(event -> {
-            ActionManager manager = ActionManager.getInstance();
-            AnAction action = manager.getAction("com.actions.ResetExercise");
-            manager.tryToExecute(action, null, null, null, true);
-        });
+        addPropertyChangeListeners(stateManager);
 
-        // submit exercise
-        submitButton.addActionListener(event -> {
-            ActionManager manager = ActionManager.getInstance();
-            AnAction action = manager.getAction("com.actions.Submit");
-            manager.tryToExecute(action, null, null, null, true);
-        });
+        stateManager.updateCourses();
+        setProgress(false, "");
+        courseTaskPane = this;
+    }
 
-        showOutputButton.addActionListener(event -> {
-            Util.showWindow(project, "Output Window", true);
-        });
-
-
-
+    private void addPropertyChangeListeners(ActiveState stateManager) {
         stateManager.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -172,17 +106,36 @@ public class CourseTaskPane {
                     setPoints(messages[0]);
                     setDeadLine(messages[1]);
                     setMaxSubmits(messages[2]);
-
                 }
-                /*if ("setDemoName".equals(evt.getPropertyName())) {
-                    setDemoName((String[]) evt.getNewValue());
-                }*/
             }
         });
+    }
 
-        stateManager.updateCourses();
-        setProgress(false, "");
-        pane = this;
+    private void addActionListeners() {
+        // Open the current exercise in browser
+        openTaskButton.addActionListener(event -> {
+            ActionManager manager = ActionManager.getInstance();
+            AnAction action = manager.getAction("com.actions.BrowserAction");
+            manager.tryToExecute(action, null, null, null, true);
+        });
+
+        // Reset subtask back to the state of last submit.
+        resetButton.addActionListener(event -> {
+            ActionManager manager = ActionManager.getInstance();
+            AnAction action = manager.getAction("com.actions.ResetExercise");
+            manager.tryToExecute(action, null, null, null, true);
+        });
+
+        // Submit exercise
+        submitButton.addActionListener(event -> {
+            ActionManager manager = ActionManager.getInstance();
+            AnAction action = manager.getAction("com.actions.Submit");
+            manager.tryToExecute(action, null, null, null, true);
+        });
+
+        showOutputButton.addActionListener(event -> {
+            Util.showWindow(project, "Output Window", true);
+        });
     }
 
 
@@ -231,7 +184,7 @@ public class CourseTaskPane {
      * @param message message containing the points for the submission
      */
     public void setPoints(String message) {
-            pisteLabel.setText(message);
+            pointsLabel.setText(message);
     }
 
     /**
@@ -253,7 +206,7 @@ public class CourseTaskPane {
      * Private method for disabling buttons.
      */
     private void disableButtons() {
-        this.avaaTehtava.setEnabled(false);
+        this.openTaskButton.setEnabled(false);
         this.resetButton.setEnabled(false);
         this.submitButton.setEnabled(false);
     }
@@ -262,7 +215,7 @@ public class CourseTaskPane {
      * Private method for enabling buttons.
      */
     private void enableButtons() {
-        this.avaaTehtava.setEnabled(true);
+        this.openTaskButton.setEnabled(true);
         this.resetButton.setEnabled(true);
         this.submitButton.setEnabled(true);
     }
@@ -271,14 +224,14 @@ public class CourseTaskPane {
      * Changes the text values of the demoTiedot abel and tehtavaNimi label.
      */
     private void setDemoName() {
-        SwingUtilities.invokeLater(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
             if (TimTask.getInstance() != null) {
                 String info = TimTask.getInstance().getCourseName() + " - " + TimTask.getInstance().getDemoName();
-                this.demoTiedot.setText(info);
-                this.tehtavaNimi.setText(TimTask.getInstance().getSubTaskName());
+                this.taskInfoLabel.setText(info);
+                this.taskNameLabel.setText(TimTask.getInstance().getSubTaskName());
             } else {
-                this.demoTiedot.setText(" - ");
-                this.tehtavaNimi.setText("");
+                this.taskInfoLabel.setText(" - ");
+                this.taskNameLabel.setText("");
             }
         });
     }
@@ -289,7 +242,7 @@ public class CourseTaskPane {
      * @param text Text to display on progress bar.
      */
     public void setProgress(boolean state, String text) {
-        SwingUtilities.invokeLater(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
             taskProgressBar.setString(text);
             taskProgressBar.setVisible(state);
             taskPane.revalidate();
@@ -302,7 +255,7 @@ public class CourseTaskPane {
      * @return CourseTaskPane.
      */
     public static CourseTaskPane getInstance() {
-        return pane;
+        return courseTaskPane;
     }
 }
 

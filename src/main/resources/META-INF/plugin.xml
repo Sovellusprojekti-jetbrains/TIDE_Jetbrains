@@ -51,12 +51,12 @@
                            displayType="BALLOON"/>
     </extensions>
     <actions>
-        <action id="MyPlugin.OpenCustomView"
+        <!--<action id="MyPlugin.OpenCustomView"
                 class="com.actions.OpenCustomEditorAction"
                 text="Open Custom View"
                 description="Opens the custom view in the editor">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
-        </action>
+        </action>-->
         <group
                 id="org.intellij.sdk.action.GroupedActions"
                 text="Tide"

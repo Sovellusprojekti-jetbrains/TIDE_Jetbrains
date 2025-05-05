@@ -32,11 +32,14 @@ public final class StateManager implements PersistentStateComponent<StateManager
         private List<String> submits;
 
         private int scrollSpeed;
+        private boolean browserChoice;
+        private String tidePath;
     }
 
     private State myState = new State(); //Object reference to state class
     private static final int DEFAULTSCROLLSPEED = 16;
     private static final int MAXSCROLLSPEED = 1000;
+    private static final boolean DEFAULTBROWSERCHOICE = false;
 
     /**
      * This method is called when updating state class fields and to save the state of the State class when IDE is closed.
@@ -159,5 +162,40 @@ public final class StateManager implements PersistentStateComponent<StateManager
      */
     public int getMaxScrollSpeed() {
         return MAXSCROLLSPEED;
+    }
+
+    /**
+     * Set whether to open the TIM view in browser (true) or IDE (false).
+     * @param choice Choice to set
+     */
+    public void setBrowserChoice(boolean choice) {
+        PropertiesComponent properties = PropertiesComponent.getInstance();
+        properties.setValue("myPlugin.browserChoice", choice);
+    }
+
+    /**
+     * @return Whether to open the TIM view in browser (true) or IDE (false)
+     */
+    public boolean getBrowserChoice() {
+        PropertiesComponent properties = PropertiesComponent.getInstance();
+        return properties.getBoolean("myPlugin.browserChoice", DEFAULTBROWSERCHOICE);
+    }
+
+    /**
+     * sets the tide installation location.
+     * @param path path to the tide folder
+     */
+    public void setTidePath(String path) {
+        PropertiesComponent properties = PropertiesComponent.getInstance();
+        properties.setValue("myPlugin.tidepath", path);
+    }
+
+    /**
+     * get the path to tide installation folder.
+     * @return path to the tide installation folder
+     */
+    public String getTidePath() {
+        PropertiesComponent properties = PropertiesComponent.getInstance();
+        return properties.getValue("myPlugin.tidepath", "");
     }
 }

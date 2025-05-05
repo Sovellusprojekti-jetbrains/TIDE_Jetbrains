@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
+import com.intellij.openapi.keymap.KeymapUtil;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.ui.Messages;
 
@@ -29,12 +30,7 @@ public class About extends AnAction {
         }
         Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
         var shortcuts = keymap.getShortcuts("com.actions.Submit");
-        StringBuilder submitShortcut = new StringBuilder();
 
-        for (var key : shortcuts) {
-            submitShortcut.append(key.toString());
-            submitShortcut.append(System.lineSeparator());
-        }
         String message = String.format(
                 """
                 <html>
@@ -43,7 +39,7 @@ public class About extends AnAction {
                         <p>Learn how to use extension: <a href='%s'>tide instructions</a></p>
                         <p>Keyboard shortcut for submit: %s</p>
                     </body>
-                </html>""", version, manualUrl, submitShortcut);
+                </html>""", version, manualUrl, KeymapUtil.getShortcutsText(shortcuts));
         Messages.showMessageDialog(
                 message,
                 "About",
