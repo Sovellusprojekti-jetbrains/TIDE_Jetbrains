@@ -188,7 +188,7 @@ object TideCommandExecutor {
                 LogHandler.logDebug(arrayOf("courseDir", "cmdArgs"), arrayOf(courseDir, ""))
                 LogHandler.logInfo("loadExercise called without arguments")
             }
-            val courseDirFile: File = File(Settings.getPath(), courseDir)
+            val courseDirFile = File(Settings.getPath(), courseDir)
             if (!courseDirFile.exists()) {
                 courseDirFile.mkdir()
             }
@@ -198,6 +198,15 @@ object TideCommandExecutor {
             val response = handleCommandLine(commandLineArgs, courseDirFile)
             activeState.setTideBaseResponse(response)
             activeState.updateCourses()
+
+            val path = Path(courseDirFile.absolutePath)
+            val list = mutableListOf<File>()
+            listAllFiles(path, list)
+            if (list.isNotEmpty()) {
+                for (file: File in list) {
+                    createOrUpdateSlnWithCsproj(courseDirFile.absolutePath, file.absolutePath)
+                }
+            }
         }
     }
 
@@ -216,7 +225,7 @@ object TideCommandExecutor {
         if (taskId != "") {
             loadExercise(courseDir, taskPath, taskId, "-f")
         } else {
-            com.views.InfoView.displayError("File open in editor is not a tide task!")
+            InfoView.displayError("File open in editor is not a tide task!")
         }
     }
 
@@ -248,15 +257,6 @@ object TideCommandExecutor {
                     } else if (productName.contains("PyCharm")) {
                         command += "pycharm64.exe"
                     } else if (productName.contains("Rider")) {
-                        // TODO: make check for solution in demo folder
-                        val root = File(taskPath)
-                        val path = Path(taskPath)
-                        val list = mutableListOf<File>()
-                        listAllFiles(path, list)
-
-                        for (file: File in list) {
-                            createOrUpdateSlnWithCsproj(taskPath, file.absolutePath)
-                        }
                         command += "rider64.exe"
                     }
                 } else if (System.getProperty("os.name").contains("Linux")) {
@@ -265,19 +265,12 @@ object TideCommandExecutor {
                     } else if (productName.contains("PyCharm")) {
                         command += "pycharm"
                     } else if (productName.contains("Rider")) {
-                        val path = Path(taskPath)
-                        val list = mutableListOf<File>()
-                        listAllFiles(path, list)
-
-                        for (file: File in list) {
-                            createOrUpdateSlnWithCsproj(taskPath, file.absolutePath)
-                        }
                         command += "rider"
                     }
                 } else {
                     // TODO: test that this works on Mac
                     // here we assume that Mac users have their ide in their path
-                    // Mac is very peculiar about running the folder so we do it like this
+                    // Mac is very peculiar about opening the folder so we do it like this
                     if (productName.contains("IDEA")) {
                         command = "idea"
                     } else if (productName.contains("PyCharm")) {
@@ -288,9 +281,9 @@ object TideCommandExecutor {
                 }
             }
 
-            // How does this behave in production?
-            // Do we need to catch and handle or print the string returned by handleCommandLine?
-            handleCommandLine(listOf(command, taskPath))
+            // how does this behave in production?
+            // do we need to catch and handle or print the string returned by handleCommandLine?
+            handleCommandLine(listOf(command, taskPath), tideCommand = false)
         }
     }
 
@@ -351,18 +344,20 @@ object TideCommandExecutor {
         val slnDir = slnFile.parentFile ?: File(".")
         var relativeCsprojPath = ""
         if (!slnFile.isFile()) {
-            relativeCsprojPath = slnDir
-                .toPath()
-                .relativize(csprojFile.toPath())
-                .toString()
-                .replace("\\", "/")
+            relativeCsprojPath =
+                slnDir
+                    .toPath()
+                    .relativize(csprojFile.toPath())
+                    .toString()
+                    .replace("\\", "/")
             relativeCsprojPath = relativeCsprojPath.split("/", ignoreCase = false, limit = 2)[1]
         } else {
-            relativeCsprojPath = slnDir
-                .toPath()
-                .relativize(csprojFile.toPath())
-                .toString()
-                .replace("\\", "/")
+            relativeCsprojPath =
+                slnDir
+                    .toPath()
+                    .relativize(csprojFile.toPath())
+                    .toString()
+                    .replace("\\", "/")
         }
 
         val projectEntry =
@@ -370,13 +365,11 @@ object TideCommandExecutor {
             Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "$projectName", "$relativeCsprojPath", "{$projectGuid}"
             EndProject
             """.trimIndent()
-
         val folderEntry =
             """
             Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "$demoName", "$demoName", "{$folderGuid}"
             EndProject
             """.trimIndent()
-
         val projectConfigSection =
             """
             {$projectGuid}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -425,9 +418,10 @@ object TideCommandExecutor {
             } else {
                 lines.add(projectEntry)
             }
-            val projectConfigurationPlatformsIndex = lines.indexOfFirst {
-                it.trim() == "GlobalSection(ProjectConfigurationPlatforms) = postSolution"
-            }
+            val projectConfigurationPlatformsIndex =
+                lines.indexOfFirst {
+                    it.trim() == "GlobalSection(ProjectConfigurationPlatforms) = postSolution"
+                }
             // Insert project configuration section at the start of project configuration
             if (globalIndex != -1 && projectConfigurationPlatformsIndex > globalIndex) {
                 lines.add(projectConfigurationPlatformsIndex + 1, projectConfigSection)
@@ -456,6 +450,11 @@ object TideCommandExecutor {
         }
     }
 
+    /**
+     * Java doesn't like calling Kotlin coroutine functions
+     * so this is needed as an intermediator.
+     * @param command The command to execute.
+     */
     fun handleCommandLineTest(command: List<String>): String =
         runBlocking {
             val result = async { handleCommandLine(command, null) }
@@ -466,11 +465,13 @@ object TideCommandExecutor {
      * Executes a command asynchronously.
      * @param command the command to execute.
      * @param workingDirectory optional working directory.
+     * @param tideCommand tells whether the command uses tide-cli
      * @return the results of the execution.
      */
     private suspend fun handleCommandLine(
         command: List<String>,
         workingDirectory: File? = null,
+        tideCommand: Boolean = true,
     ): String =
         withContext(Dispatchers.IO) {
             var tidePath = ""
@@ -482,7 +483,8 @@ object TideCommandExecutor {
 
             val command2 = command.toMutableList()
             var pb = ProcessBuilder()
-            if (!tidePath.trim().equals("")) {
+
+            if (!tidePath.trim().equals("") && tideCommand) {
                 command2[0] = tidePath + "/" + command[0]
                 if (System.getProperty("os.name").contains("Windows")) {
                     command2[0] = command2[0] + ".exe"
