@@ -42,19 +42,14 @@ public final class SmartLabelResizer {
      * @param availableWidth Width of the toolwindow.
      */
     private static void updateLabels(java.util.List<JLabel> labels, int availableWidth) {
-        System.out.println(labels.size());
         for (JLabel label : labels) {
             String fullText = STRING_HASH_MAP.get(label);
-            System.out.println(fullText);
             if (fullText == null) {
                 continue;
             }
 
             FontMetrics metrics = label.getFontMetrics(label.getFont());
             int textWidth = metrics.stringWidth(fullText);
-
-            System.out.println(textWidth + " | " + availableWidth);
-
             if (textWidth <= availableWidth) {
                 label.setText(fullText);
             } else {
