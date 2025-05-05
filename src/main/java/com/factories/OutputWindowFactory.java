@@ -9,7 +9,7 @@ import com.views.OutputWindow;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A factory to create an OutputWindow instance.
+ * A factory for creating an OutputWindow instance.
  */
 public final class OutputWindowFactory implements ToolWindowFactory {
     @Override

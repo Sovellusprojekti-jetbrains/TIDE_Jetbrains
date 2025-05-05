@@ -9,7 +9,7 @@ import com.views.LoginWindow;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Factory for creating a LoginWindow instance.
+ * A factory for creating a LoginWindow instance.
  */
 public final class LoginWindowFactory implements ToolWindowFactory {
     @Override
