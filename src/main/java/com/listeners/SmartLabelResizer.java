@@ -67,14 +67,16 @@ public final class SmartLabelResizer {
      * @return The new text.
      */
     private static String contractTextToFit(String text, FontMetrics metrics, int maxWidth) {
-        String ellipsis = "...  "; // double space for a bit of padding, because the scrollbar obscures them otherwise.
+        // Remove three spaces worth of width from the toolwindow's width to make sure there's no issues.
+        int allowedWidth = maxWidth - metrics.stringWidth("   ");
+        String ellipsis = "..."; // double space for a bit of padding, because the scrollbar obscures them otherwise.
         int ellipsisWidth = metrics.stringWidth(ellipsis);
 
-        if (ellipsisWidth > maxWidth) {
+        if (ellipsisWidth > allowedWidth) {
             return ""; // No space even for ellipsis
         }
 
-        int available = maxWidth - ellipsisWidth;
+        int available = allowedWidth - ellipsisWidth;
         StringBuilder sb = new StringBuilder();
         for (char c : text.toCharArray()) {
             sb.append(c);

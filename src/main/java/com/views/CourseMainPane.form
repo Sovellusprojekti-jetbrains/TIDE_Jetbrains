@@ -90,7 +90,7 @@
                       <enabled value="true"/>
                       <font size="36"/>
                       <horizontalAlignment value="0"/>
-                      <text value="My Courses"/>
+                      <text value=" My Courses"/>
                     </properties>
                   </component>
                   <grid id="8bfb6" binding="coursePanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
