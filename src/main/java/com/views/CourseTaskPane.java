@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.regex.*;
 
 import com.customfile.TimTask;
-import com.listeners.SmartLabelResizer;
 import com.listeners.SmartLabelRewrapper;
 import com.state.ActiveState;
 import com.state.StateManager;
