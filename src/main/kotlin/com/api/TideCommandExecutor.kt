@@ -281,7 +281,7 @@ object TideCommandExecutor {
 
             // how does this behave in production?
             // do we need to catch and handle or print the string returned by handleCommandLine?
-            handleCommandLine(listOf(command, taskPath))
+            handleCommandLine(listOf(command, taskPath), tideCommand = false)
         }
     }
 
@@ -454,17 +454,19 @@ object TideCommandExecutor {
      * Executes a command asynchronously.
      * @param command the command to execute.
      * @param workingDirectory optional working directory.
+     * @param tideCommand tells whether the command uses tide-cli
      * @return the results of the execution.
      */
     private suspend fun handleCommandLine(
         command: List<String>,
         workingDirectory: File? = null,
+        tideCommand: Boolean = true,
     ): String =
         withContext(Dispatchers.IO) {
             val tidePath = ApplicationManager.getApplication().getService<StateManager?>(StateManager::class.java).getTidePath()
             val command2 = command.toMutableList()
             var pb = ProcessBuilder()
-            if (!tidePath.trim().equals("")) {
+            if (!tidePath.trim().equals("") && tideCommand) {
                 command2[0] = tidePath + "/" + command[0]
                 if (System.getProperty("os.name").contains("Windows")) {
                     command2[0] = command2[0] + ".exe"
