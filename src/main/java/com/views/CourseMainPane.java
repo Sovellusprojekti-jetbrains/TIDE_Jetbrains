@@ -298,7 +298,8 @@ public class CourseMainPane {
         JPanel nameAndButtonPanel = new JPanel(new BorderLayout());
         nameAndButtonPanel.add(labelWeek, BorderLayout.WEST);
         nameAndButtonPanel.add(buttonPanel, BorderLayout.EAST);
-        final int borderpad = 10;
+        FontMetrics metrics = labelWeek.getFontMetrics(labelWeek.getFont());
+        int borderpad = metrics.stringWidth("    ");
         nameAndButtonPanel.setBorder(createEmptyBorder(0, borderpad, 0, 0));
         subPanel.add(nameAndButtonPanel);
 
