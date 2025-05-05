@@ -3,9 +3,11 @@
 
 package com.views;
 
+import java.util.Arrays;
 import java.util.regex.*;
 
 import com.customfile.TimTask;
+import com.listeners.SmartLabelRewrapper;
 import com.state.ActiveState;
 import com.state.StateManager;
 import com.intellij.openapi.actionSystem.ActionManager;
@@ -55,8 +57,10 @@ public class CourseTaskPane {
     private JLabel deadLineLabel;
     private JLabel maxSubmitsLabel;
     private Project project;
-    private static CourseTaskPane courseTaskPane;
-
+     private static CourseTaskPane courseTaskPane;
+    private List<JLabel> labelList = Arrays.asList(taskInformationLabel);
+    private List<JLabel> changingLabels = Arrays.asList(taskInfoLabel, taskNameLabel, pointsLabel, maxSubmitsLabel, deadLineLabel);
+    private ToolWindow thisToolWindow;
     /**
      * getter for the contents of the task panel.
      * @return the task panel
@@ -73,6 +77,7 @@ public class CourseTaskPane {
      */
     public CourseTaskPane(final ToolWindow toolWindow) {
         ActiveState stateManager = ActiveState.getInstance();
+        thisToolWindow = toolWindow;
         this.project = stateManager.getProject();
 
         addActionListeners();
@@ -82,6 +87,7 @@ public class CourseTaskPane {
         stateManager.updateCourses();
         setProgress(false, "");
         courseTaskPane = this;
+        SmartLabelRewrapper.setupSmartRewrapForLabels(labelList, thisToolWindow);
     }
 
     private void addPropertyChangeListeners(ActiveState stateManager) {
@@ -106,6 +112,7 @@ public class CourseTaskPane {
                     setPoints(messages[0]);
                     setDeadLine(messages[1]);
                     setMaxSubmits(messages[2]);
+                    SmartLabelRewrapper.setupSmartRewrapForLabels(changingLabels, thisToolWindow);
                 }
             }
         });
