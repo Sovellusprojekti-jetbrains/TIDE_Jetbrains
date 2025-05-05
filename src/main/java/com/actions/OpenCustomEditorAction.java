@@ -10,13 +10,14 @@ import com.state.ActiveState;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Class for opening a custom editor action.
+ * AnAction to show the course view in the editor.
+ * Not used in the current build.
  */
 public class OpenCustomEditorAction extends AnAction {
 
     /**
-     * What happens when the action is performed.
-     * @param event An action event.
+     * Show the course view in the editor.
+     * @param event AnActionEvent originating from IntelliJ platform's internal messaging system.
      */
     @Override
     public void actionPerformed(@NotNull final AnActionEvent event) {
@@ -26,7 +27,7 @@ public class OpenCustomEditorAction extends AnAction {
             return;
         }
 
-        // Create an instance of your custom virtual file
+        // Create a CustomFile instance
         VirtualFile file = new CustomFile();
 
         // Open the file in the editor

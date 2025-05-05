@@ -16,6 +16,8 @@ import java.util.Objects;
 
 /**
  * This class provides controller functionality for application settings.
+ * This class is included in the actions package since it's essential for
+ * the functioning of the actions.Settings class.
  */
 public final class AppSettingsConfigurable implements Configurable {
     private SettingsScreen mySettingsComponent; //Reference to the SettingsScreen panel
