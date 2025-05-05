@@ -1,6 +1,7 @@
 package com.listeners;
 
 import com.intellij.openapi.wm.ToolWindow;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -9,10 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A class that truncates names of courses automatically according to toolwindow size.
+ * a copy of the smartLabelResizer class, that wraps the text instead of using 3 dots if its too long.
  */
-public final class SmartLabelResizer {
-    private SmartLabelResizer() { };
+public final class SmartLabelRewrapper {
+    private SmartLabelRewrapper() { };
     private static final Map<JLabel, String> STRING_HASH_MAP = new HashMap<>();
 
     /**
@@ -20,7 +21,7 @@ public final class SmartLabelResizer {
      * @param labels A list of labels, namely the course names.
      * @param toolWindow CourseMainPane.
      */
-    public static void setupSmartResizeForLabels(java.util.List<JLabel> labels, ToolWindow toolWindow) {
+    public static void setupSmartRewrapForLabels(java.util.List<JLabel> labels, ToolWindow toolWindow) {
         for (JLabel label : labels) {
             STRING_HASH_MAP.put(label, label.getText());
         }
@@ -43,6 +44,11 @@ public final class SmartLabelResizer {
      */
     private static void updateLabels(java.util.List<JLabel> labels, int availableWidth) {
         for (JLabel label : labels) {
+            if (label.getText().contains("<br/>")) {
+                label.setText(label.getText().replaceAll("<br/>", " "));
+            }
+            STRING_HASH_MAP.put(label, label.getText());
+
             String fullText = STRING_HASH_MAP.get(label);
             if (fullText == null) {
                 continue;
@@ -53,38 +59,46 @@ public final class SmartLabelResizer {
             if (textWidth <= availableWidth) {
                 label.setText(fullText);
             } else {
-                String contracted = contractTextToFit(fullText, metrics, availableWidth);
+                String contracted = rewraptextToFit(fullText, metrics, availableWidth);
                 label.setText(contracted);
             }
         }
     }
 
     /**
-     * Changes the label text to the correct size, adding ellipses if it's too big otherwise.
+     * rewraps the label text by replacing an empty space with a <br> tag if the label is too long.
      * @param text Text that needs resizing.
      * @param metrics Metrics of the font being used.
      * @param maxWidth Width of the toolwindow.
      * @return The new text.
      */
-    private static String contractTextToFit(String text, FontMetrics metrics, int maxWidth) {
-        // Remove three spaces worth of width from the toolwindow's width to make sure there's no issues.
-        int allowedWidth = maxWidth - metrics.stringWidth("   ");
-        String ellipsis = "..."; // double space for a bit of padding, because the scrollbar obscures them otherwise.
-        int ellipsisWidth = metrics.stringWidth(ellipsis);
-
-        if (ellipsisWidth > allowedWidth) {
-            return ""; // No space even for ellipsis
+    private static String rewraptextToFit(String text, FontMetrics metrics, int maxWidth) {
+        if (!text.contains(" ")) {
+            return text;
         }
-
-        int available = allowedWidth - ellipsisWidth;
         StringBuilder sb = new StringBuilder();
+        if (!text.contains("<html>") && !text.contains("<br/>")) {
+            sb.append("<html>");
+        }
         for (char c : text.toCharArray()) {
             sb.append(c);
-            if (metrics.stringWidth(sb.toString()) > available) {
-                sb.setLength(sb.length() - 1); // remove last char that overflows
-                break;
+            if (metrics.stringWidth(sb.toString()) > maxWidth && !sb.toString().contains("<br/>")
+             || (metrics.stringWidth(sb.toString()) > maxWidth && sb.toString().startsWith("<br/>")
+            && sb.toString().contains(" "))) {
+                try {
+                    sb.replace(sb.lastIndexOf(" "), sb.lastIndexOf(" ") + 1, "<br/>");
+                } catch (Exception e) {
+                    continue;
+                }
             }
         }
-        return sb + ellipsis;
+        if (!text.contains("</html>") && !text.contains("<br/>")) {
+            sb.append("</html>");
+        }
+        if (sb.substring(sb.lastIndexOf("<br/>")).contains(" ")
+                && metrics.stringWidth(sb.substring(sb.lastIndexOf("<br/>"))) > maxWidth) {
+            sb.replace(sb.lastIndexOf("<br/>"), sb.length(), rewraptextToFit(sb.substring(sb.lastIndexOf("<br/>")), metrics, maxWidth));
+        }
+        return sb.toString();
     }
 }

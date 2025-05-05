@@ -171,12 +171,12 @@ public class CourseMainPane {
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
                 final int top = 20;
-                final int left = 5;
+                final int left = 0;
                 final int bottom = 5;
                 final int right = 0;
 
                 JLabel label = new JLabel();
-                label.setText(course.getName());
+                label.setText(" " + course.getName());
                 label.setFont(JBFont.h1().asBold());
                 label.setBorder(createEmptyBorder(top, left, bottom, right));
                 label.setHorizontalAlignment(SwingConstants.LEFT);
@@ -298,7 +298,8 @@ public class CourseMainPane {
         JPanel nameAndButtonPanel = new JPanel(new BorderLayout());
         nameAndButtonPanel.add(labelWeek, BorderLayout.WEST);
         nameAndButtonPanel.add(buttonPanel, BorderLayout.EAST);
-        final int borderpad = 10;
+        FontMetrics metrics = labelWeek.getFontMetrics(labelWeek.getFont());
+        int borderpad = metrics.stringWidth("    ");
         nameAndButtonPanel.setBorder(createEmptyBorder(0, borderpad, 0, 0));
         subPanel.add(nameAndButtonPanel);
 
