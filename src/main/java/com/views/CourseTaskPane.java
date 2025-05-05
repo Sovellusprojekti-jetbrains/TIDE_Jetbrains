@@ -141,7 +141,7 @@ public class CourseTaskPane {
         });
 
         showOutputButton.addActionListener(event -> {
-            Util.showWindow(project, "Output Window", true);
+            Util.showWindow(ActiveState.getInstance().getProject(), "Output Window", true);
         });
     }
 
