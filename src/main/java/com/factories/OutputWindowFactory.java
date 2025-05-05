@@ -8,29 +8,16 @@ import com.intellij.ui.content.ContentFactory;
 import com.views.OutputWindow;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
+/**
+ * A factory to create an OutputWindow instance.
+ */
 public final class OutputWindowFactory implements ToolWindowFactory {
-
-    private JTextArea textArea;
-    private static OutputWindowFactory instance;
-
-
     @Override
-    public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow outputWindow) {
-        // Create an instance of your tool window class
-        OutputWindow myToolWindow = new OutputWindow(outputWindow);
-
-        // Get the content factory instance
+    public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
+        OutputWindow outputWindow = new OutputWindow(toolWindow);
         ContentFactory contentFactory = ContentFactory.getInstance();
-
-        // Create content for the tool window
-        Content content = contentFactory.createContent(myToolWindow.getContent(), "Output", false);
-
+        Content content = contentFactory.createContent(outputWindow.getContent(), "Output", false);
         content.setCloseable(false);
-
-        // Add the content to the tool window
-        outputWindow.getContentManager().addContent(content);
+        toolWindow.getContentManager().addContent(content);
     }
-
 }

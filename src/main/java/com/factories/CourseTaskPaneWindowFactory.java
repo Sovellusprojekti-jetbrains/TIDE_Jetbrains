@@ -5,18 +5,18 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
-import com.views.LoginWindow;
+import com.views.CourseTaskPane;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Factory for creating a LoginWindow instance.
+ * A factory for creating a CourseTaskPane instance.
  */
-public final class LoginWindowFactory implements ToolWindowFactory {
+public final class CourseTaskPaneWindowFactory implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        LoginWindow loginWindow = new LoginWindow(toolWindow);
+        CourseTaskPane courseTaskPane = new CourseTaskPane(toolWindow);
         ContentFactory contentFactory = ContentFactory.getInstance();
-        Content content = contentFactory.createContent(loginWindow.getContent(), "Courses", false);
+        Content content = contentFactory.createContent(courseTaskPane.getContent(), "Task View", false);
         content.setCloseable(false);
         toolWindow.getContentManager().addContent(content);
     }

@@ -28,7 +28,7 @@
                     icon="/icons/tim.svg"
         />
         <toolWindow id="Course Task"
-                    factoryClass="com.factories.CoursePaneWindowFactory"
+                    factoryClass="com.factories.CourseTaskPaneWindowFactory"
                     anchor="right"
                     canCloseContents="true"
                     icon="/icons/timgray.svg"
