@@ -73,7 +73,7 @@ public class UiTest {
      */
     @Test
     public void textTest() throws InterruptedException {
-        final int sleeptime = 15;
+        final int sleeptime = 120;
         WelcomeFrameFixture welcomeFrame = remoteRobot.find(WelcomeFrameFixture.class);
         welcomeFrame.createNewProjectLink().click();
         final Locator createButton = byXpath("//div[@text='Create']");
@@ -82,7 +82,8 @@ public class UiTest {
         final ComponentFixture sampleComponent = remoteRobot.find(ComponentFixture.class, sampleLocator);
         sampleComponent.click();
         createFixture.click();
-        final IdeaFrame idea = remoteRobot.find(IdeaFrame.class, ofSeconds(10));
+        final IdeaFrame idea = remoteRobot.find(IdeaFrame.class, ofSeconds(5));
+        TimeUnit.SECONDS.sleep(5);
         while (idea.isDumbMode()) {
             TimeUnit.SECONDS.sleep(sleeptime);
         }
@@ -127,14 +128,14 @@ public class UiTest {
          */
         settings.click();
         TimeUnit.SECONDS.sleep(sleeptime);
-        final Locator settingsFrame = byXpath("//div[@class='MyTree']");
-        final Locator settingsLabel = byXpath("//div[@text='Task download folder']");
-        final Locator browseLabel = byXpath("//div[@text='Browse']");
-        final ComponentFixture settingsWindow = remoteRobot.find(ComponentFixture.class, settingsFrame);
+        //final Locator settingsFrame = byXpath("//div[@class='LoadingDecoratorLayeredPane']");
+        final Locator settingsLabel = byXpath("//div[@text='Task download folder:']");
+        final Locator browseLabel = byXpath("//div[@tooltiptext='Use GUI to select download folder']");
+      //  final ComponentFixture settingsWindow = remoteRobot.find(ComponentFixture.class, settingsFrame);
         final ComponentFixture settingsText = remoteRobot.find(ComponentFixture.class, settingsLabel);
         final ComponentFixture browseText = remoteRobot.find(ComponentFixture.class, browseLabel);
-        assertTrue(settingsText.hasText("Task download folder"), "Error inside settings window, should say Task download folder");
-        assertTrue(browseText.hasText("Browse"), "Error inside settings window,, button should have text Browse");
+        assertTrue(settingsText.hasText("Task download folder:"), "Error inside settings window, should say Task download folder");
+        assertTrue(browseText.hasText("Browse"), "Error inside settings window, button should have text Browse");
     }
 
 }
