@@ -123,6 +123,11 @@ public class JsonHandler {
         }
     }
 
+    /**
+     * Returns a config setting as a string.
+     * @param name Name of the parameter.
+     * @return Value of the parameter.
+     */
     public static String getConfigString(String name) {
         InputStream is = JsonHandler.class.getClassLoader().getResourceAsStream("config.json");
         if (is != null) {
@@ -132,6 +137,11 @@ public class JsonHandler {
         return null;
     }
 
+    /**
+     * Returns a config setting as an integer.
+     * @param name Name of the parameter.
+     * @return Value of the parameter.
+     */
     public static int getConfigInt(String name) {
         InputStream is = JsonHandler.class.getClassLoader().getResourceAsStream("config.json");
         if (is != null) {
@@ -141,6 +151,11 @@ public class JsonHandler {
         return 0;
     }
 
+    /**
+     * Returns a config setting as a boolean.
+     * @param name Name of the parameter.
+     * @return Value of the parameter.
+     */
     public static boolean getConfigBoolean(String name) {
         InputStream is = JsonHandler.class.getClassLoader().getResourceAsStream("config.json");
         if (is != null) {
