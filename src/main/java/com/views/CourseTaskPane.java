@@ -56,8 +56,7 @@ public class CourseTaskPane {
     private JProgressBar taskProgressBar;
     private JLabel deadLineLabel;
     private JLabel maxSubmitsLabel;
-    private Project project;
-     private static CourseTaskPane courseTaskPane;
+    private static CourseTaskPane courseTaskPane;
     private List<JLabel> labelList = Arrays.asList(taskInformationLabel);
     private List<JLabel> changingLabels = Arrays.asList(taskInfoLabel, taskNameLabel, pointsLabel, maxSubmitsLabel, deadLineLabel);
     private ToolWindow thisToolWindow;
@@ -71,14 +70,13 @@ public class CourseTaskPane {
 
     /**
      * A constructor that takes a ToolWindow as a parameter.
-     * The Toolwindow instance lets us access the current project
-     * and thus the path of the currently open file.
+     * The Toolwindow instance lets us rewrap labels according
+     * to window resizing.
      * @param toolWindow A ToolWindow instance
      */
     public CourseTaskPane(final ToolWindow toolWindow) {
         ActiveState stateManager = ActiveState.getInstance();
         thisToolWindow = toolWindow;
-        this.project = stateManager.getProject();
 
         addActionListeners();
 
@@ -152,7 +150,7 @@ public class CourseTaskPane {
      * @param response from TIDE-CLI
      */
     private void handleSubmitResponse(String response) {
-        this.project = ActiveState.getInstance().getProject();
+        Project project = ActiveState.getInstance().getProject();
         if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
             InfoView.displayError("Please open a file to submit in the editor.");
             return;
