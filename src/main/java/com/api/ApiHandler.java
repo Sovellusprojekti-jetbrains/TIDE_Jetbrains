@@ -2,13 +2,14 @@ package com.api;
 
 import com.course.SubTask;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.interfaces.UserManagement;
 
 import java.io.*;
 
 /**
  * here are the tide commands.
  */
-public class ApiHandler {
+public class ApiHandler implements UserManagement {
     private TideCommandExecutor tideCommandExecutor;
 
     /**

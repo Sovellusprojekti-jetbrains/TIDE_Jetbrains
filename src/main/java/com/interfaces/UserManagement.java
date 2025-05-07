@@ -1,5 +1,7 @@
 package com.interfaces;
 
+import java.io.IOException;
+
 /**
  * This interface defines services for user's account management.
  */
@@ -26,6 +28,8 @@ public interface UserManagement {
      * Downloaded tasks are appended into user metadata (.timdata file).
      * @param courseDirectory Directory of the course task in TIM-system.
      * @param cmdArgs Variable amount of arguments needed to use services offered by TIDE-CLI.
+     * @throws IOException If .timdata can't be accessed or modified.
+     * @throws InterruptedException In case of IOException, coroutine that uses TIDE-CLI services, might be interrupted.
      */
-    void loadExercise(String courseDirectory, String... cmdArgs);
+    void loadExercise(String courseDirectory, String... cmdArgs) throws IOException, InterruptedException;
 }
