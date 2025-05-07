@@ -74,7 +74,7 @@ public class UiTest {
     @Test
     public void textTest() throws InterruptedException {
         final int sleeptime = 120;
-        final int searchtime = 10;
+        final int searchtime = 20;
         WelcomeFrameFixture welcomeFrame = remoteRobot.find(WelcomeFrameFixture.class);
         welcomeFrame.createNewProjectLink().click();
         final Locator createButton = byXpath("//div[@text='Create']");
