@@ -164,12 +164,12 @@ public class CourseTaskPane {
                 .getFile();
 
         String path = file.getPath();
-        Pattern pattern = Pattern.compile("run: \\d+");
+        Pattern pattern = Pattern.compile("(?<=(Points: run: )|(test: ))\\d\\.?(\\d*)?");
         Matcher matcher = pattern.matcher(response);
         List<Float> n = new ArrayList<>();
         if (!response.contains("error")) {
             while (matcher.find()) {
-                n.add(Float.parseFloat(String.valueOf(matcher.group().charAt(matcher.group().length() - 1))));
+                n.add(Float.parseFloat(String.valueOf(matcher.group())));
             }
         }
         if (n.isEmpty()) {
@@ -181,7 +181,11 @@ public class CourseTaskPane {
         }
         if (!submits.contains(path)
                 | ApplicationManager.getApplication().getService(StateManager.class).getPoints(path) != n.get(0)) {
-            ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
+            float nSum = 0;
+            for (float f: n) {
+                nSum += f;
+            }
+            ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, nSum);
         }
         System.out.println(path);
     }
