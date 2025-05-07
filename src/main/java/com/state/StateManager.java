@@ -22,19 +22,7 @@ public final class StateManager implements PersistentStateComponent<StateManager
      * Separate state class to hold the user defined settings.
      */
     public static class State {
-        /**
-         * the path the user has chosen in string format. TODO:check that this is true
-         */
-        private String path;
 
-        /**
-         * List of file paths to the files that have been submitted trough tidecli.
-         */
-        private List<String> submits;
-
-        private int scrollSpeed;
-        private boolean browserChoice;
-        private String tidePath;
     }
 
     private State myState = new State(); //Object reference to state class
@@ -67,9 +55,6 @@ public final class StateManager implements PersistentStateComponent<StateManager
     public void setPath(String path) {
         PropertiesComponent properties = PropertiesComponent.getInstance();
         properties.setValue("myPlugin.path", path);
-        //String value = properties.getValue("myPlugin.path", System.getProperty("user.dir"));
-        //getState().path = path;
-
     }
 
     /**
@@ -77,14 +62,8 @@ public final class StateManager implements PersistentStateComponent<StateManager
      * @return File ath as a String
      */
     public String getPath() {
-        /*
-        if (getState().path == null) {
-            return System.getProperty("user.dir");
-        }
-        */
         PropertiesComponent properties = PropertiesComponent.getInstance();
         return properties.getValue("myPlugin.path", System.getProperty("user.dir"));
-        //System.out.println(getState().path);
     }
 
     /**
@@ -105,9 +84,6 @@ public final class StateManager implements PersistentStateComponent<StateManager
             properties.setList("myPlugin.submits", copy);
         }
         properties.setValue(taskPath, points, 0.0F);
-        //String value = properties.getValue("myPlugin.path", System.getProperty("user.dir"));
-        //getState().path = path;
-
     }
 
     /**
@@ -115,13 +91,7 @@ public final class StateManager implements PersistentStateComponent<StateManager
      * @return File ath as a String
      */
     public List<String> getSubmits() {
-        /*
-        if (getState().path == null) {
-            return System.getProperty("user.dir");
-        }
-        */
         PropertiesComponent properties = PropertiesComponent.getInstance();
-        //System.out.println(getState().path);
         return properties.getList("myPlugin.submits");
     }
 
