@@ -24,9 +24,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -194,7 +191,6 @@ public class ActiveState {
      * @param response from TIDE-CLI
      */
     public void setTideSubmitResponse(String response) {
-        String oldTideSubmitResponse = tideSubmitResponse;
         tideSubmitResponse = response;
         pcs.firePropertyChange("tideSubmitResponse", null, tideSubmitResponse);
         pcs.firePropertyChange("setSubmitData", null, getSubmitData());
@@ -207,7 +203,6 @@ public class ActiveState {
      * @param response from TIDE-CLI
      */
     public void setTideBaseResponse(String response) {
-        String oldTideBaseResponse = tideBaseResponse;
         tideBaseResponse = response;
         pcs.firePropertyChange("tideBaseResponse", null, tideBaseResponse);
         LogHandler.logInfo("ActiveState fired event tideBaseResponse");
@@ -260,8 +255,8 @@ public class ActiveState {
         for (Course courseToCheck: this.getCourses()) {
             if (courseToCheck.getName().equals(course)) {
                 for (CourseTask courseTask: courseToCheck.getTasks()) {
-                    for (SubTask subtask: courseTask.getSubtasks()) {
-                        for (SubTask.TaskFile taskFile: subtask.getTaskFiles()) {
+                    for (SubTask subTask: courseTask.getSubtasks()) {
+                        for (SubTask.TaskFile taskFile: subTask.getTaskFiles()) {
                             if (file.getPath().contains(taskFile.getFileName())) {
                                 return courseTask.getName();
                             }
@@ -279,9 +274,9 @@ public class ActiveState {
      * @return Subtask's name as String.
      */
     public SubTask findSubTask(VirtualFile file) {
-        for (Course course: this.getCourses()) {
-            for (CourseTask task: course.getTasks()) {
-                for (SubTask subTask: task.getSubtasks()) {
+        for (Course courseToCheck : this.getCourses()) {
+            for (CourseTask courseTask: courseToCheck.getTasks()) {
+                for (SubTask subTask: courseTask.getSubtasks()) {
                     for (SubTask.TaskFile tf: subTask.getTaskFiles()) {
                         if (file.getPath().contains(tf.getFileName())) {
                             return subTask;
@@ -321,25 +316,6 @@ public class ActiveState {
      */
     public String[] getSubmitData() { //Moved to TimTask
         return TimTask.getInstance().getSubmitData();
-    }
-
-    /**
-     * Checks if the deadline exists, and changes it into the systems current timezone if it does.
-     * @param current the currently open subtask which deadline is being checked.
-     * @return a string containing the deadline.
-     */
-    private String checkDeadline(SubTask current) { //Moved to TimTask
-        String deadLineMessage = "no deadline";
-        if (current.getDeadLine() != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx")
-                    .withZone(ZoneId.of("UTC"));
-            ZonedDateTime date = ZonedDateTime.parse(current.getDeadLine(), formatter);
-            ZoneId localZone = ZoneId.systemDefault();
-            ZonedDateTime localDeadline = date.withZoneSameInstant(localZone);
-            DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z");
-            deadLineMessage = localDeadline.format(deadlineFormat);
-        }
-        return deadLineMessage;
     }
 
 
