@@ -164,6 +164,8 @@ public class CourseTaskPane {
                 .getFile();
 
         String path = file.getPath();
+        // The regular expression should match to the "run" and "test"
+        // points in TIM output, but not to "Tests run: 1" or similar.
         Pattern pattern = Pattern.compile("(?<=(Points: run: )|(test: ))\\d\\.?(\\d*)?");
         Matcher matcher = pattern.matcher(response);
         List<Float> n = new ArrayList<>();
