@@ -2,15 +2,18 @@ package com.interfaces;
 
 import com.intellij.openapi.project.Project;
 
+/**
+ * This interface defines services that can be asked from an individual tide task.
+ */
 public interface TideTask {
     /**
-     * This method submits an individual tide task to TIM.
+     * This method is used to submit an individual tide task to TIM.
      * @param project Project is needed to open output window in the IDE.
      */
     void submit(Project project);
 
     /**
-     * This method reverts an individual tide task back to the state of latest submit.
+     * This method is used to revert an individual tide task back to the state of latest submit.
      */
     void resetExercise();
 
