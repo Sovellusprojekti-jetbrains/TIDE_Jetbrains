@@ -1,0 +1,11 @@
+{
+  "manual_url": "https://tim.jyu.fi/view/kurssit/tie/proj/2025/tide-jetbrains/tide-jetbrains-lisaosan-kayttoohjeet",
+  "browser_base_url": "https://tim.jyu.fi/view/",
+  "log_path": "%t/tide-cli_log.txt",
+
+  "default_scroll_speed": 16,
+  "max_scroll_speed": 1000,
+  "open_in_browser": 0,
+
+  "course_border_thickness": 2
+}

@@ -1,5 +1,6 @@
 package com.actions;
 
+import com.api.JsonHandler;
 import com.customfile.TimTask;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -10,15 +11,13 @@ import org.jetbrains.annotations.NotNull;
  * AnAction to view the current exercise in TIM.
  */
 public final class BrowserAction extends AnAction {
-    private static final String BASE_URL = "https://tim.jyu.fi/view/";
-
     /**
      * View the currently open exercise in TIM.
      * @param event AnActionEvent originating from IntelliJ platform's internal messaging system.
      */
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        TimTask.getInstance().openInBrowser(BASE_URL, ActiveState.getInstance().getProject());
+        TimTask.getInstance().openInBrowser(JsonHandler.getConfigString("browser_base_url"), ActiveState.getInstance().getProject());
     }
 
     /**

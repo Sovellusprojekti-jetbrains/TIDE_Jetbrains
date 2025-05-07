@@ -1,5 +1,6 @@
 package com.state;
 
+import com.api.JsonHandler;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.components.*;
 import org.jetbrains.annotations.NotNull;
@@ -37,9 +38,9 @@ public final class StateManager implements PersistentStateComponent<StateManager
     }
 
     private State myState = new State(); //Object reference to state class
-    private static final int DEFAULTSCROLLSPEED = 16;
-    private static final int MAXSCROLLSPEED = 1000;
-    private static final boolean DEFAULTBROWSERCHOICE = false;
+    private static final int DEFAULTSCROLLSPEED = JsonHandler.getConfigInt("default_scroll_speed");
+    private static final int MAXSCROLLSPEED = JsonHandler.getConfigInt("max_scroll_speed");
+    private static final boolean DEFAULTBROWSERCHOICE = JsonHandler.getConfigBoolean("open_in_browser");
 
     /**
      * This method is called when updating state class fields and to save the state of the State class when IDE is closed.
