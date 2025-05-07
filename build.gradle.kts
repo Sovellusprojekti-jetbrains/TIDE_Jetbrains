@@ -52,7 +52,7 @@ plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.0.20"
     // TODO: This platform version is getting old but tests fail with newer versions as of April 2025.
-    id("org.jetbrains.intellij.platform") version "2.2.1"
+    id("org.jetbrains.intellij.platform") version "2.5.0"
 }
 
 group = "org.jyu"
@@ -88,8 +88,10 @@ dependencies {
             bundledPlugins("com.intellij.java", "JUnit")
         }
     }
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.12.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.12.1")
     implementation("com.google.code.gson:gson:2.12.1")
     testImplementation("com.intellij.remoterobot:remote-robot:0.11.23")
     testImplementation("com.intellij.remoterobot:remote-fixtures:0.11.23")
