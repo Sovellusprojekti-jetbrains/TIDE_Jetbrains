@@ -76,9 +76,6 @@ public class CourseMainPane {
         addActionListeners();
 
         switchToLoggedOut();
-        ApplicationManager.getApplication().invokeLater(() -> {
-            setProgress(true, "Checking login info...");
-        });
     }
 
 
@@ -414,6 +411,7 @@ public class CourseMainPane {
         }
         return tree;
     }
+
 
     /**
      * Switches to a state where logging out is possible.

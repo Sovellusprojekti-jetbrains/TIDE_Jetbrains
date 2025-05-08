@@ -20,24 +20,11 @@
     <extensions defaultExtensionNs="com.intellij">
         <fileEditorProvider implementation="com.customfile.HtmlEditorProvider"/>
         <postStartupActivity implementation="com.listeners.StartUp"/>
-        <postStartupActivity implementation="com.listeners.ProjectStartUp"/>
         <toolWindow id="TIDE Tool Window"
-                    factoryClass="com.factories.LoginWindowFactory"
+                    factoryClass="com.factories.TideWindowFactory"
                     anchor="left"
                     canCloseContents="true"
                     icon="/icons/tim.svg"
-        />
-        <toolWindow id="Course Task"
-                    factoryClass="com.factories.CourseTaskPaneWindowFactory"
-                    anchor="right"
-                    canCloseContents="true"
-                    icon="/icons/timgray.svg"
-        />
-        <toolWindow id="Output Window"
-                    anchor="bottom"
-                    factoryClass="com.factories.OutputWindowFactory"
-                    canCloseContents="true"
-                    icon="/icons/timgray.svg"
         />
         <fileEditorProvider implementation="com.factories.MyCustomFileEditorProvider"/>
         <applicationService serviceImplementation="com.state.StateManager"/>
