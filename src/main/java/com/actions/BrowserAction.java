@@ -1,10 +1,10 @@
 package com.actions;
 
-import com.api.JsonHandler;
 import com.customfile.TimTask;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.state.ActiveState;
+import com.util.Config;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -17,7 +17,7 @@ public final class BrowserAction extends AnAction {
      */
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        TimTask.getInstance().openInBrowser(JsonHandler.getString("browser_base_url"), ActiveState.getInstance().getProject());
+        TimTask.getInstance().openInBrowser(Config.getString("browser_base_url"), ActiveState.getInstance().getProject());
     }
 
     /**

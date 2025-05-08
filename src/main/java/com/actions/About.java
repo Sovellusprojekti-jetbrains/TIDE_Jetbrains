@@ -1,6 +1,5 @@
 package com.actions;
 
-import com.api.JsonHandler;
 import com.api.LogHandler;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -39,7 +38,7 @@ public class About extends AnAction {
                         <p>Learn how to use the extension: <a href='%s'>tide instructions</a></p>
                         <p>Keyboard shortcut for submit: %s</p>
                     </body>
-                </html>""", version, JsonHandler.getString("manual_url"), KeymapUtil.getShortcutsText(shortcuts));
+                </html>""", version, Config.getString("manual_url"), KeymapUtil.getShortcutsText(shortcuts));
         Messages.showMessageDialog(
                 message,
                 "About",
