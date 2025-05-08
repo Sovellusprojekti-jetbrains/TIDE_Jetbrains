@@ -222,6 +222,7 @@ public class ActiveState {
         // These are here because calling them from inside the toolwindow would not work.
         Util.setWindowAvailable(project, "Course Task", true, "/icons/tim.svg");
         Util.setWindowAvailable(project, "Output Window", true, "/icons/tim.svg");
+        Util.showWindow(project, "Course Task", true);
     }
 
     /**
@@ -233,6 +234,8 @@ public class ActiveState {
         }
         pcs.firePropertyChange("logout", true, isLoggedIn);
         LogHandler.logInfo("ActiveState fired event logout");
+        Util.showWindow(project, "Course Task", false);
+        Util.showWindow(project, "Output Window", false);
         Util.setWindowAvailable(project, "Course Task", false, "/icons/timgray.svg");
         Util.setWindowAvailable(project, "Output Window", false, "/icons/timgray.svg");
     }
