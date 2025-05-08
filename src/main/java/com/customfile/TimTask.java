@@ -2,7 +2,7 @@ package com.customfile;
 
 import com.api.ApiHandler;
 import com.api.LogHandler;
-import com.course.SubTask;
+import com.course.DemoTask;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -36,7 +36,7 @@ public final class TimTask implements TideTask {
     private static TimTask selected; //Keep the instance of TimTask opened in the editor here.
     private final VirtualFile delegate;
     private final ArrayList<String> headers;
-    private final SubTask task;
+    private final DemoTask task;
     private static final HashMap<String, TimTask> CACHE = new HashMap<>();
 
     /**
@@ -45,7 +45,7 @@ public final class TimTask implements TideTask {
      * @param headerList Contains course name, demo name, and subtask name.
      * @param subTask Object reference to SubTask object containing all the goods.
      */
-    private TimTask(VirtualFile file, ArrayList<String> headerList, SubTask subTask) {
+    private TimTask(VirtualFile file, ArrayList<String> headerList, DemoTask subTask) {
         this.delegate = file;
         this.headers = headerList;
         this.task = subTask;
@@ -91,15 +91,7 @@ public final class TimTask implements TideTask {
      */
     public void openInBrowser(String baseURL, Project project) {
         StateManager state = Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
-        String url = baseURL;
-        //TODO: handle null case.
-        url += this.task.getPath();
-        //the task name needed for the url is not part of the subtask but part of the task file
-        //we need to get the first file of the task to get the right id.
-        //id is in form number.name.idstring
-        //thus we split the id to get the relevant part in the middle.
-        url += "#" + this.task.getTaskFiles().get(0).getTaskIdExt().split("\\.")[1];
-
+        String url = getString(baseURL);
         if (state.getBrowserChoice()) {
             if (Desktop.isDesktopSupported()) {
                 try {
@@ -119,6 +111,20 @@ public final class TimTask implements TideTask {
             // Open the file in the editor
             FileEditorManager.getInstance(project).openFile(file, true);
         }
+    }
+
+    private String getString(String baseURL) {
+        String url = baseURL;
+        //TODO: handle null case.
+        if (this.task.getPath() != null) {
+            url += this.task.getPath();
+            //the task name needed for the url is not part of the subtask but part of the task file
+            //we need to get the first file of the task to get the right id.
+            //id is in form number.name.idstring
+            //thus we split the id to get the relevant part in the middle.
+            url += "#" + this.task.getTaskFiles().get(0).getTaskIdExt().split("\\.")[1];
+        }
+        return url;
     }
 
     /**
@@ -215,7 +221,7 @@ public final class TimTask implements TideTask {
                 ArrayList<String> taskHeaders = new ArrayList<>();
                 taskHeaders.add(ActiveState.getInstance().getCourseName(file.getPath()));
                 taskHeaders.add(ActiveState.getInstance().findTaskName(taskHeaders.get(0), file));
-                SubTask taskHolder = ActiveState.getInstance().findSubTask(file);
+                DemoTask taskHolder = ActiveState.getInstance().findSubTask(file);
                 if (taskHolder != null) {
                     taskHeaders.add(taskHolder.getIdeTaskId());
                     selected = new TimTask(file, taskHeaders, taskHolder);

@@ -9,7 +9,7 @@ import java.util.List;
  * A class representing a task,
  * constructed by JsonHandler.
  */
-public class CourseTask {
+public class CourseDemo {
     /**
      * Course name.
      */
@@ -28,7 +28,7 @@ public class CourseTask {
     /**
      *  List of exercises in the task.
      */
-    private List<SubTask> tasks;
+    private List<DemoTask> tasks;
 
     /**
      * Getter for task name.
@@ -50,9 +50,9 @@ public class CourseTask {
      * Getter for the exercises in the task.
      * @return List of exercises
      */
-    public List<SubTask> getSubtasks() {
+    public List<DemoTask> getSubtasks() {
         if (this.tasks == null) {
-            this.tasks = new ArrayList<SubTask>();
+            this.tasks = new ArrayList<DemoTask>();
         }
         return this.tasks;
     }
@@ -61,7 +61,7 @@ public class CourseTask {
      * setter for the subtasks of the Course task.
      * @param subTasks list of subtasks for the Course task
      */
-    public void setTasks(List<SubTask> subTasks) {
+    public void setTasks(List<DemoTask> subTasks) {
         this.tasks = subTasks;
     }
 
@@ -69,9 +69,9 @@ public class CourseTask {
      * Add a subtask for a coursetask.
      * @param subTask The subtask to add
      */
-    public void addSubtask(SubTask subTask) {
+    public void addSubtask(DemoTask subTask) {
         if (this.tasks == null) {
-            this.tasks = new ArrayList<SubTask>();
+            this.tasks = new ArrayList<DemoTask>();
         }
         this.tasks.add(subTask);
     }

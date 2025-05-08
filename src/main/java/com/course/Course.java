@@ -23,7 +23,7 @@ public class Course {
     /**
      * List of CourseTask objects.
      */
-    private List<CourseTask> tasks;
+    private List<CourseDemo> tasks;
 
     /**
      * Getter for course name.
@@ -58,7 +58,7 @@ public class Course {
      * Getter for course tasks.
      * @return A list of Task objects
      */
-    public List<CourseTask> getTasks() {
+    public List<CourseDemo> getTasks() {
         return this.tasks;
     }
 }

@@ -1,6 +1,6 @@
 import com.api.JsonHandler;
 import com.course.Course;
-import com.course.SubTask;
+import com.course.DemoTask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -83,11 +83,11 @@ public class JsonHandlerTest {
     @Test
     @DisplayName("SubTasks correctly parsed from .timdata")
     public void parseSubtaskFromJson() {
-        List<SubTask> subtaskList = handler.jsonToSubtask(timdata);
+        List<DemoTask> subtaskList = handler.jsonToSubtask(timdata);
         final int taskCount = 3;
         assertEquals(taskCount, subtaskList.size());
         // test first subtask in the test data
-        SubTask subTask = subtaskList.get(0);
+        DemoTask subTask = subtaskList.get(0);
         assertEquals("testidemo1.java", subTask.getTaskFiles().get(0).getFileName());
         assertEquals("view/demo1/path", subTask.getPath());
         assertEquals("t1", subTask.getIdeTaskId());
@@ -107,7 +107,7 @@ public class JsonHandlerTest {
     @Test
     @DisplayName("Parsing Json data with no subtasks returns an empty list")
     public void jsonToSubtaskHandlesInvalidJson() {
-        List<SubTask> subtaskList = handler.jsonToSubtask(validJsonData);
+        List<DemoTask> subtaskList = handler.jsonToSubtask(validJsonData);
         assertEquals(0, subtaskList.size());
         subtaskList = handler.jsonToSubtask(arrayOfInvalidObjects);
         assertEquals(0, subtaskList.size());

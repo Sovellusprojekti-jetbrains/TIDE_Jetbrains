@@ -1,6 +1,6 @@
 package com.api;
 
-import com.course.SubTask;
+import com.course.DemoTask;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.interfaces.UserManagement;
 
@@ -68,7 +68,7 @@ public class ApiHandler implements UserManagement {
      * @throws IOException If .timdata file is not found or some other file reading error occurs.
      * @throws InterruptedException If TIDE CLI process fails or something else goes wrong.
      */
-    public void resetSubTask(SubTask task, String courseDirectory) throws IOException, InterruptedException {
+    public void resetSubTask(DemoTask task, String courseDirectory) throws IOException, InterruptedException {
         tideCommandExecutor.resetSubTask(task, courseDirectory);
     }
 

@@ -2,7 +2,7 @@ package com.api
 
 import com.actions.Settings
 import com.course.Course
-import com.course.SubTask
+import com.course.DemoTask
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.application.ApplicationInfo
@@ -216,7 +216,7 @@ object TideCommandExecutor {
      * @param courseDir Course directory
      */
     fun resetSubTask(
-        task: SubTask,
+        task: DemoTask,
         courseDir: String,
     ) {
         val taskId: String = task.ideTaskId

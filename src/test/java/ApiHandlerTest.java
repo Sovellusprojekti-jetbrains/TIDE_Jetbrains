@@ -3,7 +3,7 @@ import static org.mockito.Mockito.*;
 
 import com.api.ApiHandler;
 import com.api.TideCommandExecutor;
-import com.course.SubTask;
+import com.course.DemoTask;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -76,7 +76,7 @@ public class ApiHandlerTest {
      */
     @Test
     public void testResetExercise() throws IOException, InterruptedException {
-        SubTask task = new SubTask();
+        DemoTask task = new DemoTask();
         String courseDirectory = "courseDir";
 
         apiHandler.resetSubTask(task, courseDirectory);

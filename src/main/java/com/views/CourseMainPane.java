@@ -220,9 +220,9 @@ public class CourseMainPane {
      * @param gbc Grid Bag Constraints.
      */
     private void createSubPanels(Course course, JPanel panel, GridBagConstraints gbc) {
-        List<CourseTask> tasks = course.getTasks();
+        List<CourseDemo> tasks = course.getTasks();
         int j = 0;
-        for (CourseTask courseTask: tasks) {
+        for (CourseDemo courseTask: tasks) {
             courseTask.setParent(course);
             JPanel subPanel = createExercise(courseTask, course.getName());
             subPanel.setBackground(JBColor.background());
@@ -249,7 +249,7 @@ public class CourseMainPane {
      * @param courseName Course name for save path
      * @return the subpanel that contains the tasks name and the two buttons
      */
-    private JPanel createExercise(CourseTask courseTask, String courseName) {
+    private JPanel createExercise(CourseDemo courseTask, String courseName) {
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
         JLabel labelWeek = new JLabel();
@@ -318,7 +318,7 @@ public class CourseMainPane {
      * @param subPanel the panel that the panel of subtasks is appended to.
      * @param courseTask The Course task that the subtasks belong to.
      */
-    private void createSubTaskpanel(JPanel subPanel, CourseTask courseTask) {
+    private void createSubTaskpanel(JPanel subPanel, CourseDemo courseTask) {
         Tree tree = createTree(courseTask);
         if (tree.getRowCount() != 0) {
             JBScrollPane container = new JBScrollPane();
@@ -335,15 +335,15 @@ public class CourseMainPane {
      * @param courseTask The coursetask that the subtasks belong to
      * @return The created tree view.
      */
-    private Tree createTree(CourseTask courseTask) {
+    private Tree createTree(CourseDemo courseTask) {
         ApiHandler api = new ApiHandler();
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(courseTask.getName());
         int rowCount = 0;
         var subtasks = courseTask.getSubtasks();
         if (subtasks != null) {
-            for (SubTask task : subtasks) {
+            for (DemoTask task : subtasks) {
                 DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task);
-                for (SubTask.TaskFile file: task.getTaskFiles()) {
+                for (DemoTask.TaskFile file: task.getTaskFiles()) {
                     DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file.getFileName());
                     leaf.add(submitNode);
                     rowCount++;
@@ -392,7 +392,7 @@ public class CourseMainPane {
                     DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
                     DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
                     if (selectedNode.getChildCount() == 0) {
-                        SubTask taskToOpen = (SubTask) parent.getUserObject();
+                        DemoTask taskToOpen = (DemoTask) parent.getUserObject();
                         String taskPath;
                         if (taskToOpen.getTaskDirectory() == null) {
                             taskPath = Settings.getPath() + File.separatorChar + courseTask.getParent().getName()

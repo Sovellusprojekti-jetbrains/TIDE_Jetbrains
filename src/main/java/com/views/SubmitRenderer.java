@@ -2,7 +2,7 @@ package com.views;
 
 import com.intellij.openapi.util.IconLoader;
 import com.state.StateManager;
-import com.course.SubTask;
+import com.course.DemoTask;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.JBColor;
@@ -61,7 +61,7 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
             for (String s : submits) {
                 if (node.getChildCount() == 0 &&  s.contains(node.toString())) {
                     DefaultMutableTreeNode parentNode =  (DefaultMutableTreeNode) node.getParent();
-                    SubTask parent = (SubTask) parentNode.getUserObject();
+                    DemoTask parent = (DemoTask) parentNode.getUserObject();
                     if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == 0
                             && s.contains(parent.getIdeTaskId())) {
                         return IconLoader.getIcon("/icons/0_points.svg");

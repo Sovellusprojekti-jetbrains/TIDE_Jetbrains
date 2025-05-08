@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class SubTask {
+public class DemoTask {
 
     /**
      * the Task id in timdata.

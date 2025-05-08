@@ -6,8 +6,8 @@ import com.api.JsonHandler;
 import com.api.LogHandler;
 import com.api.TimDataHandler;
 import com.course.Course;
-import com.course.CourseTask;
-import com.course.SubTask;
+import com.course.CourseDemo;
+import com.course.DemoTask;
 import com.customfile.TimTask;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
@@ -171,10 +171,10 @@ public class ActiveState {
         if (timData.isEmpty()) {
             return;
         }
-        List<SubTask> subtasks = jsonHandler.jsonToSubtask(timData);
+        List<DemoTask> subtasks = jsonHandler.jsonToSubtask(timData);
         var demos = course.getTasks();
-        for (CourseTask ct: demos) {
-            for (SubTask st: subtasks) {
+        for (CourseDemo ct: demos) {
+            for (DemoTask st: subtasks) {
                 if (ct.getPath().equals(st.getPath())) {
                     ct.addSubtask(st);
                 }
@@ -254,9 +254,9 @@ public class ActiveState {
     public String findTaskName(String course, VirtualFile file) {
         for (Course courseToCheck: this.getCourses()) {
             if (courseToCheck.getName().equals(course)) {
-                for (CourseTask courseTask: courseToCheck.getTasks()) {
-                    for (SubTask subTask: courseTask.getSubtasks()) {
-                        for (SubTask.TaskFile taskFile: subTask.getTaskFiles()) {
+                for (CourseDemo courseTask: courseToCheck.getTasks()) {
+                    for (DemoTask subTask: courseTask.getSubtasks()) {
+                        for (DemoTask.TaskFile taskFile: subTask.getTaskFiles()) {
                             if (file.getPath().contains(taskFile.getFileName())) {
                                 return courseTask.getName();
                             }
@@ -273,11 +273,11 @@ public class ActiveState {
      * @param file Virtual file of the file open in the editor.
      * @return Subtask's name as String.
      */
-    public SubTask findSubTask(VirtualFile file) {
+    public DemoTask findSubTask(VirtualFile file) {
         for (Course courseToCheck : this.getCourses()) {
-            for (CourseTask courseTask: courseToCheck.getTasks()) {
-                for (SubTask subTask: courseTask.getSubtasks()) {
-                    for (SubTask.TaskFile tf: subTask.getTaskFiles()) {
+            for (CourseDemo courseTask: courseToCheck.getTasks()) {
+                for (DemoTask subTask: courseTask.getSubtasks()) {
+                    for (DemoTask.TaskFile tf: subTask.getTaskFiles()) {
                         if (file.getPath().contains(tf.getFileName())) {
                             return subTask;
                         }

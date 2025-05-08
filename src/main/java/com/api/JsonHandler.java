@@ -1,7 +1,7 @@
 package com.api;
 
 import com.course.Course;
-import com.course.SubTask;
+import com.course.DemoTask;
 import com.google.gson.*;
 
 import java.io.InputStream;
@@ -48,9 +48,9 @@ public class JsonHandler {
      * @param jsonString json to parse
      * @return a list of subtasks
      */
-    public List<SubTask> jsonToSubtask(final String jsonString) {
+    public List<DemoTask> jsonToSubtask(final String jsonString) {
         Gson gson = new Gson();
-        List<SubTask> subTaskList = new ArrayList<>();
+        List<DemoTask> subTaskList = new ArrayList<>();
         try {
             JsonObject json = gson.fromJson(jsonString, JsonObject.class);
             JsonObject coursePart = gson.fromJson((json.getAsJsonObject("course_parts")), JsonObject.class);
@@ -65,7 +65,7 @@ public class JsonHandler {
                         Set<Map.Entry<String, JsonElement>> subs = subtasksObject.entrySet();
                         for (Map.Entry subElement: subs) {
                             String jsonstr = subElement.getValue().toString();
-                            SubTask sub = new Gson().fromJson(jsonstr, SubTask.class);
+                            DemoTask sub = new Gson().fromJson(jsonstr, DemoTask.class);
                             subTaskList.add(sub);
                         }
                     }
