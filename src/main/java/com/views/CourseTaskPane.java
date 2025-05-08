@@ -260,7 +260,7 @@ public class CourseTaskPane {
                 this.taskInfoLabel.setText(info);
                 this.taskNameLabel.setText(TimTask.getInstance().getSubTaskName());
             } else {
-                this.taskInfoLabel.setText(" - ");
+                this.taskInfoLabel.setText(" Not a TIM task ");
                 this.taskNameLabel.setText("");
             }
         });
