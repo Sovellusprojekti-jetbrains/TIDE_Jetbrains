@@ -1,5 +1,6 @@
 package com.actions;
 
+import com.api.JsonHandler;
 import com.api.LogHandler;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -8,16 +9,15 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.ui.Messages;
+import com.util.*;
 
 /**
- * Class for the about-screen.
+ * AnAction to view the about-screen.
  */
 public class About extends AnAction {
-    private final String manualUrl  = "https://tim.jyu.fi/view/kurssit/tie/proj/2025/tide-jetbrains/tide-jetbrains-lisaosan-kayttoohjeet";
-
     /**
-     * Method for performed action.
-     * @param e Action event from somewhere.
+     * View the about-screen.
+     * @param e AnActionEvent originating from IntelliJ platform's internal messaging system.
      */
     @Override
     public void actionPerformed(@NotNull final AnActionEvent e) {
@@ -36,10 +36,10 @@ public class About extends AnAction {
                 <html>
                     <body>
                         <p>%s</p>
-                        <p>Learn how to use extension: <a href='%s'>tide instructions</a></p>
+                        <p>Learn how to use the extension: <a href='%s'>tide instructions</a></p>
                         <p>Keyboard shortcut for submit: %s</p>
                     </body>
-                </html>""", version, manualUrl, KeymapUtil.getShortcutsText(shortcuts));
+                </html>""", version, JsonHandler.getConfigString("manual_url"), KeymapUtil.getShortcutsText(shortcuts));
         Messages.showMessageDialog(
                 message,
                 "About",

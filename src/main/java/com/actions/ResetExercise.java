@@ -6,6 +6,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.state.ActiveState;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * AnAction to reset an exercise to the latest submitted version.
+ */
 public class ResetExercise extends AnAction {
     /**
      * This function is called when subtask is reset via TIDE dropdown menu action.

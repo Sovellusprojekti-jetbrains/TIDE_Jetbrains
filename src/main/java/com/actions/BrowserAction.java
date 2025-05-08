@@ -1,24 +1,28 @@
 package com.actions;
 
+import com.api.JsonHandler;
 import com.customfile.TimTask;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.state.ActiveState;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * AnAction to view the current exercise in TIM.
+ */
 public final class BrowserAction extends AnAction {
-
-    private static final String BASE_URL = "https://tim.jyu.fi/view/";
-
-
+    /**
+     * View the currently open exercise in TIM.
+     * @param event AnActionEvent originating from IntelliJ platform's internal messaging system.
+     */
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        TimTask.getInstance().openInBrowser(BASE_URL, ActiveState.getInstance().getProject());
+        TimTask.getInstance().openInBrowser(JsonHandler.getConfigString("browser_base_url"), ActiveState.getInstance().getProject());
     }
 
     /**
      * This function is called by the IDE when changes in the editor occur. Action's state will be updated.
-     * @param e AnActionEvent originating from idea's internal messaging system.
+     * @param e AnActionEvent originating from IntelliJ platform's internal messaging system.
      */
     @Override
     public void update(@NotNull AnActionEvent e) {

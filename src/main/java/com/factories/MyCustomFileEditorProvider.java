@@ -9,6 +9,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.views.MyCustomFileEditor;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Used to create a MyCustomFileEditor instance to show the course view in the editor window.
+ * Not used in the current build.
+ */
 public final class MyCustomFileEditorProvider implements FileEditorProvider {
     @Override
     public boolean accept(@NotNull final Project project, @NotNull final VirtualFile file) {

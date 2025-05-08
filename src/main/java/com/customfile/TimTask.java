@@ -10,6 +10,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
+import com.interfaces.TideTask;
 import com.state.ActiveState;
 import com.state.StateManager;
 import com.util.Util;
@@ -30,7 +31,7 @@ import java.util.Objects;
 /**
  * This class "extends" VirtualFile with actions of tide task.
  */
-public final class TimTask {
+public final class TimTask implements TideTask {
 
     private static TimTask selected; //Keep the instance of TimTask opened in the editor here.
     private final VirtualFile delegate;

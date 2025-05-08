@@ -35,7 +35,7 @@ import java.util.logging.*;
  */
 public final class LogHandler extends Formatter {
     private static final Logger LOGGER = Logger.getLogger("com.api.logToFile");
-    private static final String LOG_PATH = "%t/tide-cli_log.txt";
+    private static final String LOG_PATH = JsonHandler.getConfigString("log_path");
     private static FileHandler fh = null;
 
     private LogHandler() {

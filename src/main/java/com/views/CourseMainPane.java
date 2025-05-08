@@ -1,4 +1,5 @@
 package com.views;
+import com.api.JsonHandler;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
@@ -186,7 +187,7 @@ public class CourseMainPane {
 
                 createSubPanels(course, panel, gbc);
 
-                final int thickness = 2;
+                final int thickness = JsonHandler.getConfigInt("course_border_thickness");
 
                 JScrollPane scrollPane = new JBScrollPane(panel);
                 scrollPane.setBorder(BorderFactory.createLineBorder(JBColor.border(), thickness));

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>9</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>396</x>
+      <y>72</y>
+      <w>324</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>/TideTask &lt;&lt;Interface&gt;&gt;/
+--
++submit(project: Project)
++resetExercise()
++openInBrowser(baseURL: String, project Project)
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>27</x>
+      <y>72</y>
+      <w>342</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>/tide-cli/
+--
+Text commands you use while communicating
+with the tide-cli via terminal
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>729</x>
+      <y>72</y>
+      <w>396</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>/UserManagement &lt;&lt;Interface&gt;&gt;/
+--
++login()
++logout()
++courses()
++loadExercise(courseDirectory: String, cmdArgs: String...)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1143</x>
+      <y>72</y>
+      <w>261</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>/Extensions &lt;&lt;Interface&gt;&gt;&gt;/
+--
+JetBrains provides this interface to connect
+plugins into it's framework.
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>27</x>
+      <y>207</y>
+      <w>342</w>
+      <h>234</h>
+    </coordinates>
+    <panel_attributes>TideCommandExecutor
+--
+-loginCommand: String
+-logoutCommand: String
+-coursesCommand: String
+-checkLoginCommand: String
+-submitCommand: String
+-taskCreateCommand: String
+--
++login()
++fetchCoursesAsync()
++checkLogin()
++logout()
++submitExercise(file: VirtualFile)
++loadExercise(courseDir: String, cmdArgs: String &lt;&lt;vararg&gt;&gt;)
++resetSubTask(task: SubTask, courseDir: String)
++openTaskProject(taskPath: String)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>729</x>
+      <y>207</y>
+      <w>396</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>ApiHandler
+--
+-tideCommandExecutor: TideCommandExecutor
+--
++login()
++logout()
++courses()
++loadExercise(courseDirectory: String, cmdArgs: String...)
++resetSubTask(task: SubTask, courseDirectory: String)
++submitExercise(file: VirtualFile)
++openTaskProject(taskPath: String)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>396</x>
+      <y>207</y>
+      <w>315</w>
+      <h>252</h>
+    </coordinates>
+    <panel_attributes>TimTask
+--
+-selected: TimTask &lt;&lt;static&gt;&gt;
+-delegate: VirtualFile
+-headers: ArrayList&lt;String&gt;
+-task: SubTask
+-CACHE: HasMap&lt;String, TimTask&gt; &lt;&lt;static&gt;&gt;
+--
++submit(project: Project)
++resetExercise()
++openInBrowser(baseURL: String, project: Project)
++getInstance(): TimTask &lt;&lt;static&gt;&gt;
++getCourseName(): String
++getDemoName(): String
++getSubTaskName(): String
++getSubmitData(): String[]
++evaluateFile(file: VirtualFile) &lt;&lt;static&gt;&gt;
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>27</x>
+      <y>477</y>
+      <w>387</w>
+      <h>468</h>
+    </coordinates>
+    <panel_attributes>ActiveState
+--
+-pcs: PropertyChangeSupport
+-courseList: List&lt;Course&gt;
+-tideSubmitREsponse: String
+-tideBaseResponse: String
+-isLoggedIn: boolean
+-project: Project
+-isSubmittable: boolean
+--
++getLogin(): boolean
++initProjectDependents()
++getInstance(): ActiveState
++addPropertyChangeListeners: listener: PropertyChangeListener)
++removePropertychangeListener(listener: PropertyChangeListener)
++updateCourses()
++getProject(): Project
++setCourses(courses: List&lt;Course&gt;)
++getCourses(): List&lt;Course&gt;
++getCourseName(path: String): String
++addDownloadedSubtasksToCourse(course: Course)
++setTideSubmitResponse(response: String)
++getTideSubmitResponse(response: String)
++login()
++logout()
++isSubmittable(): boolean
++findTaskName(course: String, file: VirtualFile): String
++findSubTask(file: VirtualFile): SubTask
++setSubmittable(status: boolean)
++messageChanges()
++getSubmitData(): String[]
++signalScrollSpeedUpdate()
++signalBrowserChoiceUpdated()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1431</x>
+      <y>72</y>
+      <w>261</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>/ToolWindowFactory &lt;&lt;Interface&gt;&gt;/
+--
+IDE uses services provided by this interface
+to generate views. Defined by JetBrains 
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1431</x>
+      <y>207</y>
+      <w>171</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>Factories
+--
+Classes in this 
+package implements
+the required services to
+construct ToolWindows
+of the TIDE Jetbrains plugin
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1143</x>
+      <y>207</y>
+      <w>270</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>plugin.xml
+--
+Describes how the services of 
+Extensions-interface are used to 
+connect the plugin into IDE's framework.</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>576</x>
+      <y>234</y>
+      <w>126</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>Holds the data of
+the file opened in the
+IDE editor
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>225</x>
+      <y>243</y>
+      <w>126</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>Communicates
+with tide-cli
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>234</x>
+      <y>522</y>
+      <w>144</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>General storage and
+connected to the
+message bus</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

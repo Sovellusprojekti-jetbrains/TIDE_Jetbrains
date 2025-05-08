@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 /**
- * This class is used to display settings window to configure tide-settings.
+ * AnAction to display the settings window to configure the TIDE plugin.
  */
 public class Settings extends AnAction {
     private static boolean visible = false; //To ensure that only one settings window can be open at a time.
