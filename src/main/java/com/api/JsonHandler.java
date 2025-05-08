@@ -121,46 +121,44 @@ public class JsonHandler {
         }
     }
 
-    /**
-     * Returns a config setting as a string.
-     * @param name Name of the parameter.
-     * @return Value of the parameter.
-     */
-    public static String getConfigString(String name) {
-        InputStream is = JsonHandler.class.getClassLoader().getResourceAsStream("config.json");
-        if (is != null) {
-            JsonObject jsonObject = JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject();
-            return jsonObject.get(name).getAsString();
+    private static final JsonObject CONFIG;
+
+    static {
+        try (InputStream is = JsonHandler.class.getClassLoader().getResourceAsStream("config.json")) {
+            if (is == null) {
+                throw new RuntimeException("config.json not found in resources");
+            }
+            CONFIG = JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load config.json", e);
         }
-        return null;
     }
 
     /**
-     * Returns a config setting as an integer.
+     * Gets a string from config.
      * @param name Name of the parameter.
      * @return Value of the parameter.
      */
-    public static int getConfigInt(String name) {
-        InputStream is = JsonHandler.class.getClassLoader().getResourceAsStream("config.json");
-        if (is != null) {
-            JsonObject jsonObject = JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject();
-            return jsonObject.get(name).getAsInt();
-        }
-        return 0;
+    public static String getString(String name) {
+        return CONFIG.has(name) ? CONFIG.get(name).getAsString() : null;
     }
 
     /**
-     * Returns a config setting as a boolean.
+     * Gets an in from config.
      * @param name Name of the parameter.
      * @return Value of the parameter.
      */
-    public static boolean getConfigBoolean(String name) {
-        InputStream is = JsonHandler.class.getClassLoader().getResourceAsStream("config.json");
-        if (is != null) {
-            JsonObject jsonObject = JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject();
-            return jsonObject.get(name).getAsBoolean();
-        }
-        return false;
+    public static int getInt(String name) {
+        return CONFIG.has(name) ? CONFIG.get(name).getAsInt() : 0;
+    }
+
+    /**
+     * Gets a boolean value from config.
+     * @param name Name of the parameter.
+     * @return Value of the parameter.
+     */
+    public static boolean getBoolean(String name) {
+        return CONFIG.has(name) ? CONFIG.get(name).getAsBoolean() : false;
     }
 }
 

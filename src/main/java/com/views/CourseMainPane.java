@@ -187,7 +187,7 @@ public class CourseMainPane {
 
                 createSubPanels(course, panel, gbc);
 
-                final int thickness = JsonHandler.getConfigInt("course_border_thickness");
+                final int thickness = JsonHandler.getInt("course_border_thickness");
 
                 JScrollPane scrollPane = new JBScrollPane(panel);
                 scrollPane.setBorder(BorderFactory.createLineBorder(JBColor.border(), thickness));

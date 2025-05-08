@@ -26,9 +26,9 @@ public final class StateManager implements PersistentStateComponent<StateManager
     }
 
     private State myState = new State(); //Object reference to state class
-    private static final int DEFAULTSCROLLSPEED = JsonHandler.getConfigInt("default_scroll_speed");
-    private static final int MAXSCROLLSPEED = JsonHandler.getConfigInt("max_scroll_speed");
-    private static final boolean DEFAULTBROWSERCHOICE = JsonHandler.getConfigBoolean("open_in_browser");
+    private static final int DEFAULTSCROLLSPEED = JsonHandler.getInt("default_scroll_speed");
+    private static final int MAXSCROLLSPEED = JsonHandler.getInt("max_scroll_speed");
+    private static final boolean DEFAULTBROWSERCHOICE = JsonHandler.getBoolean("open_in_browser");
 
     /**
      * This method is called when updating state class fields and to save the state of the State class when IDE is closed.
