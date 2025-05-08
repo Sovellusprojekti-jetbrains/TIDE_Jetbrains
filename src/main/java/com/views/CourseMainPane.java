@@ -44,10 +44,10 @@ public class CourseMainPane {
     private JPanel mainPanel;
     private JTabbedPane tabbedPane;
     private JPanel loginPane;
-    private JPanel titlePanel; // TODO: Does this exist for a reason?
+    private JPanel titlePanel; //needs to be here even if not used, because the form breaks otherwise.
     private JLabel courseLabel;
     private JPanel coursePanel;
-    private JScrollPane coursesPane; // TODO: This is not meant to scroll under any circumstances.
+    private JScrollPane coursesPane;
     private JButton logoutButton;
     private JButton settingsButton;
     private JButton refreshButton;
