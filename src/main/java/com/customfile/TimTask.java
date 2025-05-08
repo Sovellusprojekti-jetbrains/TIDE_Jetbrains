@@ -179,12 +179,12 @@ public final class TimTask implements TideTask {
     public String[] getSubmitData() {
         StateManager state = new StateManager();
         float points = state.getPoints(this.delegate.getCanonicalPath());
-        String pointsMessage = "Points : " + points + "/" + this.task.getMaxPoints();
+        String pointsMessage = "<html><b>Points :</b> " + points + "/" + this.task.getMaxPoints() + "</html>";
         String deadLineMessage = this.getDeadline();
         int answerLimit = this.task.getAnswerLimit();
         // TODO: Ideally, there would be a distinction between no tries left and tries left not available.
         String answerLimitString = answerLimit > 0 ? String.valueOf(answerLimit) : "N/A";
-        String submitMessage = "Tries left: " + answerLimitString;
+        String submitMessage = "<html><b>Tries left: </b>" + answerLimitString + "</html>";
         return new String[] {pointsMessage, deadLineMessage, submitMessage};
     }
 
@@ -193,7 +193,7 @@ public final class TimTask implements TideTask {
      * @return a string containing the deadline.
      */
     private String getDeadline() {
-        String deadLineMessage = "Deadline: N/A";
+        String deadLineMessage = "<html><b>Deadline:</b> N/A</html>";
         if (this.task.getDeadLine() != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx")
                     .withZone(ZoneId.of("UTC"));
@@ -201,7 +201,7 @@ public final class TimTask implements TideTask {
             ZoneId localZone = ZoneId.systemDefault();
             ZonedDateTime localDeadline = date.withZoneSameInstant(localZone);
             DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z");
-            deadLineMessage = localDeadline.format(deadlineFormat);
+            deadLineMessage = "<html><b>Deadline: </b>" + localDeadline.format(deadlineFormat) + "</html>";
         }
         return deadLineMessage;
     }
