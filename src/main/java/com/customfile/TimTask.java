@@ -181,7 +181,10 @@ public final class TimTask implements TideTask {
         float points = state.getPoints(this.delegate.getCanonicalPath());
         String pointsMessage = "Points : " + points + "/" + this.task.getMaxPoints();
         String deadLineMessage = this.getDeadline();
-        String submitMessage = "Maximum number of submissions allowed: " + this.task.getAnswerLimit();
+        int answerLimit = this.task.getAnswerLimit();
+        // TODO: Ideally, there would be a distinction between no tries left and tries left not available.
+        String answerLimitString = answerLimit > 0 ? String.valueOf(answerLimit) : "N/A";
+        String submitMessage = "Tries left: " + answerLimitString;
         return new String[] {pointsMessage, deadLineMessage, submitMessage};
     }
 
@@ -190,7 +193,7 @@ public final class TimTask implements TideTask {
      * @return a string containing the deadline.
      */
     private String getDeadline() {
-        String deadLineMessage = "no deadline";
+        String deadLineMessage = "Deadline: N/A";
         if (this.task.getDeadLine() != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx")
                     .withZone(ZoneId.of("UTC"));

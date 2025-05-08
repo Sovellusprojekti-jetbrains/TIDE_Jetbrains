@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.regex.*;
 
 import com.customfile.TimTask;
+import com.intellij.util.ui.JBFont;
 import com.listeners.SmartLabelRewrapper;
 import com.state.ActiveState;
 import com.state.StateManager;
@@ -50,9 +51,10 @@ public class CourseTaskPane {
     private JButton submitButton;
     private JButton showOutputButton;
     private JButton resetButton;
-    private JPanel submitPane;
+    private JPanel textPane;
     private JPanel infoPane;
     private JPanel resetPane;
+    private JPanel buttonPanel;
     private JProgressBar taskProgressBar;
     private JLabel deadLineLabel;
     private JLabel maxSubmitsLabel;
@@ -80,12 +82,29 @@ public class CourseTaskPane {
 
         addActionListeners();
 
+        final int topPadding = 15;
+        infoPane.setBorder(BorderFactory.createEmptyBorder(topPadding, 0, 0, 0));
+        taskNameLabel.setFont(JBFont.h2());
+        final int margin = 20;
+        textPane.setBorder(BorderFactory.createEmptyBorder(0, margin, 0, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, margin));
+        setButtonTooltips();
+
         addPropertyChangeListeners(stateManager);
+
+
 
         stateManager.updateCourses();
         setProgress(false, "");
         courseTaskPane = this;
         SmartLabelRewrapper.setupSmartRewrapForLabels(labelList, thisToolWindow);
+    }
+
+    private void setButtonTooltips() {
+        openTaskButton.setToolTipText("Opens the TIM page containing the task either in browser or the editor view.");
+        resetButton.setToolTipText("Resets the task to the latest submitted version.");
+        submitButton.setToolTipText("Submits the task to TIM.");
+        showOutputButton.setToolTipText("Opens the Output panel.");
     }
 
     private void addPropertyChangeListeners(ActiveState stateManager) {
