@@ -179,12 +179,12 @@ public final class TimTask implements TideTask {
     public String[] getSubmitData() {
         StateManager state = new StateManager();
         float points = state.getPoints(this.delegate.getCanonicalPath());
-        String pointsMessage = "<html><b>Points :</b> " + points + "/" + this.task.getMaxPoints() + "</html>";
+        String pointsMessage = "<html><b>Points:</b> " + points + "/" + this.task.getMaxPoints() + "</html>";
         String deadLineMessage = this.getDeadline();
         int answerLimit = this.task.getAnswerLimit();
         // TODO: Ideally, there would be a distinction between no tries left and tries left not available.
         String answerLimitString = answerLimit > 0 ? String.valueOf(answerLimit) : "N/A";
-        String submitMessage = "<html><b>Tries left: </b>" + answerLimitString + "</html>";
+        String submitMessage = "<html><b>Max attempts: </b>" + answerLimitString + "</html>";
         return new String[] {pointsMessage, deadLineMessage, submitMessage};
     }
 
