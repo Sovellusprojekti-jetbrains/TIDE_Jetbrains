@@ -10,6 +10,7 @@ import com.course.CourseTask;
 import com.course.SubTask;
 import com.customfile.TimTask;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
@@ -217,6 +218,11 @@ public class ActiveState {
     public void login() {
         if (!isLoggedIn) {
             isLoggedIn = true;
+            var files = FileEditorManager.getInstance(this.project).getSelectedFiles();
+            if (files.length > 0) {
+                VirtualFile temp = files[0];
+                TimTask.evaluateFile(temp);
+            }
         }
         pcs.firePropertyChange("login", false, isLoggedIn);
         LogHandler.logInfo("ActiveState fired event login");
