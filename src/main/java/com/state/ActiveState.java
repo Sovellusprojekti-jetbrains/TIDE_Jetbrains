@@ -10,6 +10,7 @@ import com.course.CourseDemo;
 import com.course.DemoTask;
 import com.customfile.TimTask;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
@@ -18,6 +19,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.util.Util;
 import com.views.InfoView;
+import com.views.OutputWindow;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.PropertyChangeEvent;
@@ -77,9 +79,11 @@ public class ActiveState {
                 .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
                     @Override
                     public void selectionChanged(@NotNull FileEditorManagerEvent event) {
-                        FileEditorManagerListener.super.selectionChanged(event);
-                        VirtualFile temp = event.getNewFile();
-                        TimTask.evaluateFile(temp);
+                        if (isLoggedIn) {
+                            FileEditorManagerListener.super.selectionChanged(event);
+                            VirtualFile temp = event.getNewFile();
+                            TimTask.evaluateFile(temp);
+                        }
                     }
                 });
     }
@@ -132,6 +136,12 @@ public class ActiveState {
         courseList = courses;
         pcs.firePropertyChange("courseList", oldCourseList, courseList);
         LogHandler.logInfo("ActiveState fired event courseList");
+        if (this.project != null) {
+            var files = FileEditorManager.getInstance(this.project).getSelectedFiles();
+            if (files.length > 0) {
+                TimTask.evaluateFile(files[0]);
+            }
+        }
     }
 
 
@@ -222,6 +232,7 @@ public class ActiveState {
         // These are here because calling them from inside the toolwindow would not work.
         Util.setWindowAvailable(project, "Course Task", true, "/icons/tim.svg");
         Util.setWindowAvailable(project, "Output Window", true, "/icons/tim.svg");
+        Util.showWindow(project, "Course Task", true);
     }
 
     /**
@@ -233,6 +244,7 @@ public class ActiveState {
         }
         pcs.firePropertyChange("logout", true, isLoggedIn);
         LogHandler.logInfo("ActiveState fired event logout");
+        OutputWindow.getInstance().clearText();
         Util.setWindowAvailable(project, "Course Task", false, "/icons/timgray.svg");
         Util.setWindowAvailable(project, "Output Window", false, "/icons/timgray.svg");
     }

@@ -1,5 +1,4 @@
 package com.views;
-import com.api.JsonHandler;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.application.ApplicationManager;
@@ -29,6 +28,7 @@ import java.io.*;
 import com.course.*;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.AsyncProcessIcon;
+import com.util.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,9 +76,6 @@ public class CourseMainPane {
         addActionListeners();
 
         switchToLoggedOut();
-        ApplicationManager.getApplication().invokeLater(() -> {
-            setProgress(true, "Checking login info...");
-        });
     }
 
 
@@ -187,7 +184,7 @@ public class CourseMainPane {
 
                 createSubPanels(course, panel, gbc);
 
-                final int thickness = JsonHandler.getConfigInt("course_border_thickness");
+                final int thickness = Config.COURSE_BORDER;
 
                 JScrollPane scrollPane = new JBScrollPane(panel);
                 scrollPane.setBorder(BorderFactory.createLineBorder(JBColor.border(), thickness));
@@ -414,6 +411,7 @@ public class CourseMainPane {
         }
         return tree;
     }
+
 
     /**
      * Switches to a state where logging out is possible.
