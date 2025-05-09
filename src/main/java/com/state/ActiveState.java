@@ -77,9 +77,11 @@ public class ActiveState {
                 .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
                     @Override
                     public void selectionChanged(@NotNull FileEditorManagerEvent event) {
-                        FileEditorManagerListener.super.selectionChanged(event);
-                        VirtualFile temp = event.getNewFile();
-                        TimTask.evaluateFile(temp);
+                        if (isLoggedIn) {
+                            FileEditorManagerListener.super.selectionChanged(event);
+                            VirtualFile temp = event.getNewFile();
+                            TimTask.evaluateFile(temp);
+                        }
                     }
                 });
     }
