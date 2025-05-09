@@ -38,7 +38,7 @@ public class About extends AnAction {
                         <p>Learn how to use the extension: <a href='%s'>tide instructions</a></p>
                         <p>Keyboard shortcut for submit: %s</p>
                     </body>
-                </html>""", version, Config.getString("manual_url"), KeymapUtil.getShortcutsText(shortcuts));
+                </html>""", version, Config.MANUAL_URL, KeymapUtil.getShortcutsText(shortcuts));
         Messages.showMessageDialog(
                 message,
                 "About",

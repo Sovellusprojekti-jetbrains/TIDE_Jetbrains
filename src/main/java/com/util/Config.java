@@ -1,50 +1,34 @@
 package com.util;
 
-import com.api.JsonHandler;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 public final class Config {
-    private static final JsonObject CONFIG;
-    private Config() { }
-    static {
-        try (InputStream is = JsonHandler.class.getClassLoader().getResourceAsStream("config.json")) {
-            if (is == null) {
-                throw new RuntimeException("config.json not found in resources");
-            }
-            CONFIG = JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to load config.json", e);
-        }
-    }
-
+    private Config() { };
     /**
-     * Gets a string from config.
-     * @param name Name of the parameter.
-     * @return Value of the parameter.
+     * URL for the user manual.
      */
-    public static String getString(String name) {
-        return CONFIG.has(name) ? CONFIG.get(name).getAsString() : null;
-    }
-
+    public static final String MANUAL_URL = "https://tim.jyu.fi/view/"
+            + "kurssit/tie/proj/2025/tide-jetbrains/tide-jetbrains-lisaosan-kayttoohjeet";
     /**
-     * Gets an in from config.
-     * @param name Name of the parameter.
-     * @return Value of the parameter.
+     * Base URL for the browser window.
      */
-    public static int getInt(String name) {
-        return CONFIG.has(name) ? CONFIG.get(name).getAsInt() : 0;
-    }
-
+    public static final String BROWSER_BASE_URL = "https://tim.jyu.fi/view/";
     /**
-     * Gets a boolean value from config.
-     * @param name Name of the parameter.
-     * @return Value of the parameter.
+     * Diretory for the log file.
      */
-    public static boolean getBoolean(String name) {
-        return CONFIG.has(name) ? CONFIG.get(name).getAsBoolean() : false;
-    }
+    public static final String LOG_PATH = "%t/tide-cli_log.txt";
+    /**
+     * Default scroll speed for course view.
+     */
+    public static final int DEFAULT_SCROLL_SPEED = 16;
+    /**
+     * Upper limit for the above setting.
+     */
+    public static final int MAX_SCROLL_SPEED = 1000;
+    /**
+     * Will the "Open in TIM"-button open the file in the system default browser?
+     */
+    public static final boolean OPEN_IN_BROWSER = false;
+    /**
+     * Border thickness for a single course.
+     */
+    public static final int COURSE_BORDER = 2;
 }

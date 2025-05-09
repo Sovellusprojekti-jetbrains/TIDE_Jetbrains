@@ -37,7 +37,7 @@ import java.util.logging.*;
  */
 public final class LogHandler extends Formatter {
     private static final Logger LOGGER = Logger.getLogger("com.api.logToFile");
-    private static final String LOG_PATH = Config.getString("log_path");
+    private static final String LOG_PATH = Config.LOG_PATH;
     private static FileHandler fh = null;
 
     private LogHandler() {
