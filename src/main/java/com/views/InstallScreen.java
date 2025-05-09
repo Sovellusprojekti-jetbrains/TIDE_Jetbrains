@@ -82,19 +82,21 @@ public class InstallScreen {
                     return;
                 }
                 if (System.getProperty("os.name").contains("Mac OS X")) {
-                    //TODO: test this on a mac to make sure it works
+                    //this does not work macOS is too strict with terminal usage
+                    //better to just let the users install tide themselves
 
                     try {
                         ProcessBuilder process = new ProcessBuilder();
-                        process.command("curl -kLSs "
-                                + "https://github.com/TIDE-project/TIDE-CLI/releases/latest/download/tide-macos-latest.zip"
-                                + " -o tide.zip");
+                        process.command(
+                                "curl", "-kLSs ",
+                                "https://github.com/TIDE-project/TIDE-CLI/releases/latest/download/tide-macos-latest.zip",
+                                " -o tide.zip");
                         process.start();
-                        process.command("unzip tide.zip");
+                        process.command("unzip", "tide.zip");
                         process.start();
-                        process.command("chmod +x tide");
+                        process.command("chmod", "+x", "tide");
                         process.start();
-                        process.command("mv tide /usr/local/bin");
+                        process.command("mv", "tide", "/usr/local/bin");
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }

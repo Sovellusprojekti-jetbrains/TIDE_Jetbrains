@@ -202,7 +202,18 @@ object TideCommandExecutor {
             val path = Path(courseDirFile.absolutePath)
             val list = mutableListOf<File>()
             listAllFiles(path, list)
+            var slnFile = File("")
             if (list.isNotEmpty()) {
+                for (file in courseDirFile.listFiles()) {
+                    if (file.name.endsWith(".sln")) {
+                        slnFile = file
+                        break
+                    }
+                }
+                if (!slnFile.exists()) {
+                    createSlnFile(courseDirFile.absolutePath)
+                }
+
                 for (file: File in list) {
                     createOrUpdateSlnWithCsproj(courseDirFile.absolutePath, file.absolutePath)
                 }
@@ -304,6 +315,30 @@ object TideCommandExecutor {
     }
 
     /**
+     * creates a sln file for the project if it doesn't exist yet.
+     * @param slnPath path to the folder where sln file should go
+     */
+    private fun createSlnFile(slnPath: String) {
+        val slnFile = File("$slnPath/course.sln")
+        println("Creating new .sln file at: ${slnFile.absolutePath}")
+        slnFile.writeText(
+            buildString {
+                appendLine("Microsoft Visual Studio Solution File, Format Version 12.00")
+                appendLine("Global")
+                appendLine("GlobalSection(SolutionConfigurationPlatforms) = preSolution")
+                appendLine("Debug|Any CPU = Debug|Any CPU")
+                appendLine("Release|Any CPU = Release|Any CPU")
+                appendLine("EndGlobalSection")
+                appendLine("GlobalSection(ProjectConfigurationPlatforms) = postSolution")
+                appendLine("EndGlobalSection")
+                appendLine("GlobalSection(NestedProjects) = preSolution")
+                appendLine("EndGlobalSection")
+                appendLine("EndGlobal")
+            },
+        )
+    }
+
+    /**
      * Adds a csproj file to a solution and creates a solution if it doesn't exist.
      * there is a lot of hard coded values here to get the programming 1 folder structure to work
      * with solutions. In the future this method should be changed so that it would have
@@ -316,10 +351,10 @@ object TideCommandExecutor {
         csprojPath: String,
     ) {
         var slnFile = File(slnPath)
-        var folderGuid = UUID.randomUUID().toString().uppercase()
+        val folderGuid = UUID.randomUUID().toString().uppercase()
         val demoPathSplit = csprojPath.split(Regex("[/\\\\]"))
 
-        var demoName = demoPathSplit[demoPathSplit.size - 3]
+        val demoName = demoPathSplit[demoPathSplit.size - 3]
         for (file in slnFile.listFiles()!!) {
             if (file.name.endsWith(".sln")) {
                 slnFile = file
@@ -327,17 +362,12 @@ object TideCommandExecutor {
             }
         }
 
-        var csprojFile = File(csprojPath)
+        val csprojFile = File(csprojPath)
 
         if (!csprojFile.exists()) {
             println("Project file not found: $csprojPath")
             return
         }
-        /*
-        if(!csprojFile.name.contains(demoName)) {
-            csprojFile.renameTo(File(csprojFile.parent + "\\" + demoName + csprojFile.name) )
-            csprojFile = File(csprojFile.parent + "\\" + demoName + csprojFile.name)
-        }*/
 
         val projectName = csprojFile.nameWithoutExtension
         val projectGuid = UUID.randomUUID().toString().uppercase()
@@ -363,7 +393,6 @@ object TideCommandExecutor {
         val projectEntry =
             """
             Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "$projectName", "$relativeCsprojPath", "{$projectGuid}"
-            EndProject
             """.trimIndent()
         val folderEntry =
             """
@@ -410,13 +439,15 @@ object TideCommandExecutor {
                 return
             }
 
-            val endProjectIndex = lines.indexOfLast { it.trim().startsWith("EndProject") }
+            var endProjectIndex = lines.indexOfLast { it.trim().startsWith("EndProject") }
             val globalIndex = lines.indexOfFirst { it.trim() == "Global" }
 
             if (endProjectIndex != -1) {
                 lines.add(endProjectIndex + 1, projectEntry)
+                lines.add(endProjectIndex + 2, "EndProject")
             } else {
-                lines.add(projectEntry)
+                lines.add(globalIndex, projectEntry)
+                lines.add(globalIndex + 1, "EndProject")
             }
             val projectConfigurationPlatformsIndex =
                 lines.indexOfFirst {
@@ -439,7 +470,8 @@ object TideCommandExecutor {
                 val nestedProjectEntry = "    {$projectGuid} = {$demoGuid}"
                 lines.add(nestedIndex + 1, nestedProjectEntry)
             } else {
-                lines.add(endProjectIndex - 1, folderEntry)
+                endProjectIndex = lines.indexOfLast { it.trim().startsWith("EndProject") }
+                lines.add(endProjectIndex + 1, folderEntry)
                 val nestedProjectEntry = "    {$projectGuid} = {$folderGuid}"
                 // folder entry adds two lines to the file so we need to off set that
                 lines.add(nestedIndex + 2, nestedProjectEntry)
