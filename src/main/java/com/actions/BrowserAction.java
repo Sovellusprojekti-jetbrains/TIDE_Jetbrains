@@ -17,7 +17,7 @@ public final class BrowserAction extends AnAction {
      */
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        TimTask.getInstance().openInBrowser(Config.getString("browser_base_url"), ActiveState.getInstance().getProject());
+        TimTask.getInstance().openInBrowser(Config.BROWSER_BASE_URL, ActiveState.getInstance().getProject());
     }
 
     /**

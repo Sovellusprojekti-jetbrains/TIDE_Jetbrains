@@ -184,7 +184,7 @@ public class CourseMainPane {
 
                 createSubPanels(course, panel, gbc);
 
-                final int thickness = Config.getInt("course_border_thickness");
+                final int thickness = Config.COURSE_BORDER;
 
                 JScrollPane scrollPane = new JBScrollPane(panel);
                 scrollPane.setBorder(BorderFactory.createLineBorder(JBColor.border(), thickness));
