@@ -1,12 +1,12 @@
 package com.util;
 
-@SuppressWarnings({"checkstyle:LineLength"})
 public final class Config {
     private Config() { };
     /**
      * URL for the user manual.
      */
-    public static final String MANUAL_URL = "https://tim.jyu.fi/view/kurssit/tie/proj/2025/tide-jetbrains/tide-jetbrains-lisaosan-kayttoohjeet";
+    public static final String MANUAL_URL = "https://tim.jyu.fi/view/"
+            + "kurssit/tie/proj/2025/tide-jetbrains/tide-jetbrains-lisaosan-kayttoohjeet";
     /**
      * Base URL for the browser window.
      */
