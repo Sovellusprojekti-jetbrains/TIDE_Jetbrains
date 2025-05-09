@@ -136,6 +136,12 @@ public class ActiveState {
         courseList = courses;
         pcs.firePropertyChange("courseList", oldCourseList, courseList);
         LogHandler.logInfo("ActiveState fired event courseList");
+        if (this.project != null) {
+            var files = FileEditorManager.getInstance(this.project).getSelectedFiles();
+            if (files.length > 0) {
+                TimTask.evaluateFile(files[0]);
+            }
+        }
     }
 
 
@@ -219,11 +225,6 @@ public class ActiveState {
     public void login() {
         if (!isLoggedIn) {
             isLoggedIn = true;
-            var files = FileEditorManager.getInstance(this.project).getSelectedFiles();
-            if (files.length > 0) {
-                VirtualFile temp = files[0];
-                TimTask.evaluateFile(temp);
-            }
         }
         pcs.firePropertyChange("login", false, isLoggedIn);
         LogHandler.logInfo("ActiveState fired event login");
