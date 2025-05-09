@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.util.Util;
 import com.views.InfoView;
+import com.views.OutputWindow;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.PropertyChangeEvent;
@@ -242,8 +243,7 @@ public class ActiveState {
         }
         pcs.firePropertyChange("logout", true, isLoggedIn);
         LogHandler.logInfo("ActiveState fired event logout");
-        Util.showWindow(project, "Course Task", false);
-        Util.showWindow(project, "Output Window", false);
+        OutputWindow.getInstance().clearText();
         Util.setWindowAvailable(project, "Course Task", false, "/icons/timgray.svg");
         Util.setWindowAvailable(project, "Output Window", false, "/icons/timgray.svg");
     }
