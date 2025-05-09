@@ -4,8 +4,6 @@ import com.course.Course;
 import com.course.SubTask;
 import com.google.gson.*;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -119,48 +117,6 @@ public class JsonHandler {
 
             return course;
         }
-    }
-
-    /**
-     * Returns a config setting as a string.
-     * @param name Name of the parameter.
-     * @return Value of the parameter.
-     */
-    public static String getConfigString(String name) {
-        InputStream is = JsonHandler.class.getClassLoader().getResourceAsStream("config.json");
-        if (is != null) {
-            JsonObject jsonObject = JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject();
-            return jsonObject.get(name).getAsString();
-        }
-        return null;
-    }
-
-    /**
-     * Returns a config setting as an integer.
-     * @param name Name of the parameter.
-     * @return Value of the parameter.
-     */
-    public static int getConfigInt(String name) {
-        InputStream is = JsonHandler.class.getClassLoader().getResourceAsStream("config.json");
-        if (is != null) {
-            JsonObject jsonObject = JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject();
-            return jsonObject.get(name).getAsInt();
-        }
-        return 0;
-    }
-
-    /**
-     * Returns a config setting as a boolean.
-     * @param name Name of the parameter.
-     * @return Value of the parameter.
-     */
-    public static boolean getConfigBoolean(String name) {
-        InputStream is = JsonHandler.class.getClassLoader().getResourceAsStream("config.json");
-        if (is != null) {
-            JsonObject jsonObject = JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject();
-            return jsonObject.get(name).getAsBoolean();
-        }
-        return false;
     }
 }
 
