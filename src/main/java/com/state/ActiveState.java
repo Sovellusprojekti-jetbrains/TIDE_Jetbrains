@@ -10,6 +10,7 @@ import com.course.CourseTask;
 import com.course.SubTask;
 import com.customfile.TimTask;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
@@ -77,9 +78,11 @@ public class ActiveState {
                 .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
                     @Override
                     public void selectionChanged(@NotNull FileEditorManagerEvent event) {
-                        FileEditorManagerListener.super.selectionChanged(event);
-                        VirtualFile temp = event.getNewFile();
-                        TimTask.evaluateFile(temp);
+                        if (isLoggedIn) {
+                            FileEditorManagerListener.super.selectionChanged(event);
+                            VirtualFile temp = event.getNewFile();
+                            TimTask.evaluateFile(temp);
+                        }
                     }
                 });
     }
@@ -215,6 +218,11 @@ public class ActiveState {
     public void login() {
         if (!isLoggedIn) {
             isLoggedIn = true;
+            var files = FileEditorManager.getInstance(this.project).getSelectedFiles();
+            if (files.length > 0) {
+                VirtualFile temp = files[0];
+                TimTask.evaluateFile(temp);
+            }
         }
         pcs.firePropertyChange("login", false, isLoggedIn);
         LogHandler.logInfo("ActiveState fired event login");
@@ -222,6 +230,7 @@ public class ActiveState {
         // These are here because calling them from inside the toolwindow would not work.
         Util.setWindowAvailable(project, "Course Task", true, "/icons/tim.svg");
         Util.setWindowAvailable(project, "Output Window", true, "/icons/tim.svg");
+        Util.showWindow(project, "Course Task", true);
     }
 
     /**
@@ -233,6 +242,8 @@ public class ActiveState {
         }
         pcs.firePropertyChange("logout", true, isLoggedIn);
         LogHandler.logInfo("ActiveState fired event logout");
+        Util.showWindow(project, "Course Task", false);
+        Util.showWindow(project, "Output Window", false);
         Util.setWindowAvailable(project, "Course Task", false, "/icons/timgray.svg");
         Util.setWindowAvailable(project, "Output Window", false, "/icons/timgray.svg");
     }
