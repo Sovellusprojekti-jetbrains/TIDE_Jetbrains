@@ -38,7 +38,7 @@ public class DemoTask {
     @SerializedName(value = "deadline")
     private String deadLine;
     @SerializedName(value = "answer_limit")
-    private int answerLimit;
+    private String answerLimit;
     @SerializedName(value = "task_files")
     private List<TaskFile> taskFiles;
 
@@ -96,7 +96,7 @@ public class DemoTask {
      * getter for the maximum amount of submits allowed for a course task.
      * @return the maximum amount of submits.
      */
-    public int getAnswerLimit() {
+    public String getAnswerLimit() {
         return this.answerLimit;
     }
 
