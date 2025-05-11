@@ -169,4 +169,24 @@ public final class StateManager implements PersistentStateComponent<StateManager
         PropertiesComponent properties = PropertiesComponent.getInstance();
         return properties.getValue("myPlugin.tidepath", "");
     }
+
+    /**
+     * Gets the last saved courses as a Json String
+     * @return Json String of the saved courses
+     */
+    public String getCourses() {
+        PropertiesComponent properties = PropertiesComponent.getInstance();
+        return properties.getValue("myPlugin.courses", "");
+    }
+
+
+    /**
+     * saves the Json String containing the courses
+     * @param JsonString String containing the courses in Json format
+     */
+    public void SetCourse(String JsonString) {
+        PropertiesComponent properties = PropertiesComponent.getInstance();
+        properties.setValue("myPlugin.courses", JsonString);
+    }
+
 }

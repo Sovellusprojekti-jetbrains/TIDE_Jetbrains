@@ -29,6 +29,7 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.io.path.Path
 
 object TideCommandExecutor {
@@ -83,6 +84,7 @@ object TideCommandExecutor {
                     activeState.addDownloadedSubtasksToCourse(crs)
                 }
                 activeState.setCourses(courses) // No need to switch dispatcher unless UI update is needed
+                ApplicationManager.getApplication().getService(StateManager::class.java).SetCourse(jsonString)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -476,7 +478,7 @@ object TideCommandExecutor {
         withContext(Dispatchers.IO) {
             var tidePath = ""
             try {
-                tidePath = ApplicationManager.getApplication().getService<StateManager?>(StateManager::class.java).getTidePath()
+                tidePath = ApplicationManager.getApplication().getService(StateManager::class.java).getTidePath()
             } catch (e: Exception) {
                 println(e.toString())
             }
@@ -503,6 +505,8 @@ object TideCommandExecutor {
 
             val output = process.inputStream.bufferedReader().use { it.readText() }
 
+            process.waitFor(10, TimeUnit.SECONDS)
+            process.destroy()
             val exitCode = process.awaitExit()
             println("Process exited with code: $exitCode")
 

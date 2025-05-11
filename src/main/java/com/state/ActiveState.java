@@ -47,6 +47,15 @@ public class ActiveState {
      * Constructor for active state attempts to hide the right and bottom toolwindows.
      */
     public ActiveState() {
+        String courses = ApplicationManager.getApplication().getService(StateManager.class).getCourses();
+
+        if (!courses.isEmpty()) {
+        courseList =  new JsonHandler().jsonToCourses(courses);
+            for (Course course:  courseList) {
+                addDownloadedSubtasksToCourse(course);
+            }
+        }
+
         this.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
