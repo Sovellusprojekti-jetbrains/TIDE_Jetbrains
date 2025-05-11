@@ -85,6 +85,7 @@ object TideCommandExecutor {
                 }
                 activeState.setCourses(courses) // No need to switch dispatcher unless UI update is needed
                 ApplicationManager.getApplication().getService(StateManager::class.java).SetCourse(jsonString)
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
