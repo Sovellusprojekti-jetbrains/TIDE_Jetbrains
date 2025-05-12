@@ -274,7 +274,7 @@ public class CourseMainPane {
                 } catch (IOException ex) {
                     com.api.LogHandler.logError("CourseMainPane.createExercise(CourseTask courseTask, String courseName)", ex);
                     com.api.LogHandler.logDebug(new String[]{"CourseTask courseTask", "String courseName"},
-                            new String[]{courseTask.toString(), courseName});
+                            new String[]{courseDemo.toString(), courseName});
                     InfoView.displayError("Couldn't load exercise. Check Tide CLI");
                     throw new RuntimeException(ex);
                 } catch (InterruptedException ex) {
