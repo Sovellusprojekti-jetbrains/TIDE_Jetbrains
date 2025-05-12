@@ -105,7 +105,7 @@ public class ApiHandlerTest {
     public void testHandleCommandLine() {
         List<String> command = new ArrayList<>();
         command.add("tide");
-        String result = TideCommandExecutor.INSTANCE.handleCommandLineTest(command);
+        String result = TideCommandExecutor.INSTANCE.handleCommandLineBlocking(command);
         String expect = "Usage: tide [OPTIONS] COMMAND [ARGS]...\n"
                 + "\n"
                 + "  CLI tool for downloading and submitting TIM tasks.\n"
