@@ -54,8 +54,8 @@ public class SubTask {
     }
 
     /**
-     *
-     * @return
+     * Gets the task description.
+     * @return The string value of "stem"
      */
     public String getStem() {
         return this.stem;
