@@ -60,7 +60,8 @@ public class CourseTaskPane {
     private JLabel deadLineLabel;
     private JLabel maxSubmitsLabel;
     private static CourseTaskPane courseTaskPane;
-    private List<JLabel> changingLabels = Arrays.asList(taskInformationLabel, taskInfoLabel, taskNameLabel, pointsLabel, maxSubmitsLabel, deadLineLabel);
+    private List<JLabel> changingLabels = Arrays.asList(taskInformationLabel, taskInfoLabel, taskNameLabel,
+            pointsLabel, maxSubmitsLabel, deadLineLabel);
     private ToolWindow thisToolWindow;
     /**
      * getter for the contents of the task panel.
@@ -91,8 +92,6 @@ public class CourseTaskPane {
         setButtonTooltips();
 
         addPropertyChangeListeners(stateManager);
-
-
 
         stateManager.updateCourses();
         setProgress(false, "");
@@ -224,14 +223,15 @@ public class CourseTaskPane {
     }
 
     /**
-     * setter for the subtask deadline .
+     * Setter for the subtask deadline.
      * @param message message containing the deadline.
      */
     private void setDeadLine(String message) {
         deadLineLabel.setText(message);
     }
+
     /**
-     * sets visible number for maximum amount of submissions that is allowed for the subtask.
+     * Sets visible number for maximum amount of submissions that is allowed for the subtask.
      * @param message  a message containing the maximum amount of submits allowed.
      */
     private void setMaxSubmits(String message) {
@@ -257,7 +257,7 @@ public class CourseTaskPane {
     }
 
     /**
-     * Changes the text values of the demoTiedot abel and tehtavaNimi label.
+     * Changes the text values of the taskInfoLabel and taskNameLabel.
      */
     private void setDemoName() {
         ApplicationManager.getApplication().invokeLater(() -> {

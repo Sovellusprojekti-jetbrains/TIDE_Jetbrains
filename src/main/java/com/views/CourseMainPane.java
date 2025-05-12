@@ -87,8 +87,8 @@ public class CourseMainPane {
                 setProgress(true, "Updating courses...");
             }
         });
-        //currently assumes that the user has the TIM CLI installed.
-        //need some checks and tests in the future.
+        // Currently assumes that the user has the TIM CLI installed.
+        // Need some checks and tests in the future.
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
