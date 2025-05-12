@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Submit extends AnAction {
     /**
-     * This function is called when subtask is submitted via TIDE dropdown menu action.
+     * This function is called when demotask is submitted via TIDE dropdown menu action.
      * @param e AnActionEvent fired.
      */
     @Override

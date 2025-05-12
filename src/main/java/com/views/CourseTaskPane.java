@@ -143,7 +143,7 @@ public class CourseTaskPane {
             manager.tryToExecute(action, null, null, null, true);
         });
 
-        // Reset subtask back to the state of last submit.
+        // Reset demo task back to the state of last submit.
         resetButton.addActionListener(event -> {
             ActionManager manager = ActionManager.getInstance();
             AnAction action = manager.getAction("com.actions.ResetExercise");
@@ -218,14 +218,14 @@ public class CourseTaskPane {
     }
 
     /**
-     * setter for the subtask deadline .
+     * setter for the demo task deadline .
      * @param message message containing the deadline.
      */
     private void setDeadLine(String message) {
         deadLineLabel.setText(message);
     }
     /**
-     * sets visible number for maximum amount of submissions that is allowed for the subtask.
+     * sets visible number for maximum amount of submissions that is allowed for the demo task.
      * @param message  a message containing the maximum amount of submits allowed.
      */
     private void setMaxSubmits(String message) {
@@ -258,7 +258,7 @@ public class CourseTaskPane {
             if (TimTask.getInstance() != null) {
                 String info = TimTask.getInstance().getCourseName() + " - " + TimTask.getInstance().getDemoName();
                 this.taskInfoLabel.setText(info);
-                this.taskNameLabel.setText(TimTask.getInstance().getSubTaskName());
+                this.taskNameLabel.setText(TimTask.getInstance().getDemoTaskName());
             } else {
                 this.taskInfoLabel.setText(" Not a TIM task ");
                 this.taskNameLabel.setText("");

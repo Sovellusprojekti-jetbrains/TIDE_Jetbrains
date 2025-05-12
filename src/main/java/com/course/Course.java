@@ -21,7 +21,7 @@ public class Course {
      */
     private String path;
     /**
-     * List of CourseTask objects.
+     * List of CourseDemo objects.
      */
     private List<CourseDemo> tasks;
 

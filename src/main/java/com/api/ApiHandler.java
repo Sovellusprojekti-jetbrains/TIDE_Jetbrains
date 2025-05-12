@@ -62,20 +62,20 @@ public class ApiHandler implements UserManagement {
 
 
     /**
-     * Resets subtask back to the state of latest submit.
+     * Resets demo task back to the state of latest submit.
      * @param task to reset.
      * @param courseDirectory Course directory
      * @throws IOException If .timdata file is not found or some other file reading error occurs.
      * @throws InterruptedException If TIDE CLI process fails or something else goes wrong.
      */
-    public void resetSubTask(DemoTask task, String courseDirectory) throws IOException, InterruptedException {
-        tideCommandExecutor.resetSubTask(task, courseDirectory);
+    public void resetDemoTask(DemoTask task, String courseDirectory) throws IOException, InterruptedException {
+        tideCommandExecutor.resetDemoTask(task, courseDirectory);
     }
 
 
     /**
      * Submit an exercise.
-     * @param file Virtual file containing subtask to be submitted
+     * @param file Virtual file containing demo task to be submitted
      */
     public void submitExercise(VirtualFile file) {
         tideCommandExecutor.submitExercise(file);
@@ -83,8 +83,8 @@ public class ApiHandler implements UserManagement {
 
 
     /**
-     * opens the clicked subtasks project.
-     * @param taskPath path to the folder that has the clicked subtask.
+     * opens the clicked demo tasks project.
+     * @param taskPath path to the folder that has the clicked demo task.
      */
     public void openTaskProject(String taskPath) {
         tideCommandExecutor.openTaskProject(taskPath);

@@ -14,12 +14,12 @@ public class DemoTask {
     private String ideTaskId;
 
     /**
-     * the path to the course task that the subtask is a part of.
+     * the path to the course task that the demo task is a part of.
      */
     private String path;
 
     /**
-     * filenames of the subtasks.
+     * filenames of the demo tasks.
      */
     private List<String> fileNames;
 
@@ -33,7 +33,7 @@ public class DemoTask {
     private float maxPoints;
 
     /**
-     * deadline for the subtask.
+     * deadline for the demo task.
      */
     @SerializedName(value = "deadline")
     private String deadLine;
@@ -44,8 +44,8 @@ public class DemoTask {
 
 
     /**
-     * getter for the name of the subtask.
-     * @return subtask name
+     * getter for the name of the demo task.
+     * @return demo tasks name
      */
     public String getIdeTaskId() {
         return this.ideTaskId;
@@ -70,7 +70,7 @@ public class DemoTask {
 
 
     /**
-     * getter for the maximum amount of points you can get from a subtask.
+     * getter for the maximum amount of points you can get from a demo task.
      * @return maximum amount of points
      */
     public float getMaxPoints() {
@@ -78,8 +78,8 @@ public class DemoTask {
     }
 
     /**
-     * getter for the subtask deadline.
-     * @return the last date the subtask can be submitted by in ISO8601 format.
+     * getter for the demo task deadline.
+     * @return the last date the demo task can be submitted by in ISO8601 format.
      */
     public String getDeadLine() {
         return this.deadLine;
@@ -103,7 +103,6 @@ public class DemoTask {
     /**
      * Getter for TaskFile list.
      * @return a list of task files
-     * TODO: rethink naming of task, subtask, taskfile
      */
     public List<TaskFile> getTaskFiles() {
         return this.taskFiles;

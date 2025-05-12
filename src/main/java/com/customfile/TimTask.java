@@ -42,13 +42,13 @@ public final class TimTask implements TideTask {
     /**
      * In order to "extend" VirtualFile we must have one as a delegate.
      * @param file VirtualFile which is used as a delegate.
-     * @param headerList Contains course name, demo name, and subtask name.
-     * @param subTask Object reference to SubTask object containing all the goods.
+     * @param headerList Contains course name, demo name, and demo task name.
+     * @param demoTask Object reference to DemoTask object containing all the goods.
      */
-    private TimTask(VirtualFile file, ArrayList<String> headerList, DemoTask subTask) {
+    private TimTask(VirtualFile file, ArrayList<String> headerList, DemoTask demoTask) {
         this.delegate = file;
         this.headers = headerList;
-        this.task = subTask;
+        this.task = demoTask;
     }
 
     /**
@@ -72,7 +72,7 @@ public final class TimTask implements TideTask {
     public void resetExercise() {
         this.syncChanges();
         try {
-            new ApiHandler().resetSubTask(this.task, this.headers.get(0));
+            new ApiHandler().resetDemoTask(this.task, this.headers.get(0));
         } catch (IOException ex) {
             com.api.LogHandler.logError("TimTask.resetExercise()", ex);
             InfoView.displayError(".timdata file not found!");
@@ -118,7 +118,7 @@ public final class TimTask implements TideTask {
         //TODO: handle null case.
         if (this.task.getPath() != null) {
             url += this.task.getPath();
-            //the task name needed for the url is not part of the subtask but part of the task file
+            //the task name needed for the url is not part of the demo task but part of the task file
             //we need to get the first file of the task to get the right id.
             //id is in form number.name.idstring
             //thus we split the id to get the relevant part in the middle.
@@ -139,7 +139,7 @@ public final class TimTask implements TideTask {
     }
 
     /**
-     * This method is used to update the SubTask information into CourseTaskPane, and to update it's state etc.
+     * This method is used to update the DemoTask information into CourseTaskPane, and to update it's state etc.
      */
     private static void messageUpdates() {
         ActiveState.getInstance().setSubmittable(selected != null);
@@ -171,15 +171,15 @@ public final class TimTask implements TideTask {
     }
 
     /**
-     * Returns SubTask name.
-     * @return SubTask name as String.
+     * Returns DemoTask name.
+     * @return DemoTask name as String.
      */
-    public String getSubTaskName() {
+    public String getDemoTaskName() {
         return this.headers.get(this.headers.size() - 1);
     }
 
     /**
-     * Getter for SuTask's submit data.
+     * Getter for DemoTask's submit data.
      * @return string array of messages.
      */
     public String[] getSubmitData() {
@@ -225,7 +225,7 @@ public final class TimTask implements TideTask {
                 ArrayList<String> taskHeaders = new ArrayList<>();
                 taskHeaders.add(ActiveState.getInstance().getCourseName(file.getPath()));
                 taskHeaders.add(ActiveState.getInstance().findTaskName(taskHeaders.get(0), file));
-                DemoTask taskHolder = ActiveState.getInstance().findSubTask(file);
+                DemoTask taskHolder = ActiveState.getInstance().findDemoTask(file);
                 if (taskHolder != null) {
                     taskHeaders.add(taskHolder.getIdeTaskId());
                     selected = new TimTask(file, taskHeaders, taskHolder);

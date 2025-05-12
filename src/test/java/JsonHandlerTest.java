@@ -83,7 +83,7 @@ public class JsonHandlerTest {
     @Test
     @DisplayName("SubTasks correctly parsed from .timdata")
     public void parseSubtaskFromJson() {
-        List<DemoTask> subtaskList = handler.jsonToSubtask(timdata);
+        List<DemoTask> subtaskList = handler.jsonToDemotask(timdata);
         final int taskCount = 3;
         assertEquals(taskCount, subtaskList.size());
         // test first subtask in the test data
@@ -107,11 +107,11 @@ public class JsonHandlerTest {
     @Test
     @DisplayName("Parsing Json data with no subtasks returns an empty list")
     public void jsonToSubtaskHandlesInvalidJson() {
-        List<DemoTask> subtaskList = handler.jsonToSubtask(validJsonData);
+        List<DemoTask> subtaskList = handler.jsonToDemotask(validJsonData);
         assertEquals(0, subtaskList.size());
-        subtaskList = handler.jsonToSubtask(arrayOfInvalidObjects);
+        subtaskList = handler.jsonToDemotask(arrayOfInvalidObjects);
         assertEquals(0, subtaskList.size());
-        subtaskList = handler.jsonToSubtask(bareJsonObject);
+        subtaskList = handler.jsonToDemotask(bareJsonObject);
         assertEquals(0, subtaskList.size());
     }
 

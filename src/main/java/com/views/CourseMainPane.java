@@ -212,16 +212,16 @@ public class CourseMainPane {
 
     /**
      * Makes a subpanel for every task. Place defined by gbc.gridy.
-     * @param course Course the subtasks get added to.
+     * @param course Course the demo tasks get added to.
      * @param panel The Panel they get added to.
      * @param gbc Grid Bag Constraints.
      */
     private void createSubPanels(Course course, JPanel panel, GridBagConstraints gbc) {
         List<CourseDemo> tasks = course.getTasks();
         int j = 0;
-        for (CourseDemo courseTask: tasks) {
-            courseTask.setParent(course);
-            JPanel subPanel = createExercise(courseTask, course.getName());
+        for (CourseDemo courseDemo: tasks) {
+            courseDemo.setParent(course);
+            JPanel subPanel = createExercise(courseDemo, course.getName());
             subPanel.setBackground(JBColor.background());
             gbc.gridy = j;
             panel.add(subPanel, gbc);
@@ -242,15 +242,15 @@ public class CourseMainPane {
 
     /**
      * Creates a panel for the task together with the buttons to download or open it.
-     * @param courseTask a CourseTask object for which to create the panel
+     * @param courseDemo a CourseDemo object for which to create the panel
      * @param courseName Course name for save path
-     * @return the subpanel that contains the tasks name and the two buttons
+     * @return the subpanel that contains the demo name and the two buttons
      */
-    private JPanel createExercise(CourseDemo courseTask, String courseName) {
+    private JPanel createExercise(CourseDemo courseDemo, String courseName) {
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
         JLabel labelWeek = new JLabel();
-        labelWeek.setText(courseTask.getName());
+        labelWeek.setText(courseDemo.getName());
         labelWeek.setFont(JBFont.medium().asBold());
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -267,18 +267,18 @@ public class CourseMainPane {
             public void actionPerformed(ActionEvent e) {
                 spinner.setVisible(true);
                 setProgress(true, "Downloading...");
-                System.out.println(courseTask.getPath());
+                System.out.println(courseDemo.getPath());
                 ApiHandler api = new ApiHandler();
                 try {
-                    api.loadExercise(courseName, courseTask.getPath(), "--all");
+                    api.loadExercise(courseName, courseDemo.getPath(), "--all");
                 } catch (IOException ex) {
-                    com.api.LogHandler.logError("268 CourseMainPane.createExercise(CourseTask courseTask, String courseName)", ex);
-                    com.api.LogHandler.logDebug(new String[]{"268 CourseTask courseTask", "268 String courseName"},
-                            new String[]{courseTask.toString(), courseName});
+                    LogHandler.logError("268 CourseMainPane.createExercise(CourseTask courseTask, String courseName)", ex);
+                    LogHandler.logDebug(new String[]{"268 CourseTask courseTask", "268 String courseName"},
+                            new String[]{courseDemo.toString(), courseName});
                     InfoView.displayError("Couldn't load exercise. Check Tide CLI");
                     throw new RuntimeException(ex);
                 } catch (InterruptedException ex) {
-                    com.api.LogHandler.logError("268 CourseMainPane.createExercise(CourseTask courseTask, String courseName)", ex);
+                    LogHandler.logError("268 CourseMainPane.createExercise(CourseTask courseTask, String courseName)", ex);
                     InfoView.displayError("Couldn't load exercise. Check Tide CLI");
                     throw new RuntimeException(ex);
                 }
@@ -302,21 +302,21 @@ public class CourseMainPane {
         subPanel.add(nameAndButtonPanel);
 
         try {
-            createSubTaskpanel(subPanel, courseTask);
+            createDemoTaskpanel(subPanel, courseDemo);
         } catch (Exception e) {
-            com.api.LogHandler.logError("318 CourseMainPane.createExercise createSubTaskpanel", e);
+            LogHandler.logError("318 CourseMainPane.createExercise createSubTaskpanel", e);
             throw new RuntimeException(e);
         }
         return subPanel;
     }
 
     /**
-     * Creates and adds a panel of clickable subtasks to the panel containing the course that the subtasks belong to.
-     * @param subPanel the panel that the panel of subtasks is appended to.
-     * @param courseTask The Course task that the subtasks belong to.
+     * Creates and adds a panel of clickable demo tasks to the panel containing the course that the demo tasks belong to.
+     * @param subPanel the panel that the panel of demo tasks is appended to.
+     * @param courseDemo The Course task that the demo tasks belong to.
      */
-    private void createSubTaskpanel(JPanel subPanel, CourseDemo courseTask) {
-        Tree tree = createTree(courseTask);
+    private void createDemoTaskpanel(JPanel subPanel, CourseDemo courseDemo) {
+        Tree tree = createTree(courseDemo);
         if (tree.getRowCount() != 0) {
             JBScrollPane container = new JBScrollPane();
             container.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -328,17 +328,17 @@ public class CourseMainPane {
     }
 
     /**
-     * Creates a clickable Tree view used to show subtasks and their files.
-     * @param courseTask The coursetask that the subtasks belong to
+     * Creates a clickable Tree view used to show demo tasks and their files.
+     * @param courseDemo The course demo that the demo tasks belong to
      * @return The created tree view.
      */
-    private Tree createTree(CourseDemo courseTask) {
+    private Tree createTree(CourseDemo courseDemo) {
         ApiHandler api = new ApiHandler();
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(courseTask.getName());
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(courseDemo.getName());
         int rowCount = 0;
-        var subtasks = courseTask.getSubtasks();
-        if (subtasks != null) {
-            for (DemoTask task : subtasks) {
+        var demotasks = courseDemo.getDemotasks();
+        if (demotasks != null) {
+            for (DemoTask task : demotasks) {
                 DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(task);
                 for (DemoTask.TaskFile file: task.getTaskFiles()) {
                     DefaultMutableTreeNode submitNode = new DefaultMutableTreeNode(file.getFileName());
@@ -392,11 +392,11 @@ public class CourseMainPane {
                         DemoTask taskToOpen = (DemoTask) parent.getUserObject();
                         String taskPath;
                         if (taskToOpen.getTaskDirectory() == null) {
-                            taskPath = Settings.getPath() + File.separatorChar + courseTask.getParent().getName()
+                            taskPath = Settings.getPath() + File.separatorChar + courseDemo.getParent().getName()
                                     + File.separatorChar + selectedNode.getRoot()
                                     + File.separatorChar + parent + File.separatorChar + selectedNode;
                         } else {
-                            taskPath = Settings.getPath() + File.separatorChar + courseTask.getParent().getName() + File.separatorChar
+                            taskPath = Settings.getPath() + File.separatorChar + courseDemo.getParent().getName() + File.separatorChar
                                     + taskToOpen.getTaskDirectory()
                                     + File.separatorChar + selectedNode.toString().replace('/', File.separatorChar);
                         }

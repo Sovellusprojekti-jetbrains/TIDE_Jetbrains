@@ -70,7 +70,7 @@ public final class StateManager implements PersistentStateComponent<StateManager
      * adds a new value to the list of submitted tasks.
      *
      * @param taskPath path to the task that has been submitted.
-     * @param points points given for the submitted subtask
+     * @param points points given for the submitted demo task
      */
     public void setSubmit(String taskPath, Float points) {
         PropertiesComponent properties = PropertiesComponent.getInstance();

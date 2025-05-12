@@ -39,16 +39,16 @@ public class JsonHandler {
 
 
     /**
-     * Parses Json data from a string to subtask objects.
-     * If the Json does not map to an array of subtasks,
+     * Parses Json data from a string to DemoTask objects.
+     * If the Json does not map to an array of demo tasks,
      * returns an empty list.
      *
      * @param jsonString json to parse
-     * @return a list of subtasks
+     * @return a list of demo tasks
      */
-    public List<DemoTask> jsonToSubtask(final String jsonString) {
+    public List<DemoTask> jsonToDemotask(final String jsonString) {
         Gson gson = new Gson();
-        List<DemoTask> subTaskList = new ArrayList<>();
+        List<DemoTask> demoTasks = new ArrayList<>();
         try {
             JsonObject json = gson.fromJson(jsonString, JsonObject.class);
             JsonObject coursePart = gson.fromJson((json.getAsJsonObject("course_parts")), JsonObject.class);
@@ -56,15 +56,15 @@ public class JsonHandler {
             try {
                 Set<Map.Entry<String, JsonElement>> demos = coursePart.entrySet();
                 for (Map.Entry entry: demos) {
-                    JsonElement subtasks = (JsonElement) entry.getValue();
-                    Set<Map.Entry<String, JsonElement>> subtaskMap = subtasks.getAsJsonObject().entrySet();
-                    for (Map.Entry subEntry: subtaskMap) {
-                        JsonObject subtasksObject = ((JsonElement) subEntry.getValue()).getAsJsonObject();
-                        Set<Map.Entry<String, JsonElement>> subs = subtasksObject.entrySet();
+                    JsonElement demotasks = (JsonElement) entry.getValue();
+                    Set<Map.Entry<String, JsonElement>> demotaskMap = demotasks.getAsJsonObject().entrySet();
+                    for (Map.Entry subEntry: demotaskMap) {
+                        JsonObject demotasksObject = ((JsonElement) subEntry.getValue()).getAsJsonObject();
+                        Set<Map.Entry<String, JsonElement>> subs = demotasksObject.entrySet();
                         for (Map.Entry subElement: subs) {
                             String jsonstr = subElement.getValue().toString();
                             DemoTask sub = new Gson().fromJson(jsonstr, DemoTask.class);
-                            subTaskList.add(sub);
+                            demoTasks.add(sub);
                         }
                     }
                 }
@@ -80,8 +80,8 @@ public class JsonHandler {
             System.err.println(e.getMessage());
         }
         // remove invalid json data
-        subTaskList.removeIf(subTask -> subTask.getIdeTaskId() == null);
-        return subTaskList;
+        demoTasks.removeIf(demoTask -> demoTask.getIdeTaskId() == null);
+        return demoTasks;
     }
 
 

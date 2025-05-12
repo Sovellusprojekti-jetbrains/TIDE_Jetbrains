@@ -14,7 +14,7 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * renderer for the leaf nodes of subtasks that have been submitted.
+ * renderer for the leaf nodes of demo tasks that have been submitted.
  */
 public class SubmitRenderer extends DefaultTreeCellRenderer {
 
@@ -50,7 +50,7 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
     }
 
     /**
-     * Sets icons for subtasks with 0 or more points.
+     * Sets icons for demo tasks with 0 or more points.
      * @param value The node that the icon belongs to
      * @return The correct icon depending on the points given
      */

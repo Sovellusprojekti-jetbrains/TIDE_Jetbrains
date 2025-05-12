@@ -79,9 +79,9 @@ public class ApiHandlerTest {
         DemoTask task = new DemoTask();
         String courseDirectory = "courseDir";
 
-        apiHandler.resetSubTask(task, courseDirectory);
+        apiHandler.resetDemoTask(task, courseDirectory);
 
-        verify(tideCommandExecutorMock, times(1)).resetSubTask(task, courseDirectory);
+        verify(tideCommandExecutorMock, times(1)).resetDemoTask(task, courseDirectory);
     }
 
     /**
