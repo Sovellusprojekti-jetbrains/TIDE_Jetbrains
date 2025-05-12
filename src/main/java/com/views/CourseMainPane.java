@@ -272,13 +272,13 @@ public class CourseMainPane {
                 try {
                     api.loadExercise(courseName, courseTask.getPath(), "--all");
                 } catch (IOException ex) {
-                    com.api.LogHandler.logError("268 CourseMainPane.createExercise(CourseTask courseTask, String courseName)", ex);
-                    com.api.LogHandler.logDebug(new String[]{"268 CourseTask courseTask", "268 String courseName"},
+                    com.api.LogHandler.logError("CourseMainPane.createExercise(CourseTask courseTask, String courseName)", ex);
+                    com.api.LogHandler.logDebug(new String[]{"CourseTask courseTask", "String courseName"},
                             new String[]{courseTask.toString(), courseName});
                     InfoView.displayError("Couldn't load exercise. Check Tide CLI");
                     throw new RuntimeException(ex);
                 } catch (InterruptedException ex) {
-                    com.api.LogHandler.logError("268 CourseMainPane.createExercise(CourseTask courseTask, String courseName)", ex);
+                    com.api.LogHandler.logError("CourseMainPane.createExercise(CourseTask courseTask, String courseName)", ex);
                     InfoView.displayError("Couldn't load exercise. Check Tide CLI");
                     throw new RuntimeException(ex);
                 }
@@ -304,7 +304,7 @@ public class CourseMainPane {
         try {
             createSubTaskpanel(subPanel, courseTask);
         } catch (Exception e) {
-            com.api.LogHandler.logError("318 CourseMainPane.createExercise createSubTaskpanel", e);
+            com.api.LogHandler.logError("CourseMainPane.createExercise createSubTaskpanel", e);
             throw new RuntimeException(e);
         }
         return subPanel;
