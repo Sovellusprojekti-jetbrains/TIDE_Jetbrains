@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.regex.*;
 
 import com.customfile.TimTask;
+import com.intellij.util.ui.JBFont;
 import com.listeners.SmartLabelRewrapper;
 import com.state.ActiveState;
 import com.state.StateManager;
@@ -50,14 +51,14 @@ public class CourseTaskPane {
     private JButton submitButton;
     private JButton showOutputButton;
     private JButton resetButton;
-    private JPanel submitPane;
+    private JPanel textPane;
     private JPanel infoPane;
     private JPanel resetPane;
+    private JPanel buttonPanel;
     private JProgressBar taskProgressBar;
     private JLabel deadLineLabel;
     private JLabel maxSubmitsLabel;
-    private Project project;
-     private static CourseTaskPane courseTaskPane;
+    private static CourseTaskPane courseTaskPane;
     private List<JLabel> labelList = Arrays.asList(taskInformationLabel);
     private List<JLabel> changingLabels = Arrays.asList(taskInfoLabel, taskNameLabel, pointsLabel, maxSubmitsLabel, deadLineLabel);
     private ToolWindow thisToolWindow;
@@ -71,23 +72,39 @@ public class CourseTaskPane {
 
     /**
      * A constructor that takes a ToolWindow as a parameter.
-     * The Toolwindow instance lets us access the current project
-     * and thus the path of the currently open file.
+     * The Toolwindow instance lets us rewrap labels according
+     * to window resizing.
      * @param toolWindow A ToolWindow instance
      */
     public CourseTaskPane(final ToolWindow toolWindow) {
         ActiveState stateManager = ActiveState.getInstance();
         thisToolWindow = toolWindow;
-        this.project = stateManager.getProject();
 
         addActionListeners();
 
+        final int topPadding = 15;
+        infoPane.setBorder(BorderFactory.createEmptyBorder(topPadding, 0, 0, 0));
+        taskNameLabel.setFont(JBFont.h2());
+        final int margin = 20;
+        textPane.setBorder(BorderFactory.createEmptyBorder(0, margin, 0, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, margin));
+        setButtonTooltips();
+
         addPropertyChangeListeners(stateManager);
+
+
 
         stateManager.updateCourses();
         setProgress(false, "");
         courseTaskPane = this;
         SmartLabelRewrapper.setupSmartRewrapForLabels(labelList, thisToolWindow);
+    }
+
+    private void setButtonTooltips() {
+        openTaskButton.setToolTipText("Opens the TIM page containing the task either in browser or the editor view.");
+        resetButton.setToolTipText("Resets the task to the latest submitted version.");
+        submitButton.setToolTipText("Submits the task to TIM.");
+        showOutputButton.setToolTipText("Opens the Output panel.");
     }
 
     private void addPropertyChangeListeners(ActiveState stateManager) {
@@ -141,7 +158,7 @@ public class CourseTaskPane {
         });
 
         showOutputButton.addActionListener(event -> {
-            Util.showWindow(project, "Output Window", true);
+            Util.showWindow(ActiveState.getInstance().getProject(), "Output Window", true);
         });
     }
 
@@ -152,7 +169,7 @@ public class CourseTaskPane {
      * @param response from TIDE-CLI
      */
     private void handleSubmitResponse(String response) {
-        this.project = ActiveState.getInstance().getProject();
+        Project project = ActiveState.getInstance().getProject();
         if (!FileEditorManager.getInstance(project).hasOpenFiles()) {
             InfoView.displayError("Please open a file to submit in the editor.");
             return;
@@ -164,12 +181,14 @@ public class CourseTaskPane {
                 .getFile();
 
         String path = file.getPath();
-        Pattern pattern = Pattern.compile("run: \\d+");
+        // The regular expression should match to the "run" and "test"
+        // points in TIM output, but not to "Tests run: 1" or similar.
+        Pattern pattern = Pattern.compile("(?<=(Points: run: )|(test: ))\\d\\.?(\\d*)?");
         Matcher matcher = pattern.matcher(response);
         List<Float> n = new ArrayList<>();
         if (!response.contains("error")) {
             while (matcher.find()) {
-                n.add(Float.parseFloat(String.valueOf(matcher.group().charAt(matcher.group().length() - 1))));
+                n.add(Float.parseFloat(String.valueOf(matcher.group())));
             }
         }
         if (n.isEmpty()) {
@@ -181,7 +200,11 @@ public class CourseTaskPane {
         }
         if (!submits.contains(path)
                 | ApplicationManager.getApplication().getService(StateManager.class).getPoints(path) != n.get(0)) {
-            ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, n.get(0));
+            float nSum = 0;
+            for (float f: n) {
+                nSum += f;
+            }
+            ApplicationManager.getApplication().getService(StateManager.class).setSubmit(path, nSum);
         }
         System.out.println(path);
     }
@@ -237,7 +260,7 @@ public class CourseTaskPane {
                 this.taskInfoLabel.setText(info);
                 this.taskNameLabel.setText(TimTask.getInstance().getSubTaskName());
             } else {
-                this.taskInfoLabel.setText(" - ");
+                this.taskInfoLabel.setText(" Not a TIM task ");
                 this.taskNameLabel.setText("");
             }
         });

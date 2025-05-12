@@ -1,5 +1,7 @@
 package com.api;
 
+import com.util.Config;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.logging.*;
@@ -35,7 +37,7 @@ import java.util.logging.*;
  */
 public final class LogHandler extends Formatter {
     private static final Logger LOGGER = Logger.getLogger("com.api.logToFile");
-    private static final String LOG_PATH = "%t/tide-cli_log.txt";
+    private static final String LOG_PATH = Config.LOG_PATH;
     private static FileHandler fh = null;
 
     private LogHandler() {

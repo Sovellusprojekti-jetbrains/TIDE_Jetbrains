@@ -1,0 +1,172 @@
+<diagram program="umletino" version="15.1"><zoom_level>7</zoom_level><element><id>UMLClass</id><coordinates><x>378</x><y>77</y><w>252</w><h>56</h></coordinates><panel_attributes>/TideTask &lt;&lt;Interface&gt;&gt;/
+--
++submit(project: Project)
++resetExercise()
++openInBrowser(baseURL: String, project Project)
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1001</x><y>413</y><w>266</w><h>56</h></coordinates><panel_attributes>/tide-cli &lt;&lt;Interface&gt;&gt;/
+--
+Text commands you use while communicating
+with the tide-cli via terminal
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>42</x><y>77</y><w>308</w><h>70</h></coordinates><panel_attributes>/UserManagement &lt;&lt;Interface&gt;&gt;/
+--
++login()
++logout()
++courses()
++loadExercise(courseDirectory: String, cmdArgs: String...)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>938</x><y>49</y><w>203</w><h>63</h></coordinates><panel_attributes>/Extensions &lt;&lt;Interface&gt;&gt;&gt;/
+--
+JetBrains provides this interface to connect
+plugins into it's framework.
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>637</x><y>420</y><w>266</w><h>182</h></coordinates><panel_attributes>TideCommandExecutor
+--
+-loginCommand: String
+-logoutCommand: String
+-coursesCommand: String
+-checkLoginCommand: String
+-submitCommand: String
+-taskCreateCommand: String
+--
++login()
++fetchCoursesAsync()
++checkLogin()
++logout()
++submitExercise(file: VirtualFile)
++loadExercise(courseDir: String, cmdArgs: String &lt;&lt;vararg&gt;&gt;)
++resetSubTask(task: SubTask, courseDir: String)
++openTaskProject(taskPath: String)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>42</x><y>161</y><w>308</w><h>119</h></coordinates><panel_attributes>ApiHandler
+--
+-tideCommandExecutor: TideCommandExecutor
+--
++login()
++logout()
++courses()
++loadExercise(courseDirectory: String, cmdArgs: String...)
++resetSubTask(task: SubTask, courseDirectory: String)
++submitExercise(file: VirtualFile)
++openTaskProject(taskPath: String)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>378</x><y>147</y><w>245</w><h>196</h></coordinates><panel_attributes>TimTask
+--
+-selected: TimTask &lt;&lt;static&gt;&gt;
+-delegate: VirtualFile
+-headers: ArrayList&lt;String&gt;
+-task: SubTask
+-CACHE: HasMap&lt;String, TimTask&gt; &lt;&lt;static&gt;&gt;
+--
++submit(project: Project)
++resetExercise()
++openInBrowser(baseURL: String, project: Project)
++getInstance(): TimTask &lt;&lt;static&gt;&gt;
++getCourseName(): String
++getDemoName(): String
++getSubTaskName(): String
++getSubmitData(): String[]
++evaluateFile(file: VirtualFile) &lt;&lt;static&gt;&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>42</x><y>420</y><w>301</w><h>364</h></coordinates><panel_attributes>ActiveState
+--
+-pcs: PropertyChangeSupport
+-courseList: List&lt;Course&gt;
+-tideSubmitREsponse: String
+-tideBaseResponse: String
+-isLoggedIn: boolean
+-project: Project
+-isSubmittable: boolean
+--
++getLogin(): boolean
++initProjectDependents()
++getInstance(): ActiveState
++addPropertyChangeListeners: listener: PropertyChangeListener)
++removePropertychangeListener(listener: PropertyChangeListener)
++updateCourses()
++getProject(): Project
++setCourses(courses: List&lt;Course&gt;)
++getCourses(): List&lt;Course&gt;
++getCourseName(path: String): String
++addDownloadedSubtasksToCourse(course: Course)
++setTideSubmitResponse(response: String)
++getTideSubmitResponse(response: String)
++login()
++logout()
++isSubmittable(): boolean
++findTaskName(course: String, file: VirtualFile): String
++findSubTask(file: VirtualFile): SubTask
++setSubmittable(status: boolean)
++messageChanges()
++getSubmitData(): String[]
++signalScrollSpeedUpdate()
++signalBrowserChoiceUpdated()
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1183</x><y>49</y><w>203</w><h>56</h></coordinates><panel_attributes>/ToolWindowFactory &lt;&lt;Interface&gt;&gt;/
+--
+IDE uses services provided by this interface
+to generate views. Defined by JetBrains 
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLPackage</id><coordinates><x>672</x><y>224</y><w>133</w><h>84</h></coordinates><panel_attributes>Factories
+--
+Classes in this 
+package implements
+the required services to
+construct ToolWindows
+of the TIDE Jetbrains plugin
+halign=left</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>672</x><y>77</y><w>210</w><h>84</h></coordinates><panel_attributes>plugin.xml
+--
+Describes how the services of 
+Extensions-interface are used to 
+connect the plugin into IDE's framework.</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>518</x><y>168</y><w>98</w><h>42</h></coordinates><panel_attributes>Holds the data of
+the file opened in the
+IDE editor
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>791</x><y>448</y><w>98</w><h>49</h></coordinates><panel_attributes>Communicates
+with tide-cli
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>210</x><y>448</y><w>112</w><h>49</h></coordinates><panel_attributes>General storage and
+connected to the
+message bus</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>938</x><y>133</y><w>259</w><h>49</h></coordinates><panel_attributes>Project
+--
+An object that representing an IntelliJ project.
+(The project that you choose or create while opening your IDE)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>945</x><y>231</y><w>238</w><h>49</h></coordinates><panel_attributes>/VirtualFile/
+--
+Represents a file in VirtualFileSystem.
+(The file(s) you have open in your IDE's editor)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>378</x><y>420</y><w>210</w><h>196</h></coordinates><panel_attributes>SubTask
+--
+-ideTaskId: String
+-path: String
+-fileNames: List&lt;String&gt;
+-taskDirectory: String
+-maxPoints: float
+-deadline: String
+-answerlimit: int
+-taskFiles: List&lt;String&gt;
+--
++getIdeTaskId(): String
++getPath(): String
++getTaskDirectory():String
++getMaxPoints(): float
++getDeadline(): String
++toString(): String
++getAnswerLimit(): int
++getTaskFiles(): List&lt;String&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>532</x><y>630</y><w>133</w><h>112</h></coordinates><panel_attributes>Course
+--
+-name: String
+-id: int
+-path: String
+-task: List&lt;CourseTask&gt;
+--
++getName(): String
++setName(newName: String)
++getPath(): String
++getTasks: List&lt;CourseTask&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>378</x><y>630</y><w>147</w><h>154</h></coordinates><panel_attributes>CourseTask
+--
+-name: String
+-id: int
+-path: String
+-parent: Course
+-tasks: List&lt;SubTask&gt;
+--
++getName(): String
++getPath(): String
++getSubTasks(): List&lt;SubTask&gt;
++setTaks(subTasks: List&lt;SubTask&gt;)
++addSubTask(subTask: SubTask)
++setParent(course: Course)
++getParent(): Course</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>924</x><y>21</y><w>490</w><h>308</h></coordinates><panel_attributes>symbol=component
+JetBrains</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>924</x><y>364</y><w>469</w><h>133</h></coordinates><panel_attributes>symbol=component
+TIDE-CLI</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>28</x><y>21</y><w>889</w><h>861</h></coordinates><panel_attributes>symbol=component
+TIDE JetBrains Plugin</panel_attributes><additional_attributes></additional_attributes></element></diagram>

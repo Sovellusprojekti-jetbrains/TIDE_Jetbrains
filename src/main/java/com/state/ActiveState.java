@@ -10,6 +10,7 @@ import com.course.CourseTask;
 import com.course.SubTask;
 import com.customfile.TimTask;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
@@ -18,15 +19,13 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.util.Util;
 import com.views.InfoView;
+import com.views.OutputWindow;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,9 +79,11 @@ public class ActiveState {
                 .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
                     @Override
                     public void selectionChanged(@NotNull FileEditorManagerEvent event) {
-                        FileEditorManagerListener.super.selectionChanged(event);
-                        VirtualFile temp = event.getNewFile();
-                        TimTask.evaluateFile(temp);
+                        if (isLoggedIn) {
+                            FileEditorManagerListener.super.selectionChanged(event);
+                            VirtualFile temp = event.getNewFile();
+                            TimTask.evaluateFile(temp);
+                        }
                     }
                 });
     }
@@ -135,6 +136,12 @@ public class ActiveState {
         courseList = courses;
         pcs.firePropertyChange("courseList", oldCourseList, courseList);
         LogHandler.logInfo("ActiveState fired event courseList");
+        if (this.project != null) {
+            var files = FileEditorManager.getInstance(this.project).getSelectedFiles();
+            if (files.length > 0) {
+                TimTask.evaluateFile(files[0]);
+            }
+        }
     }
 
 
@@ -194,7 +201,6 @@ public class ActiveState {
      * @param response from TIDE-CLI
      */
     public void setTideSubmitResponse(String response) {
-        String oldTideSubmitResponse = tideSubmitResponse;
         tideSubmitResponse = response;
         pcs.firePropertyChange("tideSubmitResponse", null, tideSubmitResponse);
         pcs.firePropertyChange("setSubmitData", null, getSubmitData());
@@ -207,7 +213,6 @@ public class ActiveState {
      * @param response from TIDE-CLI
      */
     public void setTideBaseResponse(String response) {
-        String oldTideBaseResponse = tideBaseResponse;
         tideBaseResponse = response;
         pcs.firePropertyChange("tideBaseResponse", null, tideBaseResponse);
         LogHandler.logInfo("ActiveState fired event tideBaseResponse");
@@ -227,6 +232,7 @@ public class ActiveState {
         // These are here because calling them from inside the toolwindow would not work.
         Util.setWindowAvailable(project, "Course Task", true, "/icons/tim.svg");
         Util.setWindowAvailable(project, "Output Window", true, "/icons/tim.svg");
+        Util.showWindow(project, "Course Task", true);
     }
 
     /**
@@ -238,6 +244,7 @@ public class ActiveState {
         }
         pcs.firePropertyChange("logout", true, isLoggedIn);
         LogHandler.logInfo("ActiveState fired event logout");
+        OutputWindow.getInstance().clearText();
         Util.setWindowAvailable(project, "Course Task", false, "/icons/timgray.svg");
         Util.setWindowAvailable(project, "Output Window", false, "/icons/timgray.svg");
     }
@@ -260,8 +267,8 @@ public class ActiveState {
         for (Course courseToCheck: this.getCourses()) {
             if (courseToCheck.getName().equals(course)) {
                 for (CourseTask courseTask: courseToCheck.getTasks()) {
-                    for (SubTask subtask: courseTask.getSubtasks()) {
-                        for (SubTask.TaskFile taskFile: subtask.getTaskFiles()) {
+                    for (SubTask subTask: courseTask.getSubtasks()) {
+                        for (SubTask.TaskFile taskFile: subTask.getTaskFiles()) {
                             if (file.getPath().contains(taskFile.getFileName())) {
                                 return courseTask.getName();
                             }
@@ -279,9 +286,9 @@ public class ActiveState {
      * @return Subtask's name as String.
      */
     public SubTask findSubTask(VirtualFile file) {
-        for (Course course: this.getCourses()) {
-            for (CourseTask task: course.getTasks()) {
-                for (SubTask subTask: task.getSubtasks()) {
+        for (Course courseToCheck : this.getCourses()) {
+            for (CourseTask courseTask: courseToCheck.getTasks()) {
+                for (SubTask subTask: courseTask.getSubtasks()) {
                     for (SubTask.TaskFile tf: subTask.getTaskFiles()) {
                         if (file.getPath().contains(tf.getFileName())) {
                             return subTask;
@@ -321,25 +328,6 @@ public class ActiveState {
      */
     public String[] getSubmitData() { //Moved to TimTask
         return TimTask.getInstance().getSubmitData();
-    }
-
-    /**
-     * Checks if the deadline exists, and changes it into the systems current timezone if it does.
-     * @param current the currently open subtask which deadline is being checked.
-     * @return a string containing the deadline.
-     */
-    private String checkDeadline(SubTask current) { //Moved to TimTask
-        String deadLineMessage = "no deadline";
-        if (current.getDeadLine() != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx")
-                    .withZone(ZoneId.of("UTC"));
-            ZonedDateTime date = ZonedDateTime.parse(current.getDeadLine(), formatter);
-            ZoneId localZone = ZoneId.systemDefault();
-            ZonedDateTime localDeadline = date.withZoneSameInstant(localZone);
-            DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z");
-            deadLineMessage = localDeadline.format(deadlineFormat);
-        }
-        return deadLineMessage;
     }
 
 

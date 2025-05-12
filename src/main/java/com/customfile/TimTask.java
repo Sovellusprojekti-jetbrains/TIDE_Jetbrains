@@ -10,6 +10,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
+import com.interfaces.TideTask;
 import com.state.ActiveState;
 import com.state.StateManager;
 import com.util.Util;
@@ -30,7 +31,7 @@ import java.util.Objects;
 /**
  * This class "extends" VirtualFile with actions of tide task.
  */
-public final class TimTask {
+public final class TimTask implements TideTask {
 
     private static TimTask selected; //Keep the instance of TimTask opened in the editor here.
     private final VirtualFile delegate;
@@ -178,9 +179,12 @@ public final class TimTask {
     public String[] getSubmitData() {
         StateManager state = new StateManager();
         float points = state.getPoints(this.delegate.getCanonicalPath());
-        String pointsMessage = "Points : " + points + "/" + this.task.getMaxPoints();
+        String pointsMessage = "<html><b>Points:</b> " + points + "/" + this.task.getMaxPoints() + "</html>";
         String deadLineMessage = this.getDeadline();
-        String submitMessage = "Maximum number of submissions allowed: " + this.task.getAnswerLimit();
+        int answerLimit = this.task.getAnswerLimit();
+        // TODO: Ideally, there would be a distinction between no tries left and tries left not available.
+        String answerLimitString = answerLimit > 0 ? String.valueOf(answerLimit) : "N/A";
+        String submitMessage = "<html><b>Max attempts: </b>" + answerLimitString + "</html>";
         return new String[] {pointsMessage, deadLineMessage, submitMessage};
     }
 
@@ -189,7 +193,7 @@ public final class TimTask {
      * @return a string containing the deadline.
      */
     private String getDeadline() {
-        String deadLineMessage = "no deadline";
+        String deadLineMessage = "<html><b>Deadline:</b> N/A</html>";
         if (this.task.getDeadLine() != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssxxx")
                     .withZone(ZoneId.of("UTC"));
@@ -197,7 +201,7 @@ public final class TimTask {
             ZoneId localZone = ZoneId.systemDefault();
             ZonedDateTime localDeadline = date.withZoneSameInstant(localZone);
             DateTimeFormatter deadlineFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z");
-            deadLineMessage = localDeadline.format(deadlineFormat);
+            deadLineMessage = "<html><b>Deadline: </b>" + localDeadline.format(deadlineFormat) + "</html>";
         }
         return deadLineMessage;
     }
