@@ -33,7 +33,7 @@ import java.util.Objects;
  */
 public final class TimTask implements TideTask {
 
-    private static TimTask selected; //Keep the instance of TimTask opened in the editor here.
+    private static TimTask selected; // Keep the instance of TimTask opened in the editor here.
     private final VirtualFile delegate;
     private final ArrayList<String> headers;
     private final DemoTask task;
@@ -52,7 +52,7 @@ public final class TimTask implements TideTask {
     }
 
     /**
-     * This method submits exercise to tim.
+     * This method submits the exercise to TIM.
      * @param project project that is open in the ide.
      */
     public void submit(Project project) {
@@ -191,7 +191,8 @@ public final class TimTask implements TideTask {
             answerLimit = "N/A";
         }
         String submitMessage = "<html><b>Max attempts: </b>" + answerLimit + "</html>";
-        return new String[] {pointsMessage, deadLineMessage, submitMessage};
+        String stem = this.task.getStem();
+        return new String[] {pointsMessage, deadLineMessage, submitMessage, stem};
     }
 
     /**

@@ -27,8 +27,8 @@ public class JsonHandler {
             Course[] courseArray = gson.fromJson(jsonString, Course[].class);
             courseList = new ArrayList<Course>(Arrays.asList(courseArray));
         } catch (JsonParseException | IllegalStateException e) {
-            com.api.LogHandler.logError("23 JsonHandler.jsonToCourses(final String jsonString)", e);
-            com.api.LogHandler.logDebug(new String[]{"23 String jsonString"}, new String[]{jsonString});
+            com.api.LogHandler.logError("JsonHandler.jsonToCourses(final String jsonString)", e);
+            com.api.LogHandler.logDebug(new String[]{"String jsonString"}, new String[]{jsonString});
             System.err.println(e.getMessage());
         }
 
@@ -40,7 +40,7 @@ public class JsonHandler {
 
     /**
      * Parses Json data from a string to DemoTask objects.
-     * If the Json does not map to an array of demo tasks,
+     * If the Json does not map to an array of DemoTasks,
      * returns an empty list.
      *
      * @param jsonString json to parse
@@ -49,10 +49,13 @@ public class JsonHandler {
     public List<DemoTask> jsonToDemotask(final String jsonString) {
         Gson gson = new Gson();
         List<DemoTask> demoTasks = new ArrayList<>();
+        // Need to do a bit of digging to get to the demo tasks.
+        // The top level object of the json contains a "course_parts" object,
+        // which contains objects for the course demos, which contains a "tasks"
+        // object, which contains the demo tasks which we want to fetch.
         try {
             JsonObject json = gson.fromJson(jsonString, JsonObject.class);
             JsonObject coursePart = gson.fromJson((json.getAsJsonObject("course_parts")), JsonObject.class);
-
             try {
                 Set<Map.Entry<String, JsonElement>> demos = coursePart.entrySet();
                 for (Map.Entry entry: demos) {
@@ -62,6 +65,7 @@ public class JsonHandler {
                         JsonObject demotasksObject = ((JsonElement) subEntry.getValue()).getAsJsonObject();
                         Set<Map.Entry<String, JsonElement>> subs = demotasksObject.entrySet();
                         for (Map.Entry subElement: subs) {
+                            // Here we have a single DemoTask and can parse it with Gson.
                             String jsonstr = subElement.getValue().toString();
                             DemoTask sub = new Gson().fromJson(jsonstr, DemoTask.class);
                             demoTasks.add(sub);
@@ -69,14 +73,14 @@ public class JsonHandler {
                     }
                 }
             } catch (NullPointerException e) {
-                com.api.LogHandler.logError("48: JsonHandler.jsonToSubtask(final String jsonString)", e);
-                com.api.LogHandler.logDebug(new String[]{"52 JsonObject json"},
+                com.api.LogHandler.logError("JsonHandler.jsonToSubtask(final String jsonString)", e);
+                com.api.LogHandler.logDebug(new String[]{"JsonObject json"},
                         new String[]{json.toString()});
-                com.api.LogHandler.logInfo("53 JsonObject coursePart: is this null?");
+                com.api.LogHandler.logInfo("JsonObject coursePart: is this null?");
             }
         } catch (JsonParseException | IllegalStateException e) {
-            com.api.LogHandler.logError("49 JsonHandler.jsonToSubtask(final String jsonString)", e);
-            com.api.LogHandler.logDebug(new String[]{"49 String jsonString"}, new String[]{jsonString});
+            com.api.LogHandler.logError("JsonHandler.jsonToSubtask(final String jsonString)", e);
+            com.api.LogHandler.logDebug(new String[]{"String jsonString"}, new String[]{jsonString});
             System.err.println(e.getMessage());
         }
         // remove invalid json data
@@ -119,4 +123,3 @@ public class JsonHandler {
         }
     }
 }
-

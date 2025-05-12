@@ -71,6 +71,11 @@ object TideCommandExecutor {
         }
     }
 
+    /**
+     * Fetches course data from TIM and updates it to ActiveState.
+     * Checks for downloaded tasks on disk and adds them to the
+     * course data structure.
+     */
     fun fetchCoursesAsync() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -149,8 +154,8 @@ object TideCommandExecutor {
                 val response = handleCommandLine(commandLineArgs)
                 activeState.setTideSubmitResponse(response)
             } catch (ex: Exception) {
-                LogHandler.logError("121: TideCommandExecutor.submitExercise(VirtualFile file)", ex)
-                LogHandler.logDebug(arrayOf("121 VirtualFile file"), arrayOf(file.toString()))
+                LogHandler.logError("TideCommandExecutor.submitExercise(VirtualFile file)", ex)
+                LogHandler.logDebug(arrayOf("VirtualFile file"), arrayOf(file.toString()))
                 ex.printStackTrace()
                 // use tideBaseResponse to print the exception for the user
                 activeState.setTideBaseResponse("Exception:" + System.lineSeparator() + ex)
@@ -452,10 +457,10 @@ object TideCommandExecutor {
 
     /**
      * Java doesn't like calling Kotlin coroutine functions
-     * so this is needed as an intermediator.
+     * so this is needed as an intermediator for unit tests.
      * @param command The command to execute.
      */
-    fun handleCommandLineTest(command: List<String>): String =
+    fun handleCommandLineBlocking(command: List<String>): String =
         runBlocking {
             val result = async { handleCommandLine(command, null) }
             result.await()

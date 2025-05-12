@@ -41,6 +41,8 @@ public class DemoTask {
     private String answerLimit;
     @SerializedName(value = "task_files")
     private List<TaskFile> taskFiles;
+    @SerializedName(value = "stem")
+    private String stem;
 
 
     /**
@@ -49,6 +51,14 @@ public class DemoTask {
      */
     public String getIdeTaskId() {
         return this.ideTaskId;
+    }
+
+    /**
+     * Gets the task description.
+     * @return The string value of "stem"
+     */
+    public String getStem() {
+        return this.stem;
     }
 
     /**

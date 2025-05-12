@@ -44,7 +44,8 @@ public class ActiveState {
     private boolean isSubmittable = false;
 
     /**
-     * Constructor for active state attempts to hide the right and bottom toolwindows.
+     * Constructor for active state with a listener to
+     * print TIDE responses in InfoView bubbles.
      */
     public ActiveState() {
         this.addPropertyChangeListener(new PropertyChangeListener() {
@@ -67,7 +68,9 @@ public class ActiveState {
     }
 
     /**
-     * Solves one of the problems plaguing our plugin startup.
+     * Initializes project, sets ToolWindows available, and subscribes
+     * to changes in the file open in the editor. Used in TideWindowFactory
+     * to make sure the plugin state is initialized properly.
      */
     public void initProjectDependents() {
         project = ProjectManager.getInstance().getOpenProjects()[0];
@@ -195,9 +198,10 @@ public class ActiveState {
 
     /**
      * Sets a new value for the tideSubmitResponse property.
-     * Needed because response to tide submit gets parsed for
-     * information and thus needs to be differentiated from
-     * the generic response represented by tideBaseResponse.
+     * Needed because response to "tide submit" gets parsed for
+     * information and printed to output window, and thus needs
+     * to be differentiated from the generic response represented
+     * by tideBaseResponse that's printed to an InfoView bubble.
      * @param response from TIDE-CLI
      */
     public void setTideSubmitResponse(String response) {
@@ -210,6 +214,7 @@ public class ActiveState {
 
     /**
      * Sets TIDE-CLI response for cases that do not need special handling.
+     * Gets printed to an InfoView bubble.
      * @param response from TIDE-CLI
      */
     public void setTideBaseResponse(String response) {
@@ -323,7 +328,7 @@ public class ActiveState {
     }
 
     /**
-     * a method that makes messages for the points, deadline and maximum number of submits.
+     * A method that makes messages for the points, deadline and maximum number of submits.
      * @return string array of messages
      */
     public String[] getSubmitData() { //Moved to TimTask

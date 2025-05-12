@@ -4,6 +4,7 @@
 package com.views;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.regex.*;
 
 import com.customfile.TimTask;
@@ -59,8 +60,8 @@ public class CourseTaskPane {
     private JLabel deadLineLabel;
     private JLabel maxSubmitsLabel;
     private static CourseTaskPane courseTaskPane;
-    private List<JLabel> labelList = Arrays.asList(taskInformationLabel);
-    private List<JLabel> changingLabels = Arrays.asList(taskInfoLabel, taskNameLabel, pointsLabel, maxSubmitsLabel, deadLineLabel);
+    private List<JLabel> changingLabels = Arrays.asList(taskInformationLabel, taskInfoLabel, taskNameLabel,
+            pointsLabel, maxSubmitsLabel, deadLineLabel);
     private ToolWindow thisToolWindow;
     /**
      * getter for the contents of the task panel.
@@ -92,12 +93,9 @@ public class CourseTaskPane {
 
         addPropertyChangeListeners(stateManager);
 
-
-
         stateManager.updateCourses();
         setProgress(false, "");
         courseTaskPane = this;
-        SmartLabelRewrapper.setupSmartRewrapForLabels(labelList, thisToolWindow);
     }
 
     private void setButtonTooltips() {
@@ -119,6 +117,7 @@ public class CourseTaskPane {
                 if ("disableButtons".equals(evt.getPropertyName())) {
                     disableButtons();
                     setDemoName();
+                    setDescription("-");
                 }
                 if ("enableButtons".equals(evt.getPropertyName())) {
                     enableButtons();
@@ -129,10 +128,16 @@ public class CourseTaskPane {
                     setPoints(messages[0]);
                     setDeadLine(messages[1]);
                     setMaxSubmits(messages[2]);
+                    String stem = messages[messages.length - 1];
+                    setDescription(Objects.requireNonNullElse(stem, "No description available. To see more, open the task in browser."));
                     SmartLabelRewrapper.setupSmartRewrapForLabels(changingLabels, thisToolWindow);
                 }
             }
         });
+    }
+
+    private void setDescription(String stem) {
+        taskInformationLabel.setText(stem);
     }
 
     private void addActionListeners() {
@@ -224,6 +229,7 @@ public class CourseTaskPane {
     private void setDeadLine(String message) {
         deadLineLabel.setText(message);
     }
+
     /**
      * sets visible number for maximum amount of submissions that is allowed for the demo task.
      * @param message  a message containing the maximum amount of submits allowed.
@@ -251,7 +257,7 @@ public class CourseTaskPane {
     }
 
     /**
-     * Changes the text values of the demoTiedot abel and tehtavaNimi label.
+     * Changes the text values of the taskInfoLabel and taskNameLabel.
      */
     private void setDemoName() {
         ApplicationManager.getApplication().invokeLater(() -> {
