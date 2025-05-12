@@ -115,7 +115,6 @@ public final class TimTask implements TideTask {
 
     private String getString(String baseURL) {
         String url = baseURL;
-        //TODO: handle null case.
         if (this.task.getPath() != null) {
             url += this.task.getPath();
             //the task name needed for the url is not part of the demo task but part of the task file

@@ -34,8 +34,8 @@ public class MyCustomFileEditor implements FileEditor {
     private Color bgColor = new Color(color[0], color[1], color[2]);
 
     /**
-     * Constructor for the custom file editor. TODO: This is a copy of another file
-     * @param file some file? TODO: explain.
+     * Constructor for the custom file editor.
+     * @param file some file?
      */
     public MyCustomFileEditor(@NotNull final VirtualFile file) {
 
@@ -240,8 +240,8 @@ public class MyCustomFileEditor implements FileEditor {
     /**
      * Getter for user data.
      * @param key Key.
-     * @return Null. TODO
-     * @param <T> TODO
+     * @return Null.
+     * @param <T> currently nothing.
      */
     public <T> @Nullable T getUserData(@NotNull final Key<T> key) {
         return null;
