@@ -185,7 +185,8 @@ public final class TimTask implements TideTask {
         // TODO: Ideally, there would be a distinction between no tries left and tries left not available.
         String answerLimitString = answerLimit > 0 ? String.valueOf(answerLimit) : "N/A";
         String submitMessage = "<html><b>Max attempts: </b>" + answerLimitString + "</html>";
-        return new String[] {pointsMessage, deadLineMessage, submitMessage};
+        String stem = this.task.getStem();
+        return new String[] {pointsMessage, deadLineMessage, submitMessage, stem};
     }
 
     /**
