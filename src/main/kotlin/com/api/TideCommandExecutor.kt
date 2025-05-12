@@ -85,12 +85,22 @@ object TideCommandExecutor {
                 }
                 activeState.setCourses(courses) // No need to switch dispatcher unless UI update is needed
                 ApplicationManager.getApplication().getService(StateManager::class.java).SetCourse(jsonString)
-
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
+
+    fun checkLoginSynch(): Boolean =
+        runBlocking {
+            val result = async { handleCommandLine(CHECK_LOGIN_COMMAND.split(" ")) }
+            var bool = false
+            if (result.await().contains("logged_in")) {
+                bool = true
+                checkLogin()
+            }
+            bool
+        }
 
     fun checkLogin() {
         CoroutineScope(Dispatchers.IO).launch {

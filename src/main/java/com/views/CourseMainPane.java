@@ -94,7 +94,10 @@ public class CourseMainPane {
             public void actionPerformed(ActionEvent e) {
                 setProgress(true, "Logging in...");
                 ApiHandler api = new ApiHandler();
-                api.login();
+                if (!api.checkLogin()) {
+                    api.login();
+                }
+
             }
         });
 

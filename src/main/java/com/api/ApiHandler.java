@@ -34,6 +34,14 @@ public class ApiHandler implements UserManagement {
         tideCommandExecutor.login();
     }
 
+    /**
+     * checks if there is a login in keychain.
+     * @return results of the login check
+     */
+    public Boolean checkLogin() {
+        return tideCommandExecutor.checkLoginSynch();
+    }
+
 
     /**
      * Logs out from TIDE-CLI.
