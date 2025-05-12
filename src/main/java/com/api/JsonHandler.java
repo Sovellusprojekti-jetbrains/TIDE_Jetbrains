@@ -39,8 +39,8 @@ public class JsonHandler {
 
 
     /**
-     * Parses Json data from a string to subtask objects.
-     * If the Json does not map to an array of subtasks,
+     * Parses Json data from a string to DemoTask objects.
+     * If the Json does not map to an array of DemoTasks,
      * returns an empty list.
      *
      * @param jsonString json to parse
@@ -49,10 +49,10 @@ public class JsonHandler {
     public List<SubTask> jsonToSubtask(final String jsonString) {
         Gson gson = new Gson();
         List<SubTask> subTaskList = new ArrayList<>();
-        // Need to do a bit of digging to get to the subtasks.
+        // Need to do a bit of digging to get to the demo tasks.
         // The top level object of the json contains a "course_parts" object,
         // which contains objects for the course demos, which contains a "tasks"
-        // object, which contains the subtasks which we want to fetch.
+        // object, which contains the demo tasks which we want to fetch.
         try {
             JsonObject json = gson.fromJson(jsonString, JsonObject.class);
             JsonObject coursePart = gson.fromJson((json.getAsJsonObject("course_parts")), JsonObject.class);
@@ -123,4 +123,3 @@ public class JsonHandler {
         }
     }
 }
-
