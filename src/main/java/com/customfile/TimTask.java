@@ -33,7 +33,7 @@ import java.util.Objects;
  */
 public final class TimTask implements TideTask {
 
-    private static TimTask selected; //Keep the instance of TimTask opened in the editor here.
+    private static TimTask selected; // Keep the instance of TimTask opened in the editor here.
     private final VirtualFile delegate;
     private final ArrayList<String> headers;
     private final SubTask task;
@@ -52,7 +52,7 @@ public final class TimTask implements TideTask {
     }
 
     /**
-     * This method submits exercise to tim.
+     * This method submits the exercise to TIM.
      * @param project project that is open in the ide.
      */
     public void submit(Project project) {
@@ -133,7 +133,7 @@ public final class TimTask implements TideTask {
     }
 
     /**
-     * This method is used to update the SubTask information into CourseTaskPane, and to update it's state etc.
+     * This method is used to update the SubTask information into CourseTaskPane, and to update its state etc.
      */
     private static void messageUpdates() {
         ActiveState.getInstance().setSubmittable(selected != null);
