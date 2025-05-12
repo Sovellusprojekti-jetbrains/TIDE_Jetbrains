@@ -65,7 +65,7 @@ public class JsonHandler {
                         JsonObject subtasksObject = ((JsonElement) subEntry.getValue()).getAsJsonObject();
                         Set<Map.Entry<String, JsonElement>> subs = subtasksObject.entrySet();
                         for (Map.Entry subElement: subs) {
-                            // Here we have a single subtask and can parse it with Gson.
+                            // Here we have a single DemoTask and can parse it with Gson.
                             String jsonstr = subElement.getValue().toString();
                             SubTask sub = new Gson().fromJson(jsonstr, SubTask.class);
                             subTaskList.add(sub);
