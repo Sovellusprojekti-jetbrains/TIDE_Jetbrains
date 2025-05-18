@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A class representing a task,
+ * A class representing a demo,
  * constructed by JsonHandler.
  */
-public class CourseTask {
+public class CourseDemo {
     /**
      * Course name.
      */
@@ -26,58 +26,58 @@ public class CourseTask {
 
     private Course parent;
     /**
-     *  List of exercises in the task.
+     *  List of exercises in the demo.
      */
-    private List<SubTask> tasks;
+    private List<DemoTask> tasks;
 
     /**
-     * Getter for task name.
-     * @return Task name
+     * Getter for demo name.
+     * @return Demo name
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Getter for task path.
-     * @return Task path
+     * Getter for Demo path.
+     * @return Demo path
      */
     public String getPath() {
         return this.path;
     }
 
     /**
-     * Getter for the exercises in the task.
+     * Getter for the exercises in the demo.
      * @return List of exercises
      */
-    public List<SubTask> getSubtasks() {
+    public List<DemoTask> getDemotasks() {
         if (this.tasks == null) {
-            this.tasks = new ArrayList<SubTask>();
+            this.tasks = new ArrayList<DemoTask>();
         }
         return this.tasks;
     }
 
     /**
-     * setter for the subtasks of the Course task.
-     * @param subTasks list of subtasks for the Course task
+     * setter for the Demo tasks of the Course Demo.
+     * @param demoTasks list of demotasks for the  CourseDemo
      */
-    public void setTasks(List<SubTask> subTasks) {
-        this.tasks = subTasks;
+    public void setTasks(List<DemoTask> demoTasks) {
+        this.tasks = demoTasks;
     }
 
     /**
-     * Add a subtask for a coursetask.
-     * @param subTask The subtask to add
+     * Add a demo task for a course demo.
+     * @param demoTask The demo task to add
      */
-    public void addSubtask(SubTask subTask) {
+    public void addDemotask(DemoTask demoTask) {
         if (this.tasks == null) {
-            this.tasks = new ArrayList<SubTask>();
+            this.tasks = new ArrayList<DemoTask>();
         }
-        this.tasks.add(subTask);
+        this.tasks.add(demoTask);
     }
 
     /**
-     * setter the course that the task belongs to.
+     * setter the course that the demo belongs to.
      * @param course the course that the task is part of
      */
     public void setParent(Course course) {
@@ -85,8 +85,8 @@ public class CourseTask {
     }
 
     /**
-     * Returns the course that the task belongs to.
-     * @return the course that the task belongs to
+     * Returns the course that the demo belongs to.
+     * @return the course that the demo belongs to
      */
     public Course getParent() {
         return this.parent;

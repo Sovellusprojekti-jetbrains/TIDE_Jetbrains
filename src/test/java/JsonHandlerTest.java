@@ -1,6 +1,6 @@
 import com.api.JsonHandler;
 import com.course.Course;
-import com.course.SubTask;
+import com.course.DemoTask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,41 +78,41 @@ public class JsonHandlerTest {
 
 
     /**
-     * Parse SubTask objects from .timdata Json.
+     * Parse DemoTask objects from .timdata Json.
      */
     @Test
-    @DisplayName("SubTasks correctly parsed from .timdata")
-    public void parseSubtaskFromJson() {
-        List<SubTask> subtaskList = handler.jsonToSubtask(timdata);
+    @DisplayName("DemoTasks correctly parsed from .timdata")
+    public void parseDemotaskFromJson() {
+        List<DemoTask> demoTasks = handler.jsonToDemotask(timdata);
         final int taskCount = 3;
-        assertEquals(taskCount, subtaskList.size());
-        // test first subtask in the test data
-        SubTask subTask = subtaskList.get(0);
-        assertEquals("testidemo1.java", subTask.getTaskFiles().get(0).getFileName());
-        assertEquals("view/demo1/path", subTask.getPath());
-        assertEquals("t1", subTask.getIdeTaskId());
-        assertNull(subTask.getTaskDirectory());
-        // test last subtask in the test data
-        subTask = subtaskList.get(subtaskList.size() - 1);
-        assertEquals("testidemo4.java", subTask.getTaskFiles().get(0).getFileName());
-        assertEquals("view/demo1/anotherpath", subTask.getPath());
-        assertEquals("t4", subTask.getIdeTaskId());
-        assertEquals("hasTaskDirectory", subTask.getTaskDirectory());
+        assertEquals(taskCount, demoTasks.size());
+        // test first demo task in the test data
+        DemoTask demoTask = demoTasks.get(0);
+        assertEquals("testidemo1.java", demoTask.getTaskFiles().get(0).getFileName());
+        assertEquals("view/demo1/path", demoTask.getPath());
+        assertEquals("t1", demoTask.getIdeTaskId());
+        assertNull(demoTask.getTaskDirectory());
+        // test last demo task in the test data
+        demoTask = demoTasks.get(demoTasks.size() - 1);
+        assertEquals("testidemo4.java", demoTask.getTaskFiles().get(0).getFileName());
+        assertEquals("view/demo1/anotherpath", demoTask.getPath());
+        assertEquals("t4", demoTask.getIdeTaskId());
+        assertEquals("hasTaskDirectory", demoTask.getTaskDirectory());
     }
 
 
     /**
-     * Test handling incorrect subtask data.
+     * Test handling incorrect demo task data.
      */
     @Test
-    @DisplayName("Parsing Json data with no subtasks returns an empty list")
-    public void jsonToSubtaskHandlesInvalidJson() {
-        List<SubTask> subtaskList = handler.jsonToSubtask(validJsonData);
-        assertEquals(0, subtaskList.size());
-        subtaskList = handler.jsonToSubtask(arrayOfInvalidObjects);
-        assertEquals(0, subtaskList.size());
-        subtaskList = handler.jsonToSubtask(bareJsonObject);
-        assertEquals(0, subtaskList.size());
+    @DisplayName("Parsing Json data with no demo tasks returns an empty list")
+    public void jsonToDemoTaskHandlesInvalidJson() {
+        List<DemoTask> demotaskList = handler.jsonToDemotask(validJsonData);
+        assertEquals(0, demotaskList.size());
+        demotaskList = handler.jsonToDemotask(arrayOfInvalidObjects);
+        assertEquals(0, demotaskList.size());
+        demotaskList = handler.jsonToDemotask(bareJsonObject);
+        assertEquals(0, demotaskList.size());
     }
 
 

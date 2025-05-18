@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ResetExercise extends AnAction {
     /**
-     * This function is called when subtask is reset via TIDE dropdown menu action.
+     * This function is called when demotask is reset via TIDE dropdown menu action.
      * @param e AnActionEvent resulting from user interaction
      */
     @Override

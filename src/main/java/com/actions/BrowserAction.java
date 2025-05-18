@@ -26,7 +26,6 @@ public final class BrowserAction extends AnAction {
      */
     @Override
     public void update(@NotNull AnActionEvent e) {
-        //TODO: more generalized TIDE class that inherits anAction and handles checks for disable and enable
         if (!ActiveState.getInstance().getLogin()) {
             e.getPresentation().setEnabled(ActiveState.getInstance().getLogin());
             return;

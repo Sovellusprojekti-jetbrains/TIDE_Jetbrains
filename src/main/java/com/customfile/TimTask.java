@@ -2,7 +2,7 @@ package com.customfile;
 
 import com.api.ApiHandler;
 import com.api.LogHandler;
-import com.course.SubTask;
+import com.course.DemoTask;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -36,19 +36,19 @@ public final class TimTask implements TideTask {
     private static TimTask selected; // Keep the instance of TimTask opened in the editor here.
     private final VirtualFile delegate;
     private final ArrayList<String> headers;
-    private final SubTask task;
+    private final DemoTask task;
     private static final HashMap<String, TimTask> CACHE = new HashMap<>();
 
     /**
      * In order to "extend" VirtualFile we must have one as a delegate.
      * @param file VirtualFile which is used as a delegate.
-     * @param headerList Contains course name, demo name, and subtask name.
-     * @param subTask Object reference to SubTask object containing all the goods.
+     * @param headerList Contains course name, demo name, and demo task name.
+     * @param demoTask Object reference to DemoTask object containing all the goods.
      */
-    private TimTask(VirtualFile file, ArrayList<String> headerList, SubTask subTask) {
+    private TimTask(VirtualFile file, ArrayList<String> headerList, DemoTask demoTask) {
         this.delegate = file;
         this.headers = headerList;
-        this.task = subTask;
+        this.task = demoTask;
     }
 
     /**
@@ -72,7 +72,7 @@ public final class TimTask implements TideTask {
     public void resetExercise() {
         this.syncChanges();
         try {
-            new ApiHandler().resetSubTask(this.task, this.headers.get(0));
+            new ApiHandler().resetDemoTask(this.task, this.headers.get(0));
         } catch (IOException ex) {
             com.api.LogHandler.logError("TimTask.resetExercise()", ex);
             InfoView.displayError(".timdata file not found!");
@@ -91,15 +91,7 @@ public final class TimTask implements TideTask {
      */
     public void openInBrowser(String baseURL, Project project) {
         StateManager state = Objects.requireNonNull(ApplicationManager.getApplication().getService(StateManager.class));
-        String url = baseURL;
-        //TODO: handle null case.
-        url += this.task.getPath();
-        //the task name needed for the url is not part of the subtask but part of the task file
-        //we need to get the first file of the task to get the right id.
-        //id is in form number.name.idstring
-        //thus we split the id to get the relevant part in the middle.
-        url += "#" + this.task.getTaskFiles().get(0).getTaskIdExt().split("\\.")[1];
-
+        String url = getString(baseURL);
         if (state.getBrowserChoice()) {
             if (Desktop.isDesktopSupported()) {
                 try {
@@ -121,6 +113,19 @@ public final class TimTask implements TideTask {
         }
     }
 
+    private String getString(String baseURL) {
+        String url = baseURL;
+        if (this.task.getPath() != null) {
+            url += this.task.getPath();
+            //the task name needed for the url is not part of the demo task but part of the task file
+            //we need to get the first file of the task to get the right id.
+            //id is in form number.name.idstring
+            //thus we split the id to get the relevant part in the middle.
+            url += "#" + this.task.getTaskFiles().get(0).getTaskIdExt().split("\\.")[1];
+        }
+        return url;
+    }
+
     /**
      * This method updates the changes in the delegate VirtualFile to the physical file on disk.
      */
@@ -133,7 +138,7 @@ public final class TimTask implements TideTask {
     }
 
     /**
-     * This method is used to update the SubTask information into CourseTaskPane, and to update its state etc.
+     * This method is used to update the DemoTask information into CourseTaskPane, and to update it's state etc.
      */
     private static void messageUpdates() {
         ActiveState.getInstance().setSubmittable(selected != null);
@@ -165,15 +170,15 @@ public final class TimTask implements TideTask {
     }
 
     /**
-     * Returns SubTask name.
-     * @return SubTask name as String.
+     * Returns DemoTask name.
+     * @return DemoTask name as String.
      */
-    public String getSubTaskName() {
+    public String getDemoTaskName() {
         return this.headers.get(this.headers.size() - 1);
     }
 
     /**
-     * Getter for SuTask's submit data.
+     * Getter for DemoTask's submit data.
      * @return string array of messages.
      */
     public String[] getSubmitData() {
@@ -181,10 +186,11 @@ public final class TimTask implements TideTask {
         float points = state.getPoints(this.delegate.getCanonicalPath());
         String pointsMessage = "<html><b>Points:</b> " + points + "/" + this.task.getMaxPoints() + "</html>";
         String deadLineMessage = this.getDeadline();
-        int answerLimit = this.task.getAnswerLimit();
-        // TODO: Ideally, there would be a distinction between no tries left and tries left not available.
-        String answerLimitString = answerLimit > 0 ? String.valueOf(answerLimit) : "N/A";
-        String submitMessage = "<html><b>Max attempts: </b>" + answerLimitString + "</html>";
+        String answerLimit = this.task.getAnswerLimit();
+        if (answerLimit == null || answerLimit.equals("null")) {
+            answerLimit = "N/A";
+        }
+        String submitMessage = "<html><b>Max attempts: </b>" + answerLimit + "</html>";
         String stem = this.task.getStem();
         return new String[] {pointsMessage, deadLineMessage, submitMessage, stem};
     }
@@ -219,7 +225,7 @@ public final class TimTask implements TideTask {
                 ArrayList<String> taskHeaders = new ArrayList<>();
                 taskHeaders.add(ActiveState.getInstance().getCourseName(file.getPath()));
                 taskHeaders.add(ActiveState.getInstance().findTaskName(taskHeaders.get(0), file));
-                SubTask taskHolder = ActiveState.getInstance().findSubTask(file);
+                DemoTask taskHolder = ActiveState.getInstance().findDemoTask(file);
                 if (taskHolder != null) {
                     taskHeaders.add(taskHolder.getIdeTaskId());
                     selected = new TimTask(file, taskHeaders, taskHolder);

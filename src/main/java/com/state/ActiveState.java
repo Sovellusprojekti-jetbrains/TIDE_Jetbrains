@@ -6,8 +6,8 @@ import com.api.JsonHandler;
 import com.api.LogHandler;
 import com.api.TimDataHandler;
 import com.course.Course;
-import com.course.CourseTask;
-import com.course.SubTask;
+import com.course.CourseDemo;
+import com.course.DemoTask;
 import com.customfile.TimTask;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -173,10 +173,10 @@ public class ActiveState {
 
 
     /**
-     * Reads downloaded .timdata files and creates Subtasks accordingly.
-     * @param course to get subtasks for
+     * Reads downloaded .timdata files and creates Demo tasks accordingly.
+     * @param course to get demo tasks for
      */
-    public void addDownloadedSubtasksToCourse(Course course) {
+    public void addDownloadedDemotasksToCourse(Course course) {
         String pathToFile = Settings.getPath() + File.separatorChar + course.getName();
         JsonHandler jsonHandler = new JsonHandler();
         TimDataHandler tim = new TimDataHandler();
@@ -184,12 +184,12 @@ public class ActiveState {
         if (timData.isEmpty()) {
             return;
         }
-        List<SubTask> subtasks = jsonHandler.jsonToSubtask(timData);
+        List<DemoTask> demoTasks = jsonHandler.jsonToDemotask(timData);
         var demos = course.getTasks();
-        for (CourseTask ct: demos) {
-            for (SubTask st: subtasks) {
+        for (CourseDemo ct: demos) {
+            for (DemoTask st: demoTasks) {
                 if (ct.getPath().equals(st.getPath())) {
-                    ct.addSubtask(st);
+                    ct.addDemotask(st);
                 }
             }
         }
@@ -263,19 +263,19 @@ public class ActiveState {
     }
 
     /**
-     * This method is used to find CourseTask's name using course name and file name.
+     * This method is used to find CourseDemo's name using course name and file name.
      * @param course Courses name to which the opened file is related to.
      * @param file Virtual file of the file opened in the editor.
-     * @return CourseTask name as String.
+     * @return CourseDemo name as String.
      */
     public String findTaskName(String course, VirtualFile file) {
         for (Course courseToCheck: this.getCourses()) {
             if (courseToCheck.getName().equals(course)) {
-                for (CourseTask courseTask: courseToCheck.getTasks()) {
-                    for (SubTask subTask: courseTask.getSubtasks()) {
-                        for (SubTask.TaskFile taskFile: subTask.getTaskFiles()) {
+                for (CourseDemo courseDemo: courseToCheck.getTasks()) {
+                    for (DemoTask demoTask: courseDemo.getDemotasks()) {
+                        for (DemoTask.TaskFile taskFile: demoTask.getTaskFiles()) {
                             if (file.getPath().contains(taskFile.getFileName())) {
-                                return courseTask.getName();
+                                return courseDemo.getName();
                             }
                         }
                     }
@@ -286,17 +286,17 @@ public class ActiveState {
     }
 
     /**
-     * This method is used to find SubTask's name (ideTaskId).
+     * This method is used to find Demo Task's name (ideTaskId).
      * @param file Virtual file of the file open in the editor.
-     * @return Subtask's name as String.
+     * @return Demo task's name as String.
      */
-    public SubTask findSubTask(VirtualFile file) {
+    public DemoTask findDemoTask(VirtualFile file) {
         for (Course courseToCheck : this.getCourses()) {
-            for (CourseTask courseTask: courseToCheck.getTasks()) {
-                for (SubTask subTask: courseTask.getSubtasks()) {
-                    for (SubTask.TaskFile tf: subTask.getTaskFiles()) {
+            for (CourseDemo courseDemo: courseToCheck.getTasks()) {
+                for (DemoTask demoTask: courseDemo.getDemotasks()) {
+                    for (DemoTask.TaskFile tf: demoTask.getTaskFiles()) {
                         if (file.getPath().contains(tf.getFileName())) {
-                            return subTask;
+                            return demoTask;
                         }
                     }
                 }

@@ -2,7 +2,7 @@ package com.views;
 
 import com.intellij.openapi.util.IconLoader;
 import com.state.StateManager;
-import com.course.SubTask;
+import com.course.DemoTask;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.JBColor;
@@ -14,7 +14,7 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * renderer for the leaf nodes of subtasks that have been submitted.
+ * renderer for the leaf nodes of demo tasks that have been submitted.
  */
 public class SubmitRenderer extends DefaultTreeCellRenderer {
 
@@ -50,7 +50,7 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
     }
 
     /**
-     * Sets icons for subtasks with 0 or more points.
+     * Sets icons for demo tasks with 0 or more points.
      * @param value The node that the icon belongs to
      * @return The correct icon depending on the points given
      */
@@ -61,7 +61,7 @@ public class SubmitRenderer extends DefaultTreeCellRenderer {
             for (String s : submits) {
                 if (node.getChildCount() == 0 &&  s.contains(node.toString())) {
                     DefaultMutableTreeNode parentNode =  (DefaultMutableTreeNode) node.getParent();
-                    SubTask parent = (SubTask) parentNode.getUserObject();
+                    DemoTask parent = (DemoTask) parentNode.getUserObject();
                     if (ApplicationManager.getApplication().getService(StateManager.class).getPoints(s) == 0
                             && s.contains(parent.getIdeTaskId())) {
                         return IconLoader.getIcon("/icons/0_points.svg");

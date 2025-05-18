@@ -2,7 +2,7 @@ package com.api
 
 import com.actions.Settings
 import com.course.Course
-import com.course.SubTask
+import com.course.DemoTask
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.application.ApplicationInfo
@@ -85,7 +85,7 @@ object TideCommandExecutor {
 
                 val activeState = ActiveState.getInstance()
                 for (crs: Course in courses) {
-                    activeState.addDownloadedSubtasksToCourse(crs)
+                    activeState.addDownloadedDemotasksToCourse(crs)
                 }
                 activeState.setCourses(courses) // No need to switch dispatcher unless UI update is needed
             } catch (e: Exception) {
@@ -216,12 +216,12 @@ object TideCommandExecutor {
     }
 
     /**
-     * Resets subtask back to the state of latest submit.
+     * Resets demo task back to the state of latest submit.
      * @param file Virtual file to get files local path and to communicate changes to idea's UI.
      * @param courseDir Course directory
      */
-    fun resetSubTask(
-        task: SubTask,
+    fun resetDemoTask(
+        task: DemoTask,
         courseDir: String,
     ) {
         val taskId: String = task.ideTaskId

@@ -1,7 +1,7 @@
 package com.api;
 
 import com.actions.Settings;
-import com.course.SubTask;
+import com.course.DemoTask;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.BufferedReader;
@@ -40,11 +40,11 @@ public class TimDataHandler {
     }
 
     /**
-     * method to read subtask data from a timdatafile from under the timdatafile.
+     * method to read demo task data from a timdatafile from under the timdatafile.
      * @param file the file used to find the right timdata file.
-     * @return list of the subtasks that can be found in the timdata file.
+     * @return list of the demo tasks that can be found in the timdata file.
      */
-    private List<SubTask> getTimDataSubTasks(VirtualFile file) {
+    private List<DemoTask> getTimDataDemoTasks(VirtualFile file) {
         TimDataHandler tim = new TimDataHandler();
         JsonHandler json = new JsonHandler();
         VirtualFile parentFile = file.getParent();
@@ -53,6 +53,6 @@ public class TimDataHandler {
             data = tim.readTimData(parentFile.getCanonicalPath());
             parentFile = parentFile.getParent();
         }
-        return json.jsonToSubtask(data);
+        return json.jsonToDemotask(data);
     }
 }

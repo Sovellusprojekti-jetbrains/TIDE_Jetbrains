@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class SubTask {
+public class DemoTask {
 
     /**
      * the Task id in timdata.
@@ -14,12 +14,12 @@ public class SubTask {
     private String ideTaskId;
 
     /**
-     * the path to the course task that the subtask is a part of.
+     * the path to the course task that the demo task is a part of.
      */
     private String path;
 
     /**
-     * filenames of the subtasks.
+     * filenames of the demo tasks.
      */
     private List<String> fileNames;
 
@@ -33,12 +33,12 @@ public class SubTask {
     private float maxPoints;
 
     /**
-     * deadline for the subtask.
+     * deadline for the demo task.
      */
     @SerializedName(value = "deadline")
     private String deadLine;
     @SerializedName(value = "answer_limit")
-    private int answerLimit;
+    private String answerLimit;
     @SerializedName(value = "task_files")
     private List<TaskFile> taskFiles;
     @SerializedName(value = "stem")
@@ -46,8 +46,8 @@ public class SubTask {
 
 
     /**
-     * getter for the name of the subtask.
-     * @return subtask name
+     * getter for the name of the demo task.
+     * @return demo tasks name
      */
     public String getIdeTaskId() {
         return this.ideTaskId;
@@ -80,7 +80,7 @@ public class SubTask {
 
 
     /**
-     * getter for the maximum amount of points you can get from a subtask.
+     * getter for the maximum amount of points you can get from a demo task.
      * @return maximum amount of points
      */
     public float getMaxPoints() {
@@ -88,8 +88,8 @@ public class SubTask {
     }
 
     /**
-     * getter for the subtask deadline.
-     * @return the last date the subtask can be submitted by in ISO8601 format.
+     * getter for the demo task deadline.
+     * @return the last date the demo task can be submitted by in ISO8601 format.
      */
     public String getDeadLine() {
         return this.deadLine;
@@ -106,14 +106,13 @@ public class SubTask {
      * getter for the maximum amount of submits allowed for a course task.
      * @return the maximum amount of submits.
      */
-    public int getAnswerLimit() {
+    public String getAnswerLimit() {
         return this.answerLimit;
     }
 
     /**
      * Getter for TaskFile list.
      * @return a list of task files
-     * TODO: rethink naming of task, subtask, taskfile
      */
     public List<TaskFile> getTaskFiles() {
         return this.taskFiles;
