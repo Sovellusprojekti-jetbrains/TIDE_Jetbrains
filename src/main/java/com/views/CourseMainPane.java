@@ -33,6 +33,8 @@ import com.util.Config;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.util.Config.singleCourseConstraints;
+import static com.util.Config.subtaskConstraints;
 import static javax.swing.BorderFactory.createEmptyBorder;
 
 /**
@@ -149,6 +151,11 @@ public class CourseMainPane {
                 if ("scrollSpeed".equals(evt.getPropertyName())) {
                     coursesPane.getVerticalScrollBar().setUnitIncrement(Settings.getScrollSpeed());
                 }
+                if ("tideBaseResponse".equals(evt.getPropertyName())) {
+                    if (evt.getNewValue().toString().contains("Exception")) {
+                        setProgress(false, "");
+                    }
+                }
             }
         });
     }
@@ -164,10 +171,7 @@ public class CourseMainPane {
             labelList = new ArrayList<>(); // New label list for resizing purposes.
             for (Course course: courselist) {
                 JPanel panel = new JPanel(new GridBagLayout());
-                GridBagConstraints gbc = new GridBagConstraints();
-                gbc.gridx = 0;
-                gbc.weightx = 1.0;
-                gbc.fill = GridBagConstraints.HORIZONTAL;
+                GridBagConstraints gbc = subtaskConstraints();
                 final int top = 20;
                 final int left = 0;
                 final int bottom = 5;
@@ -190,12 +194,7 @@ public class CourseMainPane {
                 scrollPane.setBorder(BorderFactory.createLineBorder(JBColor.border(), thickness));
                 scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
-                gbc = new GridBagConstraints();
-                gbc.gridx = 0;
-                gbc.gridy = 0;
-                gbc.anchor = GridBagConstraints.NORTHWEST;
-                gbc.weightx = 1.0;
-                gbc.fill = GridBagConstraints.HORIZONTAL;
+                gbc = singleCourseConstraints();
                 singleCourse.add(label, gbc);
 
                 // Add scrollPane below label, but restrict expansion
