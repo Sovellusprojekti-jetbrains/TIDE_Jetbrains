@@ -160,6 +160,7 @@ public class CourseTaskPane {
             ActionManager manager = ActionManager.getInstance();
             AnAction action = manager.getAction("com.actions.Submit");
             manager.tryToExecute(action, null, null, null, true);
+            setProgress(true, "Submitting...");
         });
 
         showOutputButton.addActionListener(event -> {
