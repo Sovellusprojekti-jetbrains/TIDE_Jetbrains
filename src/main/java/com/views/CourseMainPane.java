@@ -149,6 +149,11 @@ public class CourseMainPane {
                 if ("scrollSpeed".equals(evt.getPropertyName())) {
                     coursesPane.getVerticalScrollBar().setUnitIncrement(Settings.getScrollSpeed());
                 }
+                if ("tideBaseResponse".equals(evt.getPropertyName())) {
+                    if (evt.getNewValue().toString().contains("Exception")) {
+                        setProgress(false, "");
+                    }
+                }
             }
         });
     }

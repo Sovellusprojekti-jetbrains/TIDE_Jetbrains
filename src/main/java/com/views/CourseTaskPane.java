@@ -132,6 +132,11 @@ public class CourseTaskPane {
                     setDescription(Objects.requireNonNullElse(stem, "No description available. To see more, open the task in browser."));
                     SmartLabelRewrapper.setupSmartRewrapForLabels(changingLabels, thisToolWindow);
                 }
+                if ("tideBaseResponse".equals(evt.getPropertyName())) {
+                    if (evt.getNewValue().toString().contains("Exception")) {
+                        setProgress(false, "");
+                    }
+                }
             }
         });
     }
