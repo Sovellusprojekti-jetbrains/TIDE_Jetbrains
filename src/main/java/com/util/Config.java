@@ -1,7 +1,12 @@
 package com.util;
 
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
+
 public final class Config {
-    private Config() { };
+    private Config() {
+    }
     /**
      * URL for the user manual.
      */
@@ -31,4 +36,45 @@ public final class Config {
      * Border thickness for a single course.
      */
     public static final int COURSE_BORDER = 2;
+
+    /**
+     * GridBagConstraints for subpanels in CourseMainPane.createCourseListPane.
+     *
+     * @return new GridBagConstraints.
+     */
+    public static GridBagConstraints subtaskConstraints() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        return gbc;
+    }
+
+    /**
+     * GridBagConstraints added in singleCourse.add(label, gbc).
+     *
+     * @return GridBagConstraints.
+     */
+    public static GridBagConstraints singleCourseConstraints() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        return gbc;
+    }
+
+    /**
+     * Border for infoPane in CourseTaskPane.
+     */
+    public static final Border INFOPANEBORDER = BorderFactory.createEmptyBorder(15, 0, 0, 0);
+    /**
+     * Border for textPane in CourseTaskPane.
+     */
+    public static final Border TEXTPANEBORDER = BorderFactory.createEmptyBorder(0, 20, 0, 0);
+    /**
+     * Border for buttonPanel in CourseTaskPane.
+     */
+    public static final Border BUTTONPANELBORDER = BorderFactory.createEmptyBorder(0, 20, 0, 0);
 }

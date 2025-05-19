@@ -27,6 +27,8 @@ import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import static com.util.Config.*;
+
 /**
 * Handles the functional and graphical operations of the right-side task view.
 * Taskpane = Main panel containing everything else.
@@ -83,12 +85,10 @@ public class CourseTaskPane {
 
         addActionListeners();
 
-        final int topPadding = 15;
-        infoPane.setBorder(BorderFactory.createEmptyBorder(topPadding, 0, 0, 0));
+        infoPane.setBorder(INFOPANEBORDER);
         taskNameLabel.setFont(JBFont.h2());
-        final int margin = 20;
-        textPane.setBorder(BorderFactory.createEmptyBorder(0, margin, 0, 0));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, margin));
+        textPane.setBorder(TEXTPANEBORDER);
+        buttonPanel.setBorder(BUTTONPANELBORDER);
         setButtonTooltips();
 
         addPropertyChangeListeners(stateManager);
