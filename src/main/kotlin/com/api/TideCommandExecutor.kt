@@ -481,7 +481,7 @@ object TideCommandExecutor {
         withContext(Dispatchers.IO) {
             var tidePath = ""
             try {
-                tidePath = ApplicationManager.getApplication().getService<StateManager?>(StateManager::class.java).getTidePath()
+                tidePath = ApplicationManager.getApplication().getService(StateManager::class.java).getTidePath()
             } catch (e: Exception) {
                 println(e.toString())
             }
