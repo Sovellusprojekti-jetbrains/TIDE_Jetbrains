@@ -82,9 +82,8 @@ public final class SmartLabelRewrapper {
         }
         for (char c : text.toCharArray()) {
             sb.append(c);
-            if (metrics.stringWidth(sb.toString()) > maxWidth && !sb.toString().contains("<br/>")
-             || (metrics.stringWidth(sb.toString()) > maxWidth && sb.toString().startsWith("<br/>")
-            && !sb.substring("<br/>".length()).contains("<br/>"))) {
+            if (metrics.stringWidth(sb.toString()) > maxWidth && (!sb.toString().contains("<br/>")
+             || (sb.toString().startsWith("<br/>") && !sb.substring("<br/>".length()).contains("<br/>")))) {
                 try {
                     sb.replace(sb.lastIndexOf(" "), sb.lastIndexOf(" ") + 1, "<br/>");
                 } catch (StringIndexOutOfBoundsException e) {
