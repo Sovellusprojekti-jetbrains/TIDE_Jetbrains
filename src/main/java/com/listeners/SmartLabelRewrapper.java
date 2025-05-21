@@ -84,11 +84,11 @@ public final class SmartLabelRewrapper {
             sb.append(c);
             if (metrics.stringWidth(sb.toString()) > maxWidth && !sb.toString().contains("<br/>")
              || (metrics.stringWidth(sb.toString()) > maxWidth && sb.toString().startsWith("<br/>")
-            && sb.toString().contains(" "))) {
+            && !sb.substring("<br/>".length()).contains("<br/>"))) {
                 try {
                     sb.replace(sb.lastIndexOf(" "), sb.lastIndexOf(" ") + 1, "<br/>");
-                } catch (Exception e) {
-                    continue;
+                } catch (StringIndexOutOfBoundsException e) {
+
                 }
             }
         }
