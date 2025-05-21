@@ -20,6 +20,8 @@ public class InstallScreen {
     private JButton installAutomaticallyButton;
     private JButton installManuallyButton;
     private JPanel installPane;
+    private JPanel jpanelText;
+    private JLabel jpanelLabel;
     private Boolean visible = false;
     private static JFrame frame = null;
 
@@ -28,9 +30,14 @@ public class InstallScreen {
      * Handles the actions concerning the installation of the Tide-CLI.
      */
     public InstallScreen() {
+        jpanelLabel.setText("<html> Tide-Cli was not detected in the path. Would you like to install it?" +
+                "alternatively you can set location of Tide-Cli in the setting <html\">");
+
         installAutomaticallyButton.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
+                installAutomaticallyButton.setEnabled(false);
                 if (System.getProperty("os.name").contains("Windows")) {
                     //TODO: Maybe let the user decide where to install?
                     //TODO: Would require an install wizard.
@@ -118,7 +125,6 @@ public class InstallScreen {
 
             }
         });
-
 
 
     }

@@ -4,6 +4,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
 import com.intellij.openapi.wm.ToolWindowManager
+import com.state.StateManager
 import com.views.InstallScreen
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
@@ -14,17 +15,19 @@ class StartUp : StartupActivity {
         ApplicationManager.getApplication().invokeLater {
             val programName = "tide"
             val pluginsPath = System.getProperty("idea.plugins.path")
+            val tidePath = ApplicationManager.getApplication().getService(StateManager::class.java).getTidePath()
             println(pluginsPath)
             if (System.getProperty("os.name").contains("Windows")) {
-                val process = ProcessBuilder("where", programName).start()
+                val process = ProcessBuilder("where","/q", programName).start()
                 val exitcode = process.waitFor()
-                if (exitcode != 0) {
+
+                if (exitcode != 0 && tidePath.equals("")) {
                     showInstall()
                 }
             } else {
                 val process = ProcessBuilder("which", programName).start()
                 val exitCode = process.waitFor()
-                if (exitCode != 0) {
+                if (exitCode != 0 && tidePath.equals("")) {
                     showInstall()
                 }
             }
